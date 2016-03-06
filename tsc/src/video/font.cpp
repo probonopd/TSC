@@ -73,9 +73,8 @@ void cFont_Manager::Queue_Text(const sf::Text& text)
  */
 void cFont_Manager::Prepare_SFML_Text(sf::Text& text, const std::string& str, float x, float y, int fontsize /* = FONTSIZE_NORMAL */, const Color color /* = black */, bool ignore_camera /* = false */)
 {
-    std::basic_string<sf::Uint32> tmp;
-    sf::Utf8::toUtf32(str.begin(), str.end(), std::back_inserter(tmp));
-    sf::String utf8Str = tmp;
+    wstring utf8Str;
+    sf::Utf8::toUtf32(str.begin(), str.end(), std::back_inserter(utf8Str));
 
     text.setFont(m_font_normal);
     text.setColor(color.Get_SFML_Color());
