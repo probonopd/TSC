@@ -73,11 +73,13 @@ void cFont_Manager::Queue_Text(const sf::Text& text)
  */
 void cFont_Manager::Prepare_SFML_Text(sf::Text& text, const std::string& str, float x, float y, int fontsize /* = FONTSIZE_NORMAL */, const Color color /* = black */, bool ignore_camera /* = false */)
 {
+    wstring utf32Str;
+    sf::Utf8::toUtf32(str.begin(), str.end(), std::back_inserter(utf32Str));
 
     text.setFont(m_font_normal);
     text.setColor(color.Get_SFML_Color());
     text.setCharacterSize(fontsize);
-    text.setString(str);
+    text.setString(utf32Str);
 
     if (ignore_camera) {
         // SFML thinks 0|0 is left top of the window
