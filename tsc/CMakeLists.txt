@@ -143,36 +143,6 @@ else()
   set(Tinyclipboard_INCLUDE_DIRS "${TSC_SOURCE_DIR}/../tinyclipboard/include")
 endif()
 
-########################################
-# CEGUI 0.7.x
-# Many Linux distributions do not provide CEGUI 0.7.x anymore.
-# Hence, if we do not detect it, try to download and compile it
-# ourselves.
-
-if (NOT(WIN32))
-  find_package(CEGUI COMPONENTS OPENGL)
-
-  if (NOT(CEGUI_FOUND))
-    message("CEGUI 0.7.x was not found. It will be downloaded and compiled during the build process.")
-
-    set(CEGUI_ROOT_DIR "${TSC_BINARY_DIR}/cegui")
-    set(CEGUI_SOURCE_DIR "${CEGUI_ROOT_DIR}/src/cegui07")
-
-    ExternalProject_Add(cegui07
-      PREFIX "${CEGUI_ROOT_DIR}"
-      URL "http://sourceforge.net/projects/crayzedsgui/files/CEGUI%20Mk-2/0.7.9/CEGUI-0.7.9.tar.gz"
-      URL_MD5 a8b682daf82e383edc169c2e6eb2b321
-      BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ./configure --disable-samples --disable-python-module --disable-lua-module --enable-static --disable-shared --prefix=${CEGUI_ROOT_DIR}
-      BUILD_COMMAND make -j${NUM_CPUCORES}
-      INSTALL_COMMAND make install)
-
-    set(CEGUI_INCLUDE_DIR ${CEGUI_ROOT_DIR}/include)
-    set(CEGUI_LIBRARY ${CEGUI_ROOT_DIR}/lib/libCEGUIOpenGLRenderer.a ${CEGUI_ROOT_DIR}/lib/libCEGUIBase.a ${CEGUI_ROOT_DIR}/lib/libCEGUIDevILImageCodec.a ${CEGUI_ROOT_DIR}/lib/libCEGUIFalagardWRBase.a ${CEGUI_ROOT_DIR}/lib/libCEGUILibxmlParser.a)
-    set(CEGUI_DEFINITIONS " -DCEGUI_STATIC")
-  endif()
-endif()
-
 ################################################################################
 # Check for the actual libraries and programs.
 ################################################################################
@@ -194,6 +164,7 @@ endif()
 # Several libraries we depend on
 find_package(PkgConfig REQUIRED)
 find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+find_package(CEGUI COMPONENTS OpenGL REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(Gettext)
@@ -201,7 +172,6 @@ find_package(BISON REQUIRED)
 find_package(Freetype REQUIRED)
 
 if (WIN32)
-  find_package(CEGUI COMPONENTS OPENGL REQUIRED) # Old CEGUI 0.7.x is provided by MXE
   find_package(LibIntl REQUIRED)
   find_package(FreeImage REQUIRED)
 
@@ -216,7 +186,7 @@ if (WIN32)
       REQUIRED)
   endif()
 
-  # Boost-thread and CEGUI need to be explicitely told that they’re
+  # Boost-thread needs to be explicitely told that they’re
   # linked in statically on Windows.
   add_definitions(-DBOOST_THREAD_USE_LIB)
 else()
@@ -337,7 +307,7 @@ endif()
 # TODO: Make the mruby config automatically include the correct path to the PCRE library
 if (WIN32)
   target_link_libraries(tsc
-    ${CEGUI_LIBRARY}
+    ${CEGUI_LIBRARIES}
     ${SFML_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}
@@ -357,9 +327,8 @@ if (WIN32)
   # However, as we already require Gettext anyway, linking libintl in directly
   # should be safe.
 else()
-  add_dependencies(tsc cegui07)
   target_link_libraries(tsc
-    ${CEGUI_LIBRARY}
+    ${CEGUI_LIBRARIES}
     ${SFML_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}

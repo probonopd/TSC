@@ -1,172 +1,123 @@
-# Locate CEGUI (Made for CEGUI 7.5)
+# Try to find the CEGUI library.
+# Only works for CEGUI >= 0.8.0.
+# The following variables will be defined:
 #
-# This module defines
-# CEGUI_FOUND, if false, do not try to link to CEGUI
-# CEGUI_LIBRARY, where to find the librarys
-# CEGUI_INCLUDE_DIR, where to find the headers
-# CEGUI_DEFINITIONS, what to include in C(XX)FLAGS
+# CEGUI_FOUND - Do we have CEGUI?
+# CEGUI_INCLUDE_DIR - Headers for CEGUI
+# CEGUI_LIBRARIES - Libraries for CEGUI
+# CEGUI_DEFINITIONS - C/CXX flags
 #
-# $CEGUIDIR is an environment variable that would
-# correspond to the ./configure --prefix=$CEGUIDIR
+# Usage:
 #
-# There are several COMPONENTS that can be included:
-# NULL, OPENGL, DIRECT3D9, DIRECT3D10, DIRECT3D11, DIRECTFB, OGRE, IRRLICHT
-# Selecting no render as COMPONENT will create a error massage!
+#   FindPackage(CEGUI COMPONENTS OpenGL)
 #
-# 2011-07-21 Created by Frederik vom Hofe using the findSFML.cmake versions from David Guthrie with code from Robert Osfield.
-# 2013-03-15 Slight modifications by Marvin Gülker to find more components
+# The COMPONENTS part defines the CEGUI renderer to use; the example
+# above will find the OpenGL renderer.
+#
+# Copyright © 2014, 2016 Marvin Gülker
 
-FIND_PACKAGE(PkgConfig)
+########################################
+# pkg-config
 
-SET(CEGUI_FOUND "YES")
-SET(CEGUI_LIBRARY "")
-SET(CEGUI_INCLUDE_DIR "")
+# First we need pkg-config.
+find_package(PkgConfig)
 
-SET( CEGUIDIR $ENV{CEGUIDIR} )
-IF((WIN32 OR WIN64) AND NOT(CYGWIN))
-   # Convert backslashes to slashes
-   STRING(REGEX REPLACE "\\\\" "/" CEGUIDIR "${CEGUIDIR}")
-ENDIF()
+# Check if we can find it with pkg-config.
+# (No, I don’t know why they decided to rename
+# themselves to CEGUI-0, really!)
+pkg_search_module(PKG_CEGUI CEGUI CEGUI-0)
 
+########################################
+# Include dir
 
-#To always have the right case sensitive name we use this list and a helper macro:
-SET(RENDER_NAME
-   Null
-   OpenGL
-   Direct3D9
-   Direct3D10
-   Direct3D11
-   DirectFB
-   Ogre
-   Irrlicht
-)
+# CEGUI’s pkg-config file is broken -- it says /usr/include/cegui-0/cegui,
+# but the real include dir is /usr/include/cegui-0/CEGUI. I hate Windows
+# devs who don’t care about casefolding. Also the appended "-0" CEGUI
+# uses causes problems for CMake, so we give additional PATH_SUFFIXES
+# to try.
+find_path( CEGUI_INCLUDE_DIR CEGUI/CEGUI.h
+  HINTS ${PKG_CEGUI_INCLUDE_DIRS} /usr/include/cegui-0/CEGUI
+  PATH_SUFFIXES cegui-0 CEGUI)
 
-MACRO(HELPER_GET_CASE_FROM_LIST SEARCHSTR LOOKUPLIST RESULTSTR)
-   SET(${RESULTSTR} ${SEARCHSTR}) #default return value if nothing is found
-   FOREACH(LOOP_S IN LISTS ${LOOKUPLIST})
-      string(TOLOWER ${LOOP_S} LOOP_S_LOWER)
-      string(TOLOWER ${SEARCHSTR} LOOP_SEARCHSTR_LOWER)
-      string(COMPARE EQUAL ${LOOP_S_LOWER} ${LOOP_SEARCHSTR_LOWER} LOOP_STR_COMPARE)
-      IF(LOOP_STR_COMPARE)
-         SET(${RESULTSTR} ${LOOP_S})
-      ENDIF()
-   ENDFOREACH()
-ENDMACRO()
+########################################
+# The libraries
 
-#********** First we ask pkg-config ********** ********** ********** **********
-pkg_check_modules(PC_CEGUI QUIET CEGUI)
+# We need to find a lot of libraries, so this macro
+# does the main work here.
+macro(find_cegui_library LIBNAME)
+  message("-- Searching for ${LIBNAME} CEGUI library")
 
-#********** Now we locate the include directorys ********** ********** ********** **********
-SET( CEGUI_INCLUDE_SEARCH_DIR
-   ${PC_CEGUI_INCLUDE_DIRS}
-   ${CEGUIDIR}/include
-   ${CEGUIDIR}/cegui/include
-   ~/Library/Frameworks
-   /Library/Frameworks
-   /usr/local/include
-   /usr/include
-   /sw/include # Fink
-   /opt/local/include # DarwinPorts
-   /opt/csw/include # Blastwave
-   /opt/include
-   /usr/freeware/include
-)
+  # CEGUI 0.8 scattered its libraries over /usr/lib and
+  # /usr/lib/cegui-0.8, AND it sometimes has a "-0" appended
+  # to the library name.
+  find_library( CEGUI_${LIBNAME}_LIBRARY
+                NAMES CEGUI${LIBNAME} CEGUI${LIBNAME}-0
+                HINTS ${PKG_CEGUI_LIBRARY_DIRS}
+                PATH_SUFFIXES cegui-0.8 )
 
-#helper
-MACRO(FIND_PATH_HELPER FILENAME DIR SUFFIX)
-   FIND_PATH(${FILENAME}_DIR ${FILENAME} PATHS ${${DIR}} PATH_SUFFIXES ${SUFFIX})
-   IF(NOT ${FILENAME}_DIR)
-      MESSAGE("Could not located ${FILENAME}")
-      SET(CEGUI_FOUND "NO")
-   ELSE()
-      MESSAGE("${FILENAME} : ${${FILENAME}_DIR}")
-      LIST(APPEND CEGUI_INCLUDE_DIR ${${FILENAME}_DIR})
-   ENDIF()
-ENDMACRO()
+  # Error message if not found
+  if(CEGUI_${LIBNAME}_LIBRARY)
+    message("--   found: ${CEGUI_${LIBNAME}_LIBRARY}")
+  else()
+    message(SEND_ERROR "CEGUI${LIBNAME} library not found!")
+  endif()
+endmacro()
 
-FIND_PATH_HELPER(CEGUI.h CEGUI_INCLUDE_SEARCH_DIR CEGUI)
+# CEGUI consists of a wealth of libraries.
+find_cegui_library(Base)
+find_cegui_library(CoreWindowRendererSet)
+find_cegui_library(DevILImageCodec)
+find_cegui_library(LibXMLParser)
 
-IF("${CEGUI_FIND_COMPONENTS}" STREQUAL "")
-   MESSAGE("ERROR: No CEGUI renderer selected. \n\nSelect a renderer by including it's name in the component list:\n\ne.g. Find_Package(CEGUI REQUIRED COMPONENTS OPENGL)\n\nCEGUI renderers:")
-   FOREACH(LOOP_S IN LISTS RENDER_NAME)
-      MESSAGE("${LOOP_S}")
-   ENDFOREACH()
-   MESSAGE("\n")
-   MESSAGE(SEND_ERROR "Select at last one renderer!" )
-ENDIF()
+########################################
+# The renderers
 
-FOREACH(COMPONENT ${CEGUI_FIND_COMPONENTS})
-   HELPER_GET_CASE_FROM_LIST( ${COMPONENT} RENDER_NAME COMPONENT_CASE)
-   FIND_PATH_HELPER( "CEGUI${COMPONENT_CASE}Renderer.h" "CEGUI_INCLUDE_SEARCH_DIR" "CEGUI/RendererModules/${COMPONENT_CASE}/;RendererModules/${COMPONENT_CASE}/" )
-ENDFOREACH(COMPONENT)
+# User is required to selected a renderer.
+# (CEGUI_FIND_COMPONENTS is set by package_handle_standard_args())
+if( "${CEGUI_FIND_COMPONENTS}" STREQUAL "" )
+  message(SEND_ERROR(" No renderer selected; try ...COMPENENTS OpenGL"))
+endif()
 
-IF (APPLE)
-   FIND_PATH(CEGUI_FRAMEWORK_DIR CEGUI.h
-     PATHS
-       ~/Library/Frameworks/CEGUI.framework/Headers
-       /Library/Frameworks/CEGUI.framework/Headers
-       ${DELTA3D_EXT_DIR}/Frameworks/CEGUI.framework/Headers
-)
-ENDIF (APPLE)
+set(CEGUI_RENDERER_LIBRARIES "")
+foreach(COMPONENT ${CEGUI_FIND_COMPONENTS})
+  find_cegui_library("${COMPONENT}Renderer")
+  list(APPEND CEGUI_RENDERER_LIBRARIES ${CEGUI_${COMPONENT}Renderer_LIBRARY})
+endforeach(COMPONENT)
 
-IF(CEGUI_FRAMEWORK_DIR)
-   LIST(APPEND CEGUI_INCLUDE_DIR ${CEGUI_FRAMEWORK_DIR})
-ELSE()
-   LIST(APPEND CEGUI_INCLUDE_DIR ${CEGUI_FRAMEWORK_DIR}/CEGUI)
-ENDIF()
+# Now collect all the libraries in a single variable
+set(CEGUI_LIBRARIES
+  ${CEGUI_RENDERER_LIBRARIES}
+  ${CEGUI_Base_LIBRARY}
+  ${CEGUI_CoreWindowRendererSet_LIBRARY}
+  ${CEGUI_DevILImageCodec_LIBRARY}
+  ${CEGUI_LibXMLParser_LIBRARY}
+ )
 
+########################################
+# Flags
 
-#********** Then we locate the Librarys ********** ********** ********** **********
-SET( CEGUI_LIBRARY_SEARCH_DIR
-        ${PC_CEGUI_LIBRARY_DIRS}
-        ${CEGUIDIR}/lib
-        ${CEGUIDIR}
-        ~/Library/Frameworks
-        /Library/Frameworks
-        /usr/local/lib
-        /usr/lib
-        /sw/lib
-        /opt/local/lib
-        /opt/csw/lib
-        /opt/lib
-        [HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Session\ Manager\\Environment;CEGUI_ROOT]/lib
-        /usr/freeware/lib64
-)
+# This sets -DCEGUI_STATIC! If you forget including
+# that into your compilation commands, you will get
+# wealths of "undefined references to _imp__*" errors
+# on crosscompilation!
+set(CEGUI_DEFINITIONS ${PKG_CEGUI_CFLAGS})
 
-#helper
-MACRO(FIND_LIBRARY_HELPER FILENAME DIR)
-   FIND_LIBRARY(${FILENAME}_DIR NAMES ${FILENAME} PATHS ${${DIR}})
-   IF(NOT ${FILENAME}_DIR)
-      MESSAGE("Could not located ${FILENAME}")
-      SET(CEGUI_FOUND "NO")
-   ELSE()
-      MESSAGE("${FILENAME} : ${${FILENAME}_DIR}")
-      LIST(APPEND CEGUI_LIBRARY ${${FILENAME}_DIR})
-   ENDIF()
-ENDMACRO()
+########################################
+# Package boilerplate
 
-FOREACH(COMPONENT ${CEGUI_FIND_COMPONENTS})
-   HELPER_GET_CASE_FROM_LIST( ${COMPONENT} RENDER_NAME COMPONENT_CASE)
-   MESSAGE("Looking for lib: CEGUI${COMPONENT_CASE}Renderer")
-   FIND_LIBRARY_HELPER( CEGUI${COMPONENT_CASE}Renderer "CEGUI_LIBRARY_SEARCH_DIR" CEGUI)
-ENDFOREACH(COMPONENT)
+# Register as a CMake module. This sets CEGUI_FIND_COMPONENTS
+# to the list supplied by the calling user after COMPONENTS.
+find_package_handle_standard_args(CEGUI
+  DEFAULT_MSG
+  CEGUI_INCLUDE_DIR
+  CEGUI_LIBRARIES)
 
-FIND_LIBRARY_HELPER( CEGUIBase CEGUI_LIBRARY_SEARCH_DIR )
-FIND_LIBRARY_HELPER( CEGUIFalagardWRBase CEGUI_LIBRARY_SEARCH_DIR )
-FIND_LIBRARY_HELPER( CEGUITinyXMLParser CEGUI_LIBRARY_SEARCH_DIR )
-
-# CEGUI 0.7 can't detect DevIL on MinGW, and FreeImage segfaults
-# on a UNIX system.
-IF(WIN32)
-   FIND_LIBRARY_HELPER( CEGUIFreeImageImageCodec CEGUI_LIBRARY_SEARCH_DIR )
-ELSE()
-   FIND_LIBRARY_HELPER( CEGUIDevILImageCodec CEGUI_LIBRARY_SEARCH_DIR )
-ENDIF()
-
-#********** Don't forget the flags ********** ********** ********** ********** ********** ********** ********** **********
-set(CEGUI_DEFINITIONS ${PC_CEGUI_CFLAGS})
-
-#********** And we are done ********** ********** ********** ********** ********** ********** ********** **********
-
-INCLUDE(FindPackageHandleStandardArgs)
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(CEGUI DEFAULT_MSG CEGUI_LIBRARY CEGUI_INCLUDE_DIR)
+# These variables may be set by the configuring user if
+# he knows what he is doing.
+mark_as_advanced(CEGUI_INCLUDE_DIR
+  CEGUI_BASE_LIBRARY
+  CEGUI_CORE_WINDOW_RENDERER_SET_LIBRARY
+  CEGUI_DEVIL_CODEC_LIBRARY
+  CEGUI_LIBXML_PARSER_LIBRARY
+  CEGUI_RENDERER_LIBRARIES
+  CEGUI_LIBRARIES)
