@@ -31,7 +31,6 @@
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/filesystem/relative.hpp"
-#include "../gui/spinner.hpp"
 #include "../core/global_basic.hpp"
 
 using namespace std;
@@ -105,7 +104,7 @@ void cVideo::Init_CEGUI(void)
 
     // set the default resource groups to be used
     CEGUI::Scheme::setDefaultResourceGroup("schemes");
-    CEGUI::Imageset::setDefaultResourceGroup("imagesets");
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
     CEGUI::Font::setDefaultResourceGroup("fonts");
     CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
     CEGUI::WindowManager::setDefaultResourceGroup("layouts");
@@ -124,9 +123,6 @@ void cVideo::Init_CEGUI(void)
     // Create the invisible root window
     //CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
     //gui_context.setRootWindow(p_rootwindow);
-
-    // OLD // add custom widgets
-    // OLD CEGUI::WindowFactoryManager::addFactory<CEGUI::TSC_SpinnerFactory>();
 }
 
 void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_preferences /* = true */)
@@ -182,23 +178,15 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
 
     // if reinitialization
     if (m_initialised) {
-        // check if CEGUI is initialized
-        bool cegui_initialized = pGuiSystem->getGUISheet() != NULL;
-
-        // show loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Init();
-        }
+        Loading_Screen_Init();
 
         // save textures
-        pImage_Manager->Grab_Textures(reload_textures_from_file, cegui_initialized);
-        pGuiRenderer->grabTextures();
+        pImage_Manager->Grab_Textures(reload_textures_from_file, 1);
+        mp_cegui_renderer->grabTextures();
         pImage_Manager->Delete_Hardware_Textures();
 
         // exit loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Exit();
-        }
+        Loading_Screen_Exit();
     }
 
     // For backward compatibility with old SDL. SFML is always
@@ -226,31 +214,22 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
         /* restore GUI textures
          * must be the first CEGUI call after the grabTextures function
         */
-        pGuiRenderer->restoreTextures();
+        mp_cegui_renderer->restoreTextures();
 
         // send new size to CEGUI
-        pGuiSystem->notifyDisplaySizeChanged(CEGUI::Size(static_cast<float>(videomode.width), static_cast<float>(videomode.height)));
+        CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(static_cast<float>(videomode.width), static_cast<float>(videomode.height)));
 
-        // check if CEGUI is initialized
-        bool cegui_initialized = pGuiSystem->getGUISheet() != NULL;
-
-        // show loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Init();
-        }
+        Loading_Screen_Init();
 
         // initialize new image cache
         if (reload_textures_from_file) {
-            Init_Image_Cache(0, cegui_initialized);
+            Init_Image_Cache(0, 1);
         }
 
         // restore textures
-        pImage_Manager->Restore_Textures(cegui_initialized);
+        pImage_Manager->Restore_Textures(1);
 
-        // exit loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Exit();
-        }
+        Loading_Screen_Exit();
     }
     // finishing first initialization
     else {
@@ -683,7 +662,7 @@ void cVideo::Render(bool threaded /* = 0 */)
     Render_Finish();
 
     if (threaded) {
-        pGuiSystem->renderGUI();
+        CEGUI::System::getSingleton().renderAllGUIContexts();
 
         // update performance timer
         pFramerate->m_perf_timer[PERF_RENDER_GUI]->Update();
@@ -2052,7 +2031,7 @@ void Loading_Screen_Draw(void)
 
     // Render
     pRenderer->Render();
-    pGuiSystem->renderGUI();
+    CEGUI::System::getSingleton().renderAllGUIContexts();
     pVideo->mp_window->display();
 }
 
