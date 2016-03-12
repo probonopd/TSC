@@ -39,65 +39,6 @@ namespace TSC {
         bool advance_row;
     };
 
-    /* *** *** *** *** *** *** *** *** cEditor_CEGUI_Texture *** *** *** *** *** *** *** *** *** */
-
-// Todo : Needed for CEGUI 0.7.5 to not delete our opengl texture. Remove this if CEGUI 0.8 has an option for it.
-    class cEditor_CEGUI_Texture : public CEGUI::OpenGLTexture {
-    public:
-        cEditor_CEGUI_Texture(CEGUI::OpenGLRenderer& owner, GLuint tex, const CEGUI::Size& size);
-        ~cEditor_CEGUI_Texture(void);
-
-        void cleanupOpenGLTexture(void);
-    };
-
-    /* *** *** *** *** *** *** *** *** cEditor_Item_Object *** *** *** *** *** *** *** *** *** */
-
-    class cEditor_Item_Object : public CEGUI::ListboxItem {
-    public:
-        cEditor_Item_Object(const std::string& text, const CEGUI::Listbox* parent);
-        virtual ~cEditor_Item_Object(void);
-
-        // Initialize
-        void Init(cSprite* sprite);
-
-        // overridden from base class
-        virtual CEGUI::Size getPixelSize(void) const;
-        // overridden from base class
-        void draw(CEGUI::GeometryBuffer& buffer, const CEGUI::Rect& targetRect, float alpha, const CEGUI::Rect* clipper) const;
-
-        // parent
-        const CEGUI::Listbox* m_parent;
-        // text
-        CEGUI::ListboxTextItem* list_text;
-        // cegui image
-        CEGUI::Imageset* m_image;
-        // sprite
-        cSprite* sprite_obj;
-        // preview image scale
-        float preview_scale;
-    };
-
-    /* *** *** *** *** *** *** *** *** cEditor_Menu_Object *** *** *** *** *** *** *** *** *** */
-
-    class cEditor_Menu_Object : public CEGUI::ListboxTextItem {
-    public:
-        cEditor_Menu_Object(const std::string& text);
-        virtual ~cEditor_Menu_Object(void);
-
-        // Initialize
-        void Init(void);
-
-        // name
-        std::string name;
-        // tags or function name if function
-        std::string tags;
-
-        // if type is a function
-        bool bfunction;
-        // if this is a header
-        bool header;
-    };
-
     /* *** *** *** *** *** *** *** cEditor *** *** *** *** *** *** *** *** *** *** */
 
     class cEditor {
@@ -148,7 +89,7 @@ namespace TSC {
         // ##### Main Menu
 
         // Add Menu Entry
-        void Add_Menu_Object(const std::string& name, std::string tags, CEGUI::colour normal_color = CEGUI::colour(1, 1, 1));
+        void Add_Menu_Object(const std::string& name, std::string tags, CEGUI::Colour normal_color = CEGUI::Colour(1, 1, 1));
         // Set Active Menu Entry
         virtual void Activate_Menu_Item(cEditor_Menu_Object* entry);
 
