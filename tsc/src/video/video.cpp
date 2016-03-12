@@ -66,80 +66,43 @@ cVideo::cVideo(void)
 #endif
     m_render_thread = boost::thread();
 
+    mp_cegui_renderer = NULL;
+
     m_initialised = 0;
 }
 
 cVideo::~cVideo(void)
 {
+    CEGUI::System::destroy();
+    CEGUI::OpenGLRenderer::destroy(*mp_cegui_renderer);
+    mp_cegui_renderer = NULL;
+
     if (mp_window) {
         delete mp_window;
         mp_window = NULL;
     }
 }
 
-void cVideo::Init_CEGUI(void) const
+void cVideo::Init_CEGUI(void)
 {
-    // create renderer
-    try {
-        pGuiRenderer = &CEGUI::OpenGLRenderer::create(CEGUI::Size(mp_window->getSize().x, mp_window->getSize().y));
-    }
-    // catch CEGUI Exceptions
-    catch (CEGUI::Exception& ex) {
-        cerr << "CEGUI Exception occurred : " << ex.getMessage() << endl;
-        exit(EXIT_FAILURE);
-    }
+    std::string utf8_logpath = path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile());
+    debug_print("CEGUI log file is at '%s'.\n", utf8_logpath.c_str());
 
-    pGuiRenderer->enableExtraStateSettings(1);
+    // create CEGUI renderer and system objects
+    mp_cegui_renderer = &CEGUI::OpenGLRenderer::create();
+    CEGUI::System::create(*mp_cegui_renderer, NULL, NULL, NULL, NULL, "", utf8_logpath);
 
-    // create Resource Provider
-    CEGUI::DefaultResourceProvider* rp = new CEGUI::DefaultResourceProvider();
+    // Retrieve default resource provider for the OpenGLRenderer
+    CEGUI::DefaultResourceProvider* p_rp
+        = static_cast<CEGUI::DefaultResourceProvider*>(CEGUI::System::getSingleton().getResourceProvider());
 
     // set Resource Provider directories
-    rp->setResourceGroupDirectory("schemes", path_to_utf8(pResource_Manager->Get_Gui_Scheme_Directory()));
-    rp->setResourceGroupDirectory("imagesets", path_to_utf8(pResource_Manager->Get_Gui_Imageset_Directory()));
-    rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
-    rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
-    rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
+    p_rp->setResourceGroupDirectory("schemes", path_to_utf8(pResource_Manager->Get_Gui_Scheme_Directory()));
+    p_rp->setResourceGroupDirectory("imagesets", path_to_utf8(pResource_Manager->Get_Gui_Imageset_Directory()));
+    p_rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
+    p_rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
+    p_rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
 
-    if (CEGUI::System::getDefaultXMLParserName().compare("XercesParser") == 0) {
-        // Needed for Xerces to specify the schemas location
-        rp->setResourceGroupDirectory("schemas", path_to_utf8(pResource_Manager->Get_Game_Schema_Directory()).c_str());
-    }
-
-    // create logger
-    CEGUI::Logger* logger = new CEGUI::DefaultLogger();
-    // set logging level
-#ifdef _DEBUG
-    logger->setLoggingLevel(CEGUI::Informative);
-#else
-    logger->setLoggingLevel(CEGUI::Errors);
-#endif
-
-    // set initial mouse position
-    sf::Vector2i mousepos = sf::Mouse::getPosition(*pVideo->mp_window);
-    CEGUI::MouseCursor::setInitialMousePosition(CEGUI::Point(mousepos.x, mousepos.y));
-    // add custom widgets
-    CEGUI::WindowFactoryManager::addFactory<CEGUI::TSC_SpinnerFactory>();
-
-    // create system
-    try {
-        debug_print("CEGUI log file is at '%s'.\n", path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile()).c_str());
-        // fixme : Workaround for std::string to CEGUI::String utf8 conversion. Check again if CEGUI 0.8 works with std::string utf8
-#ifdef _WIN32
-        pGuiSystem = &CEGUI::System::create(*pGuiRenderer, rp, NULL, NULL, NULL, "", (const CEGUI::utf8*)(path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile()).c_str()));
-#else
-        pGuiSystem = &CEGUI::System::create(*pGuiRenderer, rp, NULL, NULL, NULL, "", path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile()));
-#endif
-    }
-    // catch CEGUI Exceptions
-    catch (CEGUI::Exception& ex) {
-        cerr << "CEGUI Exception occurred : " << ex.getMessage() << endl;
-        exit(EXIT_FAILURE);
-    }
-}
-
-void cVideo::Init_CEGUI_Data(void) const
-{
     // set the default resource groups to be used
     CEGUI::Scheme::setDefaultResourceGroup("schemes");
     CEGUI::Imageset::setDefaultResourceGroup("imagesets");
@@ -147,27 +110,23 @@ void cVideo::Init_CEGUI_Data(void) const
     CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
     CEGUI::WindowManager::setDefaultResourceGroup("layouts");
 
-    // load the scheme file, which auto-loads the imageset
-    try {
-        CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
-    }
-    // catch CEGUI Exceptions
-    catch (CEGUI::Exception& ex) {
-        cerr << "CEGUI Scheme Exception occurred : " << ex.getMessage() << endl;
-        exit(EXIT_FAILURE);
-    }
+    // Load our CEGUI theme
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
 
-    // default mouse cursor
-    pGuiSystem->setDefaultMouseCursor("TaharezLook", "MouseArrow");
-    // force new mouse image
-    CEGUI::MouseCursor::getSingleton().setImage(&CEGUI::ImagesetManager::getSingleton().get("TaharezLook").getImage("MouseArrow"));
-    // default tooltip
-    pGuiSystem->setDefaultTooltip("TaharezLook/Tooltip");
+    // Have CEGUI draw a mouse cursor
+    CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    gui_context.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-    // create default root window
-    CEGUI::Window* window_root = CEGUI::WindowManager::getSingleton().loadWindowLayout("default.layout");
-    pGuiSystem->setGUISheet(window_root);
-    window_root->activate();
+    // set initial mouse position
+    sf::Vector2i mousepos = sf::Mouse::getPosition(*pVideo->mp_window);
+    CEGUI::MouseCursor::setInitialMousePosition(CEGUI::Vector2f(mousepos.x, mousepos.y));
+
+    // Create the invisible root window
+    //CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
+    //gui_context.setRootWindow(p_rootwindow);
+
+    // OLD // add custom widgets
+    // OLD CEGUI::WindowFactoryManager::addFactory<CEGUI::TSC_SpinnerFactory>();
 }
 
 void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_preferences /* = true */)
@@ -293,7 +252,7 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
             Loading_Screen_Exit();
         }
     }
-    // finished first initialization
+    // finishing first initialization
     else {
         // get opengl version
         std::string version_str = reinterpret_cast<const char*>(glGetString(GL_VERSION));
@@ -320,6 +279,9 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
             }
 
         }
+
+        // Init CEGUI
+        Init_CEGUI();
 
         m_initialised = 1;
     }
@@ -754,7 +716,8 @@ void cVideo::Render(bool threaded /* = 0 */)
         // update performance timer
         pFramerate->m_perf_timer[PERF_RENDER_GAME]->Update();
 
-        pGuiSystem->renderGUI();
+        // Render GUI after everything else, i.e. on top of everything
+        CEGUI::System::getSingleton().renderAllGUIContexts();
 
         // update performance timer
         pFramerate->m_perf_timer[PERF_RENDER_GUI]->Update();
@@ -2116,9 +2079,6 @@ void Loading_Screen_Exit(void)
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
 cVideo* pVideo = NULL;
-
-CEGUI::OpenGLRenderer* pGuiRenderer = NULL;
-CEGUI::System* pGuiSystem = NULL;
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

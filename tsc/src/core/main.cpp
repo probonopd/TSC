@@ -264,8 +264,6 @@ void Init_Game(void)
         pPackage_Manager->Set_Current_Package(pPreferences->m_package);
     // video init
     pVideo->Init_Video();
-    pVideo->Init_CEGUI();
-    pVideo->Init_CEGUI_Data();
     pFont->Init();
     // framerate init
     pFramerate->Init();
@@ -425,20 +423,6 @@ void Exit_Game(void)
     if (pRenderer_current) {
         delete pRenderer_current;
         pRenderer_current = NULL;
-    }
-
-    if (pGuiSystem) {
-        CEGUI::ResourceProvider* rp = pGuiSystem->getResourceProvider();
-        CEGUI::Logger* logger = CEGUI::Logger::getSingletonPtr();
-        pGuiSystem->destroy();
-        pGuiSystem = NULL;
-        delete rp;
-        delete logger;
-    }
-
-    if (pGuiRenderer) {
-        pGuiRenderer->destroy(*pGuiRenderer);
-        pGuiRenderer = NULL;
     }
 
     if (pVideo) {

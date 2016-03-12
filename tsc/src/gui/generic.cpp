@@ -310,6 +310,7 @@ void Gui_Handle_Time(void)
 
     // inject the time that passed since the last call
     CEGUI::System::getSingleton().injectTimePulse(t - last_time_pulse);
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectTimePulse(t - last_time_pulse);
 
     // store the new time as the last time
     last_time_pulse = t;

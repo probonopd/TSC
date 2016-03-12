@@ -55,24 +55,14 @@ namespace TSC {
         cVideo(void);
         ~cVideo(void);
 
-        // Initialize the CEGUI System and Renderer
-        void Init_CEGUI(void) const;
-        // Initialize the basic CEGUI data and configuration
-        void Init_CEGUI_Data(void) const;
         /* Initialize the screen surface
          * reload_textures_from_file: if set reloads all textures from the original file
          * use_preferences: if set use user preferences settings
          * shows an error if failed and exits
+         * Calls several subinitialisations.
         */
         void Init_Video(bool reload_textures_from_file = 0, bool use_preferences = 1);
-        // Initialize OpenGL with current settings
-        void Init_OpenGL(void);
-        // Initialize Geometry with current settings
-        void Init_Geometry(void);
-        // Initialize Texture detail settings
-        void Init_Texture_Detail(void);
-        // initialize the up/down scaling value for the current resolution ( image/mouse scale )
-        void Init_Resolution_Scale(void) const;
+
         /* Initialize the image cache and recreates cache if game version changed
          * recreate : if set force cache recreation
          * draw_gui : if set use the loading screen gui for drawing
@@ -241,7 +231,21 @@ namespace TSC {
         // rendering thread
         boost::thread m_render_thread;
 
+        // GUI System
+        CEGUI::OpenGLRenderer* mp_cegui_renderer;
+
     private:
+        // Initialize OpenGL with current settings
+        void Init_OpenGL(void);
+        // Initialize the CEGUI System and Renderer
+        void Init_CEGUI(void):
+        // Initialize Geometry with current settings
+        void Init_Geometry(void);
+        // Initialize Texture detail settings
+        void Init_Texture_Detail(void);
+        // initialize the up/down scaling value for the current resolution ( image/mouse scale )
+        void Init_Resolution_Scale(void) const;
+
         // if set video is initialized successfully
         bool m_initialised;
     };
@@ -269,10 +273,6 @@ namespace TSC {
 
 // Video Handler
     extern cVideo* pVideo;
-
-// GUI System
-    extern CEGUI::OpenGLRenderer* pGuiRenderer;
-    extern CEGUI::System* pGuiSystem;
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
