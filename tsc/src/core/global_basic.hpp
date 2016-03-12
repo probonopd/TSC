@@ -88,8 +88,7 @@
 // Must be included before X11, which have #defines such as
 // None, True, and False that screw CEGUI declarations.
 #include <CEGUI/CEGUI.h>
-#include <CEGUI/RendererModules/OpenGL/CEGUIOpenGLRenderer.h>
-#include <CEGUI/RendererModules/OpenGL/CEGUIOpenGLTexture.h>
+#include <CEGUI/RendererModules/OpenGL/GLRenderer.h>
 
 // SFML
 // Must also be included before X11, which has a #define Status int that messes
