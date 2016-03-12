@@ -238,7 +238,7 @@ namespace TSC {
         // Initialize OpenGL with current settings
         void Init_OpenGL(void);
         // Initialize the CEGUI System and Renderer
-        void Init_CEGUI(void):
+        void Init_CEGUI(void);
         // Initialize Geometry with current settings
         void Init_Geometry(void);
         // Initialize Texture detail settings
