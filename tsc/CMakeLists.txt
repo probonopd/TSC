@@ -398,10 +398,10 @@ set(tsc_sources
 #  src/gui/menu_data.cpp
 #  src/gui/menu.cpp
 #  src/gui/generic.cpp
-#  src/video/img_manager.cpp
+  src/video/img_manager.cpp
   src/video/renderer.cpp
-#  src/video/img_set.cpp
-#  src/video/font.cpp
+  src/video/img_set.cpp
+  src/video/font.cpp
   src/video/loading_screen.cpp
   src/video/video.cpp
 #  src/video/animation.cpp
@@ -412,7 +412,7 @@ set(tsc_sources
 #  src/audio/sound_manager.cpp
 #  src/core/camera.cpp
 #  src/core/i18n.cpp
-  src/core/main.cpp
+#  src/core/main.cpp
 #  src/core/file_parser.cpp
 #  src/core/editor/editor_items_loader.cpp
 #  src/core/editor/editor.cpp

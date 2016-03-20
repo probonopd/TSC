@@ -16,6 +16,7 @@
 
 #include "../video/img_manager.hpp"
 #include "../video/renderer.hpp"
+#include "../video/loading_screen.hpp"
 #include "../core/i18n.hpp"
 #include "../core/global_basic.hpp"
 
@@ -106,6 +107,8 @@ cGL_Surface* cImage_Manager::Copy(const fs::path& path)
     return NULL;
 }
 
+// Must be called on the loading screen, i.e. after Loading_Screen_Init() and
+// before Loading_Screen_Exit().
 void cImage_Manager::Grab_Textures(bool from_file /* = 0 */, bool draw_gui /* = 0 */)
 {
     // progress bar
@@ -113,7 +116,7 @@ void cImage_Manager::Grab_Textures(bool from_file /* = 0 */, bool draw_gui /* = 
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Saving Textures"));
@@ -159,7 +162,7 @@ void cImage_Manager::Restore_Textures(bool draw_gui /* = 0 */)
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Restoring Textures"));
