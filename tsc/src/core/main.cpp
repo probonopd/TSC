@@ -37,6 +37,7 @@
 #include "../user/savegame/savegame.hpp"
 #include "../input/keyboard.hpp"
 #include "../video/renderer.hpp"
+#include "../video/loading_screen.hpp"
 #include "../core/i18n.hpp"
 #include "../gui/generic.hpp"
 
@@ -262,13 +263,13 @@ void Init_Game(void)
         pPackage_Manager->Set_Current_Package(g_cmdline_package);
     else
         pPackage_Manager->Set_Current_Package(pPreferences->m_package);
-    // video init
-    pVideo->Init_Video();
-    pFont->Init();
     // framerate init
     pFramerate->Init();
     // audio init
     pAudio->Init();
+    // video init
+    pFont->Init();
+    pVideo->Init_Video();
 
     debug_print("Loading campaigns\n");
     pCampaign_Manager = new cCampaign_Manager();
@@ -293,7 +294,7 @@ void Init_Game(void)
     // draw generic loading screen
     Loading_Screen_Init();
     // initialize image cache
-    pVideo->Init_Image_Cache(0, 1);
+    pVideo->Init_Image_Cache(0);
 
     // Init Stage 3 - game classes
     // note : set any sprite manager as it is set again on game mode switch

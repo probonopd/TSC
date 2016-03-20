@@ -65,9 +65,10 @@ namespace TSC {
 
         /* Initialize the image cache and recreates cache if game version changed
          * recreate : if set force cache recreation
-         * draw_gui : if set use the loading screen gui for drawing
+         * Sets the CEGUI root window to the loading screen. If you own a CEGUI
+         * root window, destroy it before calling this function.
         */
-        void Init_Image_Cache(bool recreate = 0, bool draw_gui = 0);
+        void Init_Image_Cache(bool recreate = 0);
 
         /* Test if the given resolution and bits per pixel are valid
          * if flags aren't set they are auto set from the preferences
@@ -259,15 +260,6 @@ namespace TSC {
      * if effect is RANDOM_EFFECT a random effect is selected
     */
     void Draw_Effect_In(Effect_Fadein effect = EFFECT_IN_RANDOM, float speed = 1);
-
-// initialize loading screen
-    void Loading_Screen_Init(void);
-// set the loading screen info string and draw it
-    void Loading_Screen_Draw_Text(const std::string& str_info = "Loading");
-// draw the loading screen
-    void Loading_Screen_Draw(void);
-// exit loading screen
-    void Loading_Screen_Exit(void);
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

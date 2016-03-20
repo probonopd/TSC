@@ -14,7 +14,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../video/video.hpp"
+#include "video.hpp"
+#include "loading_screen.hpp"
 #include "../gui/hud.hpp"
 #include "../user/preferences.hpp"
 #include "../core/framerate.hpp"
@@ -223,7 +224,7 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
 
         // initialize new image cache
         if (reload_textures_from_file) {
-            Init_Image_Cache(0, 1);
+            Init_Image_Cache(0);
         }
 
         // restore textures
@@ -261,6 +262,11 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
 
         // Init CEGUI
         Init_CEGUI();
+
+        // On game startup, Loading_Screen_Init() etc. are called from
+        // the Init_Game() function. Only on recreation (see above) they're
+        // called from here.
+        // TODO: That's bad code design.
 
         m_initialised = 1;
     }
@@ -387,7 +393,19 @@ void cVideo::Init_Resolution_Scale(void) const
     global_downscaley = static_cast<float>(game_res_h) / static_cast<float>(pPreferences->m_video_screen_h);
 }
 
-void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
+/**
+ * Create the cache of downscaled images. This function
+ * expects to be run while the loading screen is active,
+ * i.e. the caller must make sure to have called Loading_Screen_Init()
+ * prior to this function and has to call Loading_Screen_Exit() when
+ * he is done with this function (and everything else he wants to
+ * do while the loading screen is active).
+ *
+ * \param recreate
+ * If this is true (it's false by default), recreate the image cache even
+ * if it already exists.
+ */
+void cVideo::Init_Image_Cache(bool recreate /* = 0 */)
 {
     m_imgcache_dir = pResource_Manager->Get_User_Imgcache_Directory();
     fs::path imgcache_dir_active = m_imgcache_dir / utf8_to_path(int_to_string(pPreferences->m_video_screen_w) + "x" + int_to_string(pPreferences->m_video_screen_h));
@@ -408,11 +426,8 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
             catch (const std::exception& ex) {
                 cerr << ex.what() << endl;
 
-                if (draw_gui) {
-                    // caching failed
-                    Loading_Screen_Draw_Text(_("Caching Images failed : Could not remove old images"));
-                    sleep(2);
-                }
+                Loading_Screen_Draw_Text(_("Caching Images failed : Could not remove old images"));
+                sleep(2);
             }
         }
 
@@ -433,16 +448,8 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
     float real_texture_detail = m_texture_quality;
     m_texture_quality = 1;
 
-    CEGUI::ProgressBar* progress_bar = NULL;
-
-    if (draw_gui) {
-        // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
-        progress_bar->setProgress(0);
-
-        // set loading screen text
-        Loading_Screen_Draw_Text(_("Caching Images"));
-    }
+    // set loading screen text
+    Loading_Screen_Draw_Text(_("Caching Images"));
 
     // get all files
     vector<fs::path> image_files = Get_Directory_Files(pResource_Manager->Get_Game_Pixmaps_Directory(), ".settings", true);
@@ -564,9 +571,8 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
         loaded_files++;
 
         // draw
-        if (draw_gui) {
-            // update progress
-            progress_bar->setProgress(static_cast<float>(loaded_files) / static_cast<float>(file_count));
+        // update progress
+        Loading_Screen_Set_Progress(static_cast<float>(loaded_files) / static_cast<float>(file_count));
 
 // OLD #ifdef _DEBUG
 // OLD             // update filename
@@ -579,7 +585,6 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
 // OLD             // delete
 // OLD             delete surface_filename;
 // OLD #endif
-        }
     }
 
     // set back texture detail
@@ -1972,87 +1977,6 @@ void Draw_Effect_In(Effect_Fadein effect /* = EFFECT_IN_RANDOM */, float speed /
     }
 
     pFramerate->Update();
-}
-
-void Loading_Screen_Init(void)
-{
-    if (CEGUI::WindowManager::getSingleton().isWindowPresent("loading")) {
-        cerr << "Warning: Loading Screen already initialized.";
-        return;
-    }
-
-    CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
-
-    // hide all windows
-    for (unsigned int i = 0, gui_windows = guisheet->getChildCount(); i < gui_windows; i++) {
-        guisheet->getChildAtIdx(i)->hide();
-    }
-
-    // Create loading window
-    CEGUI::Window* loading_window = CEGUI::WindowManager::getSingleton().loadWindowLayout("loading.layout");
-    guisheet->addChildWindow(loading_window);
-
-    // Set license info as translatable string
-    CEGUI::Window* license_text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_gpl"));
-    // TRANS: Be careful with the length of this line, if
-    // TRANS: it is much longer than the English version,
-    // TRANS: it will be cut off.
-    license_text->setText(UTF8_("This program is distributed under the terms of the GPLv3"));
-
-    // set info text
-    CEGUI::Window* text_default = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_loading"));
-    text_default->setText(_("Loading"));
-}
-
-void Loading_Screen_Draw_Text(const std::string& str_info /* = "Loading" */)
-{
-    // set info text
-    CEGUI::Window* text_default = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_loading"));
-    if (!text_default) {
-        cerr << "Warning: Loading Screen not initialized.";
-        return;
-    }
-    text_default->setText(reinterpret_cast<const CEGUI::utf8*>(str_info.c_str()));
-
-    Loading_Screen_Draw();
-}
-
-void Loading_Screen_Draw(void)
-{
-    // limit fps or vsync will slow down the loading
-    if (!Is_Frame_Time(60)) {
-        pRenderer->Fake_Render();
-        return;
-    }
-
-    // clear screen
-    pVideo->Clear_Screen();
-    pVideo->Draw_Rect(NULL, 0.00001f, &black);
-
-    // Render
-    pRenderer->Render();
-    CEGUI::System::getSingleton().renderAllGUIContexts();
-    pVideo->mp_window->display();
-}
-
-void Loading_Screen_Exit(void)
-{
-    CEGUI::Window* loading_window = CEGUI::WindowManager::getSingleton().getWindow("loading");
-
-    // loading window is present
-    if (loading_window) {
-        CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
-
-        // delete loading window
-        guisheet->removeChildWindow(loading_window);
-        CEGUI::WindowManager::getSingleton().destroyWindow(loading_window);
-
-        // show windows again
-        // fixme : this should only show the hidden windows again
-        for (unsigned int i = 0, gui_windows = guisheet->getChildCount(); i < gui_windows; i++) {
-            guisheet->getChildAtIdx(i)->show();
-        }
-    }
 }
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

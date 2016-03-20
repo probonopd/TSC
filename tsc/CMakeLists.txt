@@ -402,6 +402,7 @@ set(tsc_sources
   src/video/renderer.cpp
 #  src/video/img_set.cpp
 #  src/video/font.cpp
+  src/video/loading_screen.cpp
   src/video/video.cpp
 #  src/video/animation.cpp
 #  src/video/img_settings.cpp
