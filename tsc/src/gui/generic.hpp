@@ -17,9 +17,6 @@
 #ifndef TSC_GENERIC_HPP
 #define TSC_GENERIC_HPP
 
-#include "../core/global_basic.hpp"
-#include "../video/video.hpp"
-
 namespace TSC {
 
     /* *** *** *** *** *** *** *** *** DialogBox *** *** *** *** *** *** *** *** *** */
@@ -43,6 +40,7 @@ namespace TSC {
         bool finished;
         // base window
         CEGUI::Window* window;
+        CEGUI::Window* oldroot;
         // layout filename
         std::string layout_file;
 

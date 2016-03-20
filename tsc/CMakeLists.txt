@@ -397,7 +397,7 @@ set(tsc_sources
 #  src/gui/hud.cpp
 #  src/gui/menu_data.cpp
 #  src/gui/menu.cpp
-#  src/gui/generic.cpp
+  src/gui/generic.cpp
   src/video/img_manager.cpp
   src/video/renderer.cpp
   src/video/img_set.cpp
