@@ -1404,18 +1404,24 @@ void cSprite::Destroy(void)
     Set_Image(NULL, 1);
 }
 
+/**
+ * Helper function for dislaying widgets for editing an object.
+ * Takes the label (name) to display before the widget, the tooltip to display
+ * over the widget, the widget itself, and its dimensions. If advance_row
+ * is true, increases the Y for the next widget to be added with Editor_Add().
+ */
 void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height /* = 28 */, bool advance_row /* = 1 */)
 {
     if (obj_height < 28.0f) {
         obj_height = 28.0f;
     }
 
-    // get gui sheet
-    CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
+    // get root window
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
     // get window manager
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
-    // create name window
+    // create name label window
     CEGUI::Window* window_name = wmgr.createWindow("TaharezLook/StaticText", "text_" + window_setting->getName());
     window_name->setText(name);
     window_name->setTooltipText(tooltip);
@@ -1444,8 +1450,8 @@ void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip
     m_editor_windows.push_back(settings_item);
 
     // add to main window
-    guisheet->addChildWindow(window_name);
-    guisheet->addChildWindow(window_setting);
+    p_root->addChild(window_name);
+    p_root->addChild(window_setting);
 }
 
 void cSprite::Editor_Activate(void)

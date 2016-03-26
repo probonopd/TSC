@@ -32,14 +32,18 @@ namespace TSC {
 
     /* *** *** *** *** *** *** *** cEditor_Object_Settings_Item *** *** *** *** *** *** *** *** *** *** */
 
+    /**
+     * This class represents one row of widgets in a sprite's settings
+     * widget list, e.g. "Powerup" label + powerup combobox.
+     */
     class cEditor_Object_Settings_Item {
     public:
         cEditor_Object_Settings_Item(void);
         ~cEditor_Object_Settings_Item(void);
 
-        // name
+        // Label widget
         CEGUI::Window* window_name;
-        // settings
+        // settings widget
         CEGUI::Window* window_setting;
         // if set start new row
         bool advance_row;
