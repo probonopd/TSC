@@ -24,6 +24,12 @@
 
 namespace TSC {
 
+    // OLD typedefes for backward compatibility before CEGUI 0.8.x
+    // TODO: Remove these as soon as possible!
+    typedef CEGUI::OpenGLTexture cEditor_CEGUI_Texture;
+    typedef CEGUI::ListboxItem cEditor_Item_Object;
+    typedef CEGUI::ListboxTextItem cEditor_Menu_Object;
+
     /* *** *** *** *** *** *** *** cEditor_Object_Settings_Item *** *** *** *** *** *** *** *** *** *** */
 
     class cEditor_Object_Settings_Item {
