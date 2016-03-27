@@ -319,7 +319,7 @@ set(tsc_sources
 #  src/input/joystick.cpp
 #  src/objects/level_exit.cpp
 #  src/objects/box.cpp
- src/objects/sprite.cpp
+#  src/objects/sprite.cpp
 #  src/objects/movingsprite.cpp
 #  src/objects/moving_platform.cpp
 #  src/objects/bonusbox.cpp

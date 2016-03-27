@@ -122,8 +122,8 @@ void cVideo::Init_CEGUI(void)
     CEGUI::MouseCursor::setInitialMousePosition(CEGUI::Vector2f(mousepos.x, mousepos.y));
 
     // Create the invisible root window
-    //CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
-    //gui_context.setRootWindow(p_rootwindow);
+    CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
+    gui_context.setRootWindow(p_rootwindow);
 }
 
 void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_preferences /* = true */)

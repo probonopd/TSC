@@ -32,14 +32,13 @@ void Loading_Screen_Init(void)
 {
     CEGUI::GUIContext& guicontext = CEGUI::System::getSingleton().getDefaultGUIContext();
 
-    if (guicontext.getRootWindow() != NULL)
-        throw(std::runtime_error("Different CEGUI root window is active, can't init loading screen!"));
-
-    // Create new CEGUI root window (caller needs to destroy his
-    // own one if he has one, otherwise there's a memory leak here).
+    // Create new CEGUI root window
     CEGUI::WindowManager& winmanager = CEGUI::WindowManager::getSingleton();
     CEGUI::Window* p_rootwindow      = winmanager.createWindow("DefaultWindow", LOADING_ROOT_NAME);
 
+    // Destroy the current root window (loading screen is completely different)
+    // and set the new one.
+    winmanager.destroyWindow(guicontext.getRootWindow());
     guicontext.setRootWindow(p_rootwindow);
 
     CEGUI::ProgressBar* p_progress_bar =
@@ -129,9 +128,10 @@ void Loading_Screen_Exit(void)
 
     // loading window is present
     if (p_rootwindow) {
-        // delete loading window
+        // delete loading window and recreate an empty root window.
         CEGUI::WindowManager::getSingleton().destroyWindow(p_rootwindow);
-        gui_context.setRootWindow(NULL);
+        p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
+        gui_context.setRootWindow(p_rootwindow);
     }
     else {
         throw(std::runtime_error("Can't exit from loading screen if no loading screen exists!"));

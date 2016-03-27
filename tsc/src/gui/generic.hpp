@@ -40,7 +40,6 @@ namespace TSC {
         bool finished;
         // base window
         CEGUI::Window* window;
-        CEGUI::Window* oldroot;
         // layout filename
         std::string layout_file;
 

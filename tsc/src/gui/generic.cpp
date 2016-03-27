@@ -31,7 +31,6 @@ cDialogBox::cDialogBox(void)
 {
     finished = 0;
     window = NULL;
-    oldroot = NULL;
     mouse_hide = 0;
 }
 
@@ -46,9 +45,7 @@ void cDialogBox::Init(void)
 
     // load layout
     window = CEGUI::WindowManager::getSingleton().loadLayoutFromFile(layout_file);
-
-    oldroot = gui_context.getRootWindow();
-    gui_context.setRootWindow(window);
+    gui_context.getRootWindow()->addChild(window);
 
     // hide mouse on exit
     if (!pMouseCursor->m_active) {
@@ -64,10 +61,8 @@ void cDialogBox::Exit(void)
         pMouseCursor->Set_Active(0);
     }
 
-    // Destroy box and restore old root window.
-    CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    // Destroy the window we added.
     CEGUI::WindowManager::getSingleton().destroyWindow(window);
-    gui_context.setRootWindow(oldroot);
 }
 
 void cDialogBox::Draw(void)
@@ -104,13 +99,13 @@ void cDialogBox_Text::Init(std::string title_text)
     cDialogBox::Init();
 
     // get window
-    CEGUI::FrameWindow* box_window = static_cast<CEGUI::FrameWindow*>(window->getChild("box_text_window"));
+    CEGUI::FrameWindow* box_window = static_cast<CEGUI::FrameWindow*>(window);
     box_window->setText(reinterpret_cast<const CEGUI::utf8*>(title_text.c_str()));
     box_window->setSizingEnabled(0);
     box_window->getCloseButton()->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cDialogBox_Text::Button_window_quit_clicked, this));
 
     // get editbox
-    box_editbox = static_cast<CEGUI::Editbox*>(window->getChild("box_text_window/box_text_editbox"));
+    box_editbox = static_cast<CEGUI::Editbox*>(window->getChild("box_text_editbox"));
 }
 
 std::string cDialogBox_Text::Enter(std::string default_text, std::string title_text, bool auto_no_text /* = 1 */)
@@ -193,7 +188,7 @@ void cDialogBox_Question::Init(bool with_cancel)
     cDialogBox::Init();
 
     // get window
-    box_window = static_cast<CEGUI::FrameWindow*>(window->getChild("box_question_window"));
+    box_window = static_cast<CEGUI::FrameWindow*>(window);
     box_window->activate();
 
     // subscribe close button
@@ -210,9 +205,8 @@ int cDialogBox_Question::Enter(std::string text, bool with_cancel /* = 0 */)
     Init(with_cancel);
 
     // get text
-    CEGUI::Editbox* box_text = static_cast<CEGUI::Editbox*>(window->getChild("box_question_window/box_question_text"));
+    CEGUI::Editbox* box_text = static_cast<CEGUI::Editbox*>(window->getChild("box_question_text"));
     box_text->setText(reinterpret_cast<const CEGUI::utf8*>(text.c_str()));
-
 
     // align text
     CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("DejaVuSans");
@@ -225,9 +219,9 @@ int cDialogBox_Question::Enter(std::string text, bool with_cancel /* = 0 */)
     }
 
     // Button Yes
-    CEGUI::PushButton* button_yes = static_cast<CEGUI::PushButton*>(window->getChild("box_question_window/box_question_button_yes"));
+    CEGUI::PushButton* button_yes = static_cast<CEGUI::PushButton*>(window->getChild("box_question_button_yes"));
     // Button No
-    CEGUI::PushButton* button_no = static_cast<CEGUI::PushButton*>(window->getChild("box_question_window/box_question_button_no"));
+    CEGUI::PushButton* button_no = static_cast<CEGUI::PushButton*>(window->getChild("box_question_button_no"));
     // Button Cancel
     CEGUI::PushButton* button_cancel = static_cast<CEGUI::PushButton*>(window->getChild("box_question_button_cancel"));
 
@@ -330,14 +324,11 @@ void Draw_Static_Text(const std::string& text, const Color* color_text /* = &whi
 
     // Find current root window
     CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
-    CEGUI::Window* oldroot = gui_context.getRootWindow();
-
-    // Replace with new one
-    CEGUI::Window* window_statictext = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("statictext.layout");
-    gui_context.setRootWindow(window_statictext);
+    CEGUI::Window* p_rootwindow = gui_context.getRootWindow();
 
     // get default text
-    CEGUI::Window* text_default = window_statictext->getChild("text_default");
+    CEGUI::Window* text_default = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("statictext.layout");
+    p_rootwindow->addChild(text_default);
 
     // set text
     // OLD text_default->setProperty("TextColours", CEGUI::PropertyHelper::colourToString(CEGUI::colour(static_cast<float>(color_text->red) / 255, static_cast<float>(color_text->green) / 255, static_cast<float>(color_text->blue) / 255, 1)));
@@ -398,9 +389,8 @@ void Draw_Static_Text(const std::string& text, const Color* color_text /* = &whi
         Clear_Input_Events();
     }
 
-    // Destroy temporary root window and restore old one.
-    CEGUI::WindowManager::getSingleton().destroyWindow(window_statictext);
-    gui_context.setRootWindow(oldroot);
+    // Destroy temporary static text window
+    CEGUI::WindowManager::getSingleton().destroyWindow(text_default);
 }
 
 std::string Box_Text_Input(const std::string& default_text, const std::string& title_text, bool auto_no_text /* = 1 */)
