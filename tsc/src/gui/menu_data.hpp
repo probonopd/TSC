@@ -135,7 +135,7 @@ namespace TSC {
         virtual void Draw(void);
 
         // Get all levels from the given directory
-        void Get_Levels(boost::filesystem::path dir, CEGUI::colour color);
+        void Get_Levels(boost::filesystem::path dir, CEGUI::Colour color);
 
         /* Highlight the given level
          * and activates level tab if needed

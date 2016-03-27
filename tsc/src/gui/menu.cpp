@@ -286,36 +286,6 @@ bool cMenuCore::Key_Down(const sf::Event& evt)
             m_menu_data->Item_Activated(m_handler->m_active);
         }
     }
-    // Fast Debug Level entering
-    else if (evt.key.code == sf::Keyboard::X && evt.key.control) {
-        // random level name
-        std::string lvl_name;
-
-        if (!CEGUI::WindowManager::getSingleton().isWindowPresent("listbox_levels")) {
-            // Create temporary start menu
-            cMenu_Start* menu_start = new cMenu_Start();
-
-            menu_start->Init();
-            // get levels listbox
-            CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
-            // select random level
-            listbox_levels->setItemSelectState(rand() % listbox_levels->getItemCount(), 1);
-            // get level name
-            lvl_name = listbox_levels->getFirstSelectedItem()->getText().c_str();
-            menu_start->Load_Level(lvl_name);
-            // destroy menu
-            delete menu_start;
-        }
-        else {
-            // Get levels listbox
-            CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
-            // select random level
-            listbox_levels->setItemSelectState(rand() % listbox_levels->getItemCount(), 1);
-            // get level name
-            lvl_name = listbox_levels->getFirstSelectedItem()->getText().c_str();
-            static_cast<cMenu_Start*>(pMenuCore->m_menu_data)->Load_Level(lvl_name);
-        }
-    }
     // exit
     else if (evt.key.code == sf::Keyboard::Escape) {
         m_menu_data->Exit();
