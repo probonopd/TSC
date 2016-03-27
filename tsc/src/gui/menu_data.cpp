@@ -62,7 +62,7 @@ cMenu_Base::cMenu_Base(void)
 cMenu_Base::~cMenu_Base(void)
 {
     if (m_gui_window) {
-        pGuiSystem->getGUISheet()->removeChildWindow(m_gui_window);
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow().removeChild(m_gui_window);
         CEGUI::WindowManager::getSingleton().destroyWindow(m_gui_window);
     }
 
@@ -84,8 +84,8 @@ void cMenu_Base::Init_GUI(void)
         return;
     }
 
-    m_gui_window = CEGUI::WindowManager::getSingleton().loadWindowLayout(m_layout_file.c_str());
-    pGuiSystem->getGUISheet()->addChildWindow(m_gui_window);
+    m_gui_window = CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_layout_file.c_str());
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(m_gui_window);
 }
 
 void cMenu_Base::Enter(const GameMode old_mode /* = MODE_NOTHING */)
