@@ -62,7 +62,7 @@ cMenu_Base::cMenu_Base(void)
 cMenu_Base::~cMenu_Base(void)
 {
     if (m_gui_window) {
-        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow().removeChild(m_gui_window);
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(m_gui_window);
         CEGUI::WindowManager::getSingleton().destroyWindow(m_gui_window);
     }
 
@@ -342,18 +342,18 @@ void cMenu_Main::Init_GUI(void)
 {
     cMenu_Base::Init_GUI();
 
-    CEGUI::Window* text_version = CEGUI::WindowManager::getSingleton().getWindow("text_version");
+    CEGUI::Window* text_version = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("menu_main/text_version");
 
 #ifdef TSC_VERSION_POSTFIX
-    text_version->setProperty("Text", CEGUI::PropertyHelper::intToString(TSC_VERSION_MAJOR) + "." + CEGUI::PropertyHelper::intToString(TSC_VERSION_MINOR) + "." + CEGUI::PropertyHelper::intToString(TSC_VERSION_PATCH) + "-" + TSC_VERSION_POSTFIX);
+    text_version->setProperty("Text", int_to_string(TSC_VERSION_MAJOR) + "." + int_to_string(TSC_VERSION_MINOR) + "." + int_to_string(TSC_VERSION_PATCH) + "-" + TSC_VERSION_POSTFIX);
     text_version->setProperty("TextColours", "tl:FFFF0000 tr:FFFF0000 bl:FFFF0000 br:FFFF0000");
 #else
-    text_version->setProperty("Text", UTF8_("Version ") + CEGUI::PropertyHelper::intToString(TSC_VERSION_MAJOR) + "." + CEGUI::PropertyHelper::intToString(TSC_VERSION_MINOR) + "." + CEGUI::PropertyHelper::intToString(TSC_VERSION_PATCH));
+    text_version->setProperty("Text", UTF8_("Version ") + int_to_string(TSC_VERSION_MAJOR) + "." + int_to_string(TSC_VERSION_MINOR) + "." + int_to_string(TSC_VERSION_PATCH));
 #endif
 
     // if in a level/world
     if (m_exit_to_gamemode != MODE_NOTHING) {
-        CEGUI::Window* text_website = CEGUI::WindowManager::getSingleton().getWindow("text_website");
+        CEGUI::Window* text_website = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("menu_main/text_website");
         text_website->hide();
     }
 }
