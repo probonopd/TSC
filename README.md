@@ -15,7 +15,7 @@ How to install?
 ---------------
 
 Releases are published precompiled for Windows at the website. If you
-want to compile TSC yourself, please see the INSTALL.md file.
+want to compile TSC yourself, please see the [INSTALL.md](INSTALL.md) file.
 
 Links
 -----
