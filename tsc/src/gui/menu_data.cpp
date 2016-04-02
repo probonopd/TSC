@@ -545,8 +545,10 @@ void cMenu_Start::Init_GUI(void)
 {
     cMenu_Base::Init_GUI();
 
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // Tab Control
-    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_main"));
+    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(p_root->getChild("menu_overworld/tabcontrol_main"));
     tabcontrol->activate();
 
     // events
@@ -554,7 +556,7 @@ void cMenu_Start::Init_GUI(void)
     tabcontrol->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::TabControl_Keydown, this));
 
     // ### Package ###
-    CEGUI::Listbox* listbox_packages = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_packages"));
+    CEGUI::Listbox* listbox_packages = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/listbox_packages"));
 
     // package names
     vector<PackageInfo> packages = pPackage_Manager->Get_Packages();
@@ -562,9 +564,9 @@ void cMenu_Start::Init_GUI(void)
         if (itr == packages.begin()) {
             CEGUI::ListboxTextItem* first_item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>("<Core>"));
 
-            first_item->setTextColours(CEGUI::colour(1, 0.8f, 0.6f));
-            first_item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-            first_item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+            first_item->setTextColours(CEGUI::Colour(1, 0.8f, 0.6f));
+            first_item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+            // OLD first_item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
             listbox_packages->addItem(first_item);
 
             if (pPackage_Manager->Get_Current_Package().empty())
@@ -581,9 +583,9 @@ void cMenu_Start::Init_GUI(void)
 
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>((itr->name).c_str()));
 
-        item->setTextColours(CEGUI::colour(1, 0.8f, 0.6f));
-        item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+        item->setTextColours(CEGUI::Colour(1, 0.8f, 0.6f));
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         listbox_packages->addItem(item);
 
         if (pPackage_Manager->Get_Current_Package() == itr->name)
@@ -597,7 +599,7 @@ void cMenu_Start::Init_GUI(void)
     listbox_packages->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::Package_Select_final_list, this));
 
     // ### Campaign ###
-    CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_campaigns"));
+    CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"));
 
     // events
     listbox_campaigns->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Keydown, this));
@@ -606,7 +608,7 @@ void cMenu_Start::Init_GUI(void)
     listbox_campaigns->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::Campaign_Select_final_list, this));
 
     // ### World ###
-    CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_worlds"));
+    CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"));
 
     // events
     listbox_worlds->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Keydown, this));
@@ -615,7 +617,7 @@ void cMenu_Start::Init_GUI(void)
     listbox_worlds->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::World_Select_final_list, this));
 
     // ### Level ###
-    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
+    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
     listbox_levels->setSortingEnabled(1);
 
     // events
@@ -625,17 +627,17 @@ void cMenu_Start::Init_GUI(void)
     listbox_levels->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Character_Key, this));
 
     // Level Buttons
-    CEGUI::PushButton* button_new = static_cast<CEGUI::PushButton*>(CEGUI::WindowManager::getSingleton().getWindow("button_level_new"));
+    CEGUI::PushButton* button_new = static_cast<CEGUI::PushButton*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/button_level_new"));
     button_new->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Start::Button_Level_New_Clicked, this));
-    CEGUI::PushButton* button_edit = static_cast<CEGUI::PushButton*>(CEGUI::WindowManager::getSingleton().getWindow("button_level_edit"));
+    CEGUI::PushButton* button_edit = static_cast<CEGUI::PushButton*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/button_level_edit"));
     button_edit->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Start::Button_Level_Edit_Clicked, this));
-    CEGUI::PushButton* button_delete = static_cast<CEGUI::PushButton*>(CEGUI::WindowManager::getSingleton().getWindow("button_level_delete"));
+    CEGUI::PushButton* button_delete = static_cast<CEGUI::PushButton*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/button_level_delete"));
     button_delete->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Start::Button_Level_Delete_Clicked, this));
 
     // Button Enter
-    CEGUI::PushButton* button_enter = static_cast<CEGUI::PushButton*>(CEGUI::WindowManager::getSingleton().getWindow("button_enter"));
+    CEGUI::PushButton* button_enter = static_cast<CEGUI::PushButton*>(p_root->getChild("menu_overworld/button_enter"));
     // Button back
-    CEGUI::PushButton* button_back = static_cast<CEGUI::PushButton*>(CEGUI::WindowManager::getSingleton().getWindow("button_back"));
+    CEGUI::PushButton* button_back = static_cast<CEGUI::PushButton*>(p_root->getChild("menu_overworld/button_back"));
 
     // events
     button_enter->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Start::Button_Enter_Clicked, this));
@@ -652,18 +654,18 @@ void cMenu_Start::Init_GUI(void)
     button_back->setText(UTF8_("Back"));
 
     // several texts
-    CEGUI::Window* text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_level_select"));
+    CEGUI::Window* text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/text_level_select"));
     text->setText(UTF8_("Select Level"));
-    text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_campaign_select"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_campaign/text_campaign_select"));
     text->setText(UTF8_("Select Campaign"));
-    text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_world_select"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_world/text_world_select"));
     text->setText(UTF8_("Select Overworld"));
-    text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_campaign_description"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_campaign/text_campaign_description"));
     text->setText(UTF8_("Description"));
-    text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_world_description"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_world/text_world_description"));
     text->setText(UTF8_("Description"));
 
-    text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_level_info"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_level/text_level_info"));
     // TRANS: The colour names refer to the colours the level names can
     // TRANS: be in. "Game" means the level is shipped by the game,
     // TRANS: "user" means the level has been created by the user.
@@ -722,10 +724,12 @@ void cMenu_Start::Draw(void)
     Draw_End();
 }
 
-void cMenu_Start::Get_Levels(fs::path dir, CEGUI::colour color)
+void cMenu_Start::Get_Levels(fs::path dir, CEGUI::Colour color)
 {
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // Level Listbox
-    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
+    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
 
     // get all files
     // .tsclvl is the new TSC level format, but .smclvl is listed for reverse compatibility
@@ -758,8 +762,8 @@ void cMenu_Start::Get_Levels(fs::path dir, CEGUI::colour color)
         }
 
 
-        item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         listbox_levels->addItem(item);
     }
 }
@@ -770,13 +774,16 @@ bool cMenu_Start::Highlight_Level(std::string lvl_name)
         return 0;
     }
 
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // get tab control
-    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_main"));
+    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(p_root->getChild("menu_overworld/tabcontrol_main"));
+
     // select level tab
     tabcontrol->setSelectedTab("tab_level");
 
     // get levels listbox
-    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
+    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
     // get item
     CEGUI::ListboxItem* list_item = listbox_levels->findItemWithText(lvl_name, NULL);
     // select level
@@ -793,15 +800,18 @@ bool cMenu_Start::Highlight_Level(std::string lvl_name)
 
 void cMenu_Start::Load_Selected(void)
 {
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // Get Tab Control
-    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_main"));
+    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(p_root->getChild("menu_overworld/tabcontrol_main"));
 
     // Package
     if (tabcontrol->getSelectedTabIndex() == 0) {
-        CEGUI::ListboxItem* item = (static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_packages")))->getFirstSelectedItem();
+        CEGUI::Listbox* listbox_packages = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/listbox_packages"));
+        CEGUI::ListboxItem* item = listbox_packages->getFirstSelectedItem();
 
         if (item) {
-            if ((static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_packages")))->getItemIndex(item) == 0)
+            if (listbox_packages->getItemIndex(item) == 0)
                 Load_Package("");
             else
                 Load_Package(item->getText().c_str());
@@ -809,7 +819,8 @@ void cMenu_Start::Load_Selected(void)
     }
     // Campaign
     else if (tabcontrol->getSelectedTabIndex() == 1) {
-        CEGUI::ListboxItem* item = (static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_campaigns")))->getFirstSelectedItem();
+        CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"));
+        CEGUI::ListboxItem* item = listbox_campaigns->getFirstSelectedItem();
 
         if (item) {
             Load_Campaign(item->getText().c_str());
@@ -817,7 +828,8 @@ void cMenu_Start::Load_Selected(void)
     }
     // World
     else if (tabcontrol->getSelectedTabIndex() == 2) {
-        CEGUI::ListboxItem* item = (static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_worlds")))->getFirstSelectedItem();
+        CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"));
+        CEGUI::ListboxItem* item = listbox_worlds->getFirstSelectedItem();
 
         if (item) {
             Load_World(item->getText().c_str());
@@ -825,7 +837,8 @@ void cMenu_Start::Load_Selected(void)
     }
     // Level
     else {
-        CEGUI::ListboxItem* item = (static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels")))->getFirstSelectedItem();
+        CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
+        CEGUI::ListboxItem* item = listbox_levels->getFirstSelectedItem();
 
         if (item) {
             Load_Level(item->getText().c_str());
@@ -870,11 +883,11 @@ void cMenu_Start::Load_Campaign(std::string name)
         }
 
         Game_Action_Data_Start.add("music_fadeout", "1000");
-        Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_BLACK));
+        Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
         Game_Action_Data_Start.add("screen_fadeout_speed", "3");
         Game_Action_Data_Middle.add("unload_menu", "1");
         Game_Action_Data_Middle.add("reset_save", "1");
-        Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_RANDOM));
+        Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
         Game_Action_Data_End.add("screen_fadein_speed", "3");
     }
 }
@@ -895,12 +908,12 @@ void cMenu_Start::Load_World(std::string name)
         // enter world
         Game_Action = GA_ENTER_WORLD;
         Game_Action_Data_Start.add("music_fadeout", "1000");
-        Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_BLACK));
+        Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
         Game_Action_Data_Start.add("screen_fadeout_speed", "3");
         Game_Action_Data_Middle.add("enter_world", name.c_str());
         Game_Action_Data_Middle.add("unload_menu", "1");
         Game_Action_Data_Middle.add("reset_save", "1");
-        Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_RANDOM));
+        Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
         Game_Action_Data_End.add("screen_fadein_speed", "3");
     }
 }
@@ -926,12 +939,12 @@ bool cMenu_Start::Load_Level(std::string level_name)
     Game_Action = GA_ENTER_LEVEL;
     Game_Mode_Type = MODE_TYPE_LEVEL_CUSTOM;
     Game_Action_Data_Start.add("music_fadeout", "1000");
-    Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_BLACK));
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
     Game_Action_Data_Start.add("screen_fadeout_speed", "3");
     Game_Action_Data_Middle.add("load_level", level_name.c_str());
     Game_Action_Data_Middle.add("unload_menu", "1");
     Game_Action_Data_Middle.add("reset_save", "1");
-    Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_RANDOM));
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
     Game_Action_Data_End.add("screen_fadein_speed", "3");
 
     return 1;
@@ -939,8 +952,10 @@ bool cMenu_Start::Load_Level(std::string level_name)
 
 void cMenu_Start::Update_Lists(void)
 {
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // ### Campaign ###
-    CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_campaigns"));
+    CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"));
     listbox_campaigns->resetList();
 
     // campaign names
@@ -950,20 +965,20 @@ void cMenu_Start::Update_Lists(void)
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(campaign->m_name.c_str()));
         // is in game dir
         if (campaign->m_user == 0) {
-            item->setTextColours(CEGUI::colour(1, 0.8f, 0.6f));
+            item->setTextColours(CEGUI::Colour(1, 0.8f, 0.6f));
         }
         // is in user dir
         else if (campaign->m_user == 1) {
-            item->setTextColours(CEGUI::colour(0.8f, 1, 0.6f));
+            item->setTextColours(CEGUI::Colour(0.8f, 1, 0.6f));
         }
         // is in both
         else if (campaign->m_user == 2) {
             // mix colors
-            item->setTextColours(CEGUI::colour(0.8f, 1, 0.6f), CEGUI::colour(0.8f, 1, 0.6f), CEGUI::colour(1, 0.8f, 0.6f), CEGUI::colour(1, 0.8f, 0.6f));
+            item->setTextColours(CEGUI::Colour(0.8f, 1, 0.6f), CEGUI::Colour(0.8f, 1, 0.6f), CEGUI::Colour(1, 0.8f, 0.6f), CEGUI::Colour(1, 0.8f, 0.6f));
         }
 
-        item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         listbox_campaigns->addItem(item);
     }
 
@@ -973,7 +988,7 @@ void cMenu_Start::Update_Lists(void)
     }
 
     // ### World ###
-    CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_worlds"));
+    CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"));
     listbox_worlds->resetList();
 
     // overworld names
@@ -992,20 +1007,20 @@ void cMenu_Start::Update_Lists(void)
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(world->m_name.c_str()));
         // is in game dir
         if (world->m_user == 0) {
-            item->setTextColours(CEGUI::colour(1, 0.8f, 0.6f));
+            item->setTextColours(CEGUI::Colour(1, 0.8f, 0.6f));
         }
         // is in user dir
         else if (world->m_user == 1) {
-            item->setTextColours(CEGUI::colour(0.8f, 1, 0.6f));
+            item->setTextColours(CEGUI::Colour(0.8f, 1, 0.6f));
         }
         // is in both
         else if (world->m_user == 2) {
             // mix colors
-            item->setTextColours(CEGUI::colour(0.8f, 1, 0.6f), CEGUI::colour(0.8f, 1, 0.6f), CEGUI::colour(1, 0.8f, 0.6f), CEGUI::colour(1, 0.8f, 0.6f));
+            item->setTextColours(CEGUI::Colour(0.8f, 1, 0.6f), CEGUI::Colour(0.8f, 1, 0.6f), CEGUI::Colour(1, 0.8f, 0.6f), CEGUI::Colour(1, 0.8f, 0.6f));
         }
 
-        item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         listbox_worlds->addItem(item);
     }
 
@@ -1015,28 +1030,30 @@ void cMenu_Start::Update_Lists(void)
     }
 
     // ### Level ###
-    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
+    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
     listbox_levels->resetList();
 
     // get game level
-    Get_Levels(pPackage_Manager->Get_Game_Level_Path(), CEGUI::colour(1, 0.8f, 0.6f));
+    Get_Levels(pPackage_Manager->Get_Game_Level_Path(), CEGUI::Colour(1, 0.8f, 0.6f));
     // get user level
-    Get_Levels(pPackage_Manager->Get_User_Level_Path(), CEGUI::colour(0.8f, 1, 0.6f));
+    Get_Levels(pPackage_Manager->Get_User_Level_Path(), CEGUI::Colour(0.8f, 1, 0.6f));
 }
 
 bool cMenu_Start::TabControl_Selection_Changed(const CEGUI::EventArgs& e)
 {
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(e);
     CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(windowEventArgs.window);
 
     if (tabcontrol->getSelectedTabIndex() == 0) {
-        static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_campaigns"))->activate();
+        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"))->activate();
     }
     else if (tabcontrol->getSelectedTabIndex() == 1) {
-        static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_worlds"))->activate();
+        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"))->activate();
     }
     else if (tabcontrol->getSelectedTabIndex() == 2) {
-        static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"))->activate();
+        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"))->activate();
     }
 
     return 1;
@@ -1045,6 +1062,8 @@ bool cMenu_Start::TabControl_Selection_Changed(const CEGUI::EventArgs& e)
 bool cMenu_Start::TabControl_Keydown(const CEGUI::EventArgs& e)
 {
     const CEGUI::KeyEventArgs& ke = static_cast<const CEGUI::KeyEventArgs&>(e);
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(p_root->getChild("menu_overworld/tabcontrol_main"));
 
     // Return
     if (ke.scancode == CEGUI::Key::Return || ke.scancode == CEGUI::Key::NumpadEnter) {
@@ -1053,9 +1072,6 @@ bool cMenu_Start::TabControl_Keydown(const CEGUI::EventArgs& e)
     }
     // Left (todo: only for joystick when CEGUI supports these events)
     else if (ke.scancode == pKeyboard->SFMLKey_to_CEGUIKey(pPreferences->m_key_left)) {
-        // Get Tab Control
-        CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_main"));
-
         // if not first tab
         if (tabcontrol->getSelectedTabIndex() != 0) {
             tabcontrol->setSelectedTabAtIndex(tabcontrol->getSelectedTabIndex() - 1);
@@ -1065,9 +1081,6 @@ bool cMenu_Start::TabControl_Keydown(const CEGUI::EventArgs& e)
     }
     // Right (todo: only for joystick when CEGUI supports these events)
     else if (ke.scancode == pKeyboard->SFMLKey_to_CEGUIKey(pPreferences->m_key_right)) {
-        // Get Tab Control
-        CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_main"));
-
         // if not last tab
         if (tabcontrol->getSelectedTabIndex() + 1 != tabcontrol->getTabCount()) {
             tabcontrol->setSelectedTabAtIndex(tabcontrol->getSelectedTabIndex() + 1);
@@ -1077,9 +1090,6 @@ bool cMenu_Start::TabControl_Keydown(const CEGUI::EventArgs& e)
     }
     // Shift Tab
     else if (pKeyboard->Is_Shift_Down() && ke.scancode == CEGUI::Key::Tab) {
-        // Get Tab Control
-        CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_main"));
-
         // if last tab
         if (tabcontrol->getSelectedTabIndex() + 1 == tabcontrol->getTabCount()) {
             tabcontrol->setSelectedTabAtIndex(0);
@@ -1221,9 +1231,10 @@ bool cMenu_Start::Package_Select(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
     CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // description
-    CEGUI::Editbox* editbox_package_description = static_cast<CEGUI::Editbox*>(CEGUI::WindowManager::getSingleton().getWindow("editbox_package_description"));
+    CEGUI::Editbox* editbox_package_description = static_cast<CEGUI::Editbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/editbox_package_description"));
 
     // set description
     if (item) {
@@ -1265,9 +1276,10 @@ bool cMenu_Start::Campaign_Select(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
     CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // description
-    CEGUI::Editbox* editbox_campaign_description = static_cast<CEGUI::Editbox*>(CEGUI::WindowManager::getSingleton().getWindow("editbox_campaign_description"));
+    CEGUI::Editbox* editbox_campaign_description = static_cast<CEGUI::Editbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/editbox_campaign_description"));
 
     // set description
     if (item) {
@@ -1299,9 +1311,10 @@ bool cMenu_Start::World_Select(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
     CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // description
-    CEGUI::Editbox* editbox_world_description = static_cast<CEGUI::Editbox*>(CEGUI::WindowManager::getSingleton().getWindow("editbox_world_description"));
+    CEGUI::Editbox* editbox_world_description = static_cast<CEGUI::Editbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/editbox_world_description"));
 
     // set description
     if (item) {
@@ -1377,8 +1390,10 @@ bool cMenu_Start::Button_Level_New_Clicked(const CEGUI::EventArgs& event)
 
 bool cMenu_Start::Button_Level_Edit_Clicked(const CEGUI::EventArgs& event)
 {
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // Get Selected Level
-    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
+    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
     CEGUI::ListboxItem* item = listbox_levels->getFirstSelectedItem();
 
     // load level
@@ -1391,8 +1406,10 @@ bool cMenu_Start::Button_Level_Edit_Clicked(const CEGUI::EventArgs& event)
 
 bool cMenu_Start::Button_Level_Delete_Clicked(const CEGUI::EventArgs& event)
 {
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
     // Get Selected Level
-    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("listbox_levels"));
+    CEGUI::Listbox* listbox_levels = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"));
     CEGUI::ListboxItem* item = listbox_levels->getFirstSelectedItem();
 
     // load level
@@ -1516,10 +1533,10 @@ void cMenu_Options::Init_GUI_Game(void)
     m_game_combo_always_run = static_cast<CEGUI::Combobox*>(wmgr.getWindow("game_combo_always_run"));
 
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_game_combo_always_run->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_game_combo_always_run->addItem(item);
 
     if (pPreferences->m_always_run) {
@@ -1556,7 +1573,7 @@ void cMenu_Options::Init_GUI_Game(void)
     m_game_combo_language = static_cast<CEGUI::Combobox*>(wmgr.getWindow("game_combo_language"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("default"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_game_combo_language->addItem(item);
 
     // get available languages
@@ -1573,7 +1590,7 @@ void cMenu_Options::Init_GUI_Game(void)
             continue;
 
         item = new CEGUI::ListboxTextItem(path_to_utf8(this_path.filename()));
-        item->setTextColours(CEGUI::colour(0, 0, 1));
+        item->setTextColours(CEGUI::Colour(0, 0, 1));
         m_game_combo_language->addItem(item);
     }
 
@@ -1634,7 +1651,7 @@ void cMenu_Options::Init_GUI_Video(void)
         float ar = static_cast<float>(res.m_width) / static_cast<float>(res.m_height);
 
         item = new CEGUI::ListboxTextItem(int_to_string(res.m_width) + "x" + int_to_string(res.m_height));
-        CEGUI::colour color(0, 0, 0);
+        CEGUI::Colour color(0, 0, 0);
         // if a badly stretched resolution, display it in red
         if (ar < 1.1f || ar > 1.5f) {
             color.setGreen(0);
@@ -1671,10 +1688,10 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_bpp = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_bpp"));
 
     item = new CEGUI::ListboxTextItem("16");
-    item->setTextColours(CEGUI::colour(1, 0.6f, 0.3f));
+    item->setTextColours(CEGUI::Colour(1, 0.6f, 0.3f));
     m_video_combo_bpp->addItem(item);
     item = new CEGUI::ListboxTextItem("32");
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_video_combo_bpp->addItem(item);
 
     m_video_combo_bpp->setText(int_to_string(pPreferences->m_video_screen_bpp));
@@ -1688,10 +1705,10 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_fullscreen = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_fullscreen"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_video_combo_fullscreen->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_video_combo_fullscreen->addItem(item);
 
     if (pPreferences->m_video_fullscreen) {
@@ -1710,10 +1727,10 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_vsync = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_vsync"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_video_combo_vsync->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_video_combo_vsync->addItem(item);
 
     if (pPreferences->m_video_vsync) {
@@ -1779,13 +1796,13 @@ void cMenu_Options::Init_GUI_Audio(void)
     m_audio_combo_hz = static_cast<CEGUI::Combobox*>(wmgr.getWindow("audio_combo_hz"));
 
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem("22050");
-    item->setTextColours(CEGUI::colour(1, 0, 0));
+    item->setTextColours(CEGUI::Colour(1, 0, 0));
     m_audio_combo_hz->addItem(item);
     item = new CEGUI::ListboxTextItem("44100");
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_audio_combo_hz->addItem(item);
     item = new CEGUI::ListboxTextItem("48000");
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_audio_combo_hz->addItem(item);
 
     // Set current value
@@ -1802,10 +1819,10 @@ void cMenu_Options::Init_GUI_Audio(void)
     m_audio_combo_music = static_cast<CEGUI::Combobox*>(wmgr.getWindow("audio_combo_music"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_audio_combo_music->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_audio_combo_music->addItem(item);
 
     if (pAudio->m_music_enabled) {
@@ -1833,10 +1850,10 @@ void cMenu_Options::Init_GUI_Audio(void)
     m_audio_combo_sounds = static_cast<CEGUI::Combobox*>(wmgr.getWindow("audio_combo_sounds"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_audio_combo_sounds->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(1, 0.6f, 0.3f));
+    item->setTextColours(CEGUI::Colour(1, 0.6f, 0.3f));
     m_audio_combo_sounds->addItem(item);
 
     if (pAudio->m_sound_enabled) {
@@ -1915,7 +1932,7 @@ void cMenu_Options::Init_GUI_Joystick(void)
 
     // Add None
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(UTF8_("None"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     combo_joy->addItem(item);
 
     // Add all Joy names
@@ -1923,7 +1940,7 @@ void cMenu_Options::Init_GUI_Joystick(void)
 
     for (unsigned int i = 0; i < joy_names.size(); i++) {
         item = new CEGUI::ListboxTextItem(joy_names[i]);
-        item->setTextColours(CEGUI::colour(0.3f, 1, 0.3f));
+        item->setTextColours(CEGUI::Colour(0.3f, 1, 0.3f));
         combo_joy->addItem(item);
     }
 
@@ -1952,10 +1969,10 @@ void cMenu_Options::Init_GUI_Joystick(void)
     CEGUI::Combobox* combo_joy_analog_jump = static_cast<CEGUI::Combobox*>(wmgr.getWindow("joystick_combo_analog_jump"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     combo_joy_analog_jump->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     combo_joy_analog_jump->addItem(item);
 
     if (pPreferences->m_joy_analog_jump) {
@@ -2013,10 +2030,10 @@ void cMenu_Options::Init_GUI_Editor(void)
     m_game_combo_editor_show_item_images = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_combo_show_item_images"));
 
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_game_combo_editor_show_item_images->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_game_combo_editor_show_item_images->addItem(item);
 
     if (pPreferences->m_editor_show_item_images) {
@@ -2044,10 +2061,10 @@ void cMenu_Options::Init_GUI_Editor(void)
     m_game_combo_editor_mouse_auto_hide = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_combo_mouse_auto_hide"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::colour(0, 1, 0));
+    item->setTextColours(CEGUI::Colour(0, 1, 0));
     m_game_combo_editor_mouse_auto_hide->addItem(item);
     item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::colour(0, 0, 1));
+    item->setTextColours(CEGUI::Colour(0, 0, 1));
     m_game_combo_editor_mouse_auto_hide->addItem(item);
 
     if (pPreferences->m_editor_mouse_auto_hide) {
@@ -2366,7 +2383,7 @@ void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
         cShortcut_item shortcut_item = (*itr);
 
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(shortcut_item.m_name, 0, shortcut_item.m_key);
-        item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
         item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         unsigned int row_id = listbox->addRow(item, 0);
 
@@ -2398,9 +2415,9 @@ void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
         item = new CEGUI::ListboxTextItem(shortcut_key);
         // if not default
         if (shortcut_not_the_default) {
-            item->setTextColours(CEGUI::colour(0.9f, 0.6f, 0.0f));
+            item->setTextColours(CEGUI::Colour(0.9f, 0.6f, 0.0f));
         }
-        item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
         item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         listbox->setItem(item, 1, row_id);
     }
