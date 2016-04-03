@@ -1483,34 +1483,34 @@ void cMenu_Options::Init(void)
 void cMenu_Options::Init_GUI(void)
 {
     cMenu_Base::Init_GUI();
-
-    // get the CEGUI window manager
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
 
     // back button
-    CEGUI::PushButton* button_back = static_cast<CEGUI::PushButton*>(wmgr.getWindow("button_back"));
+    CEGUI::PushButton* button_back = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/button_back"));
     button_back->setText(UTF8_("Back"));
     button_back->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Button_Back_Click, this));
 
     // Tab Control
-    m_tabcontrol = static_cast<CEGUI::TabControl*>(wmgr.getWindow("tabcontrol_main"));
+    m_tabcontrol = static_cast<CEGUI::TabControl*>(p_root->getChild("options/window_options/tabcontrol_main"));
     // tab game
-    CEGUI::Window* tabwindow = wmgr.loadWindowLayout("menu/tab_game.layout");
+    CEGUI::Window* tabwindow = wmgr.loadLayoutFromFile("menu/tab_game.layout");
     m_tabcontrol->addTab(tabwindow);
     // tab video
-    tabwindow = wmgr.loadWindowLayout("menu/tab_video.layout");
+    tabwindow = wmgr.loadLayoutFromFile("menu/tab_video.layout");
     m_tabcontrol->addTab(tabwindow);
     // tab audio
-    tabwindow = wmgr.loadWindowLayout("menu/tab_audio.layout");
+    tabwindow = wmgr.loadLayoutFromFile("menu/tab_audio.layout");
     m_tabcontrol->addTab(tabwindow);
     // tab keyboard
-    tabwindow = wmgr.loadWindowLayout("menu/tab_keyboard.layout");
+    tabwindow = wmgr.loadLayoutFromFile("menu/tab_keyboard.layout");
     m_tabcontrol->addTab(tabwindow);
     // tab joystick
-    tabwindow = wmgr.loadWindowLayout("menu/tab_joystick.layout");
+    tabwindow = wmgr.loadLayoutFromFile("menu/tab_joystick.layout");
     m_tabcontrol->addTab(tabwindow);
     // tab editor
-    tabwindow = wmgr.loadWindowLayout("menu/tab_editor.layout");
+    tabwindow = wmgr.loadLayoutFromFile("menu/tab_editor.layout");
     m_tabcontrol->addTab(tabwindow);
 
     Init_GUI_Game();
