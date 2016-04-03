@@ -1877,14 +1877,13 @@ void cMenu_Options::Init_GUI_Audio(void)
 
 void cMenu_Options::Init_GUI_Keyboard(void)
 {
-    // get the CEGUI window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // Keyboard listbox
-    CEGUI::Window* text_keyboard_shortcuts = wmgr.getWindow("keyboard_text_shortcuts");
+    CEGUI::Window* text_keyboard_shortcuts = p_root->getChild("options/window_options/tabcontrol_main/tab_keyboard/keyboard_text_shortcuts");
     text_keyboard_shortcuts->setText(UTF8_("Shortcuts"));
 
-    CEGUI::MultiColumnList* listbox_keyboard = static_cast<CEGUI::MultiColumnList*>(wmgr.getWindow("keyboard_listbox"));
+    CEGUI::MultiColumnList* listbox_keyboard = static_cast<CEGUI::MultiColumnList*>(p_root->getChild("options/window_options/tabcontrol_main/tab_keyboard/keyboard_listbox"));
 
     listbox_keyboard->addColumn(UTF8_("Name"), 0, CEGUI::UDim(0.47f, 0));
     listbox_keyboard->addColumn(UTF8_("Key"), 1, CEGUI::UDim(0.47f, 0));
@@ -1893,15 +1892,15 @@ void cMenu_Options::Init_GUI_Keyboard(void)
     listbox_keyboard->subscribeEvent(CEGUI::MultiColumnList::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Options::Keyboard_List_Double_Click, this));
 
     // Keyboard scroll speed
-    CEGUI::Window* text_keyboard_scroll_speed = wmgr.getWindow("keyboard_text_scroll_speed");
+    CEGUI::Window* text_keyboard_scroll_speed = p_root->getChild("options/window_options/tabcontrol_main/tab_keyboard/keyboard_text_scroll_speed");
     text_keyboard_scroll_speed->setText(UTF8_("Scroll Speed"));
 
-    CEGUI::Slider* slider_scoll_speed = static_cast<CEGUI::Slider*>(wmgr.getWindow("keyboard_slider_scroll_speed"));
+    CEGUI::Slider* slider_scoll_speed = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_keyboard/keyboard_slider_scroll_speed"));
     slider_scoll_speed->setCurrentValue(pPreferences->m_scroll_speed);
     slider_scoll_speed->subscribeEvent(CEGUI::Slider::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Keyboard_Slider_Scroll_Speed_Changed, this));
 
     // Reset Keyboard
-    CEGUI::PushButton* button_reset_keyboard = static_cast<CEGUI::PushButton*>(wmgr.getWindow("keyboard_button_reset"));
+    CEGUI::PushButton* button_reset_keyboard = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_keyboard/keyboard_button_reset"));
     button_reset_keyboard->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Keyboard_Button_Reset_Clicked, this));
     button_reset_keyboard->setText(UTF8_("Reset"));
 }
