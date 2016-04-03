@@ -1907,24 +1907,23 @@ void cMenu_Options::Init_GUI_Keyboard(void)
 
 void cMenu_Options::Init_GUI_Joystick(void)
 {
-    // get the CEGUI window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // Joystick sensitivity text
-    CEGUI::Window* text_joystick_sensitivity = wmgr.getWindow("joystick_text_sensitivity");
+    CEGUI::Window* text_joystick_sensitivity = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_sensitivity");
     text_joystick_sensitivity->setText(UTF8_("Sensitivity"));
 
     // Joystick analog jump text
-    CEGUI::Window* text_joystick_analog_jump = wmgr.getWindow("joystick_text_analog_jump");
+    CEGUI::Window* text_joystick_analog_jump = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_analog_jump");
     text_joystick_analog_jump->setText(UTF8_("Analog Jump"));
 
     // Joystick name
-    CEGUI::Window* text_joystick_name = wmgr.getWindow("joystick_text_name");
+    CEGUI::Window* text_joystick_name = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_name");
     text_joystick_name->setText(UTF8_("Joystick"));
 
     text_joystick_name->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Name_Click, this));
 
-    CEGUI::Combobox* combo_joy = static_cast<CEGUI::Combobox*>(wmgr.getWindow("joystick_combo"));
+    CEGUI::Combobox* combo_joy = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_combo"));
 
     // Add None
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(UTF8_("None"));
@@ -1957,12 +1956,12 @@ void cMenu_Options::Init_GUI_Joystick(void)
     combo_joy->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Name_Select, this));
 
     // Joystick Sensitivity
-    CEGUI::Slider* slider_joy_sensitivity = static_cast<CEGUI::Slider*>(wmgr.getWindow("joystick_slider_sensitivity"));
+    CEGUI::Slider* slider_joy_sensitivity = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_slider_sensitivity"));
     slider_joy_sensitivity->setCurrentValue(pPreferences->m_joy_axis_threshold);
     slider_joy_sensitivity->subscribeEvent(CEGUI::Slider::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Sensitivity_Changed, this));
 
     // Joystick analog jump
-    CEGUI::Combobox* combo_joy_analog_jump = static_cast<CEGUI::Combobox*>(wmgr.getWindow("joystick_combo_analog_jump"));
+    CEGUI::Combobox* combo_joy_analog_jump = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_combo_analog_jump"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 0, 1));
@@ -1981,26 +1980,26 @@ void cMenu_Options::Init_GUI_Joystick(void)
     combo_joy_analog_jump->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Analog_Jump_Select, this));
 
     // Joystick axis horizontal
-    CEGUI::Window* text_joystick_axis_hor = wmgr.getWindow("joystick_text_axis_hor");
+    CEGUI::Window* text_joystick_axis_hor = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_axis_hor");
     text_joystick_axis_hor->setText(UTF8_("Axis Hor"));
 
-    CEGUI::Spinner* spinner_joystick_axis_hor = static_cast<CEGUI::Spinner*>(wmgr.getWindow("joystick_spinner_axis_hor"));
+    CEGUI::Spinner* spinner_joystick_axis_hor = static_cast<CEGUI::Spinner*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_spinner_axis_hor"));
     spinner_joystick_axis_hor->setCurrentValue(static_cast<float>(pPreferences->m_joy_axis_hor));
     spinner_joystick_axis_hor->subscribeEvent(CEGUI::Spinner::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Spinner_Axis_Hor_Changed, this));
 
     // Joystick axis vertical
-    CEGUI::Window* text_joystick_axis_ver = wmgr.getWindow("joystick_text_axis_ver");
+    CEGUI::Window* text_joystick_axis_ver = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_axis_ver");
     text_joystick_axis_ver->setText(UTF8_("Ver"));
 
-    CEGUI::Spinner* spinner_joystick_axis_ver = static_cast<CEGUI::Spinner*>(wmgr.getWindow("joystick_spinner_axis_ver"));
+    CEGUI::Spinner* spinner_joystick_axis_ver = static_cast<CEGUI::Spinner*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_spinner_axis_ver"));
     spinner_joystick_axis_ver->setCurrentValue(static_cast<float>(pPreferences->m_joy_axis_ver));
     spinner_joystick_axis_ver->subscribeEvent(CEGUI::Spinner::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Spinner_Axis_Ver_Changed, this));
 
     // Joystick shortcut listbox
-    CEGUI::Window* text_joystick_shortcuts = wmgr.getWindow("joystick_text_shortcuts");
+    CEGUI::Window* text_joystick_shortcuts = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_shortcuts");
     text_joystick_shortcuts->setText(UTF8_("Shortcuts"));
 
-    CEGUI::MultiColumnList* listbox_joystick = static_cast<CEGUI::MultiColumnList*>(wmgr.getWindow("joystick_listbox"));
+    CEGUI::MultiColumnList* listbox_joystick = static_cast<CEGUI::MultiColumnList*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_listbox"));
 
     listbox_joystick->addColumn(UTF8_("Name"), 0, CEGUI::UDim(0.47f, 0));
     listbox_joystick->addColumn(UTF8_("Button"), 1, CEGUI::UDim(0.47f, 0));
@@ -2009,7 +2008,7 @@ void cMenu_Options::Init_GUI_Joystick(void)
     listbox_joystick->subscribeEvent(CEGUI::MultiColumnList::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_List_Double_Click, this));
 
     // Reset Joystick
-    CEGUI::PushButton* button_reset_joystick = static_cast<CEGUI::PushButton*>(wmgr.getWindow("joystick_button_reset"));
+    CEGUI::PushButton* button_reset_joystick = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_button_reset"));
     button_reset_joystick->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Button_Reset_Clicked, this));
     button_reset_joystick->setText(UTF8_("Reset"));
 }
