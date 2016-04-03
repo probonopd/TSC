@@ -1783,15 +1783,14 @@ void cMenu_Options::Init_GUI_Video(void)
 
 void cMenu_Options::Init_GUI_Audio(void)
 {
-    // get the CEGUI window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // Audio Hz
-    CEGUI::Window* text_hz = static_cast<CEGUI::Window*>(wmgr.getWindow("audio_text_hz"));
+    CEGUI::Window* text_hz = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_text_hz"));
     text_hz->setText(UTF8_("Hertz (Hz)"));
     text_hz->setTooltipText(UTF8_("You should only change the value if the audio is scratchy."));
 
-    m_audio_combo_hz = static_cast<CEGUI::Combobox*>(wmgr.getWindow("audio_combo_hz"));
+    m_audio_combo_hz = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_combo_hz"));
 
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem("22050");
     item->setTextColours(CEGUI::Colour(1, 0, 0));
@@ -1810,11 +1809,11 @@ void cMenu_Options::Init_GUI_Audio(void)
 
 
     // Music
-    CEGUI::Window* text_music = static_cast<CEGUI::Window*>(wmgr.getWindow("audio_text_music"));
+    CEGUI::Window* text_music = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_text_music"));
     text_music->setText(UTF8_("Music"));
     text_music->setTooltipText(UTF8_("Enable to play music. You need to have the Music Addon installed."));
 
-    m_audio_combo_music = static_cast<CEGUI::Combobox*>(wmgr.getWindow("audio_combo_music"));
+    m_audio_combo_music = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_combo_music"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -1833,7 +1832,7 @@ void cMenu_Options::Init_GUI_Audio(void)
     m_audio_combo_music->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Audio_Music_Select, this));
 
     // music volume slider
-    m_audio_slider_music = static_cast<CEGUI::Slider*>(wmgr.getWindow("audio_slider_music_volume"));
+    m_audio_slider_music = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_slider_music_volume"));
     m_audio_slider_music->setTooltipText(UTF8_("Set the Music Volume."));
 
     m_audio_slider_music->setCurrentValue(static_cast<float>(pAudio->m_music_volume));
@@ -1841,11 +1840,11 @@ void cMenu_Options::Init_GUI_Audio(void)
 
 
     // Sounds
-    CEGUI::Window* text_sound = static_cast<CEGUI::Window*>(wmgr.getWindow("audio_text_sound"));
+    CEGUI::Window* text_sound = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_text_sound"));
     text_sound->setText(UTF8_("Sound"));
     text_sound->setTooltipText(UTF8_("Enable to play Sounds.")) ;
 
-    m_audio_combo_sounds = static_cast<CEGUI::Combobox*>(wmgr.getWindow("audio_combo_sounds"));
+    m_audio_combo_sounds = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_combo_sounds"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -1864,14 +1863,14 @@ void cMenu_Options::Init_GUI_Audio(void)
     m_audio_combo_sounds->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Audio_Sound_Select, this));
 
     // sound volume slider
-    m_audio_slider_sound = static_cast<CEGUI::Slider*>(wmgr.getWindow("audio_slider_sound_volume"));
+    m_audio_slider_sound = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_slider_sound_volume"));
     m_audio_slider_sound->setTooltipText(UTF8_("Set the Sound Volume."));
 
     m_audio_slider_sound->setCurrentValue(static_cast<float>(pAudio->m_sound_volume));
     m_audio_slider_sound->subscribeEvent(CEGUI::Slider::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Audio_Sound_Volume_Changed, this));
 
     // Reset
-    CEGUI::PushButton* button_reset = static_cast<CEGUI::PushButton*>(wmgr.getWindow("audio_button_reset"));
+    CEGUI::PushButton* button_reset = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_audio/audio_button_reset"));
     button_reset->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Audio_Button_Reset_Clicked, this));
     button_reset->setText(UTF8_("Reset"));
 }
