@@ -1523,14 +1523,13 @@ void cMenu_Options::Init_GUI(void)
 
 void cMenu_Options::Init_GUI_Game(void)
 {
-    // get the CEGUI window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // always run
-    CEGUI::Window* text_always_run = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("game_text_always_run"));
+    CEGUI::Window* text_always_run = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_text_always_run"));
     text_always_run->setText(UTF8_("Always Run"));
 
-    m_game_combo_always_run = static_cast<CEGUI::Combobox*>(wmgr.getWindow("game_combo_always_run"));
+    m_game_combo_always_run = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_combo_always_run"));
 
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -1549,28 +1548,28 @@ void cMenu_Options::Init_GUI_Game(void)
     m_game_combo_always_run->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Game_Always_Run_Select, this));
 
     // Camera Horizontal Speed
-    CEGUI::Window* text_camera_hor_speed = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("game_text_camera_hor_speed"));
+    CEGUI::Window* text_camera_hor_speed = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_text_camera_hor_speed"));
     text_camera_hor_speed->setText(UTF8_("Camera Hor Speed"));
 
-    m_game_spinner_camera_hor_speed = static_cast<CEGUI::Spinner*>(wmgr.getWindow("game_spinner_camera_hor_speed"));
+    m_game_spinner_camera_hor_speed = static_cast<CEGUI::Spinner*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_spinner_camera_hor_speed"));
     m_game_spinner_camera_hor_speed->setCurrentValue(pLevel_Manager->m_camera->m_hor_offset_speed);
 
     m_game_spinner_camera_hor_speed->subscribeEvent(CEGUI::Spinner::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Game_Camera_Hor_Select, this));
 
     // Camera Vertical Speed
-    CEGUI::Window* text_camera_ver_speed = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("game_text_camera_ver_speed"));
+    CEGUI::Window* text_camera_ver_speed = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_text_camera_ver_speed"));
     text_camera_ver_speed->setText(UTF8_("Camera Ver Speed"));
 
-    m_game_spinner_camera_ver_speed = static_cast<CEGUI::Spinner*>(wmgr.getWindow("game_spinner_camera_ver_speed"));
+    m_game_spinner_camera_ver_speed = static_cast<CEGUI::Spinner*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_spinner_camera_ver_speed"));
     m_game_spinner_camera_ver_speed->setCurrentValue(pLevel_Manager->m_camera->m_ver_offset_speed);
 
     m_game_spinner_camera_ver_speed->subscribeEvent(CEGUI::Spinner::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Game_Camera_Ver_Select, this));
 
     // language
-    CEGUI::Window* text_language = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("game_text_language"));
+    CEGUI::Window* text_language = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_text_language"));
     text_language->setText(UTF8_("Language"));
 
-    m_game_combo_language = static_cast<CEGUI::Combobox*>(wmgr.getWindow("game_combo_language"));
+    m_game_combo_language = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_combo_language"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("default"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -1604,10 +1603,10 @@ void cMenu_Options::Init_GUI_Game(void)
     m_game_combo_language->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Game_Language_Select, this));
 
     // menu level
-    CEGUI::Window* text_menu_level = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("game_text_menu_level"));
+    CEGUI::Window* text_menu_level = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_text_menu_level"));
     text_menu_level->setText(UTF8_("Menu Level"));
 
-    m_game_combo_menu_level = static_cast<CEGUI::Combobox*>(wmgr.getWindow("game_combo_menu_level"));
+    m_game_combo_menu_level = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_combo_menu_level"));
 
     m_game_combo_menu_level->addItem(new CEGUI::ListboxTextItem("menu_green_1"));
     m_game_combo_menu_level->addItem(new CEGUI::ListboxTextItem("menu_blue_1"));
@@ -1619,7 +1618,7 @@ void cMenu_Options::Init_GUI_Game(void)
     m_game_combo_menu_level->getEditbox()->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cMenu_Options::Game_Menu_Level_Text_Changed, this));
 
     // Reset Game
-    CEGUI::PushButton* button_reset_game = static_cast<CEGUI::PushButton*>(CEGUI::WindowManager::getSingleton().getWindow("game_button_reset"));
+    CEGUI::PushButton* button_reset_game = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_game/game_button_reset"));
     button_reset_game->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Game_Button_Reset_Game_Clicked, this));
     button_reset_game->setText(UTF8_("Reset"));
 }
