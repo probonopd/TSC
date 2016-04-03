@@ -29,6 +29,7 @@
 #include "../core/errors.hpp"
 #include "../user/savegame/savegame.hpp"
 #include "../video/renderer.hpp"
+#include "../video/loading_screen.hpp"
 #include "../level/level.hpp"
 #include "../input/keyboard.hpp"
 #include "../level/level_editor.hpp"
@@ -2326,15 +2327,16 @@ void cMenu_Options::Draw(void)
 void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
 {
     // Get Listbox
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
     CEGUI::MultiColumnList* listbox = NULL;
 
     // Keyboard
     if (!joystick) {
-        listbox = static_cast<CEGUI::MultiColumnList*>(CEGUI::WindowManager::getSingleton().getWindow("keyboard_listbox"));
+        listbox = static_cast<CEGUI::MultiColumnList*>(p_root->getChild("options/window_options/tabcontrol_main/tab_keyboard/keyboard_listbox"));
     }
     // Joystick
     else {
-        listbox = static_cast<CEGUI::MultiColumnList*>(CEGUI::WindowManager::getSingleton().getWindow("joystick_listbox"));
+        listbox = static_cast<CEGUI::MultiColumnList*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_listbox"));
     }
 
     listbox->resetList();
@@ -2378,7 +2380,7 @@ void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
 
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(shortcut_item.m_name, 0, shortcut_item.m_key);
         item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         unsigned int row_id = listbox->addRow(item, 0);
 
         // Get shortcut key name
@@ -2412,7 +2414,7 @@ void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
             item->setTextColours(CEGUI::Colour(0.9f, 0.6f, 0.0f));
         }
         item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
+        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
         listbox->setItem(item, 1, row_id);
     }
 }
@@ -2732,7 +2734,7 @@ bool cMenu_Options::Video_Button_Apply_Clicked(const CEGUI::EventArgs& event)
     // draw reinitialization text
     Draw_Static_Text(_("Reinitialization"), &green, NULL, 0);
 
-    pGuiSystem->renderGUI();
+    CEGUI::System::getSingleton().renderAllGUIContexts();
     pRenderer->Render();
     pVideo->mp_window->display();
 
@@ -2757,7 +2759,7 @@ bool cMenu_Options::Video_Button_Recreate_Cache_Clicked(const CEGUI::EventArgs& 
     pImage_Manager->Grab_Textures(1, 1);
 
     // recreate cache
-    pVideo->Init_Image_Cache(1, 1);
+    pVideo->Init_Image_Cache(1);
 
     // restore textures
     pImage_Manager->Restore_Textures(1);
@@ -2904,7 +2906,8 @@ bool cMenu_Options::Keyboard_Button_Reset_Clicked(const CEGUI::EventArgs& event)
 bool cMenu_Options::Joystick_Name_Click(const CEGUI::EventArgs& event)
 {
     // Get Joystick Combo
-    CEGUI::Combobox* combo_joy = static_cast<CEGUI::Combobox*>(CEGUI::WindowManager::getSingleton().getWindow("combo_joy"));
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::Combobox* combo_joy = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_combo"));
 
     // selected item id
     int selected_item = 0;
@@ -3280,11 +3283,11 @@ void cMenu_Savegames::Update_Load(void)
         Game_Action_Data_Start.add("music_fadeout", "1000");
     }
 
-    Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_BLACK));
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
     Game_Action_Data_Start.add("screen_fadeout_speed", "3");
     Game_Action_Data_Middle.add("unload_menu", "1");
     Game_Action_Data_Middle.add("load_savegame", int_to_string(save_num));
-    Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_BLACK));
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
     Game_Action_Data_End.add("screen_fadein_speed", "3");
 }
 
