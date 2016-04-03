@@ -1625,14 +1625,13 @@ void cMenu_Options::Init_GUI_Game(void)
 
 void cMenu_Options::Init_GUI_Video(void)
 {
-    // get the CEGUI window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // Resolution
-    CEGUI::Window* text_resolution = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_resolution"));
+    CEGUI::Window* text_resolution = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_resolution"));
     text_resolution->setText(UTF8_("Resolution"));
 
-    m_video_combo_resolution = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_resolution"));
+    m_video_combo_resolution = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_combo_resolution"));
 
     vector<cSize_Int> valid_resolutions = pVideo->Get_Supported_Resolutions();
     CEGUI::ListboxTextItem* item;
@@ -1681,10 +1680,10 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_resolution->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Video_Resolution_Select, this));
 
     // Bpp
-    CEGUI::Window* text_bpp = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_bpp"));
+    CEGUI::Window* text_bpp = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_bpp"));
     text_bpp->setText(UTF8_("Bpp"));
 
-    m_video_combo_bpp = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_bpp"));
+    m_video_combo_bpp = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_combo_bpp"));
 
     item = new CEGUI::ListboxTextItem("16");
     item->setTextColours(CEGUI::Colour(1, 0.6f, 0.3f));
@@ -1698,10 +1697,10 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_bpp->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Video_Bpp_Select, this));
 
     // Fullscreen
-    CEGUI::Window* text_fullscreen = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_fullscreen"));
+    CEGUI::Window* text_fullscreen = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_fullscreen"));
     text_fullscreen->setText(UTF8_("Fullscreen"));
 
-    m_video_combo_fullscreen = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_fullscreen"));
+    m_video_combo_fullscreen = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_combo_fullscreen"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -1720,10 +1719,10 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_fullscreen->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Video_Fullscreen_Select, this));
 
     // VSync
-    CEGUI::Window* text_vsync = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_vsync"));
+    CEGUI::Window* text_vsync = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_vsync"));
     text_vsync->setText(UTF8_("VSync"));
 
-    m_video_combo_vsync = static_cast<CEGUI::Combobox*>(wmgr.getWindow("video_combo_vsync"));
+    m_video_combo_vsync = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_combo_vsync"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -1742,42 +1741,42 @@ void cMenu_Options::Init_GUI_Video(void)
     m_video_combo_vsync->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Video_Vsync_Select, this));
 
     // FPS Limit
-    CEGUI::Window* text_fps_limit = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_fps_limit"));
+    CEGUI::Window* text_fps_limit = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_fps_limit"));
     text_fps_limit->setText(UTF8_("FPS Limit"));
 
-    m_video_spinner_fps_limit = static_cast<CEGUI::Spinner*>(wmgr.getWindow("video_spinner_fps_limit"));
+    m_video_spinner_fps_limit = static_cast<CEGUI::Spinner*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_spinner_fps_limit"));
     m_video_spinner_fps_limit->setCurrentValue(pPreferences->m_video_fps_limit);
 
     m_video_spinner_fps_limit->subscribeEvent(CEGUI::Spinner::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Video_FPS_Limit_Select, this));
 
     // Geometry quality
-    CEGUI::Window* text_geometry_quality = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_geometry_quality"));
+    CEGUI::Window* text_geometry_quality = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_geometry_quality"));
     text_geometry_quality->setText(UTF8_("Geometry Quality"));
 
-    m_video_slider_geometry_quality = static_cast<CEGUI::Slider*>(wmgr.getWindow("video_slider_geometry_quality"));
+    m_video_slider_geometry_quality = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_slider_geometry_quality"));
     m_video_slider_geometry_quality->setCurrentValue(pVideo->m_geometry_quality);
     m_video_slider_geometry_quality->subscribeEvent(CEGUI::Slider::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Video_Slider_Geometry_Quality_Changed, this));
 
     // Texture quality
-    CEGUI::Window* text_texture_quality = static_cast<CEGUI::Window*>(wmgr.getWindow("video_text_texture_quality"));
+    CEGUI::Window* text_texture_quality = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_text_texture_quality"));
     text_texture_quality->setText(UTF8_("Texture Quality"));
 
-    m_video_slider_texture_quality = static_cast<CEGUI::Slider*>(wmgr.getWindow("video_slider_texture_quality"));
+    m_video_slider_texture_quality = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_slider_texture_quality"));
     m_video_slider_texture_quality->setCurrentValue(pVideo->m_texture_quality);
     m_video_slider_texture_quality->subscribeEvent(CEGUI::Slider::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Video_Slider_Texture_Quality_Changed, this));
 
     // Reset
-    CEGUI::PushButton* button_reset = static_cast<CEGUI::PushButton*>(wmgr.getWindow("video_button_reset"));
+    CEGUI::PushButton* button_reset = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_button_reset"));
     button_reset->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Video_Button_Reset_Clicked, this));
     button_reset->setText(UTF8_("Reset"));
 
     // Apply
-    CEGUI::PushButton* button_apply = static_cast<CEGUI::PushButton*>(wmgr.getWindow("video_button_apply"));
+    CEGUI::PushButton* button_apply = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_button_apply"));
     button_apply->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Video_Button_Apply_Clicked, this));
     button_apply->setText(UTF8_("Apply"));
 
     // Recreate Cache
-    CEGUI::PushButton* button_recreate_cache = static_cast<CEGUI::PushButton*>(wmgr.getWindow("video_button_recreate_cache"));
+    CEGUI::PushButton* button_recreate_cache = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_video/video_button_recreate_cache"));
     button_recreate_cache->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Video_Button_Recreate_Cache_Clicked, this));
     button_recreate_cache->setText(UTF8_("Recreate Cache"));
 }
