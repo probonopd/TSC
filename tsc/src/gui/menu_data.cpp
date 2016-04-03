@@ -2015,14 +2015,13 @@ void cMenu_Options::Init_GUI_Joystick(void)
 
 void cMenu_Options::Init_GUI_Editor(void)
 {
-    // get the CEGUI window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
     // show item images
-    CEGUI::Window* text_editor_show_item_images = static_cast<CEGUI::Window*>(wmgr.getWindow("editor_text_show_item_images"));
+    CEGUI::Window* text_editor_show_item_images = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_text_show_item_images"));
     text_editor_show_item_images->setText(UTF8_("Show images"));
 
-    m_game_combo_editor_show_item_images = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_combo_show_item_images"));
+    m_game_combo_editor_show_item_images = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_combo_show_item_images"));
 
     CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -2041,19 +2040,19 @@ void cMenu_Options::Init_GUI_Editor(void)
     m_game_combo_editor_show_item_images->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Game_Editor_Show_Item_Images_Select, this));
 
     // item image size
-    CEGUI::Window* text_editor_item_image_size = static_cast<CEGUI::Window*>(wmgr.getWindow("editor_text_item_image_size"));
+    CEGUI::Window* text_editor_item_image_size = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_text_item_image_size"));
     text_editor_item_image_size->setText(UTF8_("Item image size"));
 
-    m_game_spinner_editor_item_image_size = static_cast<CEGUI::Spinner*>(wmgr.getWindow("editor_spinner_item_image_size"));
+    m_game_spinner_editor_item_image_size = static_cast<CEGUI::Spinner*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_spinner_item_image_size"));
     m_game_spinner_editor_item_image_size->setCurrentValue(static_cast<float>(pPreferences->m_editor_item_image_size));
 
     m_game_spinner_editor_item_image_size->subscribeEvent(CEGUI::Spinner::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Game_Editor_Item_Image_Size_Select, this));
 
     // editor mouse auto hide
-    CEGUI::Window* text_editor_mouse_auto_hide = static_cast<CEGUI::Window*>(wmgr.getWindow("editor_text_mouse_auto_hide"));
+    CEGUI::Window* text_editor_mouse_auto_hide = static_cast<CEGUI::Window*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_text_mouse_auto_hide"));
     text_editor_mouse_auto_hide->setText(UTF8_("Auto-Hide Mouse"));
 
-    m_game_combo_editor_mouse_auto_hide = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_combo_mouse_auto_hide"));
+    m_game_combo_editor_mouse_auto_hide = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_combo_mouse_auto_hide"));
 
     item = new CEGUI::ListboxTextItem(UTF8_("On"));
     item->setTextColours(CEGUI::Colour(0, 1, 0));
@@ -2072,7 +2071,7 @@ void cMenu_Options::Init_GUI_Editor(void)
     m_game_combo_editor_mouse_auto_hide->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Game_Editor_Auto_Hide_Mouse_Select, this));
 
     // Reset Editor
-    CEGUI::PushButton* button_reset_editor = static_cast<CEGUI::PushButton*>(wmgr.getWindow("editor_button_reset"));
+    CEGUI::PushButton* button_reset_editor = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/tabcontrol_main/tab_editor/editor_button_reset"));
     button_reset_editor->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Options::Game_Button_Reset_Editor_Clicked, this));
     button_reset_editor->setText(UTF8_("Reset"));
 }
