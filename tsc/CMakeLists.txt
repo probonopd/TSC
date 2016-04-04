@@ -408,6 +408,8 @@ set(tsc_sources
 #  src/video/img_settings.cpp
 #  src/video/gl_surface.cpp
 #  src/audio/random_sound.cpp
+  src/video/img_settings.cpp
+  src/video/gl_surface.cpp
 #  src/audio/audio.cpp
 #  src/audio/sound_manager.cpp
 #  src/core/camera.cpp
