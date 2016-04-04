@@ -405,11 +405,9 @@ set(tsc_sources
   src/video/loading_screen.cpp
   src/video/video.cpp
   src/video/animation.cpp
-#  src/video/img_settings.cpp
-#  src/video/gl_surface.cpp
-#  src/audio/random_sound.cpp
   src/video/img_settings.cpp
   src/video/gl_surface.cpp
+  src/audio/random_sound.cpp
 #  src/audio/audio.cpp
 #  src/audio/sound_manager.cpp
 #  src/core/camera.cpp

@@ -446,11 +446,11 @@ void cRandom_Sound::Editor_Activate(void)
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Filename_Text_Changed, this));
 
     // continuous
-    CEGUI::Checkbox* checkbox = static_cast<CEGUI::Checkbox*>(wmgr.createWindow("TaharezLook/Checkbox", "editor_sound_continuous"));
+    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/ToggleButton", "editor_sound_continuous"));
     Editor_Add(UTF8_("Continuous"), UTF8_("Check if the sound should be played continuously instead of randomly"), checkbox, 50);
 
     checkbox->setSelected(m_continuous);
-    checkbox->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Continuous_Changed, this));
+    checkbox->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Continuous_Changed, this));
 
     // delay min
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_delay_min"));
@@ -515,7 +515,7 @@ bool cRandom_Sound::Editor_Filename_Text_Changed(const CEGUI::EventArgs& event)
 bool cRandom_Sound::Editor_Continuous_Changed(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    bool enabled = static_cast<CEGUI::Checkbox*>(windowEventArgs.window)->isSelected();
+    bool enabled = static_cast<CEGUI::ToggleButton*>(windowEventArgs.window)->isSelected();
 
     Set_Continuous(enabled);
 
