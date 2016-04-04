@@ -13,6 +13,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef ENABLE_EDITOR
 #include "editor_items_loader.hpp"
 #include "../../objects/sprite.hpp"
 #include "../global_basic.hpp"
@@ -111,3 +112,5 @@ vector<cSprite*> cEditorItemsLoader::get_tagged_sprites()
 {
     return m_tagged_sprites;
 }
+
+#endif // ENABLE_EDITOR

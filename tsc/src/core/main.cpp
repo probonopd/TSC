@@ -38,6 +38,7 @@
 #include "../input/keyboard.hpp"
 #include "../video/renderer.hpp"
 #include "../video/loading_screen.hpp"
+#include "../video/img_settings.hpp"
 #include "../core/i18n.hpp"
 #include "../gui/generic.hpp"
 
@@ -300,11 +301,15 @@ void Init_Game(void)
     // note : set any sprite manager as it is set again on game mode switch
     pHud_Manager = new cHud_Manager(pActive_Level->m_sprite_manager);
     pLevel_Player->Init();
+
+#ifdef ENABLE_EDITOR
     pLevel_Editor = new cEditor_Level(pActive_Level->m_sprite_manager, pActive_Level);
     /* note : set any sprite manager as cOverworld_Manager::Load sets it again
      * parent overworld is also set from there again
     */
     pWorld_Editor = new cEditor_World(pActive_Level->m_sprite_manager, NULL);
+#endif
+
     pMouseCursor = new cMouseCursor(pActive_Level->m_sprite_manager);
     pKeyboard = new cKeyboard();
     pJoystick = new cJoystick();
@@ -356,6 +361,7 @@ void Exit_Game(void)
         pSound_Manager = NULL;
     }
 
+#ifdef ENABLE_EDITOR
     if (pLevel_Editor) {
         delete pLevel_Editor;
         pLevel_Editor = NULL;
@@ -365,6 +371,7 @@ void Exit_Game(void)
         delete pWorld_Editor;
         pWorld_Editor = NULL;
     }
+#endif
 
     if (pPreferences) {
         delete pPreferences;
@@ -537,20 +544,24 @@ bool Handle_Input_Global(const sf::Event& ev)
 
         // send events
         if (Game_Mode == MODE_LEVEL) {
+#ifdef ENABLE_EDITOR
             // editor events
             if (pLevel_Editor->m_enabled) {
                 if (pLevel_Editor->Handle_Event(ev)) {
                     return 1;
                 }
             }
+#endif
         }
         else if (Game_Mode == MODE_OVERWORLD) {
+#ifdef ENABLE_EDITOR
             // editor events
             if (pWorld_Editor->m_enabled) {
                 if (pWorld_Editor->Handle_Event(ev)) {
                     return 1;
                 }
             }
+#endif
         }
         else if (Game_Mode == MODE_MENU) {
             if (pMenuCore->Handle_Event(ev)) {
@@ -615,7 +626,9 @@ void Update_Game(void)
         pMenuCore->Update();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
+#ifdef ENABLE_EDITOR
         pLevel_Editor->m_settings_screen->Update();
+#endif
     }
 
     // gui
@@ -642,7 +655,9 @@ void Draw_Game(void)
         pMenuCore->Draw();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
+#ifdef ENABLE_EDITOR
         pLevel_Editor->m_settings_screen->Draw();
+#endif
     }
 
     // Mouse

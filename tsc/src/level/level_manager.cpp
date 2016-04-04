@@ -228,7 +228,9 @@ void cLevel_Manager::Update(void)
 {
     // input
     pActive_Level->Process_Input();
+#ifdef ENABLE_EDITOR
     pLevel_Editor->Process_Input();
+#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_PROCESS_INPUT]->Update();
@@ -239,11 +241,13 @@ void cLevel_Manager::Update(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL]->Update();
 
+#ifdef ENABLE_EDITOR
     // editor
     pLevel_Editor->Update();
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL_EDITOR]->Update();
+#endif
 
     // hud
     pHud_Manager->Update();
@@ -316,8 +320,10 @@ void cLevel_Manager::Draw(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_HUD]->Update();
 
+#ifdef ENABLE_EDITOR
     // level editor
     pLevel_Editor->Draw();
+#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_EDITOR]->Update();

@@ -260,22 +260,28 @@ void cCollidingSprite::Handle_Collision(cObjectCollision* collision)
      * and that level is not being edited at the moment.
      * Also needed as the MRuby interpreter is not initialized before
      * Level construction. */
-    if (pActive_Level && !pLevel_Editor->m_enabled) {
-        /* For whatever reason, CollidingSprite is the superclass
-         * of Sprite (I’d expect it the other way round), so we have
-         * first to check whether we got a correct sprite object prior
-         * to handing it to the event (=> downcast). As all level-relevant
-         * sprites are real Sprites (rather than bare CollidingSprites),
-         * this doesn’t exclude important sprites from being listened to
-         * in MRuby. --Marvin Gülker (aka Quintus) */
-        cSprite* p_sprite = dynamic_cast<cSprite*>(this);
-        if (p_sprite) {
-            // Fire the event for both objects, eases registering
-            Scripting::cTouch_Event evt1(collision->m_obj);
-            Scripting::cTouch_Event evt2(p_sprite);
-            evt1.Fire(pActive_Level->m_mruby, p_sprite);
-            evt2.Fire(pActive_Level->m_mruby, collision->m_obj);
+    if (pActive_Level) {
+#ifdef ENABLE_EDITOR
+        if (!pLevel_Editor->m_enabled) {
+#endif
+            /* For whatever reason, CollidingSprite is the superclass
+             * of Sprite (I’d expect it the other way round), so we have
+             * first to check whether we got a correct sprite object prior
+             * to handing it to the event (=> downcast). As all level-relevant
+             * sprites are real Sprites (rather than bare CollidingSprites),
+             * this doesn’t exclude important sprites from being listened to
+             * in MRuby. --Marvin Gülker (aka Quintus) */
+            cSprite* p_sprite = dynamic_cast<cSprite*>(this);
+            if (p_sprite) {
+                // Fire the event for both objects, eases registering
+                Scripting::cTouch_Event evt1(collision->m_obj);
+                Scripting::cTouch_Event evt2(p_sprite);
+                evt1.Fire(pActive_Level->m_mruby, p_sprite);
+                evt2.Fire(pActive_Level->m_mruby, collision->m_obj);
+            }
+#ifdef ENABLE_EDITOR
         }
+#endif
     }
 
     // player
@@ -1404,6 +1410,7 @@ void cSprite::Destroy(void)
     Set_Image(NULL, 1);
 }
 
+#ifdef ENABLE_EDITOR
 /**
  * Helper function for dislaying widgets for editing an object.
  * Takes the label (name) to display before the widget, the tooltip to display
@@ -1579,6 +1586,7 @@ bool cSprite::Editor_Image_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 /**
  * This method should append all necessary components

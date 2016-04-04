@@ -38,6 +38,7 @@ set(TSC_VERSION_POSTFIX "dev")
 
 option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
+option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
 set(FIXED_DATA_DIR "" CACHE FILEPATH "Enforce a static directory to look up graphics, music, etc. under rather than having TSC determine it dynamically.")
 set(BINARY_DIR "" CACHE FILEPATH "Enforce a path to install the binary to. If you use this, you MUST also set FIXED_DATA_DIR.")
@@ -282,11 +283,11 @@ endif()
 
 set(tsc_sources
   src/level/level_background.cpp
-#  src/level/level.cpp
-#  src/level/level_loader.cpp
-#  src/level/level_manager.cpp
+  src/level/level.cpp
+  src/level/level_loader.cpp
+  src/level/level_manager.cpp
 #  src/level/level_player.cpp
-#  src/level/level_editor.cpp
+  src/level/level_editor.cpp
 #  src/level/level_settings.cpp
 #  src/enemies/doom_larry.cpp
 #  src/enemies/static.cpp
@@ -319,8 +320,8 @@ set(tsc_sources
 #  src/input/joystick.cpp
 #  src/objects/level_exit.cpp
 #  src/objects/box.cpp
-#  src/objects/sprite.cpp
-#  src/objects/movingsprite.cpp
+  src/objects/sprite.cpp
+  src/objects/movingsprite.cpp
 #  src/objects/moving_platform.cpp
 #  src/objects/bonusbox.cpp
 #  src/objects/goldpiece.cpp
@@ -412,10 +413,10 @@ set(tsc_sources
   src/audio/sound_manager.cpp
   src/core/camera.cpp
   src/core/i18n.cpp
-#  src/core/main.cpp
+  src/core/main.cpp
   src/core/file_parser.cpp
   src/core/editor/editor_items_loader.cpp
-#  src/core/editor/editor.cpp
+  src/core/editor/editor.cpp
   src/core/errors.cpp
   src/core/game_core.cpp
   src/core/property_helper.cpp
@@ -432,7 +433,7 @@ set(tsc_sources
   src/core/math/vector.cpp
 #  src/overworld/world_player.cpp
 #  src/overworld/world_sprite_manager.cpp
-#  src/overworld/world_editor.cpp
+  src/overworld/world_editor.cpp
 #  src/overworld/overworld.cpp
 #  src/overworld/overworld_layer_loader.cpp
 #  src/overworld/world_manager.cpp

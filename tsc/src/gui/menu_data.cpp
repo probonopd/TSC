@@ -933,8 +933,10 @@ bool cMenu_Start::Load_Level(std::string level_name)
         return 0;
     }
 
+#ifdef ENABLE_EDITOR
     // Disable editor (does nothing if already disabled)
     pLevel_Editor->Disable();
+#endif
 
     // enter level
     Game_Action = GA_ENTER_LEVEL;
@@ -1376,6 +1378,7 @@ bool cMenu_Start::Level_Select_Final_List(const CEGUI::EventArgs& event)
 
 bool cMenu_Start::Button_Level_New_Clicked(const CEGUI::EventArgs& event)
 {
+#ifdef ENABLE_EDITOR
     if (!pLevel_Editor->Function_New()) {
         // aborted/failed
         return 0;
@@ -1387,6 +1390,10 @@ bool cMenu_Start::Button_Level_New_Clicked(const CEGUI::EventArgs& event)
     Game_Action_Data_End.add("activate_editor", "1");
 
     return 1;
+#else
+    std::cerr << "In-game editor disabled by compilation option." << std::endl;
+    return 0;
+#endif
 }
 
 bool cMenu_Start::Button_Level_Edit_Clicked(const CEGUI::EventArgs& event)

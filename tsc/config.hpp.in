@@ -31,6 +31,9 @@
 // will cause TSC to be always in English.
 #cmakedefine ENABLE_NLS 1
 
+// If unset, TSC will be built without the in-game editor.
+#cmakedefine ENABLE_EDITOR 1
+
 // Enforce a specifc, static directory for graphics, music,
 // etc. If this is unset, TSC determines the data directory
 // dynamically by looking for a directory ../share/tsc,

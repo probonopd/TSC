@@ -14,6 +14,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#ifdef ENABLE_EDITOR
 #include "../core/global_basic.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../core/game_core.hpp"
@@ -269,3 +270,5 @@ cEditor_World* pWorld_Editor = NULL;
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
 } // namespace TSC
+
+#endif // ENABLE_EDITOR

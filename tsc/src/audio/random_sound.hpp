@@ -88,6 +88,7 @@ namespace TSC {
         // if camera went out of range
         void Event_Out_Of_Range(void) const;
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor filename text changed event
@@ -106,6 +107,7 @@ namespace TSC {
         bool Editor_Volume_Reduction_Begin_Text_Changed(const CEGUI::EventArgs& event);
         // editor volume reduction end text changed event
         bool Editor_Volume_Reduction_End_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         // Save to XML node
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
