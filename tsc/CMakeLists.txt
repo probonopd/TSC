@@ -414,7 +414,7 @@ set(tsc_sources
   src/core/i18n.cpp
 #  src/core/main.cpp
   src/core/file_parser.cpp
-#  src/core/editor/editor_items_loader.cpp
+  src/core/editor/editor_items_loader.cpp
 #  src/core/editor/editor.cpp
   src/core/errors.cpp
   src/core/game_core.cpp
