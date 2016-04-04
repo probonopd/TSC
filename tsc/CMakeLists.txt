@@ -392,7 +392,7 @@ set(tsc_sources
 #  src/scripting/objects/boxes/mrb_spinbox.cpp
 #  src/scripting/objects/boxes/mrb_bonusbox.cpp
 #  src/scripting/objects/boxes/mrb_box.cpp
-#  src/scripting/scripting.cpp
+  src/scripting/scripting.cpp
   src/scripting/scriptable_object.cpp
   src/gui/hud.cpp
   src/gui/menu_data.cpp
@@ -408,28 +408,28 @@ set(tsc_sources
   src/video/img_settings.cpp
   src/video/gl_surface.cpp
   src/audio/random_sound.cpp
-#  src/audio/audio.cpp
-#  src/audio/sound_manager.cpp
-#  src/core/camera.cpp
-#  src/core/i18n.cpp
+  src/audio/audio.cpp
+  src/audio/sound_manager.cpp
+  src/core/camera.cpp
+  src/core/i18n.cpp
 #  src/core/main.cpp
-#  src/core/file_parser.cpp
+  src/core/file_parser.cpp
 #  src/core/editor/editor_items_loader.cpp
 #  src/core/editor/editor.cpp
-#  src/core/errors.cpp
+  src/core/errors.cpp
 #  src/core/game_core.cpp
-#  src/core/property_helper.cpp
-#  src/core/filesystem/filesystem.cpp
-#  src/core/filesystem/package_manager.cpp
-#  src/core/filesystem/resource_manager.cpp
-#  src/core/filesystem/relative.cpp
-#  src/core/sprite_manager.cpp
-#  src/core/framerate.cpp
-#  src/core/xml_attributes.cpp
-#  src/core/collision.cpp
-#  src/core/math/utilities.cpp
-#  src/core/math/circle.cpp
-#  src/core/math/vector.cpp
+  src/core/property_helper.cpp
+  src/core/filesystem/filesystem.cpp
+  src/core/filesystem/package_manager.cpp
+  src/core/filesystem/resource_manager.cpp
+  src/core/filesystem/relative.cpp
+  src/core/sprite_manager.cpp
+  src/core/framerate.cpp
+  src/core/xml_attributes.cpp
+  src/core/collision.cpp
+  src/core/math/utilities.cpp
+  src/core/math/circle.cpp
+  src/core/math/vector.cpp
 #  src/overworld/world_player.cpp
 #  src/overworld/world_sprite_manager.cpp
 #  src/overworld/world_editor.cpp
