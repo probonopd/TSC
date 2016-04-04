@@ -417,7 +417,7 @@ set(tsc_sources
 #  src/core/editor/editor_items_loader.cpp
 #  src/core/editor/editor.cpp
   src/core/errors.cpp
-#  src/core/game_core.cpp
+  src/core/game_core.cpp
   src/core/property_helper.cpp
   src/core/filesystem/filesystem.cpp
   src/core/filesystem/package_manager.cpp

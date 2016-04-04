@@ -21,6 +21,7 @@
 #include "../input/joystick.hpp"
 #include "../level/level_editor.hpp"
 #include "../level/level_player.hpp"
+#include "../video/loading_screen.hpp"
 #include "../video/renderer.hpp"
 #include "../level/level.hpp"
 #include "../core/sprite_manager.hpp"
@@ -326,12 +327,13 @@ void Clear_Input_Events(void)
 
 void Preload_Images(bool draw_gui /* = 0 */)
 {
+    CEGUI::Window* p_rootwindow = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
     // progress bar
     CEGUI::ProgressBar* progress_bar = NULL;
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(p_rootwindow->getChild("progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Loading Images"));
@@ -473,7 +475,7 @@ void Preload_Sounds(bool draw_gui /* = 0 */)
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Loading Sounds"));
