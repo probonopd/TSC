@@ -1390,11 +1390,11 @@ void cParticle_Emitter::Editor_Activate(void)
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Filename_Text_Changed, this));
 
     // emitter position based on camera pos
-    CEGUI::Checkbox* checkbox = static_cast<CEGUI::Checkbox*>(wmgr.createWindow("TaharezLook/Checkbox", "emitter_based_on_camera_pos"));
+    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/ToggleButton", "emitter_based_on_camera_pos"));
     Editor_Add(UTF8_("Based on camera pos."), UTF8_("The emitter position is based on the camera position"), checkbox, 50);
 
     checkbox->setSelected(m_emitter_based_on_camera_pos);
-    checkbox->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Emitter_Based_On_Camera_Pos_Changed, this));
+    checkbox->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Emitter_Based_On_Camera_Pos_Changed, this));
 
     // particle position based on emitter pos
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "emitter_particle_based_on_emitter_pos"));
@@ -1502,11 +1502,11 @@ void cParticle_Emitter::Editor_Activate(void)
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Rotation_Z_Base_Text_Changed, this));
 
     // start direction is added to the z rotation
-    checkbox = static_cast<CEGUI::Checkbox*>(wmgr.createWindow("TaharezLook/Checkbox", "emitter_start_rot_z_uses_direction"));
+    checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/ToggleButton", "emitter_start_rot_z_uses_direction"));
     Editor_Add(UTF8_("Add direction"), UTF8_("Start direction is added to the z rotation"), checkbox, 50, 28, 0);
 
     checkbox->setSelected(m_start_rot_z_uses_direction);
-    checkbox->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Start_Rot_Z_Uses_Direction_Changed, this));
+    checkbox->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Start_Rot_Z_Uses_Direction_Changed, this));
 
     // constant rotation x
     /*editbox = static_cast<CEGUI::Editbox *>(wmgr.createWindow( "TaharezLook/Editbox", "emitter_const_rotation_x_base" ));
@@ -1712,7 +1712,7 @@ bool cParticle_Emitter::Editor_Pos_Z_Rand_Text_Changed(const CEGUI::EventArgs& e
 bool cParticle_Emitter::Editor_Emitter_Based_On_Camera_Pos_Changed(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    bool enabled = static_cast<CEGUI::Checkbox*>(windowEventArgs.window)->isSelected();
+    bool enabled = static_cast<CEGUI::ToggleButton*>(windowEventArgs.window)->isSelected();
 
     Set_Based_On_Camera_Pos(enabled);
     Pre_Update();
@@ -1855,7 +1855,7 @@ bool cParticle_Emitter::Editor_Rotation_Y_Base_Text_Changed(const CEGUI::EventAr
 bool cParticle_Emitter::Editor_Start_Rot_Z_Uses_Direction_Changed(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    bool enabled = static_cast<CEGUI::Checkbox*>(windowEventArgs.window)->isSelected();
+    bool enabled = static_cast<CEGUI::ToggleButton*>(windowEventArgs.window)->isSelected();
 
     Set_Start_Rot_Z_Uses_Direction(enabled);
     Pre_Update();
