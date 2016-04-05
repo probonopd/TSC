@@ -551,6 +551,7 @@ void cGee::Handle_Collision_Massive(cObjectCollision* collision)
     Send_Collision(collision);
 }
 
+#ifdef ENABLE_EDITOR
 void cGee::Editor_Activate(void)
 {
     // get window manager
@@ -664,6 +665,7 @@ bool cGee::Editor_Fly_Distance_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

@@ -117,6 +117,7 @@ namespace TSC {
         // collision with massive
         virtual void Handle_Collision_Massive(cObjectCollision* collision);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
@@ -129,6 +130,7 @@ namespace TSC {
         bool Editor_Shell_Time_Text_Changed(const CEGUI::EventArgs& event);
         // editor level ends if killed option selected event
         bool Editor_Level_Ends_If_Killed(const CEGUI::EventArgs& event);
+#endif
 
         // internal turtle state
         TurtleBoss_state m_turtle_state;

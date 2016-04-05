@@ -116,6 +116,7 @@ namespace TSC {
         virtual void Handle_Collision_Massive(cObjectCollision* collision);
         virtual void Handle_Collision_Box( ObjectDirection cdirection, GL_rect *r2 );
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
@@ -124,6 +125,7 @@ namespace TSC {
         bool Editor_Max_Downgrade_Count_Text_Changed(const CEGUI::EventArgs& event);
         // editor level ends if killed
         bool Editor_Level_Ends_If_Killed(const CEGUI::EventArgs& event);
+#endif
 
         // Color
         DefaultColor m_color_type;

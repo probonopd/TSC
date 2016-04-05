@@ -337,6 +337,7 @@ void cBeetleBarrage::Calculate_Fly_Start(const cBeetle* p_beetle, float& x, floa
     y = m_pos_y + m_rect.m_h / 2.0f - p_beetle->m_rect.m_h / 2.0f - 5.0f;
 }
 
+#ifdef ENABLE_EDITOR
 void cBeetleBarrage::Editor_Activate()
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -391,3 +392,4 @@ bool cBeetleBarrage::Editor_Spit_Count_Text_Changed(const CEGUI::EventArgs& even
     Set_Beetle_Spit_Count(string_to_int(str_text));
     return true;
 }
+#endif

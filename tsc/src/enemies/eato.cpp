@@ -243,6 +243,7 @@ void cEato::Handle_Collision_Player(cObjectCollision* collision)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cEato::Editor_Activate(void)
 {
     // get window manager
@@ -293,6 +294,7 @@ bool cEato::Editor_Image_Dir_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 std::string cEato::Create_Name(void) const
 {

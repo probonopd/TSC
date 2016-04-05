@@ -289,25 +289,25 @@ set(tsc_sources
   src/level/level_player.cpp
   src/level/level_editor.cpp
   src/level/level_settings.cpp
-#  src/enemies/doom_larry.cpp
-#  src/enemies/static.cpp
-#  src/enemies/beetle.cpp
-#  src/enemies/gee.cpp
-#  src/enemies/eato.cpp
-#  src/enemies/krush.cpp
-#  src/enemies/pip.cpp
-#  src/enemies/army.cpp
-#  src/enemies/bosses/turtle_boss.cpp
-#  src/enemies/larry.cpp
-#  src/enemies/flyon.cpp
-#  src/enemies/furball.cpp
-#  src/enemies/rokko.cpp
-#  src/enemies/spikeball.cpp
-#  src/enemies/beetle_barrage.cpp
-#  src/enemies/spika.cpp
-#  src/enemies/shell.cpp
-#  src/enemies/enemy.cpp
-#  src/enemies/thromp.cpp
+  src/enemies/doom_larry.cpp
+  src/enemies/static.cpp
+  src/enemies/beetle.cpp
+  src/enemies/gee.cpp
+  src/enemies/eato.cpp
+  src/enemies/krush.cpp
+  src/enemies/pip.cpp
+  src/enemies/army.cpp
+  src/enemies/bosses/turtle_boss.cpp
+  src/enemies/larry.cpp
+  src/enemies/flyon.cpp
+  src/enemies/furball.cpp
+  src/enemies/rokko.cpp
+  src/enemies/spikeball.cpp
+  src/enemies/beetle_barrage.cpp
+  src/enemies/spika.cpp
+  src/enemies/shell.cpp
+  src/enemies/enemy.cpp
+  src/enemies/thromp.cpp
 #  src/user/savegame/savegame_loader.cpp
 #  src/user/savegame/savegame.cpp
 #  src/user/savegame/save.cpp

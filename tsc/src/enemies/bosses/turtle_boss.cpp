@@ -981,6 +981,7 @@ void cTurtleBoss::Handle_Collision_Massive(cObjectCollision* collision)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cTurtleBoss::Editor_Activate(void)
 {
     // get window manager
@@ -1093,6 +1094,7 @@ bool cTurtleBoss::Editor_Level_Ends_If_Killed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 std::string cTurtleBoss::Create_Name(void) const
 {

@@ -559,6 +559,7 @@ void cRokko::Handle_out_of_Level(ObjectDirection dir)
     //Set_Active( 0 );
 }
 
+#ifdef ENABLE_EDITOR
 void cRokko::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -606,6 +607,7 @@ bool cRokko::Editor_Speed_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 void cRokko::Set_Manual(bool manual)
 {

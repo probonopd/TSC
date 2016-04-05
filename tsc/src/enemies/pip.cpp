@@ -336,6 +336,7 @@ void cPip::Handle_Collision_Massive(cObjectCollision* p_collision)
         Turn_Around(p_collision->m_direction);
 }
 
+#ifdef ENABLE_EDITOR
 void cPip::Editor_Activate()
 {
     CEGUI::WindowManager& wm = CEGUI::WindowManager::getSingleton();
@@ -361,3 +362,4 @@ bool cPip::Editor_Direction_Select(const CEGUI::EventArgs& event)
     Set_Direction(Get_Direction_Id(p_item->getText().c_str()));
     return true;
 }
+#endif

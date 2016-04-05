@@ -113,10 +113,12 @@ namespace TSC {
         virtual void Handle_Collision_Massive(cObjectCollision* collision);
         virtual void Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
         bool Editor_Direction_Select(const CEGUI::EventArgs& event);
+#endif
 
         // internal armadillo state
         Army_state m_army_state;

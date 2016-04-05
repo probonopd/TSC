@@ -654,6 +654,7 @@ void cThromp::Handle_out_of_Level(ObjectDirection dir)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cThromp::Editor_Activate(void)
 {
     // get window manager
@@ -737,6 +738,7 @@ bool cThromp::Editor_Speed_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 std::string cThromp::Create_Name(void) const
 {

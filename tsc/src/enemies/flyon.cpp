@@ -541,6 +541,7 @@ void cFlyon::Handle_out_of_Level(ObjectDirection dir)
         cEnemy::Handle_out_of_Level(dir);
 }
 
+#ifdef ENABLE_EDITOR
 void cFlyon::Editor_Activate(void)
 {
     // get window manager
@@ -624,6 +625,7 @@ bool cFlyon::Editor_Speed_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 std::string cFlyon::Create_Name(void) const
 {

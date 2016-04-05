@@ -346,6 +346,7 @@ void cKrush::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
     DownGrade(true);
 }
 
+#ifdef ENABLE_EDITOR
 void cKrush::Editor_Activate(void)
 {
     // get window manager
@@ -375,6 +376,7 @@ bool cKrush::Editor_Direction_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

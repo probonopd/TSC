@@ -381,6 +381,7 @@ void cLarry::Explosion_Animation()
     pActive_Animation_Manager->Add(p_em);
 }
 
+#ifdef ENABLE_EDITOR
 void cLarry::Editor_Activate()
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -406,3 +407,4 @@ bool cLarry::On_Editor_Direction_Select(const CEGUI::EventArgs& event)
 
     return true;
 }
+#endif

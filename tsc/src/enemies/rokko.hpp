@@ -101,12 +101,14 @@ namespace TSC {
         // handle moved out of Level event
         virtual void Handle_out_of_Level(ObjectDirection dir);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
         bool Editor_Direction_Select(const CEGUI::EventArgs& event);
         // editor speed text changed event
         bool Editor_Speed_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         // smoke particle counter
         float m_smoke_counter;
