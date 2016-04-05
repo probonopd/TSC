@@ -288,7 +288,7 @@ set(tsc_sources
   src/level/level_manager.cpp
   src/level/level_player.cpp
   src/level/level_editor.cpp
-#  src/level/level_settings.cpp
+  src/level/level_settings.cpp
 #  src/enemies/doom_larry.cpp
 #  src/enemies/static.cpp
 #  src/enemies/beetle.cpp

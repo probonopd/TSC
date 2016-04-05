@@ -61,6 +61,12 @@ namespace TSC {
             return sf::Color(red, green, blue);
         }
 
+        // Returns it as SFML color
+        inline CEGUI::Colour Get_cegui_Color(void) const
+        {
+            return CEGUI::Colour(static_cast<float>(red) / 255, static_cast<float>(green) / 255, static_cast<float>(blue) / 255, static_cast<float>(alpha) / 255);
+        }
+
         // += operator
         inline void operator += (const Color& c)
         {
