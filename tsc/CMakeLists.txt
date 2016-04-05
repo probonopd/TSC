@@ -308,12 +308,12 @@ set(tsc_sources
   src/enemies/shell.cpp
   src/enemies/enemy.cpp
   src/enemies/thromp.cpp
-#  src/user/savegame/savegame_loader.cpp
-#  src/user/savegame/savegame.cpp
-#  src/user/savegame/save.cpp
-#  src/user/savegame/save_level.cpp
-#  src/user/savegame/save_overworld.cpp
-#  src/user/preferences_loader.cpp
+  src/user/savegame/savegame_loader.cpp
+  src/user/savegame/savegame.cpp
+  src/user/savegame/save.cpp
+  src/user/savegame/save_level.cpp
+  src/user/savegame/save_overworld.cpp
+  src/user/preferences_loader.cpp
 #  src/user/preferences.cpp
 #  src/input/mouse.cpp
 #  src/input/keyboard.cpp
