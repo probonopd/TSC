@@ -74,7 +74,7 @@ namespace TSC {
         bool Text_Entered(const sf::Event& evt);
 
         // Translate a SFMLKey to the proper CEGUI::Key
-        unsigned int SFMLKey_to_CEGUIKey(const sf::Keyboard::Key key) const;
+        CEGUI::Key::Scan SFMLKey_to_CEGUIKey(const sf::Keyboard::Key key) const;
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
