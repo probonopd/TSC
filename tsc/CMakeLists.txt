@@ -314,85 +314,85 @@ set(tsc_sources
   src/user/savegame/save_level.cpp
   src/user/savegame/save_overworld.cpp
   src/user/preferences_loader.cpp
-#  src/user/preferences.cpp
-#  src/input/mouse.cpp
-#  src/input/keyboard.cpp
-#  src/input/joystick.cpp
-#  src/objects/level_exit.cpp
-#  src/objects/box.cpp
+  src/user/preferences.cpp
+  src/input/mouse.cpp
+  src/input/keyboard.cpp
+  src/input/joystick.cpp
+  src/objects/level_exit.cpp
+  src/objects/box.cpp
   src/objects/sprite.cpp
   src/objects/movingsprite.cpp
-#  src/objects/moving_platform.cpp
-#  src/objects/bonusbox.cpp
-#  src/objects/goldpiece.cpp
-#  src/objects/crate.cpp
-#  src/objects/lava.cpp
-#  src/objects/star.cpp
-#  src/objects/spinbox.cpp
-#  src/objects/powerup.cpp
-#  src/objects/ball.cpp
-#  src/objects/path.cpp
-#  src/objects/text_box.cpp
-#  src/objects/level_entry.cpp
-#  src/objects/enemystopper.cpp
-#  src/campaign/campaign_loader.cpp
-#  src/campaign/campaign_manager.cpp
-#  src/scripting/events/shoot_event.cpp
-#  src/scripting/events/key_down_event.cpp
-#  src/scripting/events/touch_event.cpp
-#  src/scripting/events/event.cpp
-#  src/scripting/events/downgrade_event.cpp
-#  src/scripting/events/level_load_event.cpp
-#  src/scripting/events/level_save_event.cpp
-#  src/scripting/objects/enemies/mrb_spikeball.cpp
-#  src/scripting/objects/enemies/mrb_turtle_boss.cpp
-#  src/scripting/objects/enemies/mrb_rokko.cpp
-#  src/scripting/objects/enemies/mrb_eato.cpp
-#  src/scripting/objects/enemies/mrb_flyon.cpp
-#  src/scripting/objects/enemies/mrb_static.cpp
-#  src/scripting/objects/enemies/mrb_spika.cpp
-#  src/scripting/objects/enemies/mrb_enemy.cpp
-#  src/scripting/objects/enemies/mrb_larry.cpp
-#  src/scripting/objects/enemies/mrb_gee.cpp
-#  src/scripting/objects/enemies/mrb_doom_larry.cpp
-#  src/scripting/objects/enemies/mrb_krush.cpp
-#  src/scripting/objects/enemies/mrb_pip.cpp
-#  src/scripting/objects/enemies/mrb_beetle.cpp
-#  src/scripting/objects/enemies/mrb_beetle_barrage.cpp
-#  src/scripting/objects/enemies/mrb_armadillo.cpp
-#  src/scripting/objects/enemies/mrb_thromp.cpp
-#  src/scripting/objects/enemies/mrb_furball.cpp
-#  src/scripting/objects/misc/mrb_level_player.cpp
-#  src/scripting/objects/misc/mrb_input.cpp
-#  src/scripting/objects/misc/mrb_timer.cpp
-#  src/scripting/objects/misc/mrb_audio.cpp
-#  src/scripting/objects/misc/mrb_ball.cpp
-#  src/scripting/objects/misc/mrb_level.cpp
-#  src/scripting/objects/mrb_tsc.cpp
-#  src/scripting/objects/powerups/mrb_cookie.cpp
-#  src/scripting/objects/powerups/mrb_fireberry.cpp
-#  src/scripting/objects/powerups/mrb_berry.cpp
-#  src/scripting/objects/powerups/mrb_powerup.cpp
-#  src/scripting/objects/powerups/mrb_lemon.cpp
-#  src/scripting/objects/mrb_eventable.cpp
-#  src/scripting/objects/mrb_uids.cpp
-#  src/scripting/objects/sprites/mrb_sprite.cpp
-#  src/scripting/objects/sprites/mrb_moving_sprite.cpp
-#  src/scripting/objects/sprites/mrb_particle_emitter.cpp
-#  src/scripting/objects/specials/mrb_crate.cpp
-#  src/scripting/objects/specials/mrb_level_exit.cpp
-#  src/scripting/objects/specials/mrb_jewel.cpp
-#  src/scripting/objects/specials/mrb_lava.cpp
-#  src/scripting/objects/specials/mrb_falling_jewel.cpp
-#  src/scripting/objects/specials/mrb_moving_platform.cpp
-#  src/scripting/objects/specials/mrb_enemy_stopper.cpp
-#  src/scripting/objects/specials/mrb_path.cpp
-#  src/scripting/objects/specials/mrb_level_entry.cpp
-#  src/scripting/objects/specials/mrb_jumping_jewel.cpp
-#  src/scripting/objects/boxes/mrb_textbox.cpp
-#  src/scripting/objects/boxes/mrb_spinbox.cpp
-#  src/scripting/objects/boxes/mrb_bonusbox.cpp
-#  src/scripting/objects/boxes/mrb_box.cpp
+  src/objects/moving_platform.cpp
+  src/objects/bonusbox.cpp
+  src/objects/goldpiece.cpp
+  src/objects/crate.cpp
+  src/objects/lava.cpp
+  src/objects/star.cpp
+  src/objects/spinbox.cpp
+  src/objects/powerup.cpp
+  src/objects/ball.cpp
+  src/objects/path.cpp
+  src/objects/text_box.cpp
+  src/objects/level_entry.cpp
+  src/objects/enemystopper.cpp
+  src/campaign/campaign_loader.cpp
+  src/campaign/campaign_manager.cpp
+  src/scripting/events/shoot_event.cpp
+  src/scripting/events/key_down_event.cpp
+  src/scripting/events/touch_event.cpp
+  src/scripting/events/event.cpp
+  src/scripting/events/downgrade_event.cpp
+  src/scripting/events/level_load_event.cpp
+  src/scripting/events/level_save_event.cpp
+  src/scripting/objects/enemies/mrb_spikeball.cpp
+  src/scripting/objects/enemies/mrb_turtle_boss.cpp
+  src/scripting/objects/enemies/mrb_rokko.cpp
+  src/scripting/objects/enemies/mrb_eato.cpp
+  src/scripting/objects/enemies/mrb_flyon.cpp
+  src/scripting/objects/enemies/mrb_static.cpp
+  src/scripting/objects/enemies/mrb_spika.cpp
+  src/scripting/objects/enemies/mrb_enemy.cpp
+  src/scripting/objects/enemies/mrb_larry.cpp
+  src/scripting/objects/enemies/mrb_gee.cpp
+  src/scripting/objects/enemies/mrb_doom_larry.cpp
+  src/scripting/objects/enemies/mrb_krush.cpp
+  src/scripting/objects/enemies/mrb_pip.cpp
+  src/scripting/objects/enemies/mrb_beetle.cpp
+  src/scripting/objects/enemies/mrb_beetle_barrage.cpp
+  src/scripting/objects/enemies/mrb_armadillo.cpp
+  src/scripting/objects/enemies/mrb_thromp.cpp
+  src/scripting/objects/enemies/mrb_furball.cpp
+  src/scripting/objects/misc/mrb_level_player.cpp
+  src/scripting/objects/misc/mrb_input.cpp
+  src/scripting/objects/misc/mrb_timer.cpp
+  src/scripting/objects/misc/mrb_audio.cpp
+  src/scripting/objects/misc/mrb_ball.cpp
+  src/scripting/objects/misc/mrb_level.cpp
+  src/scripting/objects/mrb_tsc.cpp
+  src/scripting/objects/powerups/mrb_cookie.cpp
+  src/scripting/objects/powerups/mrb_fireberry.cpp
+  src/scripting/objects/powerups/mrb_berry.cpp
+  src/scripting/objects/powerups/mrb_powerup.cpp
+  src/scripting/objects/powerups/mrb_lemon.cpp
+  src/scripting/objects/mrb_eventable.cpp
+  src/scripting/objects/mrb_uids.cpp
+  src/scripting/objects/sprites/mrb_sprite.cpp
+  src/scripting/objects/sprites/mrb_moving_sprite.cpp
+  src/scripting/objects/sprites/mrb_particle_emitter.cpp
+  src/scripting/objects/specials/mrb_crate.cpp
+  src/scripting/objects/specials/mrb_level_exit.cpp
+  src/scripting/objects/specials/mrb_jewel.cpp
+  src/scripting/objects/specials/mrb_lava.cpp
+  src/scripting/objects/specials/mrb_falling_jewel.cpp
+  src/scripting/objects/specials/mrb_moving_platform.cpp
+  src/scripting/objects/specials/mrb_enemy_stopper.cpp
+  src/scripting/objects/specials/mrb_path.cpp
+  src/scripting/objects/specials/mrb_level_entry.cpp
+  src/scripting/objects/specials/mrb_jumping_jewel.cpp
+  src/scripting/objects/boxes/mrb_textbox.cpp
+  src/scripting/objects/boxes/mrb_spinbox.cpp
+  src/scripting/objects/boxes/mrb_bonusbox.cpp
+  src/scripting/objects/boxes/mrb_box.cpp
   src/scripting/scripting.cpp
   src/scripting/scriptable_object.cpp
   src/gui/hud.cpp
@@ -403,11 +403,11 @@ set(tsc_sources
   src/video/renderer.cpp
   src/video/img_set.cpp
   src/video/font.cpp
-  src/video/loading_screen.cpp
   src/video/video.cpp
   src/video/animation.cpp
   src/video/img_settings.cpp
   src/video/gl_surface.cpp
+  src/video/loading_screen.cpp
   src/audio/random_sound.cpp
   src/audio/audio.cpp
   src/audio/sound_manager.cpp
@@ -431,16 +431,16 @@ set(tsc_sources
   src/core/math/utilities.cpp
   src/core/math/circle.cpp
   src/core/math/vector.cpp
-#  src/overworld/world_player.cpp
-#  src/overworld/world_sprite_manager.cpp
+  src/overworld/world_player.cpp
+  src/overworld/world_sprite_manager.cpp
   src/overworld/world_editor.cpp
-#  src/overworld/overworld.cpp
-#  src/overworld/overworld_layer_loader.cpp
-#  src/overworld/world_manager.cpp
-#  src/overworld/world_layer.cpp
-#  src/overworld/overworld_loader.cpp
-#  src/overworld/overworld_description_loader.cpp
-#  src/overworld/world_waypoint.cpp
+  src/overworld/overworld.cpp
+  src/overworld/overworld_layer_loader.cpp
+  src/overworld/world_manager.cpp
+  src/overworld/world_layer.cpp
+  src/overworld/overworld_loader.cpp
+  src/overworld/overworld_description_loader.cpp
+  src/overworld/world_waypoint.cpp
 )
 file(GLOB_RECURSE tsc_headers "src/*.hpp")
 list(APPEND tsc_sources ${tsc_headers})
