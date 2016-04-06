@@ -50,7 +50,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="Area" Value="{{0.05,0},{0.43,0},{0.4,0},{0.88,0}}"/>
     </Window>
-    <Window type="TaharezLook/TSC_Spinner" name="joystick_spinner_axis_hor">
+    <Window type="TaharezLook/Spinner" name="joystick_spinner_axis_hor">
       <Property name="StepSize" Value="1"/>
       <Property name="CurrentValue" Value="0"/>
       <Property name="MaximumValue" Value="32767"/>
@@ -58,7 +58,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="Area" Value="{{0.58,0},{0.55,0},{0.68,0},{0.63,0}}"/>
     </Window>
-    <Window type="TaharezLook/TSC_Spinner" name="joystick_spinner_axis_ver">
+    <Window type="TaharezLook/Spinner" name="joystick_spinner_axis_ver">
       <Property name="StepSize" Value="1"/>
       <Property name="CurrentValue" Value="0"/>
       <Property name="MaximumValue" Value="32767"/>

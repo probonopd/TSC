@@ -21,7 +21,7 @@
       <Property name="Area" Value="{{0.01,0},{0.13,0},{0.3,0},{0.2,0}}"/>
       <Property name="BackgroundEnabled" Value="False"/>
     </Window>
-    <Window type="TaharezLook/TSC_Spinner" name="editor_spinner_item_image_size">
+    <Window type="TaharezLook/Spinner" name="editor_spinner_item_image_size">
       <Property name="TooltipText" Value="Item image size. The default is 50."/>
       <Property name="StepSize" Value="5"/>
       <Property name="CurrentValue" Value="5"/>

@@ -38,7 +38,7 @@
       <Property name="Area" Value="{{0.3,0},{0.29,0},{0.5,0},{0.54,0}}"/>
       <Property name="MaxEditTextLength" Value="1073741823"/>
     </Window>
-    <Window type="TaharezLook/TSC_Spinner" name="video_spinner_fps_limit">
+    <Window type="TaharezLook/Spinner" name="video_spinner_fps_limit">
       <Property name="TooltipText" Value="Frames per second (FPS) limit. 0 disables it."/>
       <Property name="StepSize" Value="5"/>
       <Property name="CurrentValue" Value="0"/>

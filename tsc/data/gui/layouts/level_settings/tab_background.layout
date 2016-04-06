@@ -122,7 +122,7 @@
             <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
             <Property name="Area" Value="{{0.25,0},{0.34,0},{0.8,0},{0.39,0}}"/>
         </Window>
-        <Window type="TaharezLook/TSC_Spinner" name="spinner_bg_image_speed_x">
+        <Window type="TaharezLook/Spinner" name="spinner_bg_image_speed_x">
             <Property name="TooltipText" Value="Image X scrolling speed"/>
             <Property name="StepSize" Value="1"/>
             <Property name="CurrentValue" Value="0"/>
@@ -132,7 +132,7 @@
             <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
             <Property name="Area" Value="{{0.25,0},{0.41,0},{0.35,0},{0.46,0}}"/>
         </Window>
-        <Window type="TaharezLook/TSC_Spinner" name="spinner_bg_image_speed_y">
+        <Window type="TaharezLook/Spinner" name="spinner_bg_image_speed_y">
             <Property name="TooltipText" Value="Image Y scrolling speed"/>
             <Property name="StepSize" Value="1"/>
             <Property name="CurrentValue" Value="0"/>
@@ -234,7 +234,7 @@
             <Property name="Area" Value="{{0.14,0},{0.47,0},{0.25,0},{0.52,0}}"/>
             <Property name="BackgroundEnabled" Value="False"/>
         </Window>
-        <Window type="TaharezLook/TSC_Spinner" name="spinner_bg_image_const_vel_x">
+        <Window type="TaharezLook/Spinner" name="spinner_bg_image_const_vel_x">
             <Property name="TooltipText" Value="Constant X scrolling velocity"/>
             <Property name="StepSize" Value="1"/>
             <Property name="CurrentValue" Value="0"/>
@@ -252,7 +252,7 @@
             <Property name="Area" Value="{{0.36,0},{0.47,0},{0.39,0},{0.52,0}}"/>
             <Property name="BackgroundEnabled" Value="False"/>
         </Window>
-        <Window type="TaharezLook/TSC_Spinner" name="spinner_bg_image_const_vel_y">
+        <Window type="TaharezLook/Spinner" name="spinner_bg_image_const_vel_y">
             <Property name="TooltipText" Value="Constant Y scrolling velocity"/>
             <Property name="StepSize" Value="1"/>
             <Property name="CurrentValue" Value="0"/>
