@@ -12,7 +12,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.05,0},{0.5,0},{0.38,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Combobox" name="video_combo_bpp">
       <Property name="TooltipText" Value="Set the Bits per Pixel. Only lower this value if you don&apos;t support it."/>
@@ -20,7 +20,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.13,0},{0.5,0},{0.38,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Combobox" name="video_combo_fullscreen">
       <Property name="TooltipText" Value="Should the Game run in Fullscreen or in Windowed Mode. Windowed Mode is usually used for bug hunting"/>
@@ -28,7 +28,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.21,0},{0.5,0},{0.46,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Combobox" name="video_combo_vsync">
       <Property name="TooltipText" Value="Vertical synchronization synchronizes each frame with the vertical refresh, thus ensuring that only whole frames are seen on-screen which removes visual tearing. This looks smoother and should be enabled."/>
@@ -36,7 +36,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.29,0},{0.5,0},{0.54,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Spinner" name="video_spinner_fps_limit">
       <Property name="TooltipText" Value="Frames per second (FPS) limit. 0 disables it."/>

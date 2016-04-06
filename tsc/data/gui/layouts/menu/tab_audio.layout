@@ -11,14 +11,14 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.13,0},{0.42,0},{0.37,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Combobox" name="audio_combo_sounds">
       <Property name="ReadOnly" Value="True"/>
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.21,0},{0.42,0},{0.45,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Slider" name="audio_slider_music_volume">
       <Property name="CurrentValue" Value="0"/>
@@ -39,7 +39,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.05,0},{0.46,0},{0.34,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/StaticText" name="audio_text_hz">
       <Property name="Text" Value="_Hz"/>

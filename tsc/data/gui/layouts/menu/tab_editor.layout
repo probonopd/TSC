@@ -36,7 +36,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.05,0},{0.42,0},{0.29,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
     <Window type="TaharezLook/Button" name="editor_button_reset">
       <Property name="Text" Value="_Reset"/>
@@ -55,7 +55,7 @@
       <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
       <Property name="ClippedByParent" Value="False"/>
       <Property name="Area" Value="{{0.3,0},{0.21,0},{0.42,0},{0.45,0}}"/>
-      <Property name="MaxEditTextLength" Value="1073741823"/>
+      <Property name="MaxTextLength" Value="1073741823"/>
     </Window>
   </Window>
 </GUILayout>

@@ -156,7 +156,7 @@
             <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
             <Property name="ClippedByParent" Value="False"/>
             <Property name="Area" Value="{{0.25,0},{0.26,0},{0.45,0},{0.43,0}}"/>
-            <Property name="MaxEditTextLength" Value="1073741823"/>
+            <Property name="MaxTextLength" Value="1073741823"/>
         </Window>
         <Window type="TaharezLook/Button" name="button_add_background_image">
             <Property name="Text" Value="Add"/>

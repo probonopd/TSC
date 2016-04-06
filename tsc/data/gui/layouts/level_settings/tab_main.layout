@@ -161,7 +161,7 @@
         <Window type="TaharezLook/Combobox" name="combo_land_type">
             <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
             <Property name="Area" Value="{{0.61,0},{0.13,0},{0.86,0},{0.38,0}}"/>
-            <Property name="MaxEditTextLength" Value="1073741823"/>
+            <Property name="MaxTextLength" Value="1073741823"/>
         </Window>
         <Window type="TaharezLook/MultiLineEditbox" name="multieditbox_description">
             <Property name="Text"></Property>
@@ -192,7 +192,7 @@
         <Window type="TaharezLook/Combobox" name="unload_after_exit">
             <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
             <Property name="Area" Value="{{0.21,0},{0.75,0},{0.50,0},{0.91,0}}"/>
-            <Property name="MaxEditTextLength" Value="1073741823"/>
+            <Property name="MaxTextLength" Value="1073741823"/>
         </Window>
     </Window>
 </GUILayout>
