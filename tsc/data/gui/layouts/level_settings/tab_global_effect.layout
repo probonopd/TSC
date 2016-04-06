@@ -5,12 +5,12 @@
         <Property Name="Text" Value="Global Effect"/>
         <Property Name="InheritsAlpha" Value="False"/>
         <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property Name="AreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Property Name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
         <Window Type="TaharezLook/StaticText" Name="text_global_effect_emitter">
             <Property Name="Text" Value="The Global Effect is now a Particle Emitter."/>
             <Property Name="HorzFormatting" Value="HorzCentred"/>
             <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property Name="AreaRect" Value="{{0.01,0},{0.01,0},{0.99,0},{0.06,0}}"/>
+            <Property Name="Area" Value="{{0.01,0},{0.01,0},{0.99,0},{0.06,0}}"/>
         </Window>
     </Window>
 </GUILayout>

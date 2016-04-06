@@ -2,7 +2,7 @@
 
 <GUILayout version="4">
   <Window type="TaharezLook/StaticText" name="text_debugmessage">
-    <Property name="AreaRect" value="{{0.35,0},{0.14,0},{0.75,0},{0.19,0}}"/>
+    <Property name="Area" value="{{0.35,0},{0.14,0},{0.75,0},{0.19,0}}"/>
     <Property Name="HorzFormatting" Value="WordWrapLeftAligned"/>
   </Window>
 </GUILayout>
