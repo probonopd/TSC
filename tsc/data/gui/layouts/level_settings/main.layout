@@ -2,27 +2,27 @@
 
 <GUILayout version="4">
     <Window type="DefaultWindow" name="level_settings">
-        <Property name="InheritsAlpha" Value="False"/>
-        <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Property name="InheritsAlpha" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
         <Window type="TaharezLook/TabControl" name="tabcontrol_main">
-            <Property name="TabHeight" Value="{0,-1}"/>
-            <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property name="TabPanePosition" Value="Top"/>
-            <Property name="Area" Value="{{0.0,0},{0.039,0},{1.0,0},{0.93,0}}"/>
+            <Property name="TabHeight" value="{0,-1}"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="TabPanePosition" value="Top"/>
+            <Property name="Area" value="{{0.0,0},{0.039,0},{1.0,0},{0.93,0}}"/>
         </Window>
         <Window type="TaharezLook/Button" name="button_apply">
-            <Property name="Text" Value="Apply"/>
-            <Property name="TooltipText" Value="Apply and exit"/>
-            <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property name="Area" Value="{{0.872346,0},{0.944156,0},{0.972346,0},{0.987489,0}}"/>
-            <Property name="MouseCursorImage" Value="set:TaharezLook image:MouseArrow"/>
+            <Property name="Text" value="Apply"/>
+            <Property name="TooltipText" value="Apply and exit"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.872346,0},{0.944156,0},{0.972346,0},{0.987489,0}}"/>
+            <Property name="MouseCursorImage" value="set:TaharezLook image:MouseArrow"/>
         </Window>
         <Window type="TaharezLook/StaticText" name="text_level_settings">
-            <Property name="Text" Value="Level Settings"/>
-            <Property name="HorzFormatting" Value="HorzCentred"/>
-            <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property name="Area" Value="{{0.415083,0},{0.007132,0},{0.590224,0},{0.059864,0}}"/>
+            <Property name="Text" value="Level Settings"/>
+            <Property name="HorzFormatting" value="HorzCentred"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.415083,0},{0.007132,0},{0.590224,0},{0.059864,0}}"/>
         </Window>
     </Window>
 </GUILayout>

@@ -2,32 +2,32 @@
 
 <GUILayout version="4">
   <Window type="DefaultWindow" name="options">
-    <Property name="InheritsAlpha" Value="False"/>
-    <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-    <Property name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
     <Window type="TaharezLook/FrameWindow" name="window_options">
-      <Property name="Alpha" Value="0.5"/>
-      <Property name="FrameEnabled" Value="False"/>
-      <Property name="TitlebarFont" Value="bluebold_medium"/>
-      <Property name="SizingEnabled" Value="False"/>
-      <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-      <Property name="TitlebarEnabled" Value="False"/>
-      <Property name="Area" Value="{{0.05,0},{0.26,0},{0.95,0},{0.88,0}}"/>
-      <Property name="DragMovingEnabled" Value="False"/>
-      <Property name="CloseButtonEnabled" Value="False"/>
+      <Property name="Alpha" value="0.5"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="TitlebarFont" value="bluebold_medium"/>
+      <Property name="SizingEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="TitlebarEnabled" value="False"/>
+      <Property name="Area" value="{{0.05,0},{0.26,0},{0.95,0},{0.88,0}}"/>
+      <Property name="DragMovingEnabled" value="False"/>
+      <Property name="CloseButtonEnabled" value="False"/>
       <Window type="TaharezLook/TabControl" name="tabcontrol_main">
-        <Property name="Alpha" Value="0.7"/>
-        <Property name="TabHeight" Value="{0,25}"/>
-        <Property name="InheritsAlpha" Value="False"/>
-        <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property name="TabPanePosition" Value="Top"/>
-        <Property name="Area" Value="{{0,0},{0,0},{1,0},{0.93,0}}"/>
+        <Property name="Alpha" value="0.7"/>
+        <Property name="TabHeight" value="{0,25}"/>
+        <Property name="InheritsAlpha" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="TabPanePosition" value="Top"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{0.93,0}}"/>
       </Window>
       <Window type="TaharezLook/Button" name="button_back">
-        <Property name="Text" Value="_Back"/>
-        <Property name="InheritsAlpha" Value="False"/>
-        <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property name="Area" Value="{{0.88,0},{0.935,0},{0.99,0},{0.995,0}}"/>
+        <Property name="Text" value="_Back"/>
+        <Property name="InheritsAlpha" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0.88,0},{0.935,0},{0.99,0},{0.995,0}}"/>
       </Window>
     </Window>
   </Window>
