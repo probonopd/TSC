@@ -66,6 +66,7 @@ namespace TSC {
         // Returns the Destination’s full filename (world or level file).
         boost::filesystem::path Get_Destination_Path();
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor type option selected event
@@ -78,6 +79,7 @@ namespace TSC {
         bool Editor_Backward_Direction_Select(const CEGUI::EventArgs& event);
         // editor direction forward option selected event
         bool Editor_Forward_Direction_Select(const CEGUI::EventArgs& event);
+#endif
 
         // forward direction
         ObjectDirection m_direction_forward;

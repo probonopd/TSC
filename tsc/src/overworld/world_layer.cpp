@@ -162,6 +162,7 @@ void cLayer_Line_Point_Start::Init(void)
     m_linked_point->m_linked_point = this;
 }
 
+#ifdef ENABLE_EDITOR
 cLayer_Line_Point_Start* cLayer_Line_Point_Start::Copy(void) const
 {
     // create layer line
@@ -175,6 +176,7 @@ cLayer_Line_Point_Start* cLayer_Line_Point_Start::Copy(void) const
     layer_line->m_origin = m_origin;
     return layer_line;
 }
+#endif
 
 void cLayer_Line_Point_Start::Set_Sprite_Manager(cSprite_Manager* sprite_manager)
 {
@@ -238,6 +240,7 @@ cWaypoint* cLayer_Line_Point_Start::Get_End_Waypoint(void) const
     return m_overworld->Get_Waypoint(wp_num);
 }
 
+#ifdef ENABLE_EDITOR
 void cLayer_Line_Point_Start::Editor_Activate(void)
 {
     // get window manager
@@ -264,6 +267,7 @@ bool cLayer_Line_Point_Start::Editor_Origin_Text_Changed(const CEGUI::EventArgs&
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** Line Collision *** *** *** *** *** *** *** *** *** */
 
