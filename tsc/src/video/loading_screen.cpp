@@ -26,9 +26,7 @@
 #define LOADING_TEXT_NAME "text_loading"
 #define PROGRESSBAR_NAME "progress_bar"
 
-using namespace TSC;
-
-void Loading_Screen_Init(void)
+void TSC::Loading_Screen_Init(void)
 {
     CEGUI::GUIContext& guicontext = CEGUI::System::getSingleton().getDefaultGUIContext();
 
@@ -73,7 +71,7 @@ void Loading_Screen_Init(void)
     p_progress_text->setText(_("Loading"));
 }
 
-void Loading_Screen_Draw_Text(const std::string& str_info /* = "Loading" */)
+void TSC::Loading_Screen_Draw_Text(const std::string& str_info /* = "Loading" */)
 {
     // Retrieve the text widget from the root window
     CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
@@ -89,7 +87,7 @@ void Loading_Screen_Draw_Text(const std::string& str_info /* = "Loading" */)
     Loading_Screen_Draw();
 }
 
-void Loading_Screen_Set_Progress(float progress)
+void TSC::Loading_Screen_Set_Progress(float progress)
 {
     // Retrieve the progressbar widget from the root window
     CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
@@ -103,7 +101,7 @@ void Loading_Screen_Set_Progress(float progress)
     p_progress->setProgress(progress);
 }
 
-void Loading_Screen_Draw(void)
+void TSC::Loading_Screen_Draw(void)
 {
     // limit fps or vsync will slow down the loading
     if (!Is_Frame_Time(60)) {
@@ -121,7 +119,7 @@ void Loading_Screen_Draw(void)
     pVideo->mp_window->display();
 }
 
-void Loading_Screen_Exit(void)
+void TSC::Loading_Screen_Exit(void)
 {
     CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
     CEGUI::Window* p_rootwindow = gui_context.getRootWindow();
