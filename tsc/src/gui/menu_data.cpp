@@ -657,16 +657,16 @@ void cMenu_Start::Init_GUI(void)
     // several texts
     CEGUI::Window* text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/text_level_select"));
     text->setText(UTF8_("Select Level"));
-    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_campaign/text_campaign_select"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/text_campaign_select"));
     text->setText(UTF8_("Select Campaign"));
-    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_world/text_world_select"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/text_world_select"));
     text->setText(UTF8_("Select Overworld"));
-    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_campaign/text_campaign_description"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/text_campaign_description"));
     text->setText(UTF8_("Description"));
-    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_world/text_world_description"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/text_world_description"));
     text->setText(UTF8_("Description"));
 
-    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tab_level/text_level_info"));
+    text = static_cast<CEGUI::Window*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/text_level_info"));
     // TRANS: The colour names refer to the colours the level names can
     // TRANS: be in. "Game" means the level is shipped by the game,
     // TRANS: "user" means the level has been created by the user.
