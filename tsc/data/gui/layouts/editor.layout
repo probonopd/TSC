@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4">
-  <Window Type="DefaultWindow" Name="gui_editor">
-    <Property Name="InheritsAlpha" Value="False"/>
-    <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-    <Property Name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
-    <Property Name="MousePassThroughEnabled" Value="True"/>
-    <Window Type="TaharezLook/TabControl" Name="tabcontrol_editor">
-      <Property Name="TabHeight" Value="{0,24}"/>
-      <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-      <Property Name="TabPanePosition" Value="Top"/>
-      <Property Name="Area" Value="{{0,0},{0,0},{0.2,0},{1,0}}"/>
-      <Window Type="DefaultWindow" Name="editor_tab_menu">
-        <Property Name="Text" Value="Menu"/>
-        <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property Name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
-        <Window Type="TaharezLook/Listbox" Name="editor_menu">
-          <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-          <Property Name="Area" Value="{{0.0,0},{0.01,0},{0.99,0},{0.970623,0}}"/>
+  <Window type="DefaultWindow" name="gui_editor">
+    <Property name="InheritsAlpha" Value="False"/>
+    <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+    <Property name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Property name="MousePassThroughEnabled" Value="True"/>
+    <Window type="TaharezLook/TabControl" name="tabcontrol_editor">
+      <Property name="TabHeight" Value="{0,24}"/>
+      <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+      <Property name="TabPanePosition" Value="Top"/>
+      <Property name="Area" Value="{{0,0},{0,0},{0.2,0},{1,0}}"/>
+      <Window type="DefaultWindow" name="editor_tab_menu">
+        <Property name="Text" Value="Menu"/>
+        <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+        <Property name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="editor_menu">
+          <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+          <Property name="Area" Value="{{0.0,0},{0.01,0},{0.99,0},{0.970623,0}}"/>
         </Window>
       </Window>
-      <Window Type="DefaultWindow" Name="editor_tab_items">
-        <Property Name="Text" Value="Items"/>
-        <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property Name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
-        <Window Type="TaharezLook/Listbox" Name="editor_items">
-          <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-          <Property Name="Area" Value="{{0.0,0},{0.01,0},{0.99,0},{0.95,0}}"/>
+      <Window type="DefaultWindow" name="editor_tab_items">
+        <Property name="Text" Value="Items"/>
+        <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+        <Property name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="editor_items">
+          <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+          <Property name="Area" Value="{{0.0,0},{0.01,0},{0.99,0},{0.95,0}}"/>
         </Window>
       </Window>
     </Window>

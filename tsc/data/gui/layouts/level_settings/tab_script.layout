@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4">
-  <Window Type="DefaultWindow" Name="level_settings_tab_script">
-    <Property Name="Text" Value="Script"/>
-    <Property Name="InheritsAlpha" Value="False"/>
-    <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-    <Property Name="Area"
+  <Window type="DefaultWindow" name="level_settings_tab_script">
+    <Property name="Text" Value="Script"/>
+    <Property name="InheritsAlpha" Value="False"/>
+    <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+    <Property name="Area"
 	      Value="{{0,0},{0,0},{1,0},{1,0}}"/>
-    <Window Type="TaharezLook/MultiLineEditbox" Name="multieditbox_script">
-      <Property Name="Text" Value="# Your script code here"/>
-      <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-      <Property Name="Area" Value="{{0.01,0},{0.01,0},{0.99,0},{0.92,0}}"/>
+    <Window type="TaharezLook/MultiLineEditbox" name="multieditbox_script">
+      <Property name="Text" Value="# Your script code here"/>
+      <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+      <Property name="Area" Value="{{0.01,0},{0.01,0},{0.99,0},{0.92,0}}"/>
     </Window>
-    <Window Type="TaharezLook/StaticText" Name="script_reload_info">
-      <Property Name="Text" Value="NOTE: Changing the script code will force its re-evaluation!"/>
-      <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-      <Property Name="Area" Value="{{0.01,0},{0.93,0},{0.99,0},{0.99,0}}"/>
+    <Window type="TaharezLook/StaticText" name="script_reload_info">
+      <Property name="Text" Value="NOTE: Changing the script code will force its re-evaluation!"/>
+      <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+      <Property name="Area" Value="{{0.01,0},{0.93,0},{0.99,0},{0.99,0}}"/>
     </Window>
   </Window>
 </GUILayout>

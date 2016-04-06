@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4">
-    <Window Type="DefaultWindow" Name="level_settings">
-        <Property Name="InheritsAlpha" Value="False"/>
-        <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-        <Property Name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
-        <Window Type="TaharezLook/TabControl" Name="tabcontrol_main">
-            <Property Name="TabHeight" Value="{0,-1}"/>
-            <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property Name="TabPanePosition" Value="Top"/>
-            <Property Name="Area" Value="{{0.0,0},{0.039,0},{1.0,0},{0.93,0}}"/>
+    <Window type="DefaultWindow" name="level_settings">
+        <Property name="InheritsAlpha" Value="False"/>
+        <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+        <Property name="Area" Value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/TabControl" name="tabcontrol_main">
+            <Property name="TabHeight" Value="{0,-1}"/>
+            <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+            <Property name="TabPanePosition" Value="Top"/>
+            <Property name="Area" Value="{{0.0,0},{0.039,0},{1.0,0},{0.93,0}}"/>
         </Window>
-        <Window Type="TaharezLook/Button" Name="button_apply">
-            <Property Name="Text" Value="Apply"/>
-            <Property Name="TooltipText" Value="Apply and exit"/>
-            <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property Name="Area" Value="{{0.872346,0},{0.944156,0},{0.972346,0},{0.987489,0}}"/>
-            <Property Name="MouseCursorImage" Value="set:TaharezLook image:MouseArrow"/>
+        <Window type="TaharezLook/Button" name="button_apply">
+            <Property name="Text" Value="Apply"/>
+            <Property name="TooltipText" Value="Apply and exit"/>
+            <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+            <Property name="Area" Value="{{0.872346,0},{0.944156,0},{0.972346,0},{0.987489,0}}"/>
+            <Property name="MouseCursorImage" Value="set:TaharezLook image:MouseArrow"/>
         </Window>
-        <Window Type="TaharezLook/StaticText" Name="text_level_settings">
-            <Property Name="Text" Value="Level Settings"/>
-            <Property Name="HorzFormatting" Value="HorzCentred"/>
-            <Property Name="MaxSize" Value="{{1,0},{1,0}}"/>
-            <Property Name="Area" Value="{{0.415083,0},{0.007132,0},{0.590224,0},{0.059864,0}}"/>
+        <Window type="TaharezLook/StaticText" name="text_level_settings">
+            <Property name="Text" Value="Level Settings"/>
+            <Property name="HorzFormatting" Value="HorzCentred"/>
+            <Property name="MaxSize" Value="{{1,0},{1,0}}"/>
+            <Property name="Area" Value="{{0.415083,0},{0.007132,0},{0.590224,0},{0.059864,0}}"/>
         </Window>
     </Window>
 </GUILayout>
