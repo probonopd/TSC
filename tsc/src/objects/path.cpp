@@ -690,6 +690,7 @@ bool cPath::Is_Draw_Valid(void)
     return 1;
 }
 
+#ifdef ENABLE_EDITOR
 void cPath::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -985,6 +986,7 @@ void cPath::Editor_Segment_Pos_Changed(void)
         }
     }
 }
+#endif
 
 void cPath::Add_Segment(cPath_Segment segment)
 {

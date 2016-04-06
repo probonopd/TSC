@@ -50,10 +50,12 @@ namespace TSC {
         // Set Text
         void Set_Text(const std::string& str_text);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor text text changed event
         bool Editor_Text_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         // the text
         std::string m_text;

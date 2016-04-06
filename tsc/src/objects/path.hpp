@@ -191,6 +191,7 @@ namespace TSC {
         // if draw is valid for the current state and position
         virtual bool Is_Draw_Valid(void);
 
+#ifdef ENABLE_EDITOR
         // level editor activation
         virtual void Editor_Activate(void);
         // editor state update
@@ -217,6 +218,7 @@ namespace TSC {
         bool Editor_Pos_Y2_Text_Changed(const CEGUI::EventArgs& event);
         // set linked path states to move again from start of the current segment
         void Editor_Segment_Pos_Changed(void);
+#endif
 
         // string identifier (so objects can link to us)
         std::string m_identifier;

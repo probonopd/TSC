@@ -102,8 +102,7 @@ void cText_Box::Activate(void)
     CEGUI::MultiLineEditbox* editbox = static_cast<CEGUI::MultiLineEditbox*>(wmgr.createWindow("TaharezLook/MultiLineEditbox", "text_box_text"));
 
     // add to main window
-    pGuiSystem->getGUISheet()->addChildWindow(editbox);
-
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(editbox);
 
     // set on top
     editbox->setAlwaysOnTop(1);
@@ -217,6 +216,7 @@ void cText_Box::Set_Text(const std::string& str_text)
     m_text = str_text;
 }
 
+#ifdef ENABLE_EDITOR
 void cText_Box::Editor_Activate(void)
 {
     // BaseBox Settings first
@@ -245,6 +245,7 @@ bool cText_Box::Editor_Text_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
