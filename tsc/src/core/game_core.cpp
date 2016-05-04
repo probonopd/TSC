@@ -345,7 +345,7 @@ void Preload_Images(bool draw_gui /* = 0 */)
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(p_rootwindow->getChild("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(p_rootwindow->getChild("loadingroot/progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Loading Images"));
@@ -487,7 +487,7 @@ void Preload_Sounds(bool draw_gui /* = 0 */)
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("loadingroot/progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Loading Sounds"));

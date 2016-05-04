@@ -123,6 +123,7 @@ void cVideo::Init_CEGUI(void)
 
     // Create the invisible root window
     CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
+    p_rootwindow->setMousePassThroughEnabled(true); // Ensure CEGUI doesn't eat mouse events not hitting any CEGUI window (return value of injector function)
     gui_context.setRootWindow(p_rootwindow);
 }
 
