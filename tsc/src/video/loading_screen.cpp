@@ -51,13 +51,11 @@ void TSC::Loading_Screen_Init(void)
     p_loadingscreen->addChild(p_progress_bar);
 
     p_progress_text->setSize(CEGUI::USize(CEGUI::UDim(0.7, 0), CEGUI::UDim(0, 55)));
-    p_progress_text->setPosition(CEGUI::UVector2(CEGUI::UDim(0.35, 0), CEGUI::UDim(0.5, 29 + 10)));
-    p_progress_text->setHorizontalAlignment(CEGUI::HA_CENTRE);
+    p_progress_text->setPosition(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.5, 29 + 10)));
     p_loadingscreen->addChild(p_progress_text);
 
     p_license_text->setSize(CEGUI::USize(CEGUI::UDim(0.7, 0), CEGUI::UDim(0, 55)));
-    p_license_text->setPosition(CEGUI::UVector2(CEGUI::UDim(0.35, 0), CEGUI::UDim(0.8, 0)));
-    p_license_text->setHorizontalAlignment(CEGUI::HA_CENTRE);
+    p_license_text->setPosition(CEGUI::UVector2(CEGUI::UDim(0.15, 0), CEGUI::UDim(0.8, 0)));
     p_loadingscreen->addChild(p_license_text);
 
     // Set license info as translatable string
