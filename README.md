@@ -92,7 +92,7 @@ outlined as follows: any asset is accompanied by a `.txt` or a
 the asset in question. Those assets whose accompanying `.txt` or
 `.settings` file does not specify a license are licensed under the
 old SMC Contribution license, which is included as the file
-`tsc/docs/old_smc_contribution_license.md`. Assets that are licensed
+`tsc/docs/pages/old_smc_contribution_license.md`. Assets that are licensed
 as "special" have been granted to the TSC team under special licensing
 conditions that will not allow the asset to be used outside of the
 game.
