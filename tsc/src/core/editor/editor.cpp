@@ -29,6 +29,9 @@ cEditor::cEditor()
 {
     mp_editor_tabpane = NULL;
     m_enabled = false;
+    m_rested = false;
+    m_visibility_timer = 0.0f;
+    m_mouse_inside = false;
 }
 
 cEditor::~cEditor()
@@ -46,8 +49,12 @@ cEditor::~cEditor()
 void cEditor::Init(void)
 {
     mp_editor_tabpane = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("editor.layout");
+    m_target_x_position = mp_editor_tabpane->getXPosition();
     mp_editor_tabpane->hide(); // Do not show for now
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_tabpane);
+
+    mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_enter, this));
+    mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_leave, this));
 }
 
 /**
@@ -105,6 +112,32 @@ void cEditor::Disable(void)
 
 void cEditor::Update(void)
 {
+    if (!m_enabled)
+        return;
+
+    // If we have the mouse, do nothing.
+    if (!m_mouse_inside) {
+        // Otherwise, slowly fade the panel out until it is invisible.
+        // When it reaches transparency, set to fully visible again
+        // and place it on the side.
+        if (!m_rested) {
+            float timeout = speedfactor_fps * 2;
+            if (m_visibility_timer >= timeout) {
+                mp_editor_tabpane->setXPosition(CEGUI::UDim(-0.19f, 0.0f));
+                mp_editor_tabpane->setAlpha(1.0f);
+
+                m_rested = true;
+                m_visibility_timer = 0.0f;
+            }
+            else {
+                m_visibility_timer += pFramerate->m_speed_factor;
+                float alpha_max = 1.0f;
+                mp_editor_tabpane->setAlpha(alpha_max - ((alpha_max * m_visibility_timer) / timeout));
+            }
+        }
+    }
+
+    //std::cout << "Update..." << std::endl;
 }
 
 void cEditor::Draw(void)
@@ -114,6 +147,23 @@ void cEditor::Draw(void)
 bool cEditor::Handle_Event(const sf::Event& evt)
 {
     return false;
+}
+
+bool cEditor::on_mouse_enter(const CEGUI::EventArgs& event)
+{
+    m_mouse_inside = true;
+    m_visibility_timer = 0.0f;
+    m_rested = false;
+
+    mp_editor_tabpane->setAlpha(1.0f);
+    mp_editor_tabpane->setXPosition(m_target_x_position);
+    return true;
+}
+
+bool cEditor::on_mouse_leave(const CEGUI::EventArgs& event)
+{
+    m_mouse_inside = false;
+    return true;
 }
 
 #endif

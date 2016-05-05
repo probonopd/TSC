@@ -39,6 +39,13 @@ namespace TSC {
     private:
         CEGUI::Window* mp_editor_tabpane;
         bool m_enabled;
+        float m_visibility_timer;
+        CEGUI::UDim m_target_x_position;
+        bool m_rested;
+        bool m_mouse_inside;
+
+        bool on_mouse_enter(const CEGUI::EventArgs& event);
+        bool on_mouse_leave(const CEGUI::EventArgs& event);
     };
 }
 
