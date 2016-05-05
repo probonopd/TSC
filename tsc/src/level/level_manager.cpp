@@ -241,7 +241,7 @@ void cLevel_Manager::Update(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL]->Update();
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
     // editor
     pLevel_Editor->Update();
 
@@ -320,7 +320,7 @@ void cLevel_Manager::Draw(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_HUD]->Update();
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
     // level editor
     pLevel_Editor->Draw();
 #endif

@@ -9,6 +9,11 @@ namespace TSC {
     public:
         cEditor_Level();
         virtual ~cEditor_Level();
+
+        void Set_Level(cLevel* p_level);
+
+    private:
+        cLevel* mp_level;
     };
 
     extern cEditor_Level* pLevel_Editor;

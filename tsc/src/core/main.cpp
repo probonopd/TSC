@@ -302,12 +302,15 @@ void Init_Game(void)
     pHud_Manager = new cHud_Manager(pActive_Level->m_sprite_manager);
     pLevel_Player->Init();
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR)
     pLevel_Editor = new cEditor_Level(pActive_Level->m_sprite_manager, pActive_Level);
     /* note : set any sprite manager as cOverworld_Manager::Load sets it again
      * parent overworld is also set from there again
     */
     pWorld_Editor = new cEditor_World(pActive_Level->m_sprite_manager, NULL);
+#elif defined(ENABLE_NEW_EDITOR)
+    pLevel_Editor = new cEditor_Level();
+    pLevel_Editor->Init();
 #endif
 
     pMouseCursor = new cMouseCursor(pActive_Level->m_sprite_manager);
@@ -361,7 +364,7 @@ void Exit_Game(void)
         pSound_Manager = NULL;
     }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR)
     if (pLevel_Editor) {
         delete pLevel_Editor;
         pLevel_Editor = NULL;
@@ -370,6 +373,11 @@ void Exit_Game(void)
     if (pWorld_Editor) {
         delete pWorld_Editor;
         pWorld_Editor = NULL;
+    }
+#elsif defined(ENABLE_NEW_EDITOR)
+    if (pLevel_Editor) {
+        delete pLevel_Editor;
+        pLevel_Editor = NULL;
     }
 #endif
 

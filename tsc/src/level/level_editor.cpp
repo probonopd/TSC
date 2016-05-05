@@ -31,10 +31,16 @@ cEditor_Level* TSC::pLevel_Editor = NULL;
 cEditor_Level::cEditor_Level()
     : cEditor()
 {
+    mp_level = NULL;
 }
 
 cEditor_Level::~cEditor_Level()
 {
+}
+
+void cEditor_Level::Set_Level(cLevel* p_level)
+{
+    mp_level = p_level;
 }
 
 #endif

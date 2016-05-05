@@ -33,6 +33,7 @@ cEditor::cEditor()
 
 cEditor::~cEditor()
 {
+    Unload();
 }
 
 /**
@@ -41,9 +42,6 @@ cEditor::~cEditor()
  *
  * Override in subclasses to fill the editor pane with your custom
  * items. Be sure to call this parent method before doing so, though.
- *
- * This method should be called when entering an editable object
- * (level, world).
  */
 void cEditor::Init(void)
 {
@@ -56,15 +54,14 @@ void cEditor::Init(void)
  * Empties the editor panel, detaches it from the CEGUI root window
  * and destroys it. After calling this you need to call Init()
  * again to use the editor.
- *
- * This method should be called when leaving an editable object
- * (level, world).
  */
 void cEditor::Unload(void)
 {
-    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_editor_tabpane);
-    CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_tabpane);
-    mp_editor_tabpane = NULL;
+    if (mp_editor_tabpane) {
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_editor_tabpane);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_tabpane);
+        mp_editor_tabpane = NULL;
+    }
 }
 
 void cEditor::Toggle(void)

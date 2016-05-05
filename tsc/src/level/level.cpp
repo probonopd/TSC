@@ -477,6 +477,8 @@ void cLevel::Set_Sprite_Manager(void)
 #ifdef ENABLE_EDITOR
     pLevel_Editor->Set_Sprite_Manager(m_sprite_manager);
     pLevel_Editor->Set_Level(this);
+#elsif defined(ENABLE_NEW_EDITOR)
+    pLevel_Editor->Set_Level(this);
 #endif
     // camera
     pLevel_Manager->m_camera->Set_Sprite_Manager(m_sprite_manager);
@@ -735,7 +737,7 @@ bool cLevel::Key_Down(const sf::Event& evt)
     }
     // Toggle leveleditor
     else if (evt.key.code == sf::Keyboard::F8) {
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         pLevel_Editor->Toggle();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
@@ -809,9 +811,14 @@ bool cLevel::Key_Down(const sf::Event& evt)
     else if (evt.key.code == sf::Keyboard::Escape) {
         pLevel_Player->Action_Interact(INP_EXIT);
     }
-#ifdef ENABLE_EDITOR
     // ## editor
+#if defined(ENABLE_EDITOR)
     else if (pLevel_Editor->Key_Down(evt)) {
+        // processed by the editor
+        return 1;
+    }
+#elsif defined(ENABLE_NEW_EDITOR)
+    else if (pLevel_Editor->Handle_Event(evt)) {
         // processed by the editor
         return 1;
     }
