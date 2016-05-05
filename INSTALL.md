@@ -37,13 +37,11 @@ install to.
 * GLEW OpenGL wrangler extension library.
 * GNU Gettext.
 * The LibPNG library.
-* The SDL main library plus SDL_image and SDL_mixer,
-  all <2.0, which is not supported yet.
-* The SDL_ttf library.
 * The libPCRE regular expression library.
 * The libxml++ library.
 * The Freetype library.
 * Boost >= 1.50.0 (to be exact: boost_system, boost_filesystem, boost_thread)
+* Simple and fast cross-platform multimedia library `libsfml-dev` 
 * For generating the docs:
   * `kramdown` RubyGem.
   * The `coderay` RubyGem.
@@ -68,9 +66,8 @@ TSC on Ubuntu Linux 14.04:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # apt-get install ruby-full rake gperf pkg-config bison libglew-dev \
-  freeglut3-dev gettext libpng12-dev libsdl-ttf2.0-dev \
-  libsdl-mixer1.2-dev libsdl-image1.2-dev libpcre3-dev libxml++2.6-dev \
-  libfreetype6-dev libdevil-dev libboost1.55-all-dev
+  freeglut3-dev gettext libpng12-dev libpcre3-dev libxml++2.6-dev \
+  libfreetype6-dev libdevil-dev libboost1.55-all-dev libsfml-dev
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Windows dependencies ###
