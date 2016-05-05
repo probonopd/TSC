@@ -156,6 +156,9 @@ bool cAudio::Init(void)
     // music initialization
     if (music && !m_music_enabled) {
         m_music_enabled = 1;
+        if (!m_music) {
+            m_music = new sf::Music;
+        }
 
         // set music volume
         Set_Music_Volume(m_music_volume);
