@@ -132,14 +132,15 @@ if (USE_SYSTEM_TINYCLIPBOARD)
   find_file(Tinyclipboard_INCLUDE_DIRS tinyclipboard.h)
 else()
   message("-- Building tinyclipboard statically")
-  ExternalProject_Add(tinyclipboard
-    PREFIX "${TSC_BINARY_DIR}/tinyclipboard"
-    SOURCE_DIR "${TSC_SOURCE_DIR}/../tinyclipboard"
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${CMAKE_MAKE_PROGRAM} CC=${CMAKE_C_COMPILER} AR=${CMAKE_AR}
-    INSTALL_COMMAND "")
-  set(Tinyclipboard_LIBRARIES "${TSC_SOURCE_DIR}/../tinyclipboard/libtinyclipboard.a")
+  add_library(tinyclipboard STATIC
+    "../tinyclipboard/src/tinyclipboard.c"
+    "../tinyclipboard/include/tinyclipboard.h")
+
+  # Resolves to a real CMake target
+  # (imitates setting of Tinyclipboard_LIBRARIES by
+  # find_library() above so they can be treated
+  # the same further below).
+  set(Tinyclipboard_LIBRARIES tinyclipboard)
   set(Tinyclipboard_INCLUDE_DIRS "${TSC_SOURCE_DIR}/../tinyclipboard/include")
 endif()
 
