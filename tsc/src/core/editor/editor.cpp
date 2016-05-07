@@ -18,6 +18,7 @@
 #include "../i18n.hpp"
 #include "../filesystem/filesystem.hpp"
 #include "../filesystem/resource_manager.hpp"
+#include "../../video/img_settings.hpp"
 #include "../errors.hpp"
 #include "editor.hpp"
 
@@ -32,6 +33,7 @@ cEditor::cEditor()
     m_rested = false;
     m_visibility_timer = 0.0f;
     m_mouse_inside = false;
+    m_element_y = 0.0f;
 }
 
 cEditor::~cEditor()
@@ -147,6 +149,48 @@ void cEditor::Draw(void)
 bool cEditor::Handle_Event(const sf::Event& evt)
 {
     return false;
+}
+
+void cEditor::Add_Editor_Item(boost::filesystem::path pixmap_path)
+{
+    static const int labelheight = 24;
+    static const int imageheight = 48; /* Also image width (square) */
+    static const int yskip = 24;
+
+    // Several different formats of the same path
+    std::string string_path(path_to_utf8(pixmap_path));
+    std::string escaped_path(string_path);
+    string_replace_all(escaped_path, "/", "+"); // CEGUI doesn't like / in ImageManager image names
+
+    boost::filesystem::path settings_file = pResource_Manager->Get_Game_Pixmap(string_path);
+    settings_file.replace_extension(utf8_to_path(".settings"));
+
+    // Parse the image's settings file
+    cImage_Settings_Parser parser;
+    cImage_Settings_Data* p_settings = parser.Get(settings_file);
+
+    CEGUI::Window* p_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", std::string("label-of-") + escaped_path);
+    p_label->setText(p_settings->m_name);
+    p_label->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0, labelheight)));
+    p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
+    p_label->setProperty("FrameEnabled", "False");
+
+    CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, string_path, "ingame-images");
+    CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", std::string("image-of-") + escaped_path);
+    p_image->setProperty("Image", escaped_path);
+    p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
+    p_image->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, -imageheight/2) /* center on X */, CEGUI::UDim(0, m_element_y + labelheight)));
+    p_image->setProperty("FrameEnabled", "False");
+
+    CEGUI::ScrollablePane* p_pane = static_cast<CEGUI::ScrollablePane*>(mp_editor_tabpane->getChild("editor_tab_items/editor_items"));
+    p_pane->setContentPaneAutoSized(false);
+    p_pane->setContentPaneArea(CEGUI::Rectf(0, 0, 1000, 4000));
+    p_pane->setShowHorzScrollbar(false);
+    p_pane->addChild(p_label);
+    p_pane->addChild(p_image);
+
+    m_element_y += labelheight + imageheight + yskip;
+    delete p_settings;
 }
 
 bool cEditor::on_mouse_enter(const CEGUI::EventArgs& event)

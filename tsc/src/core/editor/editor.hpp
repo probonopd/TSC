@@ -31,6 +31,8 @@ namespace TSC {
         virtual void Enable(void);
         virtual void Disable(void);
 
+        void Add_Editor_Item(boost::filesystem::path pixmap_path);
+
         virtual void Update(void);
         virtual void Draw(void);
 
@@ -43,6 +45,8 @@ namespace TSC {
         CEGUI::UDim m_target_x_position;
         bool m_rested;
         bool m_mouse_inside;
+        std::vector<CEGUI::Window*> m_editor_items;
+        float m_element_y;
 
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);

@@ -102,6 +102,8 @@ void cVideo::Init_CEGUI(void)
     p_rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
     p_rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
     p_rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
+    // This resource group is used for displaying the editor images.
+    p_rp->setResourceGroupDirectory("ingame-images", path_to_utf8(pResource_Manager->Get_Game_Pixmaps_Directory()));
 
     // set the default resource groups to be used
     CEGUI::Scheme::setDefaultResourceGroup("schemes");
