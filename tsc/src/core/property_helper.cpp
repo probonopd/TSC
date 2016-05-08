@@ -65,6 +65,7 @@ std::vector<std::string> string_split(std::string str, std::string delim)
     {
         result.push_back(str.substr(lastpos, pos - lastpos));
         pos += delim.length(); // Move behind the delimiter
+        lastpos = pos;
     }
 
     // Don't forget the last element
