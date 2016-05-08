@@ -237,8 +237,6 @@ void cEditor::parse_menu_file()
         std::string name   = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='name']")[0])->get_attribute("value")->get_value();
         std::string tagstr = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='tags']")[0])->get_attribute("value")->get_value();
 
-        std::cout << "Found XML <item> '" << name << std::endl;
-
         // Set color if available (---header--- elements have no color property)
         std::string colorstr = "FFFFFFFF";
         xmlpp::NodeSet results = p_node->find("property[@name='color']");
@@ -409,7 +407,25 @@ void cEditor_Menu_Entry::Add_Image_Item(std::string pixmap_path, const cImage_Se
     p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
     p_label->setProperty("FrameEnabled", "False");
 
-    CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, pixmap_path, "ingame-images");
+    /* CEGUI only knows about image sets, not about single images.
+     * Thus we effectively add one-image imagesets here to have CEGUI
+     * display our image. Note CEGUI also caches these images and will
+     * throw a CEGUI::AlreadyExsitsException in addFromImageFile() if
+     * an image is added multiple times (like multiple loads of the
+     * editor or just the same item being added to multiple menus).
+     * Thus we have to check if the item graphic has been cached before,
+     * and only if that isn't the case, load the file from disk in the
+     * way described. */
+    if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_path)) {
+        try {
+            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, pixmap_path, "ingame-images");
+        }
+        catch(CEGUI::RendererException& e) {
+            std::cerr << "Warning: Failed to load as editor item image: " << pixmap_path << std::endl;
+            return;
+        }
+    }
+
     CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", std::string("image-of-") + escaped_path);
     p_image->setProperty("Image", escaped_path);
     p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
