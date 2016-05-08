@@ -16,6 +16,7 @@
     <Window type="DefaultWindow" name="editor_tab_items">
       <Property name="Text" value="Items"/>
       <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+      <!-- The following window is never actually used, it's a placeholder. -->
       <Window type="TaharezLook/ScrollablePane" name="editor_items">
         <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.95,0}}"/>
       </Window>

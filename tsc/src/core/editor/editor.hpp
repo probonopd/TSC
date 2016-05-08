@@ -19,13 +19,34 @@
 #ifdef ENABLE_NEW_EDITOR
 
 namespace TSC {
-    typedef struct {
+    class cEditor_Menu_Entry {
+    public:
+        cEditor_Menu_Entry(std::string name);
+        ~cEditor_Menu_Entry();
+
+        void Add_Image_Item(std::string pixmap_path, const cImage_Settings_Data& settings);
+
+        inline void Set_Color(Color color){ m_color = color; }
+        inline Color Get_Color(){ return m_color; }
+
+        inline std::string Get_Name(){ return m_name; }
+
+        inline void Set_Header(bool is_header){ m_is_header = is_header; }
+        inline bool Is_Header() { return m_is_header; }
+
+        inline void Set_Required_Tags(std::vector<std::string> tags) { m_required_tags = tags; }
+        inline std::vector<std::string>& Get_Required_Tags() { return m_required_tags; }
+
+        inline CEGUI::ScrollablePane* Get_CEGUI_Pane() { return mp_tab_pane; }
+
+    private:
         std::string m_name;
         Color m_color;
         bool m_is_header;
         std::vector<std::string> m_required_tags;
-        CEGUI::Window* mp_tab_window;
-    } Editor_Menu_Entry;
+        CEGUI::ScrollablePane* mp_tab_pane;
+        int m_element_y;
+    };
 
     class cEditor {
     public:
@@ -39,7 +60,7 @@ namespace TSC {
         virtual void Enable(void);
         virtual void Disable(void);
 
-        void Add_Editor_Item(boost::filesystem::path pixmap_path);
+        bool Try_Add_Editor_Item(boost::filesystem::path pixmap_path);
 
         virtual void Update(void);
         virtual void Draw(void);
@@ -58,12 +79,13 @@ namespace TSC {
         bool m_rested;
         bool m_mouse_inside;
         std::vector<CEGUI::Window*> m_editor_items;
-        float m_element_y;
-        std::vector<Editor_Menu_Entry> m_menu_entries;
+        std::vector<cEditor_Menu_Entry*> m_menu_entries;
 
         void parse_menu_file();
         void populate_menu();
-        Editor_Menu_Entry& get_menu_entry(const std::string& name);
+        void load_image_items();
+        cEditor_Menu_Entry* get_menu_entry(const std::string& name);
+        std::vector<cEditor_Menu_Entry*> find_target_menu_entries_for(const cImage_Settings_Data& settings);
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);
     };
