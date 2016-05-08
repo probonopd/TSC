@@ -32,6 +32,8 @@ cEditor_Level::cEditor_Level()
     : cEditor()
 {
     mp_level = NULL;
+    m_editor_item_tag = "level";
+    m_menu_filename = pResource_Manager->Get_Game_Editor("level_menu.xml");
 }
 
 cEditor_Level::~cEditor_Level()

@@ -9,6 +9,7 @@
       <Property name="Text" value="Menu"/>
       <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
       <Window type="TaharezLook/Listbox" name="editor_menu">
+        <Property name="SortEnabled" value="False"/>
         <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.970623,0}}"/>
       </Window>
     </Window>

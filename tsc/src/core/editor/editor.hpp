@@ -19,6 +19,14 @@
 #ifdef ENABLE_NEW_EDITOR
 
 namespace TSC {
+    typedef struct {
+        std::string m_name;
+        Color m_color;
+        bool m_is_header;
+        std::vector<std::string> m_required_tags;
+        CEGUI::Window* mp_tab_window;
+    } Editor_Menu_Entry;
+
     class cEditor {
     public:
         cEditor();
@@ -38,6 +46,10 @@ namespace TSC {
 
         virtual bool Handle_Event(const sf::Event& evt);
 
+    protected:
+        std::string m_editor_item_tag;
+        boost::filesystem::path m_menu_filename;
+
     private:
         CEGUI::Window* mp_editor_tabpane;
         bool m_enabled;
@@ -47,7 +59,11 @@ namespace TSC {
         bool m_mouse_inside;
         std::vector<CEGUI::Window*> m_editor_items;
         float m_element_y;
+        std::vector<Editor_Menu_Entry> m_menu_entries;
 
+        void parse_menu_file();
+        void populate_menu();
+        Editor_Menu_Entry& get_menu_entry(const std::string& name);
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);
     };

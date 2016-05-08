@@ -34,6 +34,8 @@ cEditor::cEditor()
     m_visibility_timer = 0.0f;
     m_mouse_inside = false;
     m_element_y = 0.0f;
+    m_menu_filename = boost::filesystem::path(path_to_utf8("Needs to be set by subclasses"));
+    m_editor_item_tag = "Must be set by subclass";
 }
 
 cEditor::~cEditor()
@@ -55,6 +57,9 @@ void cEditor::Init(void)
     mp_editor_tabpane->hide(); // Do not show for now
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_tabpane);
 
+    parse_menu_file();
+    populate_menu();
+
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_enter, this));
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_leave, this));
 }
@@ -68,7 +73,7 @@ void cEditor::Unload(void)
 {
     if (mp_editor_tabpane) {
         CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_editor_tabpane);
-        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_tabpane);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_tabpane); // destroys child windows
         mp_editor_tabpane = NULL;
     }
 }
@@ -191,6 +196,77 @@ void cEditor::Add_Editor_Item(boost::filesystem::path pixmap_path)
 
     m_element_y += labelheight + imageheight + yskip;
     delete p_settings;
+}
+
+void cEditor::parse_menu_file()
+{
+    std::string menu_file = path_to_utf8(m_menu_filename);
+
+    // The menu XML file is so dead simple that a SAX parser would
+    // simply be overkill. Leightweight XPath queries are enough.
+    xmlpp::DomParser parser;
+    parser.parse_file(menu_file);
+
+    xmlpp::Element* p_root = parser.get_document()->get_root_node();
+    xmlpp::NodeSet items = p_root->find("item");
+
+    xmlpp::NodeSet::const_iterator iter;
+    for (iter=items.begin(); iter != items.end(); iter++) {
+        xmlpp::Element* p_node = dynamic_cast<xmlpp::Element*>(*iter);
+
+        std::string name   = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='name']")[0])->get_attribute("value")->get_value();
+        std::string tagstr = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='tags']")[0])->get_attribute("value")->get_value();
+
+        std::cout << "Found XML <item> '" << name << std::endl;
+
+        // Set color if available (---header--- elements have no color property)
+        std::string colorstr = "FFFFFFFF";
+        xmlpp::NodeSet results = p_node->find("property[@name='color']");
+        if (!results.empty())
+            colorstr = dynamic_cast<xmlpp::Element*>(results[0])->get_attribute("value")->get_value();
+
+        // Burst the tag list into its elements
+        std::vector<std::string> tags = string_split(tagstr, ";");
+
+        // Prepare informational menu object
+        Editor_Menu_Entry entry;
+        entry.m_name = name;
+        entry.m_color = Color(colorstr);
+        entry.m_required_tags = tags;
+        entry.mp_tab_window = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", std::string("editor_items_") + name);
+
+        // Mark as header element if the tag "header" is encountered.
+        std::vector<std::string>::iterator iter;
+        iter = std::find(tags.begin(), tags.end(), std::string("header"));
+        entry.m_is_header = (iter != tags.end());
+
+        // Store
+        m_menu_entries.push_back(entry);
+    }
+}
+
+void cEditor::populate_menu()
+{
+    CEGUI::Listbox* p_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
+    std::vector<Editor_Menu_Entry>::iterator iter;
+
+    for(iter = m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
+        CEGUI::ListboxTextItem* p_item = new CEGUI::ListboxTextItem(iter->m_name);
+        p_item->setTextColours(CEGUI::ColourRect(iter->m_color.Get_cegui_Color()));
+        p_menu_listbox->addItem(p_item);
+    }
+}
+
+Editor_Menu_Entry& cEditor::get_menu_entry(const std::string& name)
+{
+    std::vector<Editor_Menu_Entry>::iterator iter;
+    for(iter=m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
+        if (iter->m_name == name) {
+            return (*iter);
+        }
+    }
+
+    throw(std::runtime_error(std::string("Element '") + name + "' not in editor menu list!"));
 }
 
 bool cEditor::on_mouse_enter(const CEGUI::EventArgs& event)
