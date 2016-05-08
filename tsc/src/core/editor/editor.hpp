@@ -25,6 +25,7 @@ namespace TSC {
         ~cEditor_Menu_Entry();
 
         void Add_Image_Item(std::string pixmap_path, const cImage_Settings_Data& settings);
+        void Activate(CEGUI::TabControl* p_tabcontrol);
 
         inline void Set_Color(Color color){ m_color = color; }
         inline Color Get_Color(){ return m_color; }
@@ -72,7 +73,8 @@ namespace TSC {
         boost::filesystem::path m_menu_filename;
 
     private:
-        CEGUI::Window* mp_editor_tabpane;
+        CEGUI::TabControl* mp_editor_tabpane;
+        CEGUI::Listbox* mp_menu_listbox;
         bool m_enabled;
         float m_visibility_timer;
         CEGUI::UDim m_target_x_position;
@@ -88,6 +90,7 @@ namespace TSC {
         std::vector<cEditor_Menu_Entry*> find_target_menu_entries_for(const cImage_Settings_Data& settings);
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);
+        bool on_menu_selection_changed(const CEGUI::EventArgs& event);
     };
 }
 

@@ -30,6 +30,7 @@ using namespace TSC;
 cEditor::cEditor()
 {
     mp_editor_tabpane = NULL;
+    mp_menu_listbox = NULL;
     m_enabled = false;
     m_rested = false;
     m_visibility_timer = 0.0f;
@@ -52,11 +53,13 @@ cEditor::~cEditor()
  */
 void cEditor::Init(void)
 {
-    mp_editor_tabpane = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("editor.layout");
+    mp_editor_tabpane = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile("editor.layout"));
     m_target_x_position = mp_editor_tabpane->getXPosition();
     mp_editor_tabpane->hide(); // Do not show for now
 
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_tabpane);
+
+    mp_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
 
     parse_menu_file();
     populate_menu();
@@ -64,6 +67,8 @@ void cEditor::Init(void)
 
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_enter, this));
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_leave, this));
+
+    mp_menu_listbox->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cEditor::on_menu_selection_changed, this));
 }
 
 /**
@@ -260,13 +265,13 @@ void cEditor::parse_menu_file()
 
 void cEditor::populate_menu()
 {
-    CEGUI::Listbox* p_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
     std::vector<cEditor_Menu_Entry*>::iterator iter;
 
     for(iter = m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
         CEGUI::ListboxTextItem* p_item = new CEGUI::ListboxTextItem((*iter)->Get_Name());
         p_item->setTextColours(CEGUI::ColourRect((*iter)->Get_Color().Get_cegui_Color()));
-        p_menu_listbox->addItem(p_item);
+        p_item->setUserData(*iter);
+        mp_menu_listbox->addItem(p_item);
     }
 }
 
@@ -348,6 +353,25 @@ bool cEditor::on_mouse_leave(const CEGUI::EventArgs& event)
     return true;
 }
 
+bool cEditor::on_menu_selection_changed(const CEGUI::EventArgs& event)
+{
+    CEGUI::ListboxItem* p_current_item = mp_menu_listbox->getFirstSelectedItem();
+
+    // Ignore if no selection
+    if (!p_current_item)
+        return false;
+
+    cEditor_Menu_Entry* p_menu_entry = static_cast<cEditor_Menu_Entry*>(p_current_item->getUserData());
+
+    // Ignore clicks on headings
+    if (p_menu_entry->Is_Header())
+        return false;
+
+    p_menu_entry->Activate(mp_editor_tabpane);
+
+    return true;
+}
+
 cEditor_Menu_Entry::cEditor_Menu_Entry(std::string name)
 {
     m_name = name;
@@ -365,6 +389,9 @@ cEditor_Menu_Entry::cEditor_Menu_Entry(std::string name)
 
 cEditor_Menu_Entry::~cEditor_Menu_Entry()
 {
+    // TODO: Detach if still attached and destroy
+    // Nonattached windows will not get destroyed, obviously
+    // CEGUI::Window* p_editor_tabpane = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("tabcontrol_editor/editor_tab_items")
 }
 
 void cEditor_Menu_Entry::Add_Image_Item(std::string pixmap_path, const cImage_Settings_Data& settings)
@@ -394,6 +421,22 @@ void cEditor_Menu_Entry::Add_Image_Item(std::string pixmap_path, const cImage_Se
 
     // Remember where we stopped for the next call.
     m_element_y += labelheight + imageheight + yskip;
+}
+
+/// Activate this entry's panel in the handed tabbook.
+void cEditor_Menu_Entry::Activate(CEGUI::TabControl* p_tabcontrol)
+{
+    CEGUI::Window* p_container = p_tabcontrol->getTabContents("editor_tab_items");
+
+    // Detach the current scrollable pane.
+    CEGUI::ScrollablePane* p_current_pane = static_cast<CEGUI::ScrollablePane*>(p_container->getChildElementAtIdx(0));
+    p_container->removeChild(p_current_pane);
+
+    // Attach our content instead.
+    p_container->addChild(mp_tab_pane);
+
+    // Switch to the items page
+    p_tabcontrol->setSelectedTab("editor_tab_items");
 }
 
 #endif
