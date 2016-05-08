@@ -55,6 +55,16 @@ namespace TSC {
             alpha = 255;
         }
 
+        /// Creates an instance from a hex color string of form "AARRGGBB",
+        /// where AA refers to the alpha value.
+        Color(std::string hexstr)
+        {
+            alpha = static_cast<uint8_t>(std::stoul(hexstr.substr(0, 2), NULL, 16));
+            red   = static_cast<uint8_t>(std::stoul(hexstr.substr(2, 2), NULL, 16));
+            green = static_cast<uint8_t>(std::stoul(hexstr.substr(4, 2), NULL, 16));
+            blue  = static_cast<uint8_t>(std::stoul(hexstr.substr(6, 2), NULL, 16));
+        }
+
         // Returns it as SFML color.
         inline sf::Color Get_SFML_Color(void) const
         {
