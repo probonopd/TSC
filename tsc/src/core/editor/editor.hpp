@@ -24,7 +24,7 @@ namespace TSC {
         cEditor_Menu_Entry(std::string name);
         ~cEditor_Menu_Entry();
 
-        void Add_Image_Item(std::string pixmap_path, const cImage_Settings_Data& settings);
+        void Add_Image_Item(boost::filesystem::path settings_path, const cImage_Settings_Data& settings);
         void Activate(CEGUI::TabControl* p_tabcontrol);
 
         inline void Set_Color(Color color){ m_color = color; }
@@ -61,7 +61,7 @@ namespace TSC {
         virtual void Enable(void);
         virtual void Disable(void);
 
-        bool Try_Add_Editor_Item(boost::filesystem::path pixmap_path);
+        bool Try_Add_Editor_Item(boost::filesystem::path settings_path);
 
         virtual void Update(void);
         virtual void Draw(void);

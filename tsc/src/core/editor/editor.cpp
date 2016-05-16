@@ -177,28 +177,18 @@ bool cEditor::Handle_Event(const sf::Event& evt)
  * a graphic tagged with "world" will never appear in the level
  * editor, and vice-versa.).
  *
- * \param pixmap_path
- * Path relative to the "pixmaps" directory that refers to the graphic
- * to add.
+ * \param settings_path
+ * Absolute path that refers to the settings file
+ * of the graphic to add.
  *
  * \returns false if the item was not added because the master tag
  * was missing, true otherwise.
  */
-bool cEditor::Try_Add_Editor_Item(boost::filesystem::path pixmap_path)
+bool cEditor::Try_Add_Editor_Item(boost::filesystem::path settings_path)
 {
-    // Several different formats of the same path
-    std::string string_path(path_to_utf8(pixmap_path));
-
-    boost::filesystem::path settings_file = pResource_Manager->Get_Game_Pixmap(string_path);
-    settings_file.replace_extension(utf8_to_path(".settings"));
-
-    // Exclude graphics without a .settings file
-    if (!boost::filesystem::exists(settings_file))
-        return false;
-
     // Parse the image's settings file
     cImage_Settings_Parser parser;
-    cImage_Settings_Data* p_settings = parser.Get(settings_file);
+    cImage_Settings_Data* p_settings = parser.Get(settings_path);
 
     // If the master tag is not in the tag list, do not add this graphic to the
     // editor.
@@ -211,7 +201,7 @@ bool cEditor::Try_Add_Editor_Item(boost::filesystem::path pixmap_path)
 
     // Add the graphics to the respective menu entries' GUI panels.
     for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
-        (*iter)->Add_Image_Item(string_path, *p_settings);
+        (*iter)->Add_Image_Item(settings_path, *p_settings);
     }
 
     delete p_settings;
@@ -275,11 +265,11 @@ void cEditor::populate_menu()
 
 void cEditor::load_image_items()
 {
-    std::vector<boost::filesystem::path> image_files = Get_Directory_Files(pResource_Manager->Get_Game_Pixmaps_Directory(), ".png");
+    std::vector<boost::filesystem::path> image_files = Get_Directory_Files(pResource_Manager->Get_Game_Pixmaps_Directory(), ".settings");
     std::vector<boost::filesystem::path>::iterator iter;
 
     for(iter=image_files.begin(); iter != image_files.end(); iter++) {
-        Try_Add_Editor_Item(fs_relative(pResource_Manager->Get_Game_Pixmaps_Directory(), *iter));
+        Try_Add_Editor_Item(*iter);
     }
 }
 
@@ -391,20 +381,43 @@ cEditor_Menu_Entry::~cEditor_Menu_Entry()
     // CEGUI::Window* p_editor_tabpane = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("tabcontrol_editor/editor_tab_items")
 }
 
-void cEditor_Menu_Entry::Add_Image_Item(std::string pixmap_path, const cImage_Settings_Data& settings)
+void cEditor_Menu_Entry::Add_Image_Item(boost::filesystem::path settings_path, const cImage_Settings_Data& settings)
 {
     static const int labelheight = 24;
     static const int imageheight = 48; /* Also image width (square) */
     static const int yskip = 24;
 
-    std::string escaped_path(pixmap_path);
-    string_replace_all(escaped_path, "/", "+"); // CEGUI doesn't like / in ImageManager image names
+    // Find the PNG of this settings file. If an equally named .png exists,
+    // assume that file, otherwise check the settings 'base' property. If
+    // that also doesn't exist, that's an error.
+    boost::filesystem::path pixmap_path(settings_path); // Copy
+    pixmap_path.replace_extension(utf8_to_path(".png"));
+    if (!boost::filesystem::exists(pixmap_path)) {
+        if (settings.m_base.empty()) { // Error
+            std::cerr << "PNG file for settings file '" << path_to_utf8(settings_path) << "' not found (no .png found and no 'base' setting)." << std::endl;
+            return;
+        }
+        else {
+            pixmap_path = pixmap_path.parent_path() / settings.m_base;
+            if (!boost::filesystem::exists(pixmap_path)) {
+                std::cerr << "PNG base file not found at '" << path_to_utf8(pixmap_path) << "'." << std::endl;
+                return;
+            }
+        }
+    }
 
-    CEGUI::Window* p_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", std::string("label-of-") + escaped_path);
+    std::string escaped_pixmap_path(path_to_utf8(pixmap_path));
+    std::string escaped_settings_path(path_to_utf8(settings_path));
+    string_replace_all(escaped_pixmap_path, "/", "+"); // CEGUI doesn't like / in ImageManager image names
+    string_replace_all(escaped_settings_path, "/", "+");
+
+    CEGUI::Window* p_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", std::string("label-of-") + escaped_settings_path);
     p_label->setText(settings.m_name);
     p_label->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0, labelheight)));
     p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
     p_label->setProperty("FrameEnabled", "False");
+
+    // TODO: Apply rotation
 
     /* CEGUI only knows about image sets, not about single images.
      * Thus we effectively add one-image imagesets here to have CEGUI
@@ -415,9 +428,9 @@ void cEditor_Menu_Entry::Add_Image_Item(std::string pixmap_path, const cImage_Se
      * Thus we have to check if the item graphic has been cached before,
      * and only if that isn't the case, load the file from disk in the
      * way described. */
-    if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_path)) {
+    if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_pixmap_path)) {
         try {
-            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, pixmap_path, "ingame-images");
+            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_pixmap_path, path_to_utf8(fs_relative(pResource_Manager->Get_Game_Pixmaps_Directory(), pixmap_path)), "ingame-images");
         }
         catch(CEGUI::RendererException& e) {
             std::cerr << "Warning: Failed to load as editor item image: " << pixmap_path << std::endl;
@@ -425,8 +438,8 @@ void cEditor_Menu_Entry::Add_Image_Item(std::string pixmap_path, const cImage_Se
         }
     }
 
-    CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", std::string("image-of-") + escaped_path);
-    p_image->setProperty("Image", escaped_path);
+    CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", std::string("image-of-") + escaped_settings_path);
+    p_image->setProperty("Image", escaped_pixmap_path);
     p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
     p_image->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, -imageheight/2) /* center on X */, CEGUI::UDim(0, m_element_y + labelheight)));
     p_image->setProperty("FrameEnabled", "False");
