@@ -417,8 +417,6 @@ void cEditor_Menu_Entry::Add_Image_Item(boost::filesystem::path settings_path, c
     p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
     p_label->setProperty("FrameEnabled", "False");
 
-    // TODO: Apply rotation
-
     /* CEGUI only knows about image sets, not about single images.
      * Thus we effectively add one-image imagesets here to have CEGUI
      * display our image. Note CEGUI also caches these images and will
@@ -443,6 +441,9 @@ void cEditor_Menu_Entry::Add_Image_Item(boost::filesystem::path settings_path, c
     p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
     p_image->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, -imageheight/2) /* center on X */, CEGUI::UDim(0, m_element_y + labelheight)));
     p_image->setProperty("FrameEnabled", "False");
+
+    // Apply rotation
+    p_image->setRotation(CEGUI::Quaternion::eulerAnglesDegrees(settings.m_rotation_x, settings.m_rotation_y, settings.m_rotation_z));
 
     mp_tab_pane->addChild(p_label);
     mp_tab_pane->addChild(p_image);
