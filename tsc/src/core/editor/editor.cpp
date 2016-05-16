@@ -296,38 +296,37 @@ cEditor_Menu_Entry* cEditor::get_menu_entry(const std::string& name)
 }
 
 /**
- * Returns all menu entries that match any of the given graphic’s tags
- * (excluding editor master tags, which are guaranteed to not be
- * required). That is, if a menu entry declares target tags of "snow;ground",
- * then that menu entry will be in the returned list if the graphic’s
- * tags include either "snow" or "ground" or both (in the latter case the
- * menu entry is of course not included twice in the result).
+ * Iterates the list of menu entries and returns a list of those whose
+ * requirements match the graphic given. That is, a menu entry declares
+ * a set of required tags, and if the passed graphic has all of these
+ * tags set, the menu entry is included in the return list. If more
+ * than the required tags are set, the entry is returned nevertheless.
  */
 std::vector<cEditor_Menu_Entry*> cEditor::find_target_menu_entries_for(const cImage_Settings_Data& settings)
 {
     std::vector<cEditor_Menu_Entry*> results;
-    std::vector<std::string> requested_tags = string_split(settings.m_editor_tags, ";");
+    std::vector<std::string> available_tags = string_split(settings.m_editor_tags, ";");
 
-    /* If a menu entry targets at least one of the requested tags, then
-     * this menu entry is allowed to contain the graphic. This can lead
-     * to the graphic showing up in multiple menus, but that’s okay and
-     * makes navigation actually easier. It can be prevented by adjusting
-     * the tag list on the target graphic.
-     * The editor master tags are guaranteed to not be required by any
-     * menu entry. */
+    /* To show up in the editor, a graphic needs to have all tags set
+     * on it that are required by a menu entry (except for the master
+     * editor tag, which is checked elsewhere). */
     std::vector<cEditor_Menu_Entry*>::iterator iter;
     for(iter=m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
         cEditor_Menu_Entry* p_menu_entry = *iter;
         std::vector<std::string>::iterator tag_iterator;
 
-        // Check if any of this menu's tags is on the graphic
+        // Check if all of this menu's tags are on the graphic.
+        bool all_tags_available = true;
         for(tag_iterator=p_menu_entry->Get_Required_Tags().begin(); tag_iterator != p_menu_entry->Get_Required_Tags().end(); tag_iterator++) {
-            if (std::find(requested_tags.begin(), requested_tags.end(), *tag_iterator) != requested_tags.end()) {
-                // Prevent the same graphic being added to the same menu multiple times
-                if (std::find(results.begin(), results.end(), p_menu_entry) == results.end()) {
-                    results.push_back(p_menu_entry);
-                }
+            if (std::find(available_tags.begin(), available_tags.end(), *tag_iterator) == available_tags.end()) {
+                // Tag is missing.
+                all_tags_available = false;
+                break;
             }
+        }
+
+        if (all_tags_available) {
+            results.push_back(p_menu_entry);
         }
     }
 
