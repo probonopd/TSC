@@ -258,6 +258,25 @@ bool cEditor::Key_Down(const sf::Event& evt)
             m_help_window_visible = true;
         }
     }
+    // focus level start
+    else if (evt.key.code == sf::Keyboard::Home) {
+        pActive_Camera->Reset_Pos();
+    }
+    // move camera one screen to the right
+    else if (evt.key.code == sf::Keyboard::N) {
+        pActive_Camera->Move(static_cast<float>(game_res_w), 0);
+    }
+    // move camera one screen to the left
+    else if (evt.key.code == sf::Keyboard::P) {
+        pActive_Camera->Move(-static_cast<float>(game_res_w), 0);
+    }
+    // move camera to position
+    else if (evt.key.code == sf::Keyboard::G && evt.key.control) {
+        int pos_x = string_to_int(Box_Text_Input(int_to_string(static_cast<int>(pActive_Camera->m_x)), "Position X", 1));
+        int pos_y = string_to_int(Box_Text_Input(int_to_string(static_cast<int>(pActive_Camera->m_y)), "Position Y", 1));
+
+        pActive_Camera->Set_Pos(static_cast<float>(pos_x), static_cast<float>(pos_y));
+    }
     else {
         // not processed
         return false;
