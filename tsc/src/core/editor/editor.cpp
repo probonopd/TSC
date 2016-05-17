@@ -37,6 +37,7 @@ cEditor::cEditor()
     m_mouse_inside = false;
     m_menu_filename = boost::filesystem::path(path_to_utf8("Needs to be set by subclasses"));
     m_editor_item_tag = "Must be set by subclass";
+    m_help_window_visible = false;
 }
 
 cEditor::~cEditor()
@@ -164,7 +165,107 @@ void cEditor::Draw(void)
 
 bool cEditor::Key_Down(const sf::Event& evt)
 {
-    return false;
+    if (!m_enabled)
+        return false;
+
+    // New level
+    if (evt.key.code == sf::Keyboard::N && evt.key.control) {
+        Function_New();
+    }
+    // Save
+    else if (evt.key.code == sf::Keyboard::S && evt.key.control) {
+        Function_Save();
+    }
+    // Save as
+    else if (evt.key.code == sf::Keyboard::S && evt.key.control && evt.key.shift) {
+        Function_Save_as();
+    }
+    else if (evt.key.code == sf::Keyboard::F1) {
+        if (m_help_window_visible) {
+            on_help_window_exit_clicked(CEGUI::EventArgs());
+        }
+        else {
+            CEGUI::FrameWindow* p_helpframe = static_cast<CEGUI::FrameWindow*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/FrameWindow", "editor_help"));
+            p_helpframe->setPosition(CEGUI::UVector2(CEGUI::UDim(0, (game_res_w * 0.1f) * global_upscalex), CEGUI::UDim(0, (game_res_h * 0.1f) * global_upscalex)));
+            p_helpframe->setSize(CEGUI::USize(CEGUI::UDim(0, (game_res_w * 0.8f) * global_upscalex), CEGUI::UDim(0, (game_res_h * 0.8f) * global_upscalex)));
+            // TRANS: Title of the editor help window
+            p_helpframe->setText(UTF8_("Editor Help"));
+
+            p_helpframe->getCloseButton()->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cEditor::on_help_window_exit_clicked, this));
+
+            CEGUI::Window* p_helptext = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", "editor_help_text");
+            p_helptext->setPosition(CEGUI::UVector2(CEGUI::UDim(0.00f, 0.0f), CEGUI::UDim(0.00f, 0.0f)));
+            p_helptext->setSize(CEGUI::USize(CEGUI::UDim(1, 0.0f), CEGUI::UDim(1, 0.0f)));
+            p_helptext->setProperty("VertScrollbar", "True");
+            p_helptext->setProperty("FrameEnabled", "False");
+            p_helptext->setProperty("BackgroundEnabled", "False");
+            p_helptext->setProperty("VertFormatting", "TopAligned");
+
+            // TRANS: This is the help window in the editor. Do not translate
+            // TRANS: the color codes in the string.
+            p_helptext->setText(UTF8_(" \n"
+                                      "----- [colour='FFFFCF5F']General[colour='FFFFFFFF'] -----\n"
+                                      " \n"
+                                      "F1 - Toggle this Help Window\n"
+                                      "F8 - Open/Close the Editor\n"
+                                      "F10 - Toggle sound effects\n"
+                                      "F11 - Toggle music play\n"
+                                      "Home - Focus level start\n"
+                                      "End - Focus last level exit\n"
+                                      "Ctrl + G - Goto Camera position\n"
+                                      "N - Step one screen to the right ( Next Screen )\n"
+                                      "P - Step one screen to the left ( Previous Screen )\n"
+                                      "Ctrl + N - Create a new Level\n"
+                                      "Ctrl + L - Load a Level\n"
+                                      "Ctrl + W - Load an Overworld\n"
+                                      "Ctrl + S - Save the current Level/World\n"
+                                      "Ctrl + Shift + S - Save the current Level/World under a new name\n"
+                                      "Ctrl + D - Toggle debug mode\n"
+                                      "Ctrl + P - Toggle performance mode\n"
+                                      " \n"
+                                      "----- [colour='FFFFCF5F']Objects[colour='FFFFFFFF'] -----\n"
+                                      " \n"
+                                      "M - Cycle selected object(s) through massive types\n"
+                                      "Massive types with their color:\n"
+                                      "   [colour='FFFF2F0F']Massive[colour='FFFFFFFF']->[colour='FFFFAF2F']Halfmassive[colour='FFFFFFFF']->[colour='FFDF00FF']Climbable[colour='FFFFFFFF']->[colour='FF1FFF1F']Passive[colour='FFFFFFFF']->[colour='FF1FFF1F']Front Passive[colour='FFFFFFFF']\n"
+                                      "O - Enable snap to object mode\n"
+                                      "Ctrl + A - Select all objects\n"
+                                      "Ctrl + X - Cut currently selected objects\n"
+                                      "Ctrl + C - Copy currently selected objects\n"
+                                      "Ctrl + V or Insert - Paste current copied / cutted objects\n"
+                                      "Ctrl + R - Replace the selected basic sprite(s) image with another one\n"
+                                      "Del - If Mouse is over an object: Delete current object\n"
+                                      "Del - If Mouse has nothing selected: Delete selected objects\n"
+                                      "Numpad:\n"
+                                      " + - Bring object to front\n"
+                                      " - - Send object to back\n"
+                                      " 2/4/6/8 - Move selected object 1 pixel into the direction\n"
+                                      "Mouse:\n"
+                                      " Left (Hold) - Drag objects\n"
+                                      " Left (Click) - With shift to select / deselect single objects\n"
+                                      " Right - Delete intersecting Object\n"
+                                      " Middle - Toggle Mover Mode\n"
+                                      " Ctrl + Shift + Left (Click) - Select objects with the same type\n"
+                                      "Arrow keys:\n"
+                                      " Use arrow keys to move around. Press shift for faster movement\n"
+                                      " \n")
+                );
+
+            CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+            p_helpframe->addChild(p_helptext);
+            p_root->addChild(p_helpframe);
+
+            m_help_window_visible = true;
+        }
+    }
+    else {
+        // not processed
+        return false;
+    }
+
+    // key got processed
+    return true;
+
 }
 
 bool cEditor::Mouse_Down(sf::Mouse::Button button)
@@ -476,6 +577,26 @@ void cEditor_Menu_Entry::Activate(CEGUI::TabControl* p_tabcontrol)
 
     // Switch to the items page
     p_tabcontrol->setSelectedTab("editor_tab_items");
+}
+
+void cEditor::Function_Exit(void)
+{
+    sf::Event newevt;
+    newevt.type = sf::Event::KeyPressed;
+    newevt.key.code = sf::Keyboard::F8;
+    pKeyboard->Key_Down(newevt);
+}
+
+bool cEditor::on_help_window_exit_clicked(const CEGUI::EventArgs& args)
+{
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::FrameWindow* p_helpframe = static_cast<CEGUI::FrameWindow*>(p_root->getChild("editor_help"));
+
+    p_root->removeChild(p_helpframe);
+    CEGUI::WindowManager::getSingleton().destroyWindow(p_helpframe);
+    m_help_window_visible = false;
+
+    return true;
 }
 
 #endif

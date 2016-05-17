@@ -70,6 +70,17 @@ namespace TSC {
         virtual bool Mouse_Up(sf::Mouse::Button button);
         virtual bool Key_Down(const sf::Event& evt);
 
+        // Menu functions
+        void Function_Exit(void);
+        virtual bool Function_New(void) { return 0; };
+        virtual void Function_Load(void) {};
+        virtual void Function_Save(bool with_dialog = 0) {};
+        virtual void Function_Save_as(void) {};
+        virtual void Function_Delete(void) {};
+        virtual void Function_Reload(void) {};
+        virtual void Function_Settings(void) {};
+
+
         bool m_enabled;
     protected:
         std::string m_editor_item_tag;
@@ -84,6 +95,7 @@ namespace TSC {
         bool m_mouse_inside;
         std::vector<CEGUI::Window*> m_editor_items;
         std::vector<cEditor_Menu_Entry*> m_menu_entries;
+        bool m_help_window_visible;
 
         void parse_menu_file();
         void populate_menu();
@@ -93,6 +105,7 @@ namespace TSC {
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);
         bool on_menu_selection_changed(const CEGUI::EventArgs& event);
+        bool on_help_window_exit_clicked(const CEGUI::EventArgs& args);
     };
 }
 
