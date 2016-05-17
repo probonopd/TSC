@@ -162,7 +162,17 @@ void cEditor::Draw(void)
 {
 }
 
-bool cEditor::Handle_Event(const sf::Event& evt)
+bool cEditor::Key_Down(const sf::Event& evt)
+{
+    return false;
+}
+
+bool cEditor::Mouse_Down(sf::Mouse::Button button)
+{
+    return false;
+}
+
+bool cEditor::Mouse_Up(sf::Mouse::Button button)
 {
     return false;
 }

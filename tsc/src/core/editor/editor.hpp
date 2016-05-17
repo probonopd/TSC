@@ -66,8 +66,11 @@ namespace TSC {
         virtual void Update(void);
         virtual void Draw(void);
 
-        virtual bool Handle_Event(const sf::Event& evt);
+        virtual bool Mouse_Down(sf::Mouse::Button button);
+        virtual bool Mouse_Up(sf::Mouse::Button button);
+        virtual bool Key_Down(const sf::Event& evt);
 
+        bool m_enabled;
     protected:
         std::string m_editor_item_tag;
         boost::filesystem::path m_menu_filename;
@@ -75,7 +78,6 @@ namespace TSC {
     private:
         CEGUI::TabControl* mp_editor_tabpane;
         CEGUI::Listbox* mp_menu_listbox;
-        bool m_enabled;
         float m_visibility_timer;
         CEGUI::UDim m_target_x_position;
         bool m_rested;
