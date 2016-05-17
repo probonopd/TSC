@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4">
-  <Window type="TaharezLook/TabControl" name="tabcontrol_editor">
+  <Window type="TaharezLook/TabControl" name="tabcontrol_editor_world">
     <Property name="TabHeight" value="{0,24}"/>
     <Property name="TabPanePosition" value="Top"/>
     <Property name="Area" value="{{0,0},{0,0},{0.2,0},{1,0}}"/>

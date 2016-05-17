@@ -311,6 +311,9 @@ void Init_Game(void)
 #elif defined(ENABLE_NEW_EDITOR)
     pLevel_Editor = new cEditor_Level();
     pLevel_Editor->Init();
+
+    pWorld_Editor = new cEditor_World();
+    pWorld_Editor->Init();
 #endif
 
     pMouseCursor = new cMouseCursor(pActive_Level->m_sprite_manager);

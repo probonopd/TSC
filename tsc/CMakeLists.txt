@@ -286,6 +286,7 @@ endif()
 set(tsc_sources
   src/core/editor/editor.cpp
   src/level/level_editor.cpp
+  src/overworld/world_editor.cpp
   src/level/level_background.cpp
   src/level/level.cpp
   src/level/level_loader.cpp

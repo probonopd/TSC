@@ -53,7 +53,7 @@ cEditor::~cEditor()
  */
 void cEditor::Init(void)
 {
-    mp_editor_tabpane = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile("editor.layout"));
+    mp_editor_tabpane = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_editor_item_tag + "_editor.layout"));
     m_target_x_position = mp_editor_tabpane->getXPosition();
     mp_editor_tabpane->hide(); // Do not show for now
 
