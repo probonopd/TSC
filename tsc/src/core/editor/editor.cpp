@@ -282,6 +282,33 @@ bool cEditor::Key_Down(const sf::Event& evt)
 
         pActive_Camera->Set_Pos(static_cast<float>(pos_x), static_cast<float>(pos_y));
     }
+    // push selected objects into the front
+    else if (evt.key.code == sf::Keyboard::Add) {
+        for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+            cSelectedObject* sel_obj = (*itr);
+
+            if (!sel_obj->m_obj->Is_Sprite_Managed()) {
+                continue;
+            }
+
+            // last object is in front of others
+            mp_sprite_manager->Move_To_Back(sel_obj->m_obj);
+        }
+    }
+    // push selected objects into the back
+    else if (evt.key.code == sf::Keyboard::Subtract) {
+        for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+            cSelectedObject* sel_obj = (*itr);
+
+            if (!sel_obj->m_obj->Is_Sprite_Managed()) {
+                continue;
+            }
+
+            // first object is behind others
+            mp_sprite_manager->Move_To_Front(sel_obj->m_obj);
+        }
+    }
+
     else {
         // not processed
         return false;
