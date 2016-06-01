@@ -10,7 +10,7 @@ namespace TSC {
         cEditor_World();
         virtual ~cEditor_World();
 
-        virtual void Enable(void);
+        virtual void Enable(cSprite_Manager* p_sprite_manager);
         virtual void Disable(void);
         void Set_World(cOverworld* p_world);
     private:

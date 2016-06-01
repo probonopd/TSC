@@ -40,12 +40,12 @@ cEditor_Level::~cEditor_Level()
 {
 }
 
-void cEditor_Level::Enable(void)
+void cEditor_Level::Enable(cSprite_Manager* p_sprite_manager)
 {
     if (m_enabled)
         return;
 
-    cEditor::Enable();
+    cEditor::Enable(p_sprite_manager);
     editor_level_enabled = true;
 }
 

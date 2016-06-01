@@ -752,7 +752,7 @@ bool cLevel::Key_Down(const sf::Event& evt)
     // Toggle leveleditor
     else if (evt.key.code == sf::Keyboard::F8) {
 #if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
-        pLevel_Editor->Toggle();
+        pLevel_Editor->Toggle(m_sprite_manager);
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
 #endif

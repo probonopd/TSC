@@ -10,7 +10,7 @@ namespace TSC {
         cEditor_Level();
         virtual ~cEditor_Level();
 
-        virtual void Enable(void);
+        virtual void Enable(cSprite_Manager* p_sprite_manager);
         virtual void Disable(void);
         void Set_Level(cLevel* p_level);
 

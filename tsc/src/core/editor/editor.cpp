@@ -38,6 +38,7 @@ cEditor::cEditor()
     m_menu_filename = boost::filesystem::path(path_to_utf8("Needs to be set by subclasses"));
     m_editor_item_tag = "Must be set by subclass";
     m_help_window_visible = false;
+    mp_sprite_manager = NULL;
 }
 
 cEditor::~cEditor()
@@ -90,15 +91,15 @@ void cEditor::Unload(void)
     }
 }
 
-void cEditor::Toggle(void)
+void cEditor::Toggle(cSprite_Manager* p_sprite_manager)
 {
     if (m_enabled)
         Disable();
     else
-        Enable();
+        Enable(p_sprite_manager);
 }
 
-void cEditor::Enable(void)
+void cEditor::Enable(cSprite_Manager* p_sprite_manager)
 {
     if (m_enabled)
         return;
@@ -115,6 +116,7 @@ void cEditor::Enable(void)
     mp_editor_tabpane->show();
     m_enabled = true;
     editor_enabled = true;
+    mp_sprite_manager = p_sprite_manager;
 }
 
 void cEditor::Disable(void)
@@ -129,6 +131,7 @@ void cEditor::Disable(void)
     mp_editor_tabpane->hide();
     m_enabled = false;
     editor_enabled = false;
+    mp_sprite_manager = NULL;
 }
 
 void cEditor::Update(void)

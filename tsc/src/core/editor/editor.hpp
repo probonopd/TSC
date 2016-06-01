@@ -57,8 +57,8 @@ namespace TSC {
         virtual void Init(void);
         virtual void Unload(void);
 
-        void Toggle(void);
-        virtual void Enable(void);
+        void Toggle(cSprite_Manager* p_sprite_manager);
+        virtual void Enable(cSprite_Manager* p_sprite_manager);
         virtual void Disable(void);
 
         bool Try_Add_Editor_Item(boost::filesystem::path settings_path);
@@ -85,6 +85,7 @@ namespace TSC {
     protected:
         std::string m_editor_item_tag;
         boost::filesystem::path m_menu_filename;
+        cSprite_Manager* mp_sprite_manager;
 
     private:
         CEGUI::TabControl* mp_editor_tabpane;
