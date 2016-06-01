@@ -10,6 +10,8 @@ namespace TSC {
         cEditor_Level();
         virtual ~cEditor_Level();
 
+        virtual void Enable(void);
+        virtual void Disable(void);
         void Set_Level(cLevel* p_level);
 
     private:

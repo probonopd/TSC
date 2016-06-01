@@ -114,6 +114,7 @@ void cEditor::Enable(void)
 
     mp_editor_tabpane->show();
     m_enabled = true;
+    editor_enabled = true;
 }
 
 void cEditor::Disable(void)
@@ -127,6 +128,7 @@ void cEditor::Disable(void)
 
     mp_editor_tabpane->hide();
     m_enabled = false;
+    editor_enabled = false;
 }
 
 void cEditor::Update(void)

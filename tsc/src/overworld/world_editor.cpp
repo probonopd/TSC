@@ -40,6 +40,24 @@ cEditor_World::~cEditor_World()
 {
 }
 
+void cEditor_World::Enable(void)
+{
+    if (m_enabled)
+        return;
+
+    cEditor::Enable();
+    editor_world_enabled = true;
+}
+
+void cEditor_World::Disable(void)
+{
+    if (!m_enabled)
+        return;
+
+    cEditor::Disable();
+    editor_world_enabled = false;
+}
+
 void cEditor_World::Set_World(cOverworld* p_world)
 {
     mp_overworld = p_world;

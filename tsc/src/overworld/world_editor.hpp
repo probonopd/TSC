@@ -10,6 +10,8 @@ namespace TSC {
         cEditor_World();
         virtual ~cEditor_World();
 
+        virtual void Enable(void);
+        virtual void Disable(void);
         void Set_World(cOverworld* p_world);
     private:
         cOverworld* mp_overworld;

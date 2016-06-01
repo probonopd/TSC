@@ -40,6 +40,24 @@ cEditor_Level::~cEditor_Level()
 {
 }
 
+void cEditor_Level::Enable(void)
+{
+    if (m_enabled)
+        return;
+
+    cEditor::Enable();
+    editor_level_enabled = true;
+}
+
+void cEditor_Level::Disable(void)
+{
+    if (!m_enabled)
+        return;
+
+    cEditor::Disable();
+    editor_level_enabled = false;
+}
+
 void cEditor_Level::Set_Level(cLevel* p_level)
 {
     mp_level = p_level;
