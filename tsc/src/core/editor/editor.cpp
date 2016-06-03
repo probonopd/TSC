@@ -166,6 +166,62 @@ void cEditor::Update(void)
 
 void cEditor::Draw(void)
 {
+    if (!m_enabled) {
+        return;
+    }
+
+    const float camera_top = pActive_Camera->m_y;
+    const float camera_bottom = pActive_Camera->m_y + game_res_h;
+    const float camera_left = pActive_Camera->m_x;
+    const float camera_right = pActive_Camera->m_x + game_res_w;
+
+    Color color;
+
+    // Camera limit bottom line
+    if (camera_bottom > pActive_Camera->m_limit_rect.m_y && camera_top < pActive_Camera->m_limit_rect.m_y) {
+        float start_x = 0.0f;
+
+        if (pActive_Camera->m_x < 0.0f) {
+            start_x = -pActive_Camera->m_x;
+        }
+
+        color = Color(static_cast<uint8_t>(0), 0, 100, 192);
+        pVideo->Draw_Line(start_x, -pActive_Camera->m_y, static_cast<float>(game_res_w), -pActive_Camera->m_y, 0.124f, &color);
+    }
+    // Camera limit top line
+    if (camera_bottom > pActive_Camera->m_limit_rect.m_y + pActive_Camera->m_limit_rect.m_h && camera_top < pActive_Camera->m_limit_rect.m_y + pActive_Camera->m_limit_rect.m_h) {
+        float start_x = 0.0f;
+
+        if (pActive_Camera->m_x < pActive_Camera->m_limit_rect.m_x) {
+            start_x = -pActive_Camera->m_x;
+        }
+
+        color = Color(static_cast<uint8_t>(20), 20, 150, 192);
+        pVideo->Draw_Line(start_x, pActive_Camera->m_limit_rect.m_y + pActive_Camera->m_limit_rect.m_h - pActive_Camera->m_y, static_cast<float>(game_res_w), pActive_Camera->m_limit_rect.m_y + pActive_Camera->m_limit_rect.m_h - pActive_Camera->m_y, 0.124f, &color);
+    }
+
+    // Camera limit left line
+    if (camera_left < pActive_Camera->m_limit_rect.m_x && camera_right > pActive_Camera->m_limit_rect.m_x) {
+        float start_y = static_cast<float>(game_res_h);
+
+        if (pActive_Camera->m_y < game_res_h) {
+            start_y = game_res_h - pActive_Camera->m_y;
+        }
+
+        color = Color(static_cast<uint8_t>(0), 100, 0, 192);
+        pVideo->Draw_Line(pActive_Camera->m_limit_rect.m_x - pActive_Camera->m_x, start_y, -pActive_Camera->m_x, 0, 0.124f, &color);
+    }
+    // Camera limit right line
+    if (camera_left < pActive_Camera->m_limit_rect.m_x + pActive_Camera->m_limit_rect.m_w && camera_right > pActive_Camera->m_limit_rect.m_x + pActive_Camera->m_limit_rect.m_w) {
+        float start_y = static_cast<float>(game_res_h);
+
+        if (pActive_Camera->m_y < game_res_h) {
+            start_y = game_res_h - pActive_Camera->m_y;
+        }
+
+        color = Color(static_cast<uint8_t>(20), 150, 20, 192);
+        pVideo->Draw_Line(pActive_Camera->m_limit_rect.m_x + pActive_Camera->m_limit_rect.m_w - pActive_Camera->m_x, start_y, pActive_Camera->m_limit_rect.m_x + pActive_Camera->m_limit_rect.m_w - pActive_Camera->m_x, 0, 0.124f, &color);
+    }
 }
 
 bool cEditor::Key_Down(const sf::Event& evt)
