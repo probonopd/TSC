@@ -386,6 +386,32 @@ bool cEditor::Key_Down(const sf::Event& evt)
             pMouseCursor->Add_Selected_Object(obj, 1);
         }
     }
+    // Paste copy buffer objects
+    else if ((evt.key.code == sf::Keyboard::Insert || evt.key.code == sf::Keyboard::V) && evt.key.control) {
+        pMouseCursor->Paste_Copy_Objects(static_cast<float>(static_cast<int>(pMouseCursor->m_pos_x)), static_cast<float>(static_cast<int>(pMouseCursor->m_pos_y)));
+    }
+    // Cut selected Sprites to the copy buffer
+    else if (evt.key.code == sf::Keyboard::X && evt.key.control) {
+        pMouseCursor->Clear_Copy_Objects();
+
+        for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+            cSelectedObject* sel_obj = (*itr);
+
+            pMouseCursor->Add_Copy_Object(sel_obj->m_obj);
+        }
+
+        pMouseCursor->Delete_Selected_Objects();
+    }
+    // Add selected Sprites to the copy buffer
+    else if (evt.key.code == sf::Keyboard::C && evt.key.control) {
+        pMouseCursor->Clear_Copy_Objects();
+
+        for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+            cSelectedObject* sel_obj = (*itr);
+
+            pMouseCursor->Add_Copy_Object(sel_obj->m_obj);
+        }
+    }
     else {
         // not processed
         return false;
