@@ -369,6 +369,23 @@ bool cEditor::Key_Down(const sf::Event& evt)
             obj->Set_Pos(obj->m_pos_x + x_offset, obj->m_pos_y + y_offset, true);
         }
     }
+    // deselect everything
+    else if (evt.key.code == sf::Keyboard::A && evt.key.control && evt.key.shift) {
+        pMouseCursor->Clear_Selected_Objects();
+    }
+    // select everything
+    else if (evt.key.code == sf::Keyboard::A && evt.key.control) {
+        pMouseCursor->Clear_Selected_Objects();
+
+        // player
+        pMouseCursor->Add_Selected_Object(pActive_Player, 1);
+        // sprite manager
+        for (cSprite_List::iterator itr = mp_sprite_manager->objects.begin(); itr != mp_sprite_manager->objects.end(); ++itr) {
+            cSprite* obj = (*itr);
+
+            pMouseCursor->Add_Selected_Object(obj, 1);
+        }
+    }
     else {
         // not processed
         return false;
