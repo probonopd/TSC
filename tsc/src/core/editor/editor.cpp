@@ -413,7 +413,9 @@ bool cEditor::Key_Down(const sf::Event& evt)
         }
     }
     // Replace sprites
-    // TODO!
+    else if (evt.key.code == sf::Keyboard::R && evt.key.control) {
+        replace_sprites();
+    }
     // Delete mouse object
     else if (evt.key.code == sf::Keyboard::Delete && pMouseCursor->m_hovering_object->m_obj) {
         pMouseCursor->Delete(pMouseCursor->m_hovering_object->m_obj);
@@ -867,6 +869,44 @@ cSprite* cEditor::copy_direction(const cSprite* obj, const ObjectDirection dir, 
     }
 
     return pMouseCursor->Copy(obj, obj->m_start_pos_x + w, obj->m_start_pos_y + h);
+}
+
+void cEditor::replace_sprites(void)
+{
+    if (pMouseCursor->Get_Selected_Object_Size() == 0) {
+        return;
+    }
+
+    if (!pMouseCursor->m_selected_objects[0]->m_obj->m_start_image) {
+        return;
+    }
+
+    char i18nstr[256];
+    sprintf(i18nstr, PL_("Change selected sprite's image", "Change selected %d sprites' images", pMouseCursor->Get_Selected_Object_Size()), pMouseCursor->Get_Selected_Object_Size());
+
+    std::string image_filename = Box_Text_Input(path_to_utf8(pMouseCursor->m_selected_objects[0]->m_obj->m_start_image->m_path), i18nstr, 0);
+
+    // aborted/invalid
+    if (image_filename.empty()) {
+        return;
+    }
+
+    cGL_Surface* image = pVideo->Get_Surface(image_filename);
+
+    if (!image) {
+        return;
+    }
+
+    for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+        cSelectedObject* sel_obj = (*itr);
+
+        // only sprites
+        if (!sel_obj->m_obj->Is_Basic_Sprite()) {
+            continue;
+        }
+
+        sel_obj->m_obj->Set_Image(image, 1);
+    }
 }
 
 bool cEditor::on_help_window_exit_clicked(const CEGUI::EventArgs& args)
