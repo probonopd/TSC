@@ -103,6 +103,8 @@ namespace TSC {
         void load_image_items();
         cEditor_Menu_Entry* get_menu_entry(const std::string& name);
         std::vector<cEditor_Menu_Entry*> find_target_menu_entries_for(const cImage_Settings_Data& settings);
+        cSprite_List copy_direction(const cSprite_List& objects, const ObjectDirection dir) const;
+        cSprite* copy_direction(const cSprite* obj, const ObjectDirection dir, int offset /* = 0 */) const;
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);
         bool on_menu_selection_changed(const CEGUI::EventArgs& event);

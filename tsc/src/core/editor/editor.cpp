@@ -308,7 +308,42 @@ bool cEditor::Key_Down(const sf::Event& evt)
             mp_sprite_manager->Move_To_Front(sel_obj->m_obj);
         }
     }
+    // copy into direction
+    else if ((evt.key.code == pPreferences->m_key_editor_fast_copy_up || evt.key.code == pPreferences->m_key_editor_fast_copy_down || evt.key.code == pPreferences->m_key_editor_fast_copy_left || evt.key.code == pPreferences->m_key_editor_fast_copy_right) && pMouseCursor->m_hovering_object->m_obj && pMouseCursor->m_fastcopy_mode) {
+        ObjectDirection dir = DIR_UNDEFINED;
 
+        if (evt.key.code == pPreferences->m_key_editor_fast_copy_up) {
+            dir = DIR_UP;
+        }
+        else if (evt.key.code == pPreferences->m_key_editor_fast_copy_down) {
+            dir = DIR_DOWN;
+        }
+        else if (evt.key.code == pPreferences->m_key_editor_fast_copy_left) {
+            dir = DIR_LEFT;
+        }
+        else if (evt.key.code == pPreferences->m_key_editor_fast_copy_right) {
+            dir = DIR_RIGHT;
+        }
+
+        // get currently selected objects
+        cSprite_List objects = pMouseCursor->Get_Selected_Objects();
+        // copy objects
+        cSprite_List new_objects = copy_direction(objects, dir);
+
+        // add new objects
+        for (cSprite_List::iterator itr = new_objects.begin(); itr != new_objects.end(); ++itr) {
+            cSprite* obj = (*itr);
+
+            pMouseCursor->Add_Selected_Object(obj, 1);
+        }
+
+        // deselect old objects
+        for (cSprite_List::const_iterator itr = objects.begin(); itr != objects.end(); ++itr) {
+            const cSprite* obj = (*itr);
+
+            pMouseCursor->Remove_Selected_Object(obj);
+        }
+    }
     else {
         // not processed
         return false;
@@ -636,6 +671,116 @@ void cEditor::Function_Exit(void)
     newevt.type = sf::Event::KeyPressed;
     newevt.key.code = sf::Keyboard::F8;
     pKeyboard->Key_Down(newevt);
+}
+
+cSprite_List cEditor::copy_direction(const cSprite_List& objects, const ObjectDirection dir) const
+{
+    // additional direction objects offset
+    unsigned int offset = 0;
+
+    // get the objects difference offset
+    if (dir == DIR_LEFT || dir == DIR_RIGHT) {
+        // first object
+        const cSprite* first = objects[0];
+
+        for (unsigned int i = 1; i < objects.size(); i++) {
+            if (objects[i]->m_start_pos_x < first->m_start_pos_x) {
+                first = objects[i];
+            }
+        }
+
+        // last object
+        const cSprite* last = objects[0];
+
+        for (unsigned int i = 1; i < objects.size(); i++) {
+            if (objects[i]->m_start_pos_x + objects[i]->m_start_rect.m_w > last->m_start_pos_x + last->m_start_rect.m_w) {
+                last = objects[i];
+            }
+        }
+
+        // Set X offset
+        offset = static_cast<int>(last->m_start_pos_x - first->m_start_pos_x + last->m_start_rect.m_w);
+    }
+    else if (dir == DIR_UP || dir == DIR_DOWN) {
+        // first object
+        const cSprite* first = objects[0];
+
+        for (unsigned int i = 1; i < objects.size(); i++) {
+            if (objects[i]->m_start_pos_y < first->m_start_pos_y) {
+                first = objects[i];
+            }
+        }
+
+        // last object
+        const cSprite* last = objects[0];
+
+        for (unsigned int i = 1; i < objects.size(); i++) {
+            if (objects[i]->m_start_pos_y + objects[i]->m_start_rect.m_h > last->m_start_pos_y + last->m_start_rect.m_h) {
+                last = objects[i];
+            }
+        }
+
+        // Set Y offset
+        offset = static_cast<int>(last->m_start_pos_y - first->m_start_pos_y + last->m_start_rect.m_h);
+    }
+
+    // new copied objects
+    cSprite_List new_objects;
+
+    for (cSprite_List::const_iterator itr = objects.begin(); itr != objects.end(); ++itr) {
+        const cSprite* obj = (*itr);
+
+        new_objects.push_back(copy_direction(obj, dir, offset));
+    }
+
+    // return only new objects
+    return new_objects;
+}
+
+cSprite* cEditor::copy_direction(const cSprite* obj, const ObjectDirection dir, int offset /* = 0 */) const
+{
+    float w = 0.0f;
+    float h = 0.0f;
+
+    if (dir == DIR_LEFT) {
+        if (offset) {
+            w = -static_cast<float>(offset);
+        }
+        else {
+            w = -obj->m_start_rect.m_w;
+        }
+    }
+    else if (dir == DIR_RIGHT) {
+        if (offset) {
+            w = static_cast<float>(offset);
+        }
+        else {
+            w = obj->m_start_rect.m_w;
+        }
+    }
+    else if (dir == DIR_UP) {
+        if (offset) {
+            h = -static_cast<float>(offset);
+        }
+        else {
+            h = -obj->m_start_rect.m_h;
+        }
+    }
+    else if (dir == DIR_DOWN) {
+        if (offset) {
+            h = static_cast<float>(offset);
+        }
+        else {
+            h = obj->m_start_rect.m_h;
+        }
+    }
+
+    // only move camera if obj is the mouse object
+    if (pMouseCursor->m_hovering_object->m_obj == obj) {
+        pActive_Camera->Move(w, h);
+    }
+
+    return pMouseCursor->Copy(obj, obj->m_start_pos_x + w, obj->m_start_pos_y + h);
 }
 
 bool cEditor::on_help_window_exit_clicked(const CEGUI::EventArgs& args)
