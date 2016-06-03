@@ -63,6 +63,8 @@ namespace TSC {
 
         bool Try_Add_Editor_Item(boost::filesystem::path settings_path);
 
+        void Process_Input(void);
+
         virtual void Update(void);
         virtual void Draw(void);
 
@@ -97,6 +99,7 @@ namespace TSC {
         std::vector<CEGUI::Window*> m_editor_items;
         std::vector<cEditor_Menu_Entry*> m_menu_entries;
         bool m_help_window_visible;
+        const int CAMERA_SPEED = 35;
 
         void parse_menu_file();
         void populate_menu();

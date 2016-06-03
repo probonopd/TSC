@@ -294,7 +294,7 @@ bool cMouseCursor::Handle_Mouse_Up(sf::Mouse::Button button)
     return 0;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 cObjectCollision* cMouseCursor::Get_First_Editor_Collsion(float px /* = 0.0f */, float py /* = 0.0f */)
 {
     if (m_mover_mode) {
@@ -302,7 +302,7 @@ cObjectCollision* cMouseCursor::Get_First_Editor_Collsion(float px /* = 0.0f */,
     }
 
     // Get CEGUI Window containing the mouse
-    CEGUI::Window* mouse_window = pGuiSystem->getWindowContainingMouse();
+    CEGUI::Window* mouse_window = CEGUI::System::getSingleton().getDefaultGUIContext().getWindowContainingMouse();
 
     // if mouse is over a blocking CEGUI window
     if (mouse_window && !mouse_window->isMousePassThroughEnabled()) {

@@ -753,6 +753,57 @@ void cEditor_Menu_Entry::Activate(CEGUI::TabControl* p_tabcontrol)
     p_tabcontrol->setSelectedTab("editor_tab_items");
 }
 
+void cEditor::Process_Input(void)
+{
+    if (!m_enabled) {
+        return;
+    }
+
+    // Drag Delete
+    if (pKeyboard->Is_Ctrl_Down() && pMouseCursor->m_right) {
+        cObjectCollision* col = pMouseCursor->Get_First_Editor_Collsion();
+
+        if (col) {
+            pMouseCursor->Delete(col->m_obj);
+            delete col;
+        }
+    }
+
+    // Camera Movement
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || pJoystick->m_right) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed, 0.0f);
+        }
+        else {
+            pActive_Camera->Move(CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed, 0.0f);
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || pJoystick->m_left) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(-(CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed), 0.0f);
+        }
+        else {
+            pActive_Camera->Move(-(CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed), 0.0f);
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || pJoystick->m_up) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(0.0f, -(CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed));
+        }
+        else {
+            pActive_Camera->Move(0.0f, -(CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed));
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || pJoystick->m_down) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(0.0f, CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed);
+        }
+        else {
+            pActive_Camera->Move(0.0f, CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed);
+        }
+    }
+}
+
 void cEditor::Function_Exit(void)
 {
     sf::Event newevt;

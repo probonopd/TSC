@@ -90,7 +90,7 @@ namespace TSC {
          */
         bool Handle_Mouse_Wheel(float delta);
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         /* Get the first object colliding with the mouse which is valid for the editor
          * returns the collision if an object was found else NULL
          * The collision data should be deleted if not used anymore

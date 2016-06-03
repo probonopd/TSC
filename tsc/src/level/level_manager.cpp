@@ -228,7 +228,8 @@ void cLevel_Manager::Update(void)
 {
     // input
     pActive_Level->Process_Input();
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+    // TODO: Why is this not in cEditor::Update()?
     pLevel_Editor->Process_Input();
 #endif
 
