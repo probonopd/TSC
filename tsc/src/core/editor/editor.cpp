@@ -412,6 +412,24 @@ bool cEditor::Key_Down(const sf::Event& evt)
             pMouseCursor->Add_Copy_Object(sel_obj->m_obj);
         }
     }
+    // Replace sprites
+    // TODO!
+    // Delete mouse object
+    else if (evt.key.code == sf::Keyboard::Delete && pMouseCursor->m_hovering_object->m_obj) {
+        pMouseCursor->Delete(pMouseCursor->m_hovering_object->m_obj);
+    }
+    // if shift got pressed remove mouse object for possible mouse selection
+    else if (evt.key.shift && pMouseCursor->m_hovering_object->m_obj) {
+        pMouseCursor->Clear_Hovered_Object();
+    }
+    // Delete selected objects
+    else if (evt.key.code == sf::Keyboard::Delete) {
+        pMouseCursor->Delete_Selected_Objects();
+    }
+    // Snap to objects mode
+    else if (evt.key.code == sf::Keyboard::O) {
+        pMouseCursor->Toggle_Snap_Mode();
+    }
     else {
         // not processed
         return false;
