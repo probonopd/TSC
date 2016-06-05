@@ -62,6 +62,7 @@ namespace TSC {
         virtual void Disable(void);
 
         bool Try_Add_Editor_Item(boost::filesystem::path settings_path);
+        void Select_Same_Object_Types(const cSprite* obj);
 
         void Process_Input(void);
 

@@ -223,7 +223,7 @@ namespace TSC {
         void Toggle_Mover_Mode(void);
         // Updates the Mover Mode
         void Mover_Update(int move_x, int move_y);
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // Updates the editor Mouse
         void Editor_Update(void);
 #endif

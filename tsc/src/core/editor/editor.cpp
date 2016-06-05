@@ -809,6 +809,38 @@ void cEditor_Menu_Entry::Activate(CEGUI::TabControl* p_tabcontrol)
     p_tabcontrol->setSelectedTab("editor_tab_items");
 }
 
+void cEditor::Select_Same_Object_Types(const cSprite* obj)
+{
+    if (!obj) {
+        return;
+    }
+
+    bool is_basic_sprite = 0;
+
+    if (obj->Is_Basic_Sprite()) {
+        if (!obj->m_start_image) {
+            return;
+        }
+
+        is_basic_sprite = 1;
+    }
+
+    // sprite manager
+    for (cSprite_List::iterator itr = mp_sprite_manager->objects.begin(); itr != mp_sprite_manager->objects.end(); ++itr) {
+        cSprite* game_obj = (*itr);
+
+        if (game_obj->m_type != obj->m_type) {
+            continue;
+        }
+
+        if (is_basic_sprite && game_obj->m_start_image != obj->m_start_image) {
+            continue;
+        }
+
+        pMouseCursor->Add_Selected_Object(game_obj, 1);
+    }
+}
+
 void cEditor::Process_Input(void)
 {
     if (!m_enabled) {
