@@ -261,7 +261,7 @@ void cCollidingSprite::Handle_Collision(cObjectCollision* collision)
      * Also needed as the MRuby interpreter is not initialized before
      * Level construction. */
     if (pActive_Level) {
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         if (!pLevel_Editor->m_enabled) {
 #endif
             /* For whatever reason, CollidingSprite is the superclass
@@ -279,7 +279,7 @@ void cCollidingSprite::Handle_Collision(cObjectCollision* collision)
                 evt1.Fire(pActive_Level->m_mruby, p_sprite);
                 evt2.Fire(pActive_Level->m_mruby, collision->m_obj);
             }
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         }
 #endif
     }
@@ -347,6 +347,11 @@ cSprite::~cSprite(void)
     if (m_delete_image && m_image) {
         delete m_image;
         m_image = NULL;
+    }
+    if (mp_editor_container) {
+        mp_editor_container->getParent()->removeChild(mp_editor_container);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_container);
+        mp_editor_container = NULL;
     }
 }
 
@@ -433,6 +438,7 @@ void cSprite::Init(void)
     m_valid_update = 1;
 
     m_editor_window_name_width = 0.0f;
+    mp_editor_container = NULL;
 
     m_uid = -1;
 }
@@ -1410,7 +1416,7 @@ void cSprite::Destroy(void)
     Set_Image(NULL, 1);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 /**
  * Helper function for dislaying widgets for editing an object.
  * Takes the label (name) to display before the widget, the tooltip to display
@@ -1428,37 +1434,71 @@ void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip
     // get window manager
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
+    /* If no container has been created yet, do it now. CEGUI only accepts unique
+     * window names at a given level in the window tree, the UID is required here
+     * as we use it to name the container. On object creation the UID is not set,
+     * so the container can't be created earlier. */
+    if (!mp_editor_container) {
+        if (m_uid < 0) {
+            throw(std::runtime_error("Cannot edit object without UID!"));
+        }
+
+        mp_editor_container = wmgr.createWindow("defaultWindow", std::string("editorcontainer-") + std::to_string(m_uid));
+        mp_editor_container->setMousePassThroughEnabled(true); // Container should have no visible effect
+        p_root->addChild(mp_editor_container);
+        mp_editor_container->hide();
+    }
+
     // create name label window
     CEGUI::Window* window_name = wmgr.createWindow("TaharezLook/StaticText", "text_" + window_setting->getName());
     window_name->setText(name);
     window_name->setTooltipText(tooltip);
     // get text width
-    CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("bluebold_medium");
+    CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("DejaVuSans");
     float text_width = 12.0f + font->getTextExtent(name) * global_downscalex;
     // all names should have the same width
     if (text_width > m_editor_window_name_width) {
         m_editor_window_name_width = text_width;
+
+        /* Resize all previous children to new width. Note that the even elements
+         * always refer to the label windows, and the odd elements to the actual
+         * config setting widget. The former needs to be resized, the latter to
+         * be moved to the right according to the change. */
+        for(unsigned int i=0; i < mp_editor_container->getChildCount(); i += 2) {
+            mp_editor_container->getChildAtIdx(i)->setWidth(CEGUI::UDim(0, text_width * global_upscalex));
+            mp_editor_container->getChildAtIdx(i+1)->setXPosition(CEGUI::UDim(0, text_width * global_upscalex));
+        }
     }
+
     // set size
     window_name->setWidth(CEGUI::UDim(0, text_width * global_upscalex));
     window_name->setHeight(CEGUI::UDim(0, 28 * global_upscaley));
-
-    // create settings window
-    cEditor_Object_Settings_Item* settings_item = new cEditor_Object_Settings_Item();
-
-    // set size
     window_setting->setWidth(CEGUI::UDim(0, obj_width * global_upscalex));
     window_setting->setHeight(CEGUI::UDim(0, obj_height * global_upscaley));
 
-    settings_item->window_name = window_name;
-    settings_item->window_setting = window_setting;
-    settings_item->advance_row = advance_row;
+    /* Position the two widgets inside the container. Note we update
+     * the container's own position later in Editor_Position_Update()
+     * to pin it to the object in the game world. */
+    if (mp_editor_container->getChildCount() > 0) {
+        const CEGUI::Window* p_last_window = mp_editor_container->getChildAtIdx(mp_editor_container->getChildCount() - 1);
+        CEGUI::UDim new_y = p_last_window->getYPosition();
 
-    m_editor_windows.push_back(settings_item);
+        if (advance_row)
+            new_y += CEGUI::UDim(0, obj_height * global_upscaley);
 
-    // add to main window
-    p_root->addChild(window_name);
-    p_root->addChild(window_setting);
+        window_name->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), new_y));
+        window_setting->setPosition(CEGUI::UVector2(CEGUI::UDim(0, text_width * global_upscalex), new_y));
+    }
+    else { // First entry, starting at top of container
+        window_name->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
+        window_setting->setPosition(CEGUI::UVector2(CEGUI::UDim(0, text_width * global_upscalex), CEGUI::UDim(0, 0)));
+    }
+
+    /* Add to container. The settings window must come last as it may
+     * be higher then the label window and its height is used in the
+     * position calculation above. */
+    mp_editor_container->addChild(window_name);
+    mp_editor_container->addChild(window_setting);
 }
 
 void cSprite::Editor_Activate(void)
@@ -1485,14 +1525,14 @@ void cSprite::Editor_Activate(void)
 
 void cSprite::Editor_Deactivate(void)
 {
-    // remove editor controls
-    for (Editor_Object_Settings_List::iterator itr = m_editor_windows.begin(); itr != m_editor_windows.end(); ++itr) {
-        cEditor_Object_Settings_Item* obj = (*itr);
-
-        delete obj;
+    /* TODO: Destroying windows is not required, but that requires
+     * recoding of Editor_Activate() in all subclasses of cSprite to
+     * not re-create the widgets each time they're clicked. */
+    if (mp_editor_container) {
+        mp_editor_container->getParent()->removeChild(mp_editor_container);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_container);
+        mp_editor_container = NULL;
     }
-
-    m_editor_windows.clear();
 }
 
 void cSprite::Editor_Init(void)
@@ -1500,16 +1540,9 @@ void cSprite::Editor_Init(void)
     // set state
     Editor_State_Update();
 
-    // init
-    for (Editor_Object_Settings_List::iterator itr = m_editor_windows.begin(); itr != m_editor_windows.end(); ++itr) {
-        cEditor_Object_Settings_Item* obj = (*itr);
-        CEGUI::Window* window_name = obj->window_name;
-
-        // set first row width
-        if (obj->advance_row) {
-            window_name->setWidth(CEGUI::UDim(0, m_editor_window_name_width * global_upscalex));
-        }
-    }
+    // Show
+    if (mp_editor_container)
+        mp_editor_container->show();
 
     // set position
     Editor_Position_Update();
@@ -1517,63 +1550,12 @@ void cSprite::Editor_Init(void)
 
 void cSprite::Editor_Position_Update(void)
 {
-    float obj_posx = 0.0f;
-    float obj_posy = 0.0f;
-    float row_height = 0.0f;
-
-    // set all positions
-    for (Editor_Object_Settings_List::iterator itr = m_editor_windows.begin(); itr != m_editor_windows.end(); ++itr) {
-        cEditor_Object_Settings_Item* obj = (*itr);
-        CEGUI::Window* window_name = obj->window_name;
-        CEGUI::Window* window_setting = obj->window_setting;
-
-        // start a new row
-        if (obj->advance_row) {
-            obj_posx = 0.0f;
-            obj_posy += row_height;
-            row_height = 0.0f;
-        }
-
-        // get window text width
-        float window_name_width = window_name->getWidth().asAbsolute(static_cast<float>(game_res_w)) * global_downscalex;
-        float window_name_height = window_name->getHeight().asAbsolute(static_cast<float>(game_res_h)) * global_downscaley;
-
-        // get window setting width
-        float window_setting_width;
-        float window_setting_height;
-
-        // if combobox get the editbox/droplist dimension
-        if (window_setting->getType() == "TaharezLook/Combobox") {
-            window_setting_width = static_cast<CEGUI::Combobox*>(window_setting)->getDropList()->getWidth().asAbsolute(static_cast<float>(game_res_w)) * global_downscalex;
-            window_setting_height = static_cast<CEGUI::Combobox*>(window_setting)->getEditbox()->getHeight().asAbsolute(static_cast<float>(game_res_h)) * global_downscaley;
-        }
-        // get default dimension
-        else {
-            window_setting_width = window_setting->getWidth().asAbsolute(static_cast<float>(game_res_w)) * global_downscalex;
-            window_setting_height = window_setting->getHeight().asAbsolute(static_cast<float>(game_res_h)) * global_downscaley;
-        }
-
-        // update row height
-        if (window_setting_height > row_height) {
-            row_height = window_setting_height;
-        }
-        if (window_name_height > row_height) {
-            row_height = window_name_height;
-        }
-
-        // current position
-        float object_final_pos_x = m_start_pos_x + m_rect.m_w + 5.0f + obj_posx - pActive_Camera->m_x;
-        float object_final_pos_y = m_start_pos_y + 5.0f + obj_posy - pActive_Camera->m_y;
-
-        // set name position
-        window_name->setXPosition(CEGUI::UDim(0, object_final_pos_x * global_upscalex));
-        window_name->setYPosition(CEGUI::UDim(0, object_final_pos_y * global_upscaley));
-        // set setting position
-        window_setting->setXPosition(CEGUI::UDim(0, (window_name_width + object_final_pos_x) * global_upscalex));
-        window_setting->setYPosition(CEGUI::UDim(0, object_final_pos_y * global_upscaley));
-
-        // set new position x
-        obj_posx += window_name_width + window_setting_width + 0.05f;
+    // Pin editor widget container to the object's position
+    if (mp_editor_container) {
+        mp_editor_container->setPosition(
+            CEGUI::UVector2(CEGUI::UDim(0, m_start_pos_x + m_rect.m_w + 5.0f - pActive_Camera->m_x),
+                            CEGUI::UDim(0, m_start_pos_y + 5.0f - pActive_Camera->m_y))
+            );
     }
 }
 

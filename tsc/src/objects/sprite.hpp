@@ -431,7 +431,7 @@ namespace TSC {
         */
         virtual void Destroy(void);
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // editor add window object
         void Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height = 28, bool advance_row = 1);
         // editor activation
@@ -560,9 +560,8 @@ namespace TSC {
         /// if updating is valid
         bool m_valid_update;
 
-        /// editor active window list
-        typedef vector<cEditor_Object_Settings_Item*> Editor_Object_Settings_List;
-        Editor_Object_Settings_List m_editor_windows;
+        /// Container for all editor windows
+        CEGUI::Window* mp_editor_container;
         /// width for all name windows based on largest name text width
         float m_editor_window_name_width;
 
