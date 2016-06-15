@@ -139,7 +139,7 @@ void cEditor::Update(void)
     if (!m_enabled)
         return;
 
-    // If we have the mouse, do nothing.
+    // If the mouse is in the editor panel, do not fade it out.
     if (!m_mouse_inside) {
         // Otherwise, slowly fade the panel out until it is invisible.
         // When it reaches transparency, set to fully visible again
@@ -161,7 +161,7 @@ void cEditor::Update(void)
         }
     }
 
-    //std::cout << "Update..." << std::endl;
+    pMouseCursor->Editor_Update();
 }
 
 void cEditor::Draw(void)
@@ -500,12 +500,86 @@ bool cEditor::Key_Down(const sf::Event& evt)
 
 bool cEditor::Mouse_Down(sf::Mouse::Button button)
 {
-    return false;
+    if (!m_enabled) {
+        return 0;
+    }
+
+    // left
+    if (button == sf::Mouse::Left) {
+        pMouseCursor->Left_Click_Down();
+
+        // auto hide if enabled
+        if (pMouseCursor->m_hovering_object->m_obj && pPreferences->m_editor_mouse_auto_hide) {
+            pMouseCursor->Set_Active(0);
+        }
+    }
+    // middle
+    else if (button == sf::Mouse::Middle) {
+        // Activate fast copy mode
+        if (pMouseCursor->m_hovering_object->m_obj) {
+            pMouseCursor->m_fastcopy_mode = 1;
+            return 1;
+        }
+        // Mover mode
+        else {
+            pMouseCursor->Toggle_Mover_Mode();
+            return 1;
+        }
+    }
+    // right
+    else if (button == sf::Mouse::Right) {
+        if (!pMouseCursor->m_left) {
+            pMouseCursor->Delete(pMouseCursor->m_hovering_object->m_obj);
+            return 1;
+        }
+    }
+    else {
+        // not processed
+        return 0;
+    }
+
+    // button got processed
+    return 1;
 }
 
 bool cEditor::Mouse_Up(sf::Mouse::Button button)
 {
-    return false;
+    if (!m_enabled) {
+        return 0;
+    }
+
+    // left
+    if (button == sf::Mouse::Left) {
+        // unhide
+        if (pPreferences->m_editor_mouse_auto_hide) {
+            pMouseCursor->Set_Active(1);
+        }
+
+        pMouseCursor->End_Selection();
+
+        if (pMouseCursor->m_hovering_object->m_obj) {
+            for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+                cSelectedObject* object = (*itr);
+
+                // pre-update to keep particles on the correct position
+                if (object->m_obj->m_type == TYPE_PARTICLE_EMITTER) {
+                    cParticle_Emitter* emitter = static_cast<cParticle_Emitter*>(object->m_obj);
+                    emitter->Pre_Update();
+                }
+            }
+        }
+    }
+    // middle
+    else if (button == sf::Mouse::Middle) {
+        pMouseCursor->m_fastcopy_mode = 0;
+    }
+    else {
+        // not processed
+        return 0;
+    }
+
+    // button got processed
+    return 1;
 }
 
 /**
