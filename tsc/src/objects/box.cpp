@@ -666,7 +666,7 @@ void cBaseBox::Handle_Collision_Enemy(cObjectCollision* collision)
     }
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cBaseBox::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
