@@ -1443,7 +1443,7 @@ void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip
             throw(std::runtime_error("Cannot edit object without UID!"));
         }
 
-        mp_editor_container = wmgr.createWindow("defaultWindow", std::string("editorcontainer-") + std::to_string(m_uid));
+        mp_editor_container = wmgr.createWindow("DefaultWindow", std::string("editorcontainer-") + std::to_string(m_uid));
         mp_editor_container->setMousePassThroughEnabled(true); // Container should have no visible effect
         p_root->addChild(mp_editor_container);
         mp_editor_container->hide();
