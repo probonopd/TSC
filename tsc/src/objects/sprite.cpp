@@ -1423,10 +1423,13 @@ void cSprite::Destroy(void)
  * over the widget, the widget itself, and its dimensions. If advance_row
  * is true, increases the Y for the next widget to be added with Editor_Add().
  */
-void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height /* = 28 */, bool advance_row /* = 1 */)
+void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height /* = labelheight */, bool advance_row /* = 1 */)
 {
-    if (obj_height < 28.0f) {
-        obj_height = 28.0f;
+    static const float labelheight = 28.0f;
+
+    // The settings widget must at least have the height of the label widget.
+    if (obj_height < labelheight) {
+        obj_height = labelheight;
     }
 
     // get root window
@@ -1472,7 +1475,7 @@ void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip
 
     // set size
     window_name->setWidth(CEGUI::UDim(0, text_width * global_upscalex));
-    window_name->setHeight(CEGUI::UDim(0, 28 * global_upscaley));
+    window_name->setHeight(CEGUI::UDim(0, labelheight * global_upscaley));
     window_setting->setWidth(CEGUI::UDim(0, obj_width * global_upscalex));
     window_setting->setHeight(CEGUI::UDim(0, obj_height * global_upscaley));
 
@@ -1484,7 +1487,7 @@ void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip
         CEGUI::UDim new_y = p_last_window->getYPosition();
 
         if (advance_row)
-            new_y += CEGUI::UDim(0, obj_height * global_upscaley);
+            new_y += CEGUI::UDim(0, labelheight * global_upscaley);
 
         window_name->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), new_y));
         window_setting->setPosition(CEGUI::UVector2(CEGUI::UDim(0, text_width * global_upscalex), new_y));
