@@ -15,6 +15,7 @@ namespace TSC {
         void Set_Level(cLevel* p_level);
 
         virtual bool Function_New(void);
+        virtual void Function_Save_as(void);
         virtual void Function_Delete(void);
 
     private:

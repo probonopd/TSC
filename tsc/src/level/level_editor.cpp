@@ -90,6 +90,19 @@ bool cEditor_Level::Function_New(void)
     return 1;
 }
 
+void cEditor_Level::Function_Save_as(void)
+{
+    std::string levelname = Box_Text_Input(_("Save Level as"), _("New name"), 1);
+
+    // aborted
+    if (levelname.empty()) {
+        return;
+    }
+
+    pActive_Level->Set_Filename(levelname, 0);
+    pActive_Level->Save();
+}
+
 void cEditor_Level::Function_Delete(void)
 {
     std::string levelname = pActive_Level->Get_Level_Name();
