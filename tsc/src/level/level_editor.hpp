@@ -14,6 +14,8 @@ namespace TSC {
         virtual void Disable(void);
         void Set_Level(cLevel* p_level);
 
+        virtual void Function_Delete(void);
+
     private:
         cLevel* mp_level;
     };

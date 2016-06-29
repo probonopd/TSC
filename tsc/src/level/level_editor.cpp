@@ -63,4 +63,32 @@ void cEditor_Level::Set_Level(cLevel* p_level)
     mp_level = p_level;
 }
 
+void cEditor_Level::Function_Delete(void)
+{
+    std::string levelname = pActive_Level->Get_Level_Name();
+    if (pLevel_Manager->Get_Path(levelname, true).empty()) {
+        pHud_Debug->Set_Text(_("Level was not yet saved"));
+        return;
+    }
+
+    // if denied
+    if (!Box_Question(_("Delete and Unload ") + levelname + " ?")) {
+        return;
+    }
+
+    pActive_Level->Delete();
+    Disable();
+
+    Game_Action = GA_ENTER_MENU;
+    Game_Action_Data_Start.add("music_fadeout", "1000");
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
+    Game_Action_Data_Start.add("screen_fadeout_speed", "3");
+    Game_Action_Data_Middle.add("load_menu", int_to_string(MENU_MAIN));
+    if (Game_Mode_Type != MODE_TYPE_LEVEL_CUSTOM) {
+        Game_Action_Data_Middle.add("menu_exit_back_to", int_to_string(MODE_OVERWORLD));
+    }
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
+    Game_Action_Data_End.add("screen_fadein_speed", "3");
+}
+
 #endif
