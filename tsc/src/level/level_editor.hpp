@@ -20,6 +20,7 @@ namespace TSC {
         virtual void Function_Save_as(void);
         virtual void Function_Delete(void);
         virtual void Function_Reload(void);
+        virtual void Function_Settings(void);
 
     private:
         cLevel* mp_level;

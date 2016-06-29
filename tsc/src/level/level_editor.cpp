@@ -205,4 +205,13 @@ void cEditor_Level::Function_Reload(void)
     Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
 }
 
+void cEditor_Level::Function_Settings(void)
+{
+    Game_Action = GA_ENTER_LEVEL_SETTINGS;
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
+    Game_Action_Data_Start.add("screen_fadeout_speed", "3");
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
+    Game_Action_Data_End.add("screen_fadein_speed", "3");
+}
+
 #endif
