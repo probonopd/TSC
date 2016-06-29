@@ -63,4 +63,85 @@ void cEditor_World::Set_World(cOverworld* p_world)
     mp_overworld = p_world;
 }
 
+bool cEditor_World::Function_New(void)
+{
+    std::string world_name = Box_Text_Input(_("Create a new World"), C_("world", "Name"));
+
+    // aborted/invalid
+    if (world_name.empty()) {
+        return 0;
+    }
+
+    if (pOverworld_Manager->New(world_name)) {
+        Game_Action = GA_ENTER_WORLD;
+        Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK_TILED_RECTS));
+        Game_Action_Data_Start.add("screen_fadeout_speed", "3");
+        Game_Action_Data_Middle.add("enter_world", world_name.c_str());
+        Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
+        Game_Action_Data_End.add("screen_fadein_speed", "3");
+
+        pHud_Debug->Set_Text(_("Created ") + world_name);
+        return 1;
+    }
+    else {
+        pHud_Debug->Set_Text(_("World ") + world_name + _(" already exists"));
+    }
+
+    return 0;
+}
+
+void cEditor_World::Function_Load(void)
+{
+    std::string world_name = C_("world", "Name");
+
+    // valid world
+    while (world_name.length()) {
+        world_name = Box_Text_Input(world_name, _("Load an Overworld"), world_name.compare(C_("world", "Name")) == 0 ? 1 : 0);
+
+        // break if empty
+        if (world_name.empty()) {
+            break;
+        }
+
+        // success
+        if (pOverworld_Manager->Get(world_name)) {
+            Game_Action = GA_ENTER_WORLD;
+            Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK_TILED_RECTS));
+            Game_Action_Data_Start.add("screen_fadeout_speed", "3");
+            Game_Action_Data_Middle.add("enter_world", world_name.c_str());
+            Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
+            Game_Action_Data_End.add("screen_fadein_speed", "3");
+
+            pHud_Debug->Set_Text(_("Loaded ") + world_name);
+            break;
+        }
+        // failed
+        else {
+            pAudio->Play_Sound("error.ogg");
+        }
+    }
+}
+
+void cEditor_World::Function_Save(bool with_dialog /* = 0 */)
+{
+    // if denied
+    if (with_dialog && !Box_Question(_("Save ") + mp_overworld->m_description->m_name + " ?")) {
+        return;
+    }
+
+    mp_overworld->Save();
+}
+
+void cEditor_World::Function_Reload(void)
+{
+    // if denied
+    if (!Box_Question(_("Reload World ?"))) {
+        return;
+    }
+
+    cOverworld* p_old_world = mp_overworld;
+    mp_overworld = cOverworld::Load_From_Directory(p_old_world->m_description->Get_Path());
+    delete p_old_world;
+}
+
 #endif

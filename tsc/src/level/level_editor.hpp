@@ -14,6 +14,7 @@ namespace TSC {
         virtual void Disable(void);
         void Set_Level(cLevel* p_level);
 
+        // Menu functions
         virtual bool Function_New(void);
         virtual void Function_Load(void);
         virtual void Function_Save(bool with_dialog = 0);
