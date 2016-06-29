@@ -182,4 +182,27 @@ void cEditor_Level::Function_Delete(void)
     Game_Action_Data_End.add("screen_fadein_speed", "3");
 }
 
+void cEditor_Level::Function_Reload(void)
+{
+    // if denied
+    if (!Box_Question(_("Reload Level ?"))) {
+        return;
+    }
+
+    // Simulate level ending followed by loading the level from scratch
+    // (cf. cLevel_Manager::Finish_Level)
+    Game_Action = GA_ENTER_LEVEL;
+    pHud_Time->Reset();
+    pLevel_Player->Clear_Return();
+
+    // Remove old level
+    Game_Action_Data_Start.add("music_fadeout", "1500");
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_RANDOM));
+    Game_Action_Data_Middle.add("unload_levels", "1");
+
+    // Load new level
+    Game_Action_Data_Middle.add("load_level", path_to_utf8(pActive_Level->m_level_filename.filename()));
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
+}
+
 #endif

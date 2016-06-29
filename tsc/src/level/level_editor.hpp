@@ -19,6 +19,7 @@ namespace TSC {
         virtual void Function_Save(bool with_dialog = 0);
         virtual void Function_Save_as(void);
         virtual void Function_Delete(void);
+        virtual void Function_Reload(void);
 
     private:
         cLevel* mp_level;
