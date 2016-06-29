@@ -90,6 +90,21 @@ bool cEditor_Level::Function_New(void)
     return 1;
 }
 
+void cEditor_Level::Function_Save(bool with_dialog /* = 0 */)
+{
+    // not loaded
+    if (!pActive_Level->Is_Loaded()) {
+        return;
+    }
+
+    // if denied
+    if (with_dialog && !Box_Question(_("Save ") + pActive_Level->Get_Level_Name() + " ?")) {
+        return;
+    }
+
+    pActive_Level->Save();
+}
+
 void cEditor_Level::Function_Save_as(void)
 {
     std::string levelname = Box_Text_Input(_("Save Level as"), _("New name"), 1);
