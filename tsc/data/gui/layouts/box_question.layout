@@ -16,7 +16,7 @@
       <Property name="Area" value="{{0.04,0},{0.8,0},{0.28,0},{0.98,0}}"/>
     </Window>
 
-    <Window type="TaharezLook/Button" name="box_question_button_yes">
+    <Window type="TaharezLook/Button" name="box_question_button_no">
       <Property name="Text" value="No"/>
       <Property name="Area" value="{{0.33,0},{0.8,0},{0.58,0},{0.98,0}}"/>
     </Window>
