@@ -661,6 +661,11 @@ void cEditor::parse_menu_file()
         iter = std::find(tags.begin(), tags.end(), std::string("header"));
         p_entry->Set_Header((iter != tags.end()));
 
+        // Mark as a function element (= does something special if clicked)
+        // if the tag "function" is encountered.
+        iter = std::find(tags.begin(), tags.end(), std::string("function"));
+        p_entry->Set_Function((iter != tags.end()));
+
         // Store
         m_menu_entries.push_back(p_entry);
     }
@@ -769,9 +774,45 @@ bool cEditor::on_menu_selection_changed(const CEGUI::EventArgs& event)
     if (p_menu_entry->Is_Header())
         return false;
 
+    // Treat clicks on function elements specifically
+    if (p_menu_entry->Is_Function()) {
+        Activate_Function_Entry(p_menu_entry);
+        return true;
+    }
+
+    // Ordinary menu item (i.e. submenu with game objects).
     p_menu_entry->Activate(mp_editor_tabpane);
 
     return true;
+}
+
+/**
+ * Takes a function menu entry and executes the Function_*() function it
+ * belongs to. These functions are intended to be overridden in subclasses.
+ */
+void cEditor::Activate_Function_Entry(cEditor_Menu_Entry* p_function_entry)
+{
+    std::vector<std::string>& tags = p_function_entry->Get_Required_Tags();
+    std::vector<std::string>::const_iterator iter;
+
+    // HIER! Führt zu einer Exception!
+
+    if (std::find(tags.begin(), tags.end(), std::string("new")) != tags.end())
+        Function_New();
+    else if (std::find(tags.begin(), tags.end(), std::string("load")) != tags.end())
+        Function_Load();
+    else if (std::find(tags.begin(), tags.end(), std::string("save")) != tags.end())
+        Function_Save(); // TODO: optional argument?
+    else if (std::find(tags.begin(), tags.end(), std::string("save_as")) != tags.end())
+        Function_Save_as();
+    else if (std::find(tags.begin(), tags.end(), std::string("delete")) != tags.end())
+        Function_Delete();
+    else if (std::find(tags.begin(), tags.end(), std::string("reload")) != tags.end())
+        Function_Reload();
+    else if (std::find(tags.begin(), tags.end(), std::string("settings")) != tags.end())
+        Function_Settings();
+    else
+        throw(std::runtime_error("Invalid function menu item!"));
 }
 
 cEditor_Menu_Entry::cEditor_Menu_Entry(std::string name)

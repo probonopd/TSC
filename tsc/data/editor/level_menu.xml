@@ -164,37 +164,37 @@
 	</item>
 	<item>
 		<property name="name" value="New" />
-		<property name="tags" value="function:new" />
+		<property name="tags" value="function;new" />
 		<property name="color" value="FF0F03DF" />
 	</item>
 	<item>
 		<property name="name" value="Load" />
-		<property name="tags" value="function:load" />
+		<property name="tags" value="function;load" />
 		<property name="color" value="FFDFA30F" />
 	</item>
 	<item>
 		<property name="name" value="Save" />
-		<property name="tags" value="function:save" />
+		<property name="tags" value="function;save" />
 		<property name="color" value="FF0FC30F" />
 	</item>
 	<item>
 		<property name="name" value="Save as" />
-		<property name="tags" value="function:save_as" />
+		<property name="tags" value="function;save_as" />
 		<property name="color" value="FF2FC35F" />
 	</item>
 	<item>
 		<property name="name" value="Delete" />
-		<property name="tags" value="function:delete" />
+		<property name="tags" value="function;delete" />
 		<property name="color" value="FFFF7000" />
 	</item>
 	<item>
 		<property name="name" value="Reload" />
-		<property name="tags" value="function:reload" />
+		<property name="tags" value="function;reload" />
 		<property name="color" value="FFAF8A4F" />
 	</item>
 	<item>
 		<property name="name" value="Settings" />
-		<property name="tags" value="function:settings" />
+		<property name="tags" value="function;settings" />
 		<property name="color" value="FFCF6AAF" />
 	</item>
 </menu>

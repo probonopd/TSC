@@ -33,7 +33,9 @@ namespace TSC {
         inline std::string Get_Name(){ return m_name; }
 
         inline void Set_Header(bool is_header){ m_is_header = is_header; }
+        inline void Set_Function(bool is_function){ m_is_function = is_function; }
         inline bool Is_Header() { return m_is_header; }
+        inline bool Is_Function() { return m_is_function; }
 
         inline void Set_Required_Tags(std::vector<std::string> tags) { m_required_tags = tags; }
         inline std::vector<std::string>& Get_Required_Tags() { return m_required_tags; }
@@ -44,6 +46,7 @@ namespace TSC {
         std::string m_name;
         Color m_color;
         bool m_is_header;
+        bool m_is_function;
         std::vector<std::string> m_required_tags;
         CEGUI::ScrollablePane* mp_tab_pane;
         int m_element_y;
@@ -73,7 +76,14 @@ namespace TSC {
         virtual bool Mouse_Up(sf::Mouse::Button button);
         virtual bool Key_Down(const sf::Event& evt);
 
+        bool m_enabled;
+    protected:
+        std::string m_editor_item_tag;
+        boost::filesystem::path m_menu_filename;
+        cSprite_Manager* mp_sprite_manager;
+
         // Menu functions
+        void Activate_Function_Entry(cEditor_Menu_Entry* p_function_entry);
         void Function_Exit(void);
         virtual bool Function_New(void) { return 0; };
         virtual void Function_Load(void) {};
@@ -82,13 +92,6 @@ namespace TSC {
         virtual void Function_Delete(void) {};
         virtual void Function_Reload(void) {};
         virtual void Function_Settings(void) {};
-
-
-        bool m_enabled;
-    protected:
-        std::string m_editor_item_tag;
-        boost::filesystem::path m_menu_filename;
-        cSprite_Manager* mp_sprite_manager;
 
     private:
         CEGUI::TabControl* mp_editor_tabpane;
