@@ -90,6 +90,42 @@ bool cEditor_Level::Function_New(void)
     return 1;
 }
 
+void cEditor_Level::Function_Load(void)
+{
+    std::string level_name = C_("level", "Name");
+
+    // valid level
+    while (level_name.length()) {
+        level_name = Box_Text_Input(level_name, _("Load a Level"), level_name.compare(C_("level", "Name")) == 0 ? 1 : 0);
+
+        // aborted
+        if (level_name.empty()) {
+            break;
+        }
+
+        // if available
+        boost::filesystem::path level_path = pLevel_Manager->Get_Path(level_name);
+        if (!level_path.empty()) {
+            Game_Action = GA_ENTER_LEVEL;
+            Game_Mode_Type = MODE_TYPE_LEVEL_CUSTOM;
+            Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK_TILED_RECTS));
+            Game_Action_Data_Start.add("screen_fadeout_speed", "3");
+            Game_Action_Data_Middle.add("load_level", level_name.c_str());
+            Game_Action_Data_Middle.add("reset_save", "1");
+            Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
+            Game_Action_Data_End.add("screen_fadein_speed", "3");
+
+            pHud_Debug->Set_Text(_("Loaded ") + path_to_utf8(Trim_Filename(level_path, 0, 0)));
+
+            break;
+        }
+        // not found
+        else {
+            pAudio->Play_Sound("error.ogg");
+        }
+    }
+}
+
 void cEditor_Level::Function_Save(bool with_dialog /* = 0 */)
 {
     // not loaded
