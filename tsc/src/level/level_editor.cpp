@@ -63,6 +63,33 @@ void cEditor_Level::Set_Level(cLevel* p_level)
     mp_level = p_level;
 }
 
+bool cEditor_Level::Function_New(void)
+{
+    std::string level_name = Box_Text_Input(_("Create a new Level"), C_("level", "Name"));
+
+    // aborted
+    if (level_name.empty()) {
+        return 0;
+    }
+
+    // if it already exists
+    if (!pLevel_Manager->Get_Path(level_name, true).empty()) {
+        pHud_Debug->Set_Text(_("Level ") + level_name + _(" already exists"));
+        return 0;
+    }
+
+    Game_Action = GA_ENTER_LEVEL;
+    Game_Action_Data_Start.add("music_fadeout", "1000");
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
+    Game_Action_Data_Start.add("screen_fadeout_speed", "3");
+    Game_Action_Data_Middle.add("new_level", level_name.c_str());
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
+    Game_Action_Data_End.add("screen_fadein_speed", "3");
+
+    pHud_Debug->Set_Text(_("Created ") + level_name);
+    return 1;
+}
+
 void cEditor_Level::Function_Delete(void)
 {
     std::string levelname = pActive_Level->Get_Level_Name();
