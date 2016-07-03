@@ -377,7 +377,7 @@ void Exit_Game(void)
         delete pWorld_Editor;
         pWorld_Editor = NULL;
     }
-#elsif defined(ENABLE_NEW_EDITOR)
+#elif defined(ENABLE_NEW_EDITOR)
     if (pLevel_Editor) {
         delete pLevel_Editor;
         pLevel_Editor = NULL;

@@ -474,10 +474,10 @@ void cLevel::Set_Sprite_Manager(void)
 {
     pHud_Manager->Set_Sprite_Manager(m_sprite_manager);
     pMouseCursor->Set_Sprite_Manager(m_sprite_manager);
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR)
     pLevel_Editor->Set_Sprite_Manager(m_sprite_manager);
     pLevel_Editor->Set_Level(this);
-#elsif defined(ENABLE_NEW_EDITOR)
+#elif defined(ENABLE_NEW_EDITOR)
     pLevel_Editor->Set_Level(this);
 #endif
     // camera
@@ -517,7 +517,7 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
             pMouseCursor->Set_Active(1);
         }
     }
-#elsif defined(ENABLE_NEW_EDITOR)
+#elif defined(ENABLE_NEW_EDITOR)
     // disable world editor
     pWorld_Editor->Disable();
 
