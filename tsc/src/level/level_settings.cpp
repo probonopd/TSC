@@ -241,6 +241,8 @@ void cLevel_Settings::Enter(void)
 
     // update camera
     m_camera->Update_Position();
+
+    pMouseCursor->Set_Active(1);
 }
 
 void cLevel_Settings::Leave(void)
