@@ -19,6 +19,7 @@
 #include "../core/filesystem/filesystem.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/errors.hpp"
+#include "level_settings.hpp"
 #include "level_editor.hpp"
 
 #ifdef ENABLE_NEW_EDITOR
@@ -61,6 +62,7 @@ void cEditor_Level::Disable(void)
 void cEditor_Level::Set_Level(cLevel* p_level)
 {
     mp_level = p_level;
+    m_settings_screen.Set_Level(p_level);
 }
 
 bool cEditor_Level::Function_New(void)

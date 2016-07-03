@@ -23,6 +23,8 @@ namespace TSC {
         virtual void Function_Reload(void);
         virtual void Function_Settings(void);
 
+        cLevel_Settings m_settings_screen;
+
     private:
         cLevel* mp_level;
     };

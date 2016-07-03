@@ -35,12 +35,12 @@ namespace TSC {
 
 /* *** *** *** *** *** cLevel_Settings *** *** *** *** *** *** *** *** *** *** *** *** */
 
-cLevel_Settings::cLevel_Settings(cSprite_Manager* sprite_manager, cLevel* level)
+cLevel_Settings::cLevel_Settings()
 {
     m_active = 0;
 
-    m_level = level;
-    m_camera = new cCamera(sprite_manager);
+    m_level = NULL;
+    m_camera = NULL;
     m_gui_window = NULL;
     m_tabcontrol = NULL;
 }
@@ -49,7 +49,8 @@ cLevel_Settings::~cLevel_Settings(void)
 {
     Unload();
 
-    delete m_camera;
+    if (m_camera)
+        delete m_camera;
 }
 
 void cLevel_Settings::Init(void)
@@ -136,8 +137,9 @@ void cLevel_Settings::Init(void)
     CEGUI::PushButton* button_delete_background_image = static_cast<CEGUI::PushButton*>(m_tabcontrol->getChild("level_settings_tab_background/button_delete_background_image"));
     button_delete_background_image->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cLevel_Settings::Delete_Background_Image, this));
     // apply button
-    CEGUI::PushButton* button_apply = static_cast<CEGUI::PushButton*>(m_tabcontrol->getChild("level_settings_tab_background/button_apply"));
-    button_apply->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cLevel_Settings::Button_Apply, this));
+    // TODO: Disabled because entire mini preview does not work currently
+    //CEGUI::PushButton* button_apply = static_cast<CEGUI::PushButton*>(m_tabcontrol->getChild("level_settings_tab_background/button_apply"));
+    //button_apply->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cLevel_Settings::Button_Apply, this));
 
     // listbox
     CEGUI::Listbox* listbox = static_cast<CEGUI::Listbox*>(m_tabcontrol->getChild("level_settings_tab_background/listbox_backgrounds"));
@@ -200,7 +202,7 @@ void cLevel_Settings::Init(void)
     CEGUI::MultiLineEditbox* multieditbox_script = static_cast<CEGUI::MultiLineEditbox*>(m_tabcontrol->getChild("level_settings_tab_script/multieditbox_script"));
     multieditbox_script->setText(reinterpret_cast<const CEGUI::utf8*>(m_level->m_script.c_str()));
 
-    CEGUI::Font& monofont = CEGUI::FontManager::getSingleton().get("dejavu_sans_mono");
+    CEGUI::Font& monofont = CEGUI::FontManager::getSingleton().get("DejaVuSansMono");
     multieditbox_script->setFont(&monofont);
 
     Update_BG_Colors(CEGUI::EventArgs());
@@ -220,6 +222,9 @@ void cLevel_Settings::Exit(void)
 
 void cLevel_Settings::Enter(void)
 {
+    if (!m_level)
+        throw(std::runtime_error("No level set with cLevel_Settings::Set_Level()!"));
+
     // set active camera
     pActive_Camera = m_camera;
 
@@ -356,11 +361,11 @@ bool cLevel_Settings::Key_Down(const sf::Event& evt)
 void cLevel_Settings::Set_Level(cLevel* level)
 {
     m_level = level;
-}
 
-void cLevel_Settings::Set_Sprite_Manager(cSprite_Manager* sprite_manager)
-{
-    m_camera->Set_Sprite_Manager(sprite_manager);
+    if (m_camera)
+        delete m_camera;
+
+    m_camera = new cCamera(level->m_sprite_manager);
 }
 
 bool cLevel_Settings::Add_Background_Image(const CEGUI::EventArgs& event)

@@ -19,6 +19,7 @@
 #include "../input/keyboard.hpp"
 #include "../input/mouse.hpp"
 #include "../input/joystick.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../level/level_player.hpp"
 #include "../video/loading_screen.hpp"
@@ -288,8 +289,8 @@ void Leave_Game_Mode(const GameMode next_mode)
         pMenuCore->Leave(next_mode);
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#ifdef ENABLE_EDITOR
-        pLevel_Editor->m_settings_screen->Leave();
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+        pLevel_Editor->m_settings_screen.Leave();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
 #endif
@@ -317,8 +318,8 @@ void Enter_Game_Mode(const GameMode new_mode)
     }
     // mode gets settings
     else if (new_mode == MODE_LEVEL_SETTINGS) {
-#ifdef ENABLE_EDITOR
-        pLevel_Editor->m_settings_screen->Enter();
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+        pLevel_Editor->m_settings_screen.Enter();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
 #endif
