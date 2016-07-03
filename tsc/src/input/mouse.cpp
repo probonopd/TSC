@@ -18,6 +18,7 @@
 #include "../input/mouse.hpp"
 #include "../input/keyboard.hpp"
 #include "../core/game_core.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../overworld/overworld.hpp"

@@ -32,6 +32,7 @@
 #include "../video/loading_screen.hpp"
 #include "../level/level.hpp"
 #include "../input/keyboard.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../core/math/utilities.hpp"
 #include "../core/i18n.hpp"

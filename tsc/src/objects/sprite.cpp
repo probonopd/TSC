@@ -27,6 +27,7 @@
 #include "../core/editor/editor.hpp"
 #include "../core/i18n.hpp"
 #include "../scripting/events/touch_event.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../core/file_parser.hpp"
 #include "../core/filesystem/resource_manager.hpp"

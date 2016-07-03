@@ -26,6 +26,7 @@
 #include "../audio/audio.hpp"
 #include "../level/level.hpp"
 #include "../user/preferences.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 

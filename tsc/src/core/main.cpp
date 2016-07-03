@@ -27,6 +27,7 @@
 #include "../user/preferences.hpp"
 #include "../audio/sound_manager.hpp"
 #include "../audio/audio.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../input/joystick.hpp"

@@ -24,6 +24,7 @@
 #include "../core/framerate.hpp"
 #include "../objects/path.hpp"
 #include "../audio/audio.hpp"
+#include "level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
