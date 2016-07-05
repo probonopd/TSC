@@ -74,6 +74,10 @@ void cLevel_Settings::Init(void)
     m_tabcontrol->addTab(wmgr.loadLayoutFromFile("level_settings/tab_global_effect.layout"));
     m_tabcontrol->addTab(wmgr.loadLayoutFromFile("level_settings/tab_script.layout"));
 
+    // apply button
+    CEGUI::PushButton* button_apply = static_cast<CEGUI::PushButton*>(m_gui_window->getChild("button_apply"));
+    button_apply->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cLevel_Settings::Button_Apply, this));
+
     //////////////////// Main ////////////////////
     // level filename
     CEGUI::Editbox* editbox_level_filename = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_main/editbox_level_filename"));
@@ -136,10 +140,6 @@ void cLevel_Settings::Init(void)
     // delete background image button
     CEGUI::PushButton* button_delete_background_image = static_cast<CEGUI::PushButton*>(m_tabcontrol->getChild("level_settings_tab_background/button_delete_background_image"));
     button_delete_background_image->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cLevel_Settings::Delete_Background_Image, this));
-    // apply button
-    // TODO: Disabled because entire mini preview does not work currently
-    //CEGUI::PushButton* button_apply = static_cast<CEGUI::PushButton*>(m_tabcontrol->getChild("level_settings_tab_background/button_apply"));
-    //button_apply->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cLevel_Settings::Button_Apply, this));
 
     // listbox
     CEGUI::Listbox* listbox = static_cast<CEGUI::Listbox*>(m_tabcontrol->getChild("level_settings_tab_background/listbox_backgrounds"));
@@ -218,6 +218,8 @@ void cLevel_Settings::Exit(void)
     Game_Action_Data_Start.add("screen_fadeout_speed", "3");
     Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
     Game_Action_Data_End.add("screen_fadein_speed", "3");
+
+    pMouseCursor->Set_Active(0);
 }
 
 void cLevel_Settings::Enter(void)

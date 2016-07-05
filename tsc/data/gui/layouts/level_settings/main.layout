@@ -16,7 +16,6 @@
             <Property name="TooltipText" value="Apply and exit"/>
             <Property name="MaxSize" value="{{1,0},{1,0}}"/>
             <Property name="Area" value="{{0.872346,0},{0.944156,0},{0.972346,0},{0.987489,0}}"/>
-            <Property name="MouseCursorImage" value="set:TaharezLook image:MouseArrow"/>
         </Window>
         <Window type="TaharezLook/StaticText" name="text_level_settings">
             <Property name="Text" value="Level Settings"/>
