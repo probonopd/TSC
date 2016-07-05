@@ -504,9 +504,9 @@ void cLevel_Settings::Load_BG_Image_List(void)
         }
 
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(float_to_string(background->m_pos_z).c_str(), 0, background);
-        // OLD item->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-        // OLD item->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
-        listbox->addItem(static_cast<CEGUI::ListboxItem*>(item));
+        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+        item->setSelectionBrushImage("TaharezLook/ListboxSelectionBrush");
+        listbox->addItem(item);
     }
 
     CEGUI::PushButton* button_add = static_cast<CEGUI::PushButton*>(m_tabcontrol->getChild("level_settings_tab_background/button_add_background_image"));
