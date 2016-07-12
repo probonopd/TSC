@@ -298,7 +298,7 @@ void cStaticEnemy::Handle_Collision_Enemy(cObjectCollision* collision)
     enemy->DownGrade(1);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cStaticEnemy::Editor_Activate(void)
 {
     // get window manager

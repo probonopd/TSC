@@ -87,7 +87,7 @@ namespace TSC {
         // collision from an enemy
         virtual void Handle_Collision_Enemy(cObjectCollision* collision);
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // leveleditor activation
         virtual void Editor_Activate(void);
         // editor image text changed event

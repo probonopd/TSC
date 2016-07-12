@@ -485,7 +485,7 @@ void cSpikeball::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
     }
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cSpikeball::Editor_Activate(void)
 {
     // get window manager

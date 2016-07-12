@@ -381,7 +381,7 @@ void cLarry::Explosion_Animation()
     pActive_Animation_Manager->Add(p_em);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cLarry::Editor_Activate()
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
