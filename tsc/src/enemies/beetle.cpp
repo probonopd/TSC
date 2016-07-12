@@ -238,7 +238,7 @@ DefaultColor cBeetle::Get_Color()
     return m_color;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cBeetle::Editor_Activate()
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
