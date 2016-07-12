@@ -897,7 +897,7 @@ void cArmy::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
     DownGrade(true);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cArmy::Editor_Activate(void)
 {
     // get window manager
