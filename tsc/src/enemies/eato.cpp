@@ -243,7 +243,7 @@ void cEato::Handle_Collision_Player(cObjectCollision* collision)
     }
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cEato::Editor_Activate(void)
 {
     // get window manager
