@@ -337,7 +337,7 @@ void cBeetleBarrage::Calculate_Fly_Start(const cBeetle* p_beetle, float& x, floa
     y = m_pos_y + m_rect.m_h / 2.0f - p_beetle->m_rect.m_h / 2.0f - 5.0f;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cBeetleBarrage::Editor_Activate()
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
