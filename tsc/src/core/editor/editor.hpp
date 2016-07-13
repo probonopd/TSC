@@ -50,6 +50,8 @@ namespace TSC {
         std::vector<std::string> m_required_tags;
         CEGUI::ScrollablePane* mp_tab_pane;
         int m_element_y;
+
+        bool on_image_mouse_down(const CEGUI::EventArgs& ev);
     };
 
     class cEditor {

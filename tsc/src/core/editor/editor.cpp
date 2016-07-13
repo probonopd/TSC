@@ -897,6 +897,8 @@ void cEditor_Menu_Entry::Add_Image_Item(boost::filesystem::path settings_path, c
     p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
     p_image->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, -imageheight/2) /* center on X */, CEGUI::UDim(0, m_element_y + labelheight)));
     p_image->setProperty("FrameEnabled", "False");
+    p_image->setUserData(new boost::filesystem::path(settings_path)); // TODO: FIXME: Memory leak! This pointer is never freed!
+    p_image->subscribeEvent(CEGUI::Window::EventMouseButtonDown, CEGUI::Event::Subscriber(&cEditor_Menu_Entry::on_image_mouse_down, this));
 
     // Apply rotation
     p_image->setRotation(CEGUI::Quaternion::eulerAnglesDegrees(settings.m_rotation_x, settings.m_rotation_y, settings.m_rotation_z));
@@ -922,6 +924,18 @@ void cEditor_Menu_Entry::Activate(CEGUI::TabControl* p_tabcontrol)
 
     // Switch to the items page
     p_tabcontrol->setSelectedTab("editor_tab_items");
+}
+
+bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
+{
+    // EventMouseButtonDown event handler receives a CEGUI::MouseEventArgs in reality,
+    // see http://static.cegui.org.uk/docs/0.8.7/classCEGUI_1_1Window.html#a073c0f8e07cad39c21dce04cc2e49b3c.
+    const CEGUI::MouseEventArgs& event = static_cast<const CEGUI::MouseEventArgs&>(ev);
+
+    boost::filesystem::path* p_path = static_cast<boost::filesystem::path*>(event.window->getUserData());
+
+    std::cout << "CLICKED THIS: " << path_to_utf8(*p_path) << std::endl;
+    return true;
 }
 
 void cEditor::Select_Same_Object_Types(const cSprite* obj)
