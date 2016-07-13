@@ -23,6 +23,8 @@
 #include "../errors.hpp"
 #include "editor.hpp"
 
+#define PANEL_OUT_OF_SIGHT_X -0.19f
+
 #ifdef ENABLE_NEW_EDITOR
 
 using namespace TSC;
@@ -147,7 +149,7 @@ void cEditor::Update(void)
         if (!m_rested) {
             float timeout = speedfactor_fps * 2;
             if (m_visibility_timer >= timeout) {
-                mp_editor_tabpane->setXPosition(CEGUI::UDim(-0.19f, 0.0f));
+                mp_editor_tabpane->setXPosition(CEGUI::UDim(PANEL_OUT_OF_SIGHT_X, 0.0f));
                 mp_editor_tabpane->setAlpha(1.0f);
 
                 m_rested = true;
@@ -934,7 +936,25 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
 
     boost::filesystem::path* p_path = static_cast<boost::filesystem::path*>(event.window->getUserData());
 
-    std::cout << "CLICKED THIS: " << path_to_utf8(*p_path) << std::endl;
+    // TODO: Callback for subclasses as to pActiveLevel/pActiveWorld
+    // TODO: Allow other things different from plain static sprites
+
+    // Create the new sprite
+    cSprite* p_new_sprite = new cSprite(pActive_Level->m_sprite_manager);
+    p_new_sprite->Set_Image(pVideo->Get_Surface(*p_path), 1);
+    p_new_sprite->Set_Pos(pMouseCursor->m_pos_x, pMouseCursor->m_pos_y, 1);
+
+    // Move the editor tabpane to the left
+    mp_tab_pane->getParent()->getParent()->getParent()->setXPosition(CEGUI::UDim(PANEL_OUT_OF_SIGHT_X, 0));
+
+    // Add the new sprite to the level and attach it to the mouse cursor,
+    // ensuring the cursor is centered on the object.
+    pActive_Level->m_sprite_manager->Add(p_new_sprite);
+    pMouseCursor->Set_Hovered_Object(p_new_sprite);
+    pMouseCursor->m_left = 1;
+    pMouseCursor->m_hovering_object->m_mouse_offset_y = static_cast<int>(p_new_sprite->m_col_rect.m_h / 2);
+    pMouseCursor->m_hovering_object->m_mouse_offset_x = static_cast<int>(p_new_sprite->m_col_rect.m_w / 2);
+
     return true;
 }
 
