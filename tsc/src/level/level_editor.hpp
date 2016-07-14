@@ -23,9 +23,12 @@ namespace TSC {
         virtual void Function_Reload(void);
         virtual void Function_Settings(void);
 
+        virtual vector<cSprite*> Parse_Items_File();
+
         cLevel_Settings m_settings_screen;
 
     private:
+        static std::vector<cSprite*> items_loader_callback(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager, void* p_data);
         cLevel* mp_level;
     };
 

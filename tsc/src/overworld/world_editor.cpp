@@ -12,12 +12,14 @@
 #include "../overworld/overworld.hpp"
 #include "../overworld/world_player.hpp"
 #include "../overworld/world_manager.hpp"
+#include "../overworld/overworld_loader.hpp"
 #include "../video/renderer.hpp"
 #include "../core/sprite_manager.hpp"
 #include "../overworld/overworld.hpp"
 #include "../core/i18n.hpp"
 #include "../core/filesystem/filesystem.hpp"
 #include "../core/filesystem/resource_manager.hpp"
+#include "../core/editor/editor_items_loader.hpp"
 #include "../core/errors.hpp"
 #include "world_editor.hpp"
 
@@ -142,6 +144,23 @@ void cEditor_World::Function_Reload(void)
     cOverworld* p_old_world = mp_overworld;
     mp_overworld = cOverworld::Load_From_Directory(p_old_world->m_description->Get_Path());
     delete p_old_world;
+}
+
+std::vector<cSprite*> cEditor_World::items_loader_callback(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager, void* p_data)
+{
+    cSprite* p_sprite = cOverworldLoader::Create_World_Object_From_XML(name, attributes, engine_version, p_sprite_manager, pActive_Overworld);
+
+    std::vector<cSprite*> result;
+    result.push_back(p_sprite);
+    return result;
+}
+
+std::vector<cSprite*> cEditor_World::Parse_Items_File()
+{
+    // OLD cEditorItemsLoader parser;
+    // OLD parser.parse_file(pResource_Manager->Get_Game_Editor("world_items.xml"), pActive_Overworld->m_sprite_manager, NULL, items_loader_callback);
+    // OLD return parser.get_tagged_sprites();
+    return std::vector<cSprite*>(); // FIXME ↑ Segfaults
 }
 
 #endif

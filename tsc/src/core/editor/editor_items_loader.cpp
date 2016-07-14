@@ -13,10 +13,11 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef ENABLE_EDITOR
+#include "../global_basic.hpp"
 #include "editor_items_loader.hpp"
 #include "../../objects/sprite.hpp"
-#include "../global_basic.hpp"
+
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 
 using namespace std;
 
@@ -101,6 +102,9 @@ void cEditorItemsLoader::on_end_element(const Glib::ustring& name)
     // This really looks stupid this way. Really. I mean really.
     sprites[0]->m_editor_tags = tags.c_str();
 
+    // FIXME: This must be a nested vector, because some tags (as outlined above)
+    // can produce multiple sprites. Not using a nested vector results in the
+    // editor only outputting the first sprite in the group.
     std::vector<cSprite*>::iterator iter;
     for (iter=sprites.begin(); iter != sprites.end(); iter++)
         m_tagged_sprites.push_back(*iter);

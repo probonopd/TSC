@@ -21,7 +21,10 @@ namespace TSC {
         //virtual void Function_Save_as( void );
         virtual void Function_Reload(void);
         //void Function_Settings( void );
+
+        virtual vector<cSprite*> Parse_Items_File();
     private:
+        static std::vector<cSprite*> items_loader_callback(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager, void* p_data);
         cOverworld* mp_overworld;
     };
 

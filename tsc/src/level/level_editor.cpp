@@ -11,6 +11,7 @@
 #include "../user/preferences.hpp"
 #include "../level/level.hpp"
 #include "../level/level_player.hpp"
+#include "../level/level_loader.hpp"
 #include "../overworld/world_manager.hpp"
 #include "../video/renderer.hpp"
 #include "../core/sprite_manager.hpp"
@@ -18,6 +19,8 @@
 #include "../core/i18n.hpp"
 #include "../core/filesystem/filesystem.hpp"
 #include "../core/filesystem/resource_manager.hpp"
+#include "../core/editor/editor_items_loader.hpp"
+#include "../core/xml_attributes.hpp"
 #include "../core/errors.hpp"
 #include "level_settings.hpp"
 #include "level_editor.hpp"
@@ -214,6 +217,18 @@ void cEditor_Level::Function_Settings(void)
     Game_Action_Data_Start.add("screen_fadeout_speed", "3");
     Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
     Game_Action_Data_End.add("screen_fadein_speed", "3");
+}
+
+std::vector<cSprite*> cEditor_Level::items_loader_callback(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager, void* p_data)
+{
+    return cLevelLoader::Create_Level_Objects_From_XML_Tag(name, attributes, engine_version, p_sprite_manager);
+}
+
+std::vector<cSprite*> cEditor_Level::Parse_Items_File()
+{
+    cEditorItemsLoader parser;
+    parser.parse_file(pResource_Manager->Get_Game_Editor("level_items.xml"), pActive_Level->m_sprite_manager, NULL, items_loader_callback);
+    return parser.get_tagged_sprites();
 }
 
 #endif

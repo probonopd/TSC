@@ -65,9 +65,17 @@ void cEditor::Init(void)
 
     mp_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
 
+    // Create the menu hierarchy
     parse_menu_file();
     populate_menu();
+
+    /* Fill in the creatable objects for each menu entry; first the
+     * image items (= static sprites with a .settings file), then the
+     * special items (= everything else, such as enemies).  The
+     * function menu entries are handled in the
+     * on_menu_selection_changed() event handler function. */
     load_image_items();
+    load_special_items();
 
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_enter, this));
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_leave, this));
@@ -585,14 +593,14 @@ bool cEditor::Mouse_Up(sf::Mouse::Button button)
 }
 
 /**
- * Adds a graphic to the editor menu. The settings file of this
- * graphic will be parsed and it will be placed in the menu
- * accordingly (subclasses have to set the `m_editor_item_tag`
- * member variable the the master tag required for graphics to
- * show up in this editor; these are "level" and "world" for the
- * level and world editor subclasses, respectively. That is,
- * a graphic tagged with "world" will never appear in the level
- * editor, and vice-versa.).
+ * Adds a graphic for a static .settings-file based object to the
+ * editor menu. The settings file of this graphic will be parsed and
+ * it will be placed in the menu accordingly (subclasses have to set
+ * the `m_editor_item_tag` member variable the the master tag required
+ * for graphics to show up in this editor; these are "level" and
+ * "world" for the level and world editor subclasses,
+ * respectively. That is, a graphic tagged with "world" will never
+ * appear in the level editor, and vice-versa.).
  *
  * \param settings_path
  * Absolute path that refers to the settings file
@@ -601,27 +609,108 @@ bool cEditor::Mouse_Up(sf::Mouse::Button button)
  * \returns false if the item was not added because the master tag
  * was missing, true otherwise.
  */
-bool cEditor::Try_Add_Editor_Item(boost::filesystem::path settings_path)
+bool cEditor::Try_Add_Image_Item(boost::filesystem::path settings_path)
 {
     // Parse the image's settings file
     cImage_Settings_Parser parser;
     cImage_Settings_Data* p_settings = parser.Get(settings_path);
+    std::vector<std::string> available_tags = string_split(p_settings->m_editor_tags, ";");
 
     // If the master tag is not in the tag list, do not add this graphic to the
     // editor.
-    if (p_settings->m_editor_tags.find(m_editor_item_tag) == std::string::npos)
+    if (std::find(available_tags.begin(), available_tags.end(), m_editor_item_tag) == available_tags.end())
         return false;
 
     // Find the menu entries that contain the tags this graphic has set.
-    std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(*p_settings);
+    std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(available_tags);
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
+
+    // Find the PNG of this settings file. If an equally named .png exists,
+    // assume that file, otherwise check the settings 'base' property. If
+    // that also doesn't exist, that's an error.
+    boost::filesystem::path pixmap_path(settings_path); // Copy
+    pixmap_path.replace_extension(utf8_to_path(".png"));
+    if (!boost::filesystem::exists(pixmap_path)) {
+        if (p_settings->m_base.empty()) { // Error
+            std::cerr << "PNG file for settings file '" << path_to_utf8(settings_path) << "' not found (no .png found and no 'base' setting)." << std::endl;
+            std::cerr << "Using dummy image instead." << std::endl;
+            pixmap_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
+        }
+        else {
+            pixmap_path = pixmap_path.parent_path() / p_settings->m_base;
+            if (!boost::filesystem::exists(pixmap_path)) {
+                std::cerr << "PNG base file not found at '" << path_to_utf8(pixmap_path) << "'." << std::endl;
+                std::cerr << "Using dummy image instead." << std::endl;
+                pixmap_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
+            }
+        }
+    }
+
+    // Create the template sprite that will be copied each time the
+    // user wants to add this object.
+    cSprite* p_template_sprite = new cSprite(pActive_Level->m_sprite_manager); // FIXME: Allow for World editor!
+    p_template_sprite->Set_Image(pVideo->Get_Surface(settings_path), 1);
+    pActive_Level->m_sprite_manager->Add(p_template_sprite); // Have the level memory-manage it
+
+    // Add the graphics to the respective menu entries' GUI panels.
+    for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
+        (*iter)->Add_Item(
+            p_template_sprite,
+            load_cegui_image(pixmap_path),
+            p_settings->m_name,
+            CEGUI::Quaternion::eulerAnglesDegrees(
+                p_settings->m_rotation_x,
+                p_settings->m_rotation_y,
+                p_settings->m_rotation_z
+                )
+            );
+    }
+
+    delete p_settings;
+    return true;
+}
+
+/**
+ * Similar to Try_Add_Image_Item(), but this method instead adds
+ * a special object that is not based on a .settings file (e.g. enemies)
+ * to the editor menu. Regarding tags, the function works exactly the same
+ * way as Try_Add_Image_Item(), except the tags for each object are not
+ * specified in a .settings file (as they don't have one), but in the
+ * editor/level_items.xml or editor/world_items.xml file.
+ *
+ * FIXME: This must take a std::vector<cSprite*>, because there are
+ * multi-sprite objects (most notably backward-compatibility burts,
+ * but also things like pathes for platforms).
+ */
+bool cEditor::Try_Add_Special_Item(cSprite* p_sprite)
+{
+    // Get the list of tags attached to this graphic.
+    // FIXME: For nested sprite list, the tag list can be retrieved from the first sprite.
+    std::vector<std::string> available_tags = string_split(p_sprite->m_editor_tags, ";");
+
+    // If the master tag is not in the tag list, do not add this graphic to the
+    // editor.
+    if (std::find(available_tags.begin(), available_tags.end(), m_editor_item_tag) == available_tags.end())
+        return false;
+
+    // Find the menu entries that contain the tags this graphic has set.
+    std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(available_tags);
     std::vector<cEditor_Menu_Entry*>::iterator iter;
 
     // Add the graphics to the respective menu entries' GUI panels.
     for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
-        (*iter)->Add_Image_Item(settings_path, *p_settings);
+        (*iter)->Add_Item(
+            p_sprite,
+            load_cegui_image(p_sprite->Get_Image(0)->Get_Path()),
+            p_sprite->Create_Name(),
+            CEGUI::Quaternion::eulerAnglesDegrees(
+                p_sprite->m_start_rot_x,
+                p_sprite->m_start_rot_y,
+                p_sprite->m_start_rot_z
+                )
+            );
     }
 
-    delete p_settings;
     return true;
 }
 
@@ -685,13 +774,26 @@ void cEditor::populate_menu()
     }
 }
 
+/// Load the static .settings-file based objects into the editor menu.
 void cEditor::load_image_items()
 {
     std::vector<boost::filesystem::path> image_files = Get_Directory_Files(pResource_Manager->Get_Game_Pixmaps_Directory(), ".settings");
     std::vector<boost::filesystem::path>::iterator iter;
 
     for(iter=image_files.begin(); iter != image_files.end(); iter++) {
-        Try_Add_Editor_Item(*iter);
+        Try_Add_Image_Item(*iter);
+    }
+}
+
+/// Load the special objects into the editor menu (e.g. enemies).
+void cEditor::load_special_items()
+{
+    // FIXME: Must take a nested cSprite vector due to multi-sprite objects
+    std::vector<cSprite*> tagged_sprites = Parse_Items_File();
+    std::vector<cSprite*>::iterator iter;
+
+    for(iter=tagged_sprites.begin(); iter != tagged_sprites.end(); iter++) {
+        Try_Add_Special_Item(*iter);
     }
 }
 
@@ -709,15 +811,19 @@ cEditor_Menu_Entry* cEditor::get_menu_entry(const std::string& name)
 
 /**
  * Iterates the list of menu entries and returns a list of those whose
- * requirements match the graphic given. That is, a menu entry declares
+ * requirements match the given taglist. That is, a menu entry declares
  * a set of required tags, and if the passed graphic has all of these
  * tags set, the menu entry is included in the return list. If more
  * than the required tags are set, the entry is returned nevertheless.
+ *
+ * \param[in] available_tags
+ * A list of tags the target graphics has set. This is what you
+ * find in a .settings file of a graphic or for special items
+ * in the editor/level_items.xml resp. editor/world_items.xml file.
  */
-std::vector<cEditor_Menu_Entry*> cEditor::find_target_menu_entries_for(const cImage_Settings_Data& settings)
+std::vector<cEditor_Menu_Entry*> cEditor::find_target_menu_entries_for(const std::vector<std::string>& available_tags)
 {
     std::vector<cEditor_Menu_Entry*> results;
-    std::vector<std::string> available_tags = string_split(settings.m_editor_tags, ";");
 
     /* To show up in the editor, a graphic needs to have all tags set
      * on it that are required by a menu entry (except for the master
@@ -839,41 +945,23 @@ cEditor_Menu_Entry::~cEditor_Menu_Entry()
     // CEGUI::Window* p_editor_tabpane = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("tabcontrol_editor/editor_tab_items")
 }
 
-void cEditor_Menu_Entry::Add_Image_Item(boost::filesystem::path settings_path, const cImage_Settings_Data& settings)
+/**
+ * Looks up if the given file is available in the CEGUI image manager, and
+ * if so, returns the CEGUI image reference string to add (you can pass
+ * this into cEditor_Menu_Entry::Add_Item()). If not, loads the file into
+ * the image manager and returns the same; further calls will return the
+ * reference to the stored image. I.e., the image gets cached.
+ *
+ * \param path
+ * Absolute path to the PNG file to load.
+ *
+ * \returns CEGUI image identifier that can be used everywhere CEGUI
+ * expects an image.
+ */
+std::string cEditor::load_cegui_image(boost::filesystem::path path)
 {
-    static const int labelheight = 24;
-    static const int imageheight = 48; /* Also image width (square) */
-    static const int yskip = 24;
-
-    // Find the PNG of this settings file. If an equally named .png exists,
-    // assume that file, otherwise check the settings 'base' property. If
-    // that also doesn't exist, that's an error.
-    boost::filesystem::path pixmap_path(settings_path); // Copy
-    pixmap_path.replace_extension(utf8_to_path(".png"));
-    if (!boost::filesystem::exists(pixmap_path)) {
-        if (settings.m_base.empty()) { // Error
-            std::cerr << "PNG file for settings file '" << path_to_utf8(settings_path) << "' not found (no .png found and no 'base' setting)." << std::endl;
-            return;
-        }
-        else {
-            pixmap_path = pixmap_path.parent_path() / settings.m_base;
-            if (!boost::filesystem::exists(pixmap_path)) {
-                std::cerr << "PNG base file not found at '" << path_to_utf8(pixmap_path) << "'." << std::endl;
-                return;
-            }
-        }
-    }
-
-    std::string escaped_pixmap_path(path_to_utf8(pixmap_path));
-    std::string escaped_settings_path(path_to_utf8(settings_path));
-    string_replace_all(escaped_pixmap_path, "/", "+"); // CEGUI doesn't like / in ImageManager image names
-    string_replace_all(escaped_settings_path, "/", "+");
-
-    CEGUI::Window* p_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", std::string("label-of-") + escaped_settings_path);
-    p_label->setText(settings.m_name);
-    p_label->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0, labelheight)));
-    p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
-    p_label->setProperty("FrameEnabled", "False");
+    std::string escaped_path(path_to_utf8(path));
+    string_replace_all(escaped_path, "/", "+"); // CEGUI doesn't like / in ImageManager image names
 
     /* CEGUI only knows about image sets, not about single images.
      * Thus we effectively add one-image imagesets here to have CEGUI
@@ -884,26 +972,42 @@ void cEditor_Menu_Entry::Add_Image_Item(boost::filesystem::path settings_path, c
      * Thus we have to check if the item graphic has been cached before,
      * and only if that isn't the case, load the file from disk in the
      * way described. */
-    if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_pixmap_path)) {
+    if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_path)) {
         try {
-            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_pixmap_path, path_to_utf8(fs_relative(pResource_Manager->Get_Game_Pixmaps_Directory(), pixmap_path)), "ingame-images");
+            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, path_to_utf8(fs_relative(pResource_Manager->Get_Game_Pixmaps_Directory(), path)), "ingame-images");
         }
         catch(CEGUI::RendererException& e) {
-            std::cerr << "Warning: Failed to load as editor item image: " << pixmap_path << std::endl;
-            return;
+            std::cerr << "Warning: Failed to load as editor item image: " << path << std::endl;
+            std::cerr << "Using dummy image instead." << std::endl;
+            return load_cegui_image(pResource_Manager->Get_Game_Pixmap("game/image_not_found.png"));
         }
     }
 
-    CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage", std::string("image-of-") + escaped_settings_path);
-    p_image->setProperty("Image", escaped_pixmap_path);
+    return escaped_path;
+}
+
+void cEditor_Menu_Entry::Add_Item(cSprite* p_template_sprite, std::string cegui_img_ident, std::string name, CEGUI::Quaternion rotation) // FIXME: Must take std::vector<cSprite*> due to multi-sprite objects
+{
+    static const int labelheight = 24;
+    static const int imageheight = 48; /* Also image width (square) */
+    static const int yskip = 24;
+
+    CEGUI::Window* p_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText"/* , std::string("label-of-") + name */);
+    p_label->setText(name);
+    p_label->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0, labelheight)));
+    p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
+    p_label->setProperty("FrameEnabled", "False");
+
+    CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage"/* , std::string("image-of-") + name */);
+    p_image->setProperty("Image", cegui_img_ident);
     p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
     p_image->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, -imageheight/2) /* center on X */, CEGUI::UDim(0, m_element_y + labelheight)));
     p_image->setProperty("FrameEnabled", "False");
-    p_image->setUserData(new boost::filesystem::path(settings_path)); // TODO: FIXME: Memory leak! This pointer is never freed!
+    p_image->setUserData(p_template_sprite);
     p_image->subscribeEvent(CEGUI::Window::EventMouseButtonDown, CEGUI::Event::Subscriber(&cEditor_Menu_Entry::on_image_mouse_down, this));
 
     // Apply rotation
-    p_image->setRotation(CEGUI::Quaternion::eulerAnglesDegrees(settings.m_rotation_x, settings.m_rotation_y, settings.m_rotation_z));
+    p_image->setRotation(rotation);
 
     mp_tab_pane->addChild(p_label);
     mp_tab_pane->addChild(p_image);
@@ -934,14 +1038,15 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
     // see http://static.cegui.org.uk/docs/0.8.7/classCEGUI_1_1Window.html#a073c0f8e07cad39c21dce04cc2e49b3c.
     const CEGUI::MouseEventArgs& event = static_cast<const CEGUI::MouseEventArgs&>(ev);
 
-    boost::filesystem::path* p_path = static_cast<boost::filesystem::path*>(event.window->getUserData());
+    // FIXME: Should be std::vector<cSprite>* due to multi-sprite objects
+    const cSprite* p_template_sprite = static_cast<const cSprite*>(event.window->getUserData());
 
     // TODO: Callback for subclasses as to pActiveLevel/pActiveWorld
     // TODO: Allow other things different from plain static sprites
 
     // Create the new sprite
-    cSprite* p_new_sprite = new cSprite(pActive_Level->m_sprite_manager);
-    p_new_sprite->Set_Image(pVideo->Get_Surface(*p_path), 1);
+    // FIXME: Create complete group of sprites for multi-sprite objects
+    cSprite* p_new_sprite = p_template_sprite->Copy();
     p_new_sprite->Set_Pos(pMouseCursor->m_pos_x, pMouseCursor->m_pos_y, 1);
 
     // Move the editor tabpane to the left
@@ -949,6 +1054,7 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
 
     // Add the new sprite to the level and attach it to the mouse cursor,
     // ensuring the cursor is centered on the object.
+    p_new_sprite->Set_Sprite_Manager(pActive_Level->m_sprite_manager);
     pActive_Level->m_sprite_manager->Add(p_new_sprite);
     pMouseCursor->Set_Hovered_Object(p_new_sprite);
     pMouseCursor->m_left = 1;

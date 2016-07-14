@@ -526,7 +526,10 @@ namespace TSC {
         /// massive collision type
         MassiveType m_massive_type;
 
-        /// sprite editor tags
+        /// sprite editor tags. Only populated and used in relation
+        /// with the editor's object menu. See
+        /// cEditor::load_special_items() function. In normal
+        /// gameplay, this is empty.
         std::string m_editor_tags;
 
         /// true if not using the camera position

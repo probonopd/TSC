@@ -24,7 +24,7 @@ namespace TSC {
         cEditor_Menu_Entry(std::string name);
         ~cEditor_Menu_Entry();
 
-        void Add_Image_Item(boost::filesystem::path settings_path, const cImage_Settings_Data& settings);
+        void Add_Item(cSprite* p_template_sprite, std::string cegui_img_ident, std::string name, CEGUI::Quaternion rotation); // FIXME: Must take std::vector<cSprite*> due to multi-sprite objects
         void Activate(CEGUI::TabControl* p_tabcontrol);
 
         inline void Set_Color(Color color){ m_color = color; }
@@ -66,7 +66,8 @@ namespace TSC {
         virtual void Enable(cSprite_Manager* p_sprite_manager);
         virtual void Disable(void);
 
-        bool Try_Add_Editor_Item(boost::filesystem::path settings_path);
+        bool Try_Add_Image_Item(boost::filesystem::path settings_path);
+        bool Try_Add_Special_Item(cSprite* p_sprite); // FIXME: Must take std::vector<cSprite*> due to multi-sprite objects
         void Select_Same_Object_Types(const cSprite* obj);
 
         void Process_Input(void);
@@ -95,6 +96,11 @@ namespace TSC {
         virtual void Function_Reload(void) {};
         virtual void Function_Settings(void) {};
 
+        // Loads the editor/*_items.xml file that corresponds to this
+        // editor. Override in a subclass and employ cEditorItemsLoader
+        // to parse the file and return its result.
+        virtual vector<cSprite*> Parse_Items_File() = 0;
+
     private:
         CEGUI::TabControl* mp_editor_tabpane;
         CEGUI::Listbox* mp_menu_listbox;
@@ -110,11 +116,13 @@ namespace TSC {
         void parse_menu_file();
         void populate_menu();
         void load_image_items();
+        void load_special_items();
         cEditor_Menu_Entry* get_menu_entry(const std::string& name);
-        std::vector<cEditor_Menu_Entry*> find_target_menu_entries_for(const cImage_Settings_Data& settings);
+        std::vector<cEditor_Menu_Entry*> find_target_menu_entries_for(const std::vector<std::string>& available_tags);
         cSprite_List copy_direction(const cSprite_List& objects, const ObjectDirection dir) const;
         cSprite* copy_direction(const cSprite* obj, const ObjectDirection dir, int offset /* = 0 */) const;
         void replace_sprites(void);
+        std::string load_cegui_image(boost::filesystem::path);
         bool on_mouse_enter(const CEGUI::EventArgs& event);
         bool on_mouse_leave(const CEGUI::EventArgs& event);
         bool on_menu_selection_changed(const CEGUI::EventArgs& event);
