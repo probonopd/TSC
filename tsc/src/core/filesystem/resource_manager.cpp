@@ -25,6 +25,7 @@
 #include "../property_helper.hpp"
 #include "../errors.hpp"
 #include "../global_basic.hpp"
+#include "../../user/preferences.hpp"
 
 using namespace std;
 
@@ -137,6 +138,12 @@ fs::path cResource_Manager::Get_User_Campaign_Directory()
 fs::path cResource_Manager::Get_User_Imgcache_Directory()
 {
     return m_paths.user_cache_dir / utf8_to_path(USER_IMGCACHE_DIR);
+}
+
+fs::path cResource_Manager::Get_User_Pixmaps_Directory()
+{
+    std::string resolution = int_to_string(pPreferences->m_video_screen_w) + "x" + int_to_string(pPreferences->m_video_screen_h);
+    return Get_User_Imgcache_Directory() / utf8_to_path(resolution);
 }
 
 fs::path cResource_Manager::Get_User_CEGUI_Logfile()

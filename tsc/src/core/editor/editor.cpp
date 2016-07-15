@@ -697,11 +697,19 @@ bool cEditor::Try_Add_Special_Item(cSprite* p_sprite)
     std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(available_tags);
     std::vector<cEditor_Menu_Entry*>::iterator iter;
 
+    // Some objects (like pathes) have no image at all. For those we can directly
+    // jump to the dummy image.
+    boost::filesystem::path image_path;
+    if (p_sprite->Get_Image(0))
+        image_path = p_sprite->Get_Image(0)->Get_Real_PNG_Path();
+    else
+        image_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
+
     // Add the graphics to the respective menu entries' GUI panels.
     for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
         (*iter)->Add_Item(
             p_sprite,
-            load_cegui_image(p_sprite->Get_Image(0)->Get_Path()),
+            load_cegui_image(image_path),
             p_sprite->Create_Name(),
             CEGUI::Quaternion::eulerAnglesDegrees(
                 p_sprite->m_start_rot_x,
@@ -973,8 +981,25 @@ std::string cEditor::load_cegui_image(boost::filesystem::path path)
      * and only if that isn't the case, load the file from disk in the
      * way described. */
     if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_path)) {
+        std::string string_path(path_to_utf8(path));
+        std::string target_group;
+        boost::filesystem::path reltarget;
+
+        // Find out whether we need to specify a path relative to the cache
+        // or to the game pixmaps directory. CEGUI does not accept absolute
+        // pathes as we receive them here.
+        if (string_path.find(path_to_utf8(pResource_Manager->Get_User_Pixmaps_Directory())) != string::npos) {
+            target_group = "cache-images";
+            reltarget = pResource_Manager->Get_User_Pixmaps_Directory();
+        }
+        else {
+            target_group = "ingame-images";
+            reltarget = pResource_Manager->Get_Game_Pixmaps_Directory();
+        }
+
         try {
-            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, path_to_utf8(fs_relative(pResource_Manager->Get_Game_Pixmaps_Directory(), path)), "ingame-images");
+            boost::filesystem::path relative_path = fs_relative(reltarget, path);
+            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, path_to_utf8(relative_path), target_group);
         }
         catch(CEGUI::RendererException& e) {
             std::cerr << "Warning: Failed to load as editor item image: " << path << std::endl;

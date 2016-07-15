@@ -91,7 +91,7 @@ by selecting it from the editor's menu.
 		<property name="object_tags" value="level;box" />
 		<property name="type" value="text" />
 	</item>
-	<!--<item>
+	<item>
 		<property name="object_name" value="enemy" />
 		<property name="object_tags" value="level;enemy" />
 		<property name="type" value="static" />
@@ -133,7 +133,7 @@ by selecting it from the editor's menu.
 		<property name="rotation_speed" value="0" />
 		<property name="fire_resistant" value="1" />
 		<property name="ice_resistance" value="1" />
-		<property name="image" value="enemy/static/metal_1/1_up.settings" />
+		<property name="image" value="enemy/static/metal_1/1_up.png" />
 	</item>
 	<item>
 		<property name="object_name" value="enemy" />
@@ -152,7 +152,7 @@ by selecting it from the editor's menu.
 		<property name="fire_resistant" value="1" />
 		<property name="ice_resistance" value="0" />
 		<property name="image" value="enemy/static/fire/fireballs_1/1.png" />
-	</item>-->
+	</item>
 	<item>
 		<property name="object_name" value="enemy" />
 		<property name="object_tags" value="level;enemy" />
@@ -392,7 +392,7 @@ by selecting it from the editor's menu.
 		<property name="type" value="rokko" />
 		<property name="direction" value="left" />
 	</item>
-	<!--<item>
+	<item>
 		<property name="object_name" value="enemy" />
 		<property name="object_tags" value="level;enemy" />
 		<property name="type" value="thromp" />
@@ -544,7 +544,7 @@ by selecting it from the editor's menu.
 		<property name="type" value="gee" />
 		<property name="color" value="green" />
 		<property name="direction" value="vertical" />
-	</item>-->
+	</item>
 	<!-- Turtle boss disabled for now due to lack of
 	     replacements. -->
 	<!-- See https://github.com/Secretchronicles/TSC/issues/77 -->
@@ -554,7 +554,7 @@ by selecting it from the editor's menu.
 		<property name="object_tags" value="level;enemy" />
 		<property name="type" value="turtleboss" />
 	</item>
-	--><!--
+	-->
 	<item>
 		<property name="object_name" value="item" />
 		<property name="object_tags" value="level;special" />
@@ -699,7 +699,7 @@ by selecting it from the editor's menu.
 		<property name="segment_2_y1" value="200" />
 		<property name="segment_2_x2" value="500" />
 		<property name="segment_2_y2" value="0" />
-	        </item>-->
+	        </item>
 	<item>
 	  <property name="object_name" value="lava"/>
 	  <property name="object_tags" value="level;special"/>

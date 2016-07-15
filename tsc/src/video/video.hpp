@@ -115,6 +115,7 @@ namespace TSC {
 
             sf::Image* m_sf_image;
             cImage_Settings_Data* m_settings;
+            boost::filesystem::path m_real_png_path; /// The fully resolved path to the loaded PNG image file.
         };
 
         /* Load and return the software image with the settings data

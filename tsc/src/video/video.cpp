@@ -102,8 +102,9 @@ void cVideo::Init_CEGUI(void)
     p_rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
     p_rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
     p_rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
-    // This resource group is used for displaying the editor images.
+    // These resource groups are used for displaying the editor images.
     p_rp->setResourceGroupDirectory("ingame-images", path_to_utf8(pResource_Manager->Get_Game_Pixmaps_Directory()));
+    p_rp->setResourceGroupDirectory("cache-images", path_to_utf8(pResource_Manager->Get_User_Pixmaps_Directory()));
 
     // set the default resource groups to be used
     CEGUI::Scheme::setDefaultResourceGroup("schemes");
@@ -822,6 +823,7 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
     sf::Image* p_sf_image = new sf::Image();
     bool successfully_loaded = false;
     cImage_Settings_Data* settings = NULL;
+    fs::path final_png_path;
 
     // load settings if available
     if (load_settings) {
@@ -846,8 +848,13 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
                 img_filename_cache = m_imgcache_dir / rel; // Why add .png here? Should be in the return value of fs_relative() anyway.
 
             // check if image cache file exists
-            if (!img_filename_cache.empty() && fs::exists(img_filename_cache) && fs::is_regular_file(img_filename_cache))
+            if (!img_filename_cache.empty() && fs::exists(img_filename_cache) && fs::is_regular_file(img_filename_cache)) {
                 successfully_loaded = p_sf_image->loadFromFile(path_to_utf8(img_filename_cache));
+
+                if (successfully_loaded) {
+                    final_png_path = img_filename_cache;
+                }
+            }
             // image given in base settings
             else if (!settings->m_base.empty()) {
                 // use current directory
@@ -865,6 +872,10 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
                 }
 
                 successfully_loaded = p_sf_image->loadFromFile(path_to_utf8(img_filename));
+
+                if (successfully_loaded) {
+                    final_png_path = img_filename;
+                }
             }
         }
     }
@@ -872,6 +883,10 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
     // if not set in image settings and file exists
     if (!successfully_loaded && exists(filename) && (!settings || settings->m_base.empty())) {
         successfully_loaded = p_sf_image->loadFromFile(path_to_utf8(filename));
+
+        if (successfully_loaded) {
+            final_png_path = filename;
+        }
     }
 
     if (!successfully_loaded) {
@@ -890,6 +905,7 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
 
     software_image.m_sf_image = p_sf_image;
     software_image.m_settings = settings;
+    software_image.m_real_png_path = final_png_path;
     return software_image;
 }
 
@@ -942,9 +958,10 @@ cGL_Surface* cVideo :: Load_GL_Surface_Helper(boost::filesystem::path filename, 
     else {
         image = Create_Texture(p_sf_image);
     }
-    // set filename
+    // set filenames
     if (image) {
         image->m_path = filename;
+        image->m_real_png_path = software_image.m_real_png_path;
     }
     // print error
     else if (print_errors) {
