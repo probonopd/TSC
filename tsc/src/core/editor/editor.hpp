@@ -63,7 +63,7 @@ namespace TSC {
         virtual void Unload(void);
 
         void Toggle(cSprite_Manager* p_sprite_manager);
-        virtual void Enable(cSprite_Manager* p_sprite_manager);
+        virtual void Enable(cSprite_Manager* p_edited_sprite_manager);
         virtual void Disable(void);
 
         bool Try_Add_Image_Item(boost::filesystem::path settings_path);
@@ -83,7 +83,13 @@ namespace TSC {
     protected:
         std::string m_editor_item_tag;
         boost::filesystem::path m_menu_filename;
-        cSprite_Manager* mp_sprite_manager;
+        // This sprite manager is a reference to the edited level's/world's
+        // sprite manager and used when interacting with the level.
+        cSprite_Manager* mp_edited_sprite_manager;
+        // This sprite manager holds the template objects from which sprites
+        // are created when an object is dragged from the sidebar into the level.
+        // I.e. it holds the objects in the sidebar.
+        cSprite_Manager m_sprite_manager;
 
         // Menu functions
         void Activate_Function_Entry(cEditor_Menu_Entry* p_function_entry);
@@ -98,7 +104,9 @@ namespace TSC {
 
         // Loads the editor/*_items.xml file that corresponds to this
         // editor. Override in a subclass and employ cEditorItemsLoader
-        // to parse the file and return its result.
+        // to parse the file and return its result. Use the sprite
+        // manager available in `m_sprite_manager' to store the resulting
+        // template cSprite objects.
         virtual vector<cSprite*> Parse_Items_File() = 0;
 
     private:

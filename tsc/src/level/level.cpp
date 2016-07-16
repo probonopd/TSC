@@ -16,6 +16,7 @@
 
 #include "../level/level.hpp"
 #include "level_settings.hpp"
+#include "../core/sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "level_loader.hpp"
 #include "../core/game_core.hpp"

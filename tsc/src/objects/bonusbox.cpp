@@ -22,6 +22,7 @@
 #include "../core/framerate.hpp"
 #include "../level/level.hpp"
 #include "../level/level_settings.hpp"
+#include "../core/sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "../core/game_core.hpp"
 #include "../objects/goldpiece.hpp"

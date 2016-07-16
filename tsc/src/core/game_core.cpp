@@ -20,6 +20,7 @@
 #include "../input/mouse.hpp"
 #include "../input/joystick.hpp"
 #include "../level/level_settings.hpp"
+#include "sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "../level/level_player.hpp"
 #include "../video/loading_screen.hpp"

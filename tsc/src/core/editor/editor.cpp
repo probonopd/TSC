@@ -40,7 +40,7 @@ cEditor::cEditor()
     m_menu_filename = boost::filesystem::path(path_to_utf8("Needs to be set by subclasses"));
     m_editor_item_tag = "Must be set by subclass";
     m_help_window_visible = false;
-    mp_sprite_manager = NULL;
+    mp_edited_sprite_manager = NULL;
 }
 
 cEditor::~cEditor()
@@ -109,7 +109,7 @@ void cEditor::Toggle(cSprite_Manager* p_sprite_manager)
         Enable(p_sprite_manager);
 }
 
-void cEditor::Enable(cSprite_Manager* p_sprite_manager)
+void cEditor::Enable(cSprite_Manager* p_edited_sprite_manager)
 {
     if (m_enabled)
         return;
@@ -126,7 +126,7 @@ void cEditor::Enable(cSprite_Manager* p_sprite_manager)
     mp_editor_tabpane->show();
     m_enabled = true;
     editor_enabled = true;
-    mp_sprite_manager = p_sprite_manager;
+    mp_edited_sprite_manager = p_edited_sprite_manager;
 }
 
 void cEditor::Disable(void)
@@ -141,7 +141,7 @@ void cEditor::Disable(void)
     mp_editor_tabpane->hide();
     m_enabled = false;
     editor_enabled = false;
-    mp_sprite_manager = NULL;
+    mp_edited_sprite_manager = NULL;
 }
 
 void cEditor::Update(void)
@@ -358,7 +358,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
             }
 
             // last object is in front of others
-            mp_sprite_manager->Move_To_Back(sel_obj->m_obj);
+            mp_edited_sprite_manager->Move_To_Back(sel_obj->m_obj);
         }
     }
     // push selected objects into the back
@@ -371,7 +371,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
             }
 
             // first object is behind others
-            mp_sprite_manager->Move_To_Front(sel_obj->m_obj);
+            mp_edited_sprite_manager->Move_To_Front(sel_obj->m_obj);
         }
     }
     // copy into direction
@@ -446,7 +446,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
         // player
         pMouseCursor->Add_Selected_Object(pActive_Player, 1);
         // sprite manager
-        for (cSprite_List::iterator itr = mp_sprite_manager->objects.begin(); itr != mp_sprite_manager->objects.end(); ++itr) {
+        for (cSprite_List::iterator itr = mp_edited_sprite_manager->objects.begin(); itr != mp_edited_sprite_manager->objects.end(); ++itr) {
             cSprite* obj = (*itr);
 
             pMouseCursor->Add_Selected_Object(obj, 1);
@@ -1106,7 +1106,7 @@ void cEditor::Select_Same_Object_Types(const cSprite* obj)
     }
 
     // sprite manager
-    for (cSprite_List::iterator itr = mp_sprite_manager->objects.begin(); itr != mp_sprite_manager->objects.end(); ++itr) {
+    for (cSprite_List::iterator itr = mp_edited_sprite_manager->objects.begin(); itr != mp_edited_sprite_manager->objects.end(); ++itr) {
         cSprite* game_obj = (*itr);
 
         if (game_obj->m_type != obj->m_type) {
