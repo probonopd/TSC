@@ -901,7 +901,7 @@ void cMoving_Platform::Handle_Collision_Enemy(cObjectCollision* collision)
     Handle_Move_Object_Collision(collision);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cMoving_Platform::Editor_Activate(void)
 {
     // get window manager
@@ -1027,14 +1027,12 @@ void cMoving_Platform::Editor_Activate(void)
 
 void cMoving_Platform::Editor_State_Update(void)
 {
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
     // path identifier
-    CEGUI::Editbox* editbox_path_identifier = static_cast<CEGUI::Editbox*>(wmgr.getWindow("editor_moving_platform_path_identifier"));
+    CEGUI::Editbox* editbox_path_identifier = static_cast<CEGUI::Editbox*>(mp_editor_container->getChild("editor_moving_platform_path_identifier"));
     // direction
-    CEGUI::Combobox* combobox_direction = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_moving_platform_direction"));
+    CEGUI::Combobox* combobox_direction = static_cast<CEGUI::Combobox*>(mp_editor_container->getChild("editor_moving_platform_direction"));
     // max distance
-    CEGUI::Editbox* editbox_max_distance = static_cast<CEGUI::Editbox*>(wmgr.getWindow("editor_moving_platform_max_distance"));
+    CEGUI::Editbox* editbox_max_distance = static_cast<CEGUI::Editbox*>(mp_editor_container->getChild("editor_moving_platform_max_distance"));
 
     if (m_move_type == MOVING_PLATFORM_TYPE_PATH || m_move_type == MOVING_PLATFORM_TYPE_PATH_BACKWARDS) {
         editbox_path_identifier->setEnabled(1);
@@ -1212,7 +1210,7 @@ bool cMoving_Platform::Editor_Image_Top_Right_Text_Changed(const CEGUI::EventArg
 
     return 1;
 }
-#endif // ENABLE_EDITOR
+#endif // ENABLE_EDITOR || ENABLE_NEW_EDITOR
 
 std::string cMoving_Platform::Create_Name(void) const
 {
