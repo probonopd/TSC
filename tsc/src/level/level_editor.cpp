@@ -227,7 +227,7 @@ std::vector<cSprite*> cEditor_Level::items_loader_callback(const std::string& na
 std::vector<cSprite*> cEditor_Level::Parse_Items_File()
 {
     cEditorItemsLoader parser;
-    parser.parse_file(pResource_Manager->Get_Game_Editor("level_items.xml"), pActive_Level->m_sprite_manager, NULL, items_loader_callback);
+    parser.parse_file(pResource_Manager->Get_Game_Editor("level_items.xml"), &m_sprite_manager, NULL, items_loader_callback);
     return parser.get_tagged_sprites();
 }
 
