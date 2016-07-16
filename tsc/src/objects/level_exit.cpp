@@ -442,7 +442,7 @@ bool cLevel_Exit::Is_Draw_Valid(void)
     return 1;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cLevel_Exit::Editor_Activate(void)
 {
     // get window manager
@@ -529,16 +529,12 @@ void cLevel_Exit::Editor_Activate(void)
 
 void cLevel_Exit::Editor_State_Update(void)
 {
-    // get window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
     // path identifier
-    CEGUI::Editbox* editbox_path_identifier = static_cast<CEGUI::Editbox*>(wmgr.getWindow("level_exit_path_identifier"));
+    CEGUI::Editbox* editbox_path_identifier = static_cast<CEGUI::Editbox*>(mp_editor_container->getChild("level_exit_path_identifier"));
     // destination level
-    CEGUI::Editbox* editbox_destination_level = static_cast<CEGUI::Editbox*>(wmgr.getWindow("level_exit_destination_level"));
+    CEGUI::Editbox* editbox_destination_level = static_cast<CEGUI::Editbox*>(mp_editor_container->getChild("level_exit_destination_level"));
     // direction
-    //CEGUI::Combobox *combobox_direction = static_cast<CEGUI::Combobox *>(wmgr.getWindow( "level_exit_direction" ));
-
+    //CEGUI::Combobox *combobox_direction = static_cast<CEGUI::Combobox *>(mp_editor_container->getChild( "level_exit_direction" ));
 
     if (m_exit_motion == CAMERA_MOVE_ALONG_PATH || m_exit_motion == CAMERA_MOVE_ALONG_PATH_BACKWARDS) {
         editbox_path_identifier->setEnabled(1);

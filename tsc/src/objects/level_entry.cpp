@@ -356,7 +356,7 @@ bool cLevel_Entry::Is_Draw_Valid(void)
     return 1;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cLevel_Entry::Editor_Activate(void)
 {
     // get window manager
