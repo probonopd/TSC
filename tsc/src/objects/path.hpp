@@ -191,7 +191,7 @@ namespace TSC {
         // if draw is valid for the current state and position
         virtual bool Is_Draw_Valid(void);
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // level editor activation
         virtual void Editor_Activate(void);
         // editor state update
