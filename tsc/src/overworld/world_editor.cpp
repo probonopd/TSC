@@ -157,9 +157,9 @@ std::vector<cSprite*> cEditor_World::items_loader_callback(const std::string& na
 
 std::vector<cSprite*> cEditor_World::Parse_Items_File()
 {
-    // OLD cEditorItemsLoader parser;
-    // OLD parser.parse_file(pResource_Manager->Get_Game_Editor("world_items.xml"), pActive_Overworld->m_sprite_manager, NULL, items_loader_callback);
-    // OLD return parser.get_tagged_sprites();
+    cEditorItemsLoader parser;
+    parser.parse_file(pResource_Manager->Get_Game_Editor("world_items.xml"), &m_sprite_manager, NULL, items_loader_callback);
+    return parser.get_tagged_sprites();
     return std::vector<cSprite*>(); // FIXME ↑ Segfaults
 }
 
