@@ -216,7 +216,7 @@ void cText_Box::Set_Text(const std::string& str_text)
     m_text = str_text;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cText_Box::Editor_Activate(void)
 {
     // BaseBox Settings first
