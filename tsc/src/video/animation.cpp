@@ -1362,7 +1362,7 @@ void cParticle_Emitter::Set_Clip_Mode(ParticleClipMode mode)
     m_clip_mode = mode;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cParticle_Emitter::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -1391,7 +1391,7 @@ void cParticle_Emitter::Editor_Activate(void)
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Filename_Text_Changed, this));
 
     // emitter position based on camera pos
-    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/ToggleButton", "emitter_based_on_camera_pos"));
+    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/Checkbox", "emitter_based_on_camera_pos"));
     Editor_Add(UTF8_("Based on camera pos."), UTF8_("The emitter position is based on the camera position"), checkbox, 50);
 
     checkbox->setSelected(m_emitter_based_on_camera_pos);
@@ -1503,7 +1503,7 @@ void cParticle_Emitter::Editor_Activate(void)
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cParticle_Emitter::Editor_Rotation_Z_Base_Text_Changed, this));
 
     // start direction is added to the z rotation
-    checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/ToggleButton", "emitter_start_rot_z_uses_direction"));
+    checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/Checkbox", "emitter_start_rot_z_uses_direction"));
     Editor_Add(UTF8_("Add direction"), UTF8_("Start direction is added to the z rotation"), checkbox, 50, 28, 0);
 
     checkbox->setSelected(m_start_rot_z_uses_direction);
@@ -2093,7 +2093,7 @@ bool cParticle_Emitter::Editor_Clip_Mode_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
-#endif // ENABLE_EDITOR
+#endif // ENABLE_EDITOR || ENABLE_NEW_EDITOR
 
 /* *** *** *** *** *** cAnimation_Manager *** *** *** *** *** *** *** *** *** *** *** *** */
 
