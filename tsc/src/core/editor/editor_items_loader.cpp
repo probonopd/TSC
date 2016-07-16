@@ -83,6 +83,8 @@ void cEditorItemsLoader::on_end_element(const Glib::ustring& name)
     // terminates here.
     if (name == "property")
         return;
+    if (name == "items") // ignore root element
+        return;
 
     std::string objname = m_current_properties["object_name"];
     std::string tags = m_current_properties["object_tags"];
