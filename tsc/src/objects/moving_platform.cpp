@@ -901,7 +901,7 @@ void cMoving_Platform::Handle_Collision_Enemy(cObjectCollision* collision)
     Handle_Move_Object_Collision(collision);
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cMoving_Platform::Editor_Activate(void)
 {
     // get window manager
@@ -1210,7 +1210,7 @@ bool cMoving_Platform::Editor_Image_Top_Right_Text_Changed(const CEGUI::EventArg
 
     return 1;
 }
-#endif // ENABLE_EDITOR || ENABLE_NEW_EDITOR
+#endif // ENABLE_OLD_EDITOR || ENABLE_NEW_EDITOR
 
 std::string cMoving_Platform::Create_Name(void) const
 {

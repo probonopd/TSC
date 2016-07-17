@@ -18,7 +18,7 @@
 #include "../core/global_game.hpp"
 #include "../core/xml_attributes.hpp"
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 namespace TSC {
 
     /**

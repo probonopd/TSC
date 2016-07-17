@@ -88,7 +88,7 @@ namespace TSC {
         // if camera went out of range
         void Event_Out_Of_Range(void) const;
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // editor activation
         virtual void Editor_Activate(void);
         // editor filename text changed event

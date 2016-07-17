@@ -425,7 +425,7 @@ bool cBonusBox::Is_Update_Valid()
     return cBaseBox::Is_Update_Valid();
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cBonusBox::Editor_Activate(void)
 {
     // BaseBox Settings first

@@ -336,7 +336,7 @@ void cPip::Handle_Collision_Massive(cObjectCollision* p_collision)
         Turn_Around(p_collision->m_direction);
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cPip::Editor_Activate()
 {
     CEGUI::WindowManager& wm = CEGUI::WindowManager::getSingleton();

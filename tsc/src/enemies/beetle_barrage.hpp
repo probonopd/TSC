@@ -47,7 +47,7 @@ namespace TSC {
         virtual void Draw(cSurface_Request* p_request = NULL);
         virtual void Update();
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         virtual void Editor_Activate();
 #endif
 
@@ -80,7 +80,7 @@ namespace TSC {
 
         void Generate_Beetles();
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // Editor event handlers
         bool Editor_Fly_Distance_Text_Changed(const CEGUI::EventArgs& event);
         bool Editor_Range_Text_Changed(const CEGUI::EventArgs& event);

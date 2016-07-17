@@ -268,7 +268,7 @@ namespace TSC {
         // set the clip mode
         void Set_Clip_Mode(ParticleClipMode mode);
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // editor todo : start rotation x/y/z rand, color, color_rand
         // editor activation
         virtual void Editor_Activate(void);

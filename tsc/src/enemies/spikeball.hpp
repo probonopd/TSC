@@ -91,7 +91,7 @@ namespace TSC {
         // collision from a box
         virtual void Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2);
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event

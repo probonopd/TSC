@@ -38,7 +38,7 @@
 #include "../errors.hpp"
 #include "../global_basic.hpp"
 
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_OLD_EDITOR
 
 using namespace std;
 
@@ -1523,4 +1523,4 @@ void cEditor::Parse_Menu_File(fs::path filename)
 
 } // namespace TSC
 
-#endif // ENABLE_EDITOR
+#endif // ENABLE_OLD_EDITOR

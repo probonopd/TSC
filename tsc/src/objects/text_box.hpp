@@ -50,7 +50,7 @@ namespace TSC {
         // Set Text
         void Set_Text(const std::string& str_text);
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         // editor activation
         virtual void Editor_Activate(void);
         // editor text text changed event

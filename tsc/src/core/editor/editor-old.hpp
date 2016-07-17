@@ -16,7 +16,7 @@
 
 #ifndef TSC_EDITOR_HPP
 #define TSC_EDITOR_HPP
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_OLD_EDITOR
 
 #include "../../core/global_basic.hpp"
 #include "../../objects/sprite.hpp"
@@ -195,5 +195,5 @@ namespace TSC {
 
 } // namespace TSC
 
-#endif // ENABLE_EDITOR
+#endif // ENABLE_OLD_EDITOR
 #endif // header guard

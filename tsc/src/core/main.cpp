@@ -304,7 +304,7 @@ void Init_Game(void)
     pHud_Manager = new cHud_Manager(pActive_Level->m_sprite_manager);
     pLevel_Player->Init();
 
-#if defined(ENABLE_EDITOR)
+#if defined(ENABLE_OLD_EDITOR)
     pLevel_Editor = new cEditor_Level(pActive_Level->m_sprite_manager, pActive_Level);
     /* note : set any sprite manager as cOverworld_Manager::Load sets it again
      * parent overworld is also set from there again
@@ -369,7 +369,7 @@ void Exit_Game(void)
         pSound_Manager = NULL;
     }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
     if (pLevel_Editor) {
         delete pLevel_Editor;
         pLevel_Editor = NULL;
@@ -552,7 +552,7 @@ bool Handle_Input_Global(const sf::Event& ev)
 
         // send events
         if (Game_Mode == MODE_LEVEL) {
-#ifdef ENABLE_EDITOR // handled in pMouseCursor->Handle_Event() for ENABLE_NEW_EDITOR
+#ifdef ENABLE_OLD_EDITOR // handled in pMouseCursor->Handle_Event() for ENABLE_NEW_EDITOR
             // editor events
             if (pLevel_Editor->m_enabled) {
                 if (pLevel_Editor->Handle_Event(ev)) {
@@ -562,7 +562,7 @@ bool Handle_Input_Global(const sf::Event& ev)
 #endif
         }
         else if (Game_Mode == MODE_OVERWORLD) {
-#ifdef ENABLE_EDITOR // handled in pMouseCursor->Handle_Event() for ENABLE_NEW_EDITOR
+#ifdef ENABLE_OLD_EDITOR // handled in pMouseCursor->Handle_Event() for ENABLE_NEW_EDITOR
             // editor events
             if (pWorld_Editor->m_enabled) {
                 if (pWorld_Editor->Handle_Event(ev)) {
@@ -634,7 +634,7 @@ void Update_Game(void)
         pMenuCore->Update();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         pLevel_Editor->m_settings_screen.Update();
 #endif
     }
@@ -663,7 +663,7 @@ void Draw_Game(void)
         pMenuCore->Draw();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
         pLevel_Editor->m_settings_screen.Draw();
 #endif
     }

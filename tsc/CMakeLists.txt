@@ -38,7 +38,7 @@ set(TSC_VERSION_POSTFIX "dev")
 
 option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
-option(ENABLE_EDITOR "Enable the in-game editor" OFF)
+option(ENABLE_OLD_EDITOR "Enable the in-game editor" OFF)
 option(ENABLE_NEW_EDITOR "Enable the CEGUI-0.8-based in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
 set(FIXED_DATA_DIR "" CACHE FILEPATH "Enforce a static directory to look up graphics, music, etc. under rather than having TSC determine it dynamically.")

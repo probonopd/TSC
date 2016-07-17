@@ -16,7 +16,7 @@
 
 #ifndef TSC_LEVEL_EDITOR_HPP
 #define TSC_LEVEL_EDITOR_HPP
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_OLD_EDITOR
 
 #include "../core/editor/editor.hpp"
 #include "../level/level_settings.hpp"
@@ -87,5 +87,5 @@ namespace TSC {
 
 } // namespace TSC
 
-#endif // ENABLE_EDITOR
+#endif // ENABLE_OLD_EDITOR
 #endif // header guard

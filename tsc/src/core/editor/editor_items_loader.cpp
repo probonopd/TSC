@@ -17,7 +17,7 @@
 #include "editor_items_loader.hpp"
 #include "../../objects/sprite.hpp"
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 
 using namespace std;
 
@@ -132,4 +132,4 @@ vector<cSprite*> cEditorItemsLoader::get_tagged_sprites()
     return m_tagged_sprites;
 }
 
-#endif // ENABLE_EDITOR
+#endif // ENABLE_OLD_EDITOR

@@ -162,7 +162,7 @@ void cLayer_Line_Point_Start::Init(void)
     m_linked_point->m_linked_point = this;
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 cLayer_Line_Point_Start* cLayer_Line_Point_Start::Copy(void) const
 {
     // create layer line
@@ -240,7 +240,7 @@ cWaypoint* cLayer_Line_Point_Start::Get_End_Waypoint(void) const
     return m_overworld->Get_Waypoint(wp_num);
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cLayer_Line_Point_Start::Editor_Activate(void)
 {
     // get window manager

@@ -357,7 +357,7 @@ boost::filesystem::path cWaypoint::Get_Destination_Path()
     }
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cWaypoint::Editor_Activate(void)
 {
     // get window manager
@@ -490,7 +490,7 @@ bool cWaypoint::Editor_Access_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
-#endif // ENABLE_EDITOR || ENABLE_NEW_EDITOR
+#endif // ENABLE_OLD_EDITOR || ENABLE_NEW_EDITOR
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

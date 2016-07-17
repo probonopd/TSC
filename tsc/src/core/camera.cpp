@@ -394,7 +394,7 @@ void cCamera::Update_Position(void) const
         m_sprite_manager->Update_Items_Valid_Draw();
 
         // editor
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_OLD_EDITOR
         if (editor_enabled) {
             // update settings activated object position
             if (pMouseCursor->m_active_object) {

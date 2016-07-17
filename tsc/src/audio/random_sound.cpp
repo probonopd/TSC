@@ -434,7 +434,7 @@ void cRandom_Sound::Event_Out_Of_Range(void) const
     pAudio->Fadeout_Sounds(500, m_filename);
 }
 
-#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cRandom_Sound::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();

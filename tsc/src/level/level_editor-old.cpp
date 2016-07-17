@@ -14,7 +14,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_OLD_EDITOR
 #include "../core/global_basic.hpp"
 #include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
@@ -442,4 +442,4 @@ cEditor_Level* pLevel_Editor = NULL;
 
 } // namespace TSC
 
-#endif // ENABLE_EDITOR
+#endif // ENABLE_OLD_EDITOR

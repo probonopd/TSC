@@ -17,7 +17,7 @@
 #ifndef TSC_WORLD_EDITOR_HPP
 #define TSC_WORLD_EDITOR_HPP
 
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_OLD_EDITOR
 #include "../core/editor/editor.hpp"
 
 namespace TSC {
@@ -74,5 +74,5 @@ namespace TSC {
 
 } // namespace TSC
 
-#endif // ENABLE_EDITOR
+#endif // ENABLE_OLD_EDITOR
 #endif // header guard
