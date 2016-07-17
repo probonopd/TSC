@@ -89,6 +89,10 @@ namespace TSC {
          * Returns true if GUI handled the event
          */
         bool Handle_Mouse_Wheel(float delta);
+        /* GUI handle mouse move function
+         * Returns true if GUI handled the event
+         */
+        bool Handle_Mouse_Move(const sf::Event& evt);
 
 #if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
         /* Get the first object colliding with the mouse which is valid for the editor

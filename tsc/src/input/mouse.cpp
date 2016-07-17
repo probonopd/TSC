@@ -145,6 +145,11 @@ bool cMouseCursor::Handle_Event(const sf::Event& ev)
     case sf::Event::MouseMoved: {
         CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(static_cast<float>(ev.mouseMove.x), static_cast<float>(ev.mouseMove.y));
         Update_Position();
+
+        if (Handle_Mouse_Move(ev)) {
+            // processed
+            return 1;
+        }
         break;
     }
     case sf::Event::MouseButtonReleased: {
@@ -294,6 +299,25 @@ bool cMouseCursor::Handle_Mouse_Up(sf::Mouse::Button button)
     }
 
     return 0;
+}
+
+bool cMouseCursor::Handle_Mouse_Move(const sf::Event& evt)
+{
+#ifdef ENABLE_NEW_EDITOR // Counterpart to ENABLE_EDITOR in Handle_Input_Global() in main.cpp
+    if (Game_Mode == MODE_LEVEL && pLevel_Editor->m_enabled) {
+        if (pLevel_Editor->Mouse_Move(evt)) {
+            return true;
+        }
+    }
+
+    if (Game_Mode == MODE_OVERWORLD && pWorld_Editor->m_enabled) {
+        if (pWorld_Editor->Mouse_Move(evt)) {
+            return true;
+        }
+    }
+#endif
+
+    return false;
 }
 
 #if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)

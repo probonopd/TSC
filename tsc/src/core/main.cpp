@@ -552,7 +552,7 @@ bool Handle_Input_Global(const sf::Event& ev)
 
         // send events
         if (Game_Mode == MODE_LEVEL) {
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_EDITOR // handled in pMouseCursor->Handle_Event() for ENABLE_NEW_EDITOR
             // editor events
             if (pLevel_Editor->m_enabled) {
                 if (pLevel_Editor->Handle_Event(ev)) {
@@ -562,7 +562,7 @@ bool Handle_Input_Global(const sf::Event& ev)
 #endif
         }
         else if (Game_Mode == MODE_OVERWORLD) {
-#ifdef ENABLE_EDITOR
+#ifdef ENABLE_EDITOR // handled in pMouseCursor->Handle_Event() for ENABLE_NEW_EDITOR
             // editor events
             if (pWorld_Editor->m_enabled) {
                 if (pWorld_Editor->Handle_Event(ev)) {

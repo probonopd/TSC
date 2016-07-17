@@ -77,6 +77,7 @@ namespace TSC {
 
         virtual bool Mouse_Down(sf::Mouse::Button button);
         virtual bool Mouse_Up(sf::Mouse::Button button);
+        virtual bool Mouse_Move(const sf::Event& evt);
         virtual bool Key_Down(const sf::Event& evt);
 
         bool m_enabled;

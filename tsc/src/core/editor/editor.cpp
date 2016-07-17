@@ -592,6 +592,19 @@ bool cEditor::Mouse_Up(sf::Mouse::Button button)
     return 1;
 }
 
+bool cEditor::Mouse_Move(const sf::Event& evt)
+{
+    if (!m_enabled)
+        return false;
+
+    if (pMouseCursor->m_mover_mode) {
+        sf::Vector2i pos = sf::Mouse::getPosition(*pVideo->mp_window);
+        pMouseCursor->Mover_Update(pos.x, pos.y);
+    }
+
+    return false; // Bubble up
+}
+
 /**
  * Adds a graphic for a static .settings-file based object to the
  * editor menu. The settings file of this graphic will be parsed and
