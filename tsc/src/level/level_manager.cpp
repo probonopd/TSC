@@ -229,7 +229,7 @@ void cLevel_Manager::Update(void)
 {
     // input
     pActive_Level->Process_Input();
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
     // TODO: Why is this not in cEditor::Update()?
     pLevel_Editor->Process_Input();
 #endif
@@ -243,7 +243,7 @@ void cLevel_Manager::Update(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL]->Update();
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
     // editor
     pLevel_Editor->Update();
 
@@ -322,7 +322,7 @@ void cLevel_Manager::Draw(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_HUD]->Update();
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
     // level editor
     pLevel_Editor->Draw();
 #endif

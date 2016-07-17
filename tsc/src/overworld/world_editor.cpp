@@ -23,7 +23,7 @@
 #include "../core/errors.hpp"
 #include "world_editor.hpp"
 
-#ifdef ENABLE_NEW_EDITOR
+#ifdef ENABLE_EDITOR
 
 using namespace TSC;
 

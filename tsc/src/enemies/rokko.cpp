@@ -559,7 +559,7 @@ void cRokko::Handle_out_of_Level(ObjectDirection dir)
     //Set_Active( 0 );
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
 void cRokko::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();

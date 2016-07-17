@@ -94,7 +94,7 @@ namespace TSC {
          */
         bool Handle_Mouse_Move(const sf::Event& evt);
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
         /* Get the first object colliding with the mouse which is valid for the editor
          * returns the collision if an object was found else NULL
          * The collision data should be deleted if not used anymore
@@ -227,7 +227,7 @@ namespace TSC {
         void Toggle_Mover_Mode(void);
         // Updates the Mover Mode
         void Mover_Update(int move_x, int move_y);
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
         // Updates the editor Mouse
         void Editor_Update(void);
 #endif

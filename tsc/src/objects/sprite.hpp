@@ -431,7 +431,7 @@ namespace TSC {
         */
         virtual void Destroy(void);
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
         // editor add window object
         void Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height = 28, bool advance_row = 1);
         // editor activation

@@ -721,7 +721,7 @@ void cFurball::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
     DownGrade(true);
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
 void cFurball::Editor_Activate(void)
 {
     // get window manager

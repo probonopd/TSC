@@ -25,7 +25,7 @@
 
 #define PANEL_OUT_OF_SIGHT_X -0.19f
 
-#ifdef ENABLE_NEW_EDITOR
+#ifdef ENABLE_EDITOR
 
 using namespace TSC;
 

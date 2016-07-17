@@ -16,7 +16,7 @@
 #ifndef TSC_EDITOR_ITEMS_LOADER_HPP
 #define TSC_EDITOR_ITEMS_LOADER_HPP
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
 #include "../global_game.hpp"
 #include "../xml_attributes.hpp"
 

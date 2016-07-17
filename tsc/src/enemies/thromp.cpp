@@ -654,7 +654,7 @@ void cThromp::Handle_out_of_Level(ObjectDirection dir)
     }
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
 void cThromp::Editor_Activate(void)
 {
     // get window manager

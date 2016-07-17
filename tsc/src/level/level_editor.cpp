@@ -25,7 +25,7 @@
 #include "level_settings.hpp"
 #include "level_editor.hpp"
 
-#ifdef ENABLE_NEW_EDITOR
+#ifdef ENABLE_EDITOR
 
 using namespace TSC;
 

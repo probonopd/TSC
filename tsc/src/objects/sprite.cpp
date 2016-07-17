@@ -262,7 +262,7 @@ void cCollidingSprite::Handle_Collision(cObjectCollision* collision)
      * Also needed as the MRuby interpreter is not initialized before
      * Level construction. */
     if (pActive_Level) {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
         if (!pLevel_Editor->m_enabled) {
 #endif
             /* For whatever reason, CollidingSprite is the superclass
@@ -280,7 +280,7 @@ void cCollidingSprite::Handle_Collision(cObjectCollision* collision)
                 evt1.Fire(pActive_Level->m_mruby, p_sprite);
                 evt2.Fire(pActive_Level->m_mruby, collision->m_obj);
             }
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
         }
 #endif
     }
@@ -1417,7 +1417,7 @@ void cSprite::Destroy(void)
     Set_Image(NULL, 1);
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
 /**
  * Helper function for dislaying widgets for editing an object.
  * Takes the label (name) to display before the widget, the tooltip to display

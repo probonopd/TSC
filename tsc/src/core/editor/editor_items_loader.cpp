@@ -17,7 +17,7 @@
 #include "editor_items_loader.hpp"
 #include "../../objects/sprite.hpp"
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_NEW_EDITOR)
+#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
 
 using namespace std;
 

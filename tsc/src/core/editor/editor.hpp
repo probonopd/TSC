@@ -16,7 +16,7 @@
 
 #ifndef TSC_EDITOR_HPP
 #define TSC_EDITOR_HPP
-#ifdef ENABLE_NEW_EDITOR
+#ifdef ENABLE_EDITOR
 
 namespace TSC {
     class cEditor_Menu_Entry {
