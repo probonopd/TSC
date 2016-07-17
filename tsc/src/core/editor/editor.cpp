@@ -1066,9 +1066,6 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
     // FIXME: Should be std::vector<cSprite>* due to multi-sprite objects
     const cSprite* p_template_sprite = static_cast<const cSprite*>(event.window->getUserData());
 
-    // TODO: Callback for subclasses as to pActiveLevel/pActiveWorld
-    // TODO: Allow other things different from plain static sprites
-
     // Create the new sprite
     // FIXME: Create complete group of sprites for multi-sprite objects
     cSprite* p_new_sprite = p_template_sprite->Copy();
