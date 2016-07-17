@@ -89,28 +89,41 @@ void cEditorItemsLoader::on_end_element(const Glib::ustring& name)
     std::string objname = m_current_properties["object_name"];
     std::string tags = m_current_properties["object_tags"];
 
-    // TODO: When backward compatibility is removed, reduce to ONE
-    // cSprite* instead of this stupid vector. Currently backward
-    // compatibility may cause a single XML tag to explode to multiple
-    // sprites.
+    /* The orindary level loaders suffer from a problem that the editor items
+     * loader does not have: legacy objects. Since it is possible that a level
+     * contains tags that the parser bursts into *multiple* sprite objects the
+     * level loading code must take care of adding an entire group of sprites for
+     * a single XML object to the level. However, the level_items.xml and world_items.xml
+     * files *never* contain legacy tags of this nature, because they're part of the
+     * TSC distribution itself and the devs keep them up to date. In other words:
+     * the editor does not even allow the user to place legacy objects in a level.
+     * Thus, each tag in the *_items.xml file is guaranteed to create exactly one
+     * sprite on parsing. Hence it is okay if we reduce the std::vector<cSprite*>
+     * vector returned by the level parser to its first element. There cannot,
+     * ever, be more than one element in this vector if the *_items.xml files are
+     * maintained properly by the TSC devs and do not contain legacy tags. */
     std::vector<cSprite*> sprites = mfp_callback(objname, m_current_properties, level_engine_version, mp_sprite_manager, mp_data);
 
     if (sprites.empty()) {
         cerr << "Warning: Editor item could not be created: " << objname << endl;
         return;
     }
+    else if (sprites.size() > 1) {
+        std::string str = "Legacy tag '";
+        str += objname;
+        str += "' in editor items XML file '";
+        str += path_to_utf8(m_items_file);
+        str += "' detected! This is a bug. The editor items XML file needs to be updated to the current set of tags!";
+        throw(std::runtime_error(str));
+    }
 
-    // Also, the tags would then only be set on this one sprite.
-    // This really looks stupid this way. Really. I mean really.
+    // Cf. above why we can reduce the vector to its first element.
+    // Once the parser does not produce legacy output with multi-sprite
+    // elements anymore, simplify this code accordingly.
     sprites[0]->m_editor_tags = tags.c_str();
+    m_tagged_sprites.push_back(sprites[0]);
 
-    // FIXME: This must be a nested vector, because some tags (as outlined above)
-    // can produce multiple sprites. Not using a nested vector results in the
-    // editor only outputting the first sprite in the group.
-    std::vector<cSprite*>::iterator iter;
-    for (iter=sprites.begin(); iter != sprites.end(); iter++)
-        m_tagged_sprites.push_back(*iter);
-
+    // Prepare for next element
     m_current_properties.clear();
 }
 

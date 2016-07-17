@@ -680,15 +680,10 @@ bool cEditor::Try_Add_Image_Item(boost::filesystem::path settings_path)
  * way as Try_Add_Image_Item(), except the tags for each object are not
  * specified in a .settings file (as they don't have one), but in the
  * editor/level_items.xml or editor/world_items.xml file.
- *
- * FIXME: This must take a std::vector<cSprite*>, because there are
- * multi-sprite objects (most notably backward-compatibility burts,
- * but also things like pathes for platforms).
  */
 bool cEditor::Try_Add_Special_Item(cSprite* p_sprite)
 {
     // Get the list of tags attached to this graphic.
-    // FIXME: For nested sprite list, the tag list can be retrieved from the first sprite.
     std::vector<std::string> available_tags = string_split(p_sprite->m_editor_tags, ";");
 
     // If the master tag is not in the tag list, do not add this graphic to the
@@ -799,7 +794,6 @@ void cEditor::load_image_items()
 /// Load the special objects into the editor menu (e.g. enemies).
 void cEditor::load_special_items()
 {
-    // FIXME: Must take a nested cSprite vector due to multi-sprite objects
     std::vector<cSprite*> tagged_sprites = Parse_Items_File();
     std::vector<cSprite*>::iterator iter;
 
@@ -1014,7 +1008,7 @@ std::string cEditor::load_cegui_image(boost::filesystem::path path)
     return escaped_path;
 }
 
-void cEditor_Menu_Entry::Add_Item(cSprite* p_template_sprite, std::string cegui_img_ident, std::string name, CEGUI::Quaternion rotation) // FIXME: Must take std::vector<cSprite*> due to multi-sprite objects
+void cEditor_Menu_Entry::Add_Item(cSprite* p_template_sprite, std::string cegui_img_ident, std::string name, CEGUI::Quaternion rotation)
 {
     static const int labelheight = 24;
     static const int imageheight = 48; /* Also image width (square) */
@@ -1066,11 +1060,9 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
     // see http://static.cegui.org.uk/docs/0.8.7/classCEGUI_1_1Window.html#a073c0f8e07cad39c21dce04cc2e49b3c.
     const CEGUI::MouseEventArgs& event = static_cast<const CEGUI::MouseEventArgs&>(ev);
 
-    // FIXME: Should be std::vector<cSprite>* due to multi-sprite objects
     const cSprite* p_template_sprite = static_cast<const cSprite*>(event.window->getUserData());
 
     // Create the new sprite
-    // FIXME: Create complete group of sprites for multi-sprite objects
     cSprite* p_new_sprite = p_template_sprite->Copy();
     p_new_sprite->Set_Pos(pMouseCursor->m_pos_x, pMouseCursor->m_pos_y, 1);
 
