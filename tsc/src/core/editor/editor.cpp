@@ -648,9 +648,9 @@ bool cEditor::Try_Add_Image_Item(boost::filesystem::path settings_path)
 
     // Create the template sprite that will be copied each time the
     // user wants to add this object.
-    cSprite* p_template_sprite = new cSprite(pActive_Level->m_sprite_manager); // FIXME: Allow for World editor!
+    cSprite* p_template_sprite = new cSprite(&m_sprite_manager);
     p_template_sprite->Set_Image(pVideo->Get_Surface(settings_path), 1);
-    pActive_Level->m_sprite_manager->Add(p_template_sprite); // Have the level memory-manage it
+    m_sprite_manager.Add(p_template_sprite); // Memory-manage it
 
     // Add the graphics to the respective menu entries' GUI panels.
     for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
