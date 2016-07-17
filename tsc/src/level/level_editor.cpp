@@ -62,6 +62,49 @@ void cEditor_Level::Disable(void)
     editor_level_enabled = false;
 }
 
+bool cEditor_Level::Key_Down(const sf::Event& evt)
+{
+    if (!m_enabled)
+        return false;
+
+    // Handle general commands
+    if (cEditor::Key_Down(evt)) {
+        return true;
+    }
+    // OLD // focus last levelexit
+    // OLD else if (evt.key.code == sf::Keyboard::End) {
+    // OLD }
+    // Handle level-editor-specific commands
+    else if (evt.key.code == sf::Keyboard::M) {
+        if (!pMouseCursor->m_selected_objects.empty()) {
+            cSprite* mouse_obj = pMouseCursor->m_selected_objects[0]->m_obj;
+
+            // change state of the base object
+            if (cycle_object_massive_type(mouse_obj)) {
+                // change selected objects state to the base object state
+                for (SelectedObjectList::iterator itr = pMouseCursor->m_selected_objects.begin(); itr != pMouseCursor->m_selected_objects.end(); ++itr) {
+                    cSprite* obj = (*itr)->m_obj;
+
+                    // skip base object
+                    if (obj == mouse_obj) {
+                        continue;
+                    }
+
+                    // set state
+                    obj->Set_Massive_Type(mouse_obj->m_massive_type);
+                }
+            }
+        }
+    }
+    else {
+        // not processed
+        return false;
+    }
+
+    // key got processed
+    return true;
+}
+
 void cEditor_Level::Set_Level(cLevel* p_level)
 {
     mp_level = p_level;
@@ -229,6 +272,36 @@ std::vector<cSprite*> cEditor_Level::Parse_Items_File()
     cEditorItemsLoader parser;
     parser.parse_file(pResource_Manager->Get_Game_Editor("level_items.xml"), &m_sprite_manager, NULL, items_loader_callback);
     return parser.get_tagged_sprites();
+}
+
+bool cEditor_Level::cycle_object_massive_type(cSprite* obj) const
+{
+    // empty object or lava
+    if (!obj || obj->m_sprite_array == ARRAY_LAVA) {
+        return 0;
+    }
+
+    if (obj->m_massive_type == MASS_FRONT_PASSIVE) {
+        obj->Set_Massive_Type(MASS_MASSIVE);
+    }
+    else if (obj->m_massive_type == MASS_MASSIVE) {
+        obj->Set_Massive_Type(MASS_HALFMASSIVE);
+    }
+    else if (obj->m_massive_type == MASS_HALFMASSIVE) {
+        obj->Set_Massive_Type(MASS_CLIMBABLE);
+    }
+    else if (obj->m_massive_type == MASS_CLIMBABLE) {
+        obj->Set_Massive_Type(MASS_PASSIVE);
+    }
+    else if (obj->m_massive_type == MASS_PASSIVE) {
+        obj->Set_Massive_Type(MASS_FRONT_PASSIVE);
+    }
+    // invalid object type
+    else {
+        return 0;
+    }
+
+    return 1;
 }
 
 #endif
