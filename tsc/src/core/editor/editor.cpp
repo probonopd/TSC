@@ -648,8 +648,11 @@ bool cEditor::Try_Add_Image_Item(boost::filesystem::path settings_path)
 
     // Create the template sprite that will be copied each time the
     // user wants to add this object.
+    // Cf. cSprite::cSprite(XmlAtributes) constructor on how to create
+    // a sprite correctly.
     cSprite* p_template_sprite = new cSprite(&m_sprite_manager);
-    p_template_sprite->Set_Image(pVideo->Get_Surface(settings_path), 1);
+    p_template_sprite->Set_Image(pVideo->Get_Surface(settings_path), 1); // FIXME: handle .imgset files?
+    p_template_sprite->Set_Massive_Type(p_settings->m_massive_type);
     m_sprite_manager.Add(p_template_sprite); // Memory-manage it
 
     // Add the graphics to the respective menu entries' GUI panels.
