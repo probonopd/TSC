@@ -148,7 +148,7 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
         }
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         // processed by the level settings
         if (pLevel_Editor->m_settings_screen.Key_Down(evt)) {
             return 1;
@@ -187,7 +187,7 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
     }
     // load a level
     else if (evt.key.code == sf::Keyboard::L && evt.key.control && !(Game_Mode == MODE_OVERWORLD && pOverworld_Manager->m_debug_mode) && Game_Mode != MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         pLevel_Editor->Function_Load();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
@@ -195,7 +195,7 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
     }
     // load an overworld
     else if (evt.key.code == sf::Keyboard::W && evt.key.control && !(Game_Mode == MODE_OVERWORLD && pOverworld_Manager->m_debug_mode) && Game_Mode != MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         pWorld_Editor->Function_Load();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;

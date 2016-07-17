@@ -1362,7 +1362,7 @@ void cParticle_Emitter::Set_Clip_Mode(ParticleClipMode mode)
     m_clip_mode = mode;
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 void cParticle_Emitter::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -2093,7 +2093,7 @@ bool cParticle_Emitter::Editor_Clip_Mode_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
-#endif // ENABLE_OLD_EDITOR || ENABLE_EDITOR
+#endif // ENABLE_EDITOR
 
 /* *** *** *** *** *** cAnimation_Manager *** *** *** *** *** *** *** *** *** *** *** *** */
 

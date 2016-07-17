@@ -346,7 +346,7 @@ void cKrush::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
     DownGrade(true);
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 void cKrush::Editor_Activate(void)
 {
     // get window manager

@@ -66,7 +66,7 @@ namespace TSC {
         // Returns the Destination’s full filename (world or level file).
         boost::filesystem::path Get_Destination_Path();
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor type option selected event

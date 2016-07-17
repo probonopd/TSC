@@ -265,14 +265,7 @@ void Handle_Generic_Game_Events(const CEGUI::XMLAttributes& action_data)
         }
     }
     if (action_data.getValueAsBool("activate_editor")) {
-#if defined(ENABLE_OLD_EDITOR)
-        if (Game_Mode == MODE_LEVEL) {
-            pLevel_Editor->Enable();
-        }
-        else if (Game_Mode == MODE_OVERWORLD) {
-            pWorld_Editor->Enable();
-        }
-#elif defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         if (Game_Mode == MODE_LEVEL) {
             pLevel_Editor->Enable(pActive_Level->m_sprite_manager);
         }
@@ -297,7 +290,7 @@ void Leave_Game_Mode(const GameMode next_mode)
         pMenuCore->Leave(next_mode);
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         pLevel_Editor->m_settings_screen.Leave();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
@@ -326,7 +319,7 @@ void Enter_Game_Mode(const GameMode new_mode)
     }
     // mode gets settings
     else if (new_mode == MODE_LEVEL_SETTINGS) {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         pLevel_Editor->m_settings_screen.Enter();
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;

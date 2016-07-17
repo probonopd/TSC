@@ -20,7 +20,7 @@
 #include "overworld.hpp"
 #include "../core/global_basic.hpp"
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 
 namespace fs = boost::filesystem;
 using namespace TSC;

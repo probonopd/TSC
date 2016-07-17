@@ -551,7 +551,7 @@ void cGee::Handle_Collision_Massive(cObjectCollision* collision)
     Send_Collision(collision);
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 void cGee::Editor_Activate(void)
 {
     // get window manager

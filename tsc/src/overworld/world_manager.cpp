@@ -128,10 +128,7 @@ bool cOverworld_Manager::Set_Active(cOverworld* world)
 
     pActive_Overworld = world;
 
-#if defined(ENABLE_OLD_EDITOR)
-    pWorld_Editor->Set_Sprite_Manager(world->m_sprite_manager);
-    pWorld_Editor->Set_Overworld(world);
-#elif defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     pWorld_Editor->Set_World(world);
 #endif
 

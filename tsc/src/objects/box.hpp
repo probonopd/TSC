@@ -106,7 +106,7 @@ namespace TSC {
         // handle the basic box enemy collision
         virtual void Handle_Collision_Enemy(cObjectCollision* collision);
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor useable count text changed event

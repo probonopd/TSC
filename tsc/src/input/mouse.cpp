@@ -303,7 +303,7 @@ bool cMouseCursor::Handle_Mouse_Up(sf::Mouse::Button button)
 
 bool cMouseCursor::Handle_Mouse_Move(const sf::Event& evt)
 {
-#ifdef ENABLE_EDITOR // Counterpart to ENABLE_OLD_EDITOR in Handle_Input_Global() in main.cpp
+#ifdef ENABLE_EDITOR
     if (Game_Mode == MODE_LEVEL && pLevel_Editor->m_enabled) {
         if (pLevel_Editor->Mouse_Move(evt)) {
             return true;
@@ -320,7 +320,7 @@ bool cMouseCursor::Handle_Mouse_Move(const sf::Event& evt)
     return false;
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 cObjectCollision* cMouseCursor::Get_First_Editor_Collsion(float px /* = 0.0f */, float py /* = 0.0f */)
 {
     if (m_mover_mode) {
@@ -448,7 +448,7 @@ void cMouseCursor::Update_Doubleclick(void)
 
 void cMouseCursor::Left_Click_Down(void)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     if (m_mover_mode) {
         return;
     }
@@ -514,7 +514,7 @@ void cMouseCursor::Left_Click_Down(void)
 
 void cMouseCursor::Double_Click(bool activate /* = 1 */)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     Clear_Active_Object();
 
     // add new
@@ -528,7 +528,7 @@ void cMouseCursor::Double_Click(bool activate /* = 1 */)
 
 void cMouseCursor::Set_Hovered_Object(cSprite* sprite)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     // return if mouse object is the same or in mouse selection mode
     if (m_hovering_object->m_obj == sprite || (sprite && m_selection_mode)) {
         return;
@@ -553,7 +553,7 @@ void cMouseCursor::Set_Hovered_Object(cSprite* sprite)
 
 void cMouseCursor::Update_Hovered_Object(void)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     if (!editor_enabled || !m_hovering_object->m_obj || (m_mover_mode && (Game_Mode == MODE_LEVEL || Game_Mode == MODE_OVERWORLD))) {
         return;
     }
@@ -571,7 +571,7 @@ void cMouseCursor::Update_Hovered_Object(void)
 
 void cMouseCursor::Add_Copy_Object(cSprite* sprite)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     if (!sprite) {
         return;
     }
@@ -599,7 +599,7 @@ void cMouseCursor::Add_Copy_Object(cSprite* sprite)
 
 void cMouseCursor::Add_Copy_Objects(cSprite_List& spritelist)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     if (spritelist.empty()) {
         return;
     }
@@ -615,7 +615,7 @@ void cMouseCursor::Add_Copy_Objects(cSprite_List& spritelist)
 
 bool cMouseCursor::Remove_Copy_Object(const cSprite* sprite)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     if (!sprite) {
         return 0;
     }
@@ -639,7 +639,7 @@ bool cMouseCursor::Remove_Copy_Object(const cSprite* sprite)
 
 void cMouseCursor::Clear_Copy_Objects(void)
 {
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     for (CopyObjectList::iterator itr = m_copy_objects.begin(); itr != m_copy_objects.end(); ++itr) {
         delete *itr;
     }
@@ -1161,7 +1161,7 @@ void cMouseCursor::Set_Active_Object(cSprite* sprite)
 
     if (sprite) {
         m_active_object = sprite;
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         m_active_object->Editor_Activate();
 #endif
     }
@@ -1173,7 +1173,7 @@ void cMouseCursor::Clear_Active_Object(void)
         return;
     }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     m_active_object->Editor_Deactivate();
 #endif
 
@@ -1262,7 +1262,7 @@ void cMouseCursor::Set_Object_Position(cSelectedObject* sel_obj)
     }
 
     // update object settings position
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
     if (m_active_object && m_active_object == sel_obj->m_obj) {
         m_active_object->Editor_Position_Update();
     }
@@ -1522,7 +1522,7 @@ void cMouseCursor::Mover_Update(int move_x, int move_y)
     }
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 void cMouseCursor::Editor_Update(void)
 {
     if (!editor_enabled) {

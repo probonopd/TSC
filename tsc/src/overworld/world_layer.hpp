@@ -69,7 +69,7 @@ namespace TSC {
         // init defaults
         void Init(void);
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         // copy (end point can not be copied)
         virtual cLayer_Line_Point_Start* Copy(void) const;
 #endif
@@ -88,7 +88,7 @@ namespace TSC {
         */
         cWaypoint* Get_End_Waypoint(void) const;
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor origin text changed event

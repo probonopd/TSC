@@ -91,6 +91,8 @@ You may pass the following optional variables to the `cmake` command:
   game data with this fixed directory.
 * `BINARY_DIR=/some/dir`: Overrides the default installation path for
   the game binary.
+* `ENABLE_EDITOR=ON/OFF`: Enables or disables the in-game editor.
+  By default, this option is set to ON, i.e. the editor is built.
 
 Especially if you are packaging, you will most likely also find it
 useful to execute the install step like this:

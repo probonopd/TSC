@@ -101,7 +101,7 @@ namespace TSC {
         // handle moved out of Level event
         virtual void Handle_out_of_Level(ObjectDirection dir);
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event

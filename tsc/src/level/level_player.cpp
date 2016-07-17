@@ -3949,7 +3949,7 @@ void cLevel_Player::Handle_out_of_Level(ObjectDirection dir)
     }
 }
 
-#if defined(ENABLE_OLD_EDITOR) || defined(ENABLE_EDITOR)
+#ifdef ENABLE_EDITOR
 void cLevel_Player::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
