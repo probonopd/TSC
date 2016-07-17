@@ -434,7 +434,7 @@ void cRandom_Sound::Event_Out_Of_Range(void) const
     pAudio->Fadeout_Sounds(500, m_filename);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cRandom_Sound::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -447,7 +447,7 @@ void cRandom_Sound::Editor_Activate(void)
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Filename_Text_Changed, this));
 
     // continuous
-    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/ToggleButton", "editor_sound_continuous"));
+    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/Checkbox", "editor_sound_continuous"));
     Editor_Add(UTF8_("Continuous"), UTF8_("Check if the sound should be played continuously instead of randomly"), checkbox, 50);
 
     checkbox->setSelected(m_continuous);
