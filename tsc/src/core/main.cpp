@@ -369,7 +369,7 @@ void Exit_Game(void)
         pSound_Manager = NULL;
     }
 
-#if defined(ENABLE_EDITOR)
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
     if (pLevel_Editor) {
         delete pLevel_Editor;
         pLevel_Editor = NULL;
@@ -378,11 +378,6 @@ void Exit_Game(void)
     if (pWorld_Editor) {
         delete pWorld_Editor;
         pWorld_Editor = NULL;
-    }
-#elif defined(ENABLE_NEW_EDITOR)
-    if (pLevel_Editor) {
-        delete pLevel_Editor;
-        pLevel_Editor = NULL;
     }
 #endif
 
@@ -639,8 +634,8 @@ void Update_Game(void)
         pMenuCore->Update();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#ifdef ENABLE_EDITOR
-        pLevel_Editor->m_settings_screen->Update();
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+        pLevel_Editor->m_settings_screen.Update();
 #endif
     }
 
@@ -668,8 +663,8 @@ void Draw_Game(void)
         pMenuCore->Draw();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-#ifdef ENABLE_EDITOR
-        pLevel_Editor->m_settings_screen->Draw();
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
+        pLevel_Editor->m_settings_screen.Draw();
 #endif
     }
 
