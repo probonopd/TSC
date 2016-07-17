@@ -265,12 +265,19 @@ void Handle_Generic_Game_Events(const CEGUI::XMLAttributes& action_data)
         }
     }
     if (action_data.getValueAsBool("activate_editor")) {
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR)
         if (Game_Mode == MODE_LEVEL) {
             pLevel_Editor->Enable();
         }
         else if (Game_Mode == MODE_OVERWORLD) {
             pWorld_Editor->Enable();
+        }
+#elif defined(ENABLE_NEW_EDITOR)
+        if (Game_Mode == MODE_LEVEL) {
+            pLevel_Editor->Enable(pActive_Level->m_sprite_manager);
+        }
+        else if (Game_Mode == MODE_OVERWORLD) {
+            pWorld_Editor->Enable(pActive_Overworld->m_sprite_manager);
         }
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;

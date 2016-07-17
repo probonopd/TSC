@@ -934,7 +934,7 @@ bool cMenu_Start::Load_Level(std::string level_name)
         return 0;
     }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
     // Disable editor (does nothing if already disabled)
     pLevel_Editor->Disable();
 #endif
@@ -1379,7 +1379,7 @@ bool cMenu_Start::Level_Select_Final_List(const CEGUI::EventArgs& event)
 
 bool cMenu_Start::Button_Level_New_Clicked(const CEGUI::EventArgs& event)
 {
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
     if (!pLevel_Editor->Function_New()) {
         // aborted/failed
         return 0;
