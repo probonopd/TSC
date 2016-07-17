@@ -23,9 +23,11 @@ namespace TSC {
         //void Function_Settings( void );
 
         virtual vector<cSprite*> Parse_Items_File();
+
+        // This one should be private...
+        cOverworld* mp_overworld;
     private:
         static std::vector<cSprite*> items_loader_callback(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager, void* p_data);
-        cOverworld* mp_overworld;
     };
 
     extern cEditor_World* pWorld_Editor;

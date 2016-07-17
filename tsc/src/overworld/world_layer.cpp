@@ -162,12 +162,12 @@ void cLayer_Line_Point_Start::Init(void)
     m_linked_point->m_linked_point = this;
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 cLayer_Line_Point_Start* cLayer_Line_Point_Start::Copy(void) const
 {
     // create layer line
     // hack : assume it's copied with the editor
-    cLayer_Line_Point_Start* layer_line = new cLayer_Line_Point_Start(m_sprite_manager, pWorld_Editor->m_overworld);
+    cLayer_Line_Point_Start* layer_line = new cLayer_Line_Point_Start(m_sprite_manager, pWorld_Editor->mp_overworld);
     // start position
     layer_line->Set_Pos(m_pos_x, m_pos_y, 1);
     // end position
@@ -240,7 +240,7 @@ cWaypoint* cLayer_Line_Point_Start::Get_End_Waypoint(void) const
     return m_overworld->Get_Waypoint(wp_num);
 }
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR) || defined(ENABLE_NEW_EDITOR)
 void cLayer_Line_Point_Start::Editor_Activate(void)
 {
     // get window manager

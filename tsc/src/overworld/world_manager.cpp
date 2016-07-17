@@ -128,9 +128,11 @@ bool cOverworld_Manager::Set_Active(cOverworld* world)
 
     pActive_Overworld = world;
 
-#ifdef ENABLE_EDITOR
+#if defined(ENABLE_EDITOR)
     pWorld_Editor->Set_Sprite_Manager(world->m_sprite_manager);
     pWorld_Editor->Set_Overworld(world);
+#elif defined(ENABLE_NEW_EDITOR)
+    pWorld_Editor->Set_World(world);
 #endif
 
     m_camera->Set_Sprite_Manager(world->m_sprite_manager);
