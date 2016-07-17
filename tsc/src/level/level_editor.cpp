@@ -71,9 +71,28 @@ bool cEditor_Level::Key_Down(const sf::Event& evt)
     if (cEditor::Key_Down(evt)) {
         return true;
     }
-    // OLD // focus last levelexit
-    // OLD else if (evt.key.code == sf::Keyboard::End) {
-    // OLD }
+    // focus last levelexit
+    else if (evt.key.code == sf::Keyboard::End) {
+        float new_camera_posx = 0.0f;
+        float new_camera_posy = 0.0f;
+
+        for (cSprite_List::iterator itr = mp_edited_sprite_manager->objects.begin(); itr != mp_edited_sprite_manager->objects.end(); ++itr) {
+            cSprite* obj = (*itr);
+
+            if (obj->m_sprite_array != ARRAY_ACTIVE) {
+                continue;
+            }
+
+            if (obj->m_type == TYPE_LEVEL_EXIT && new_camera_posx < obj->m_pos_x) {
+                new_camera_posx = obj->m_pos_x;
+                new_camera_posy = obj->m_pos_y;
+            }
+        }
+
+        if (!Is_Float_Equal(new_camera_posx, 0.0f) || !Is_Float_Equal(new_camera_posy, 0.0f)) {
+            pActive_Camera->Set_Pos(new_camera_posx - (game_res_w * 0.5f), new_camera_posy - (game_res_h * 0.5f));
+        }
+    }
     // Handle level-editor-specific commands
     else if (evt.key.code == sf::Keyboard::M) {
         if (!pMouseCursor->m_selected_objects.empty()) {
