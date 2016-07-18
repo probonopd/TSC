@@ -194,6 +194,8 @@ namespace TSC {
 #ifdef ENABLE_EDITOR
         // level editor activation
         virtual void Editor_Activate(void);
+        // level editor deactivation
+        virtual void Editor_Deactivate(void);
         // editor state update
         virtual void Editor_State_Update(void);
         // editor identifier text changed event
@@ -218,6 +220,12 @@ namespace TSC {
         bool Editor_Pos_Y2_Text_Changed(const CEGUI::EventArgs& event);
         // set linked path states to move again from start of the current segment
         void Editor_Segment_Pos_Changed(void);
+
+        CEGUI::Combobox* mp_segment_box;
+        CEGUI::Editbox* mp_x1_box;
+        CEGUI::Editbox* mp_x2_box;
+        CEGUI::Editbox* mp_y1_box;
+        CEGUI::Editbox* mp_y2_box;
 #endif
 
         // string identifier (so objects can link to us)
