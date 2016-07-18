@@ -26,7 +26,7 @@
     </Window>
 
     <Window type="TaharezLook/TabControl" name="object_config_pane">
-      <Property name="Area" value="{{0.8,0},{0,0},{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.6,0},{0,0},{1,0},{1,0}}"/>
       <Window type="TaharezLook/TabContentPane" name="tab_config">
         <Property name="Text" value="Object Configuration"/>
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
