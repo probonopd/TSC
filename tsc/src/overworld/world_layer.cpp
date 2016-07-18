@@ -22,6 +22,9 @@
 #include "../overworld/world_editor.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../core/editor/editor.hpp"
+#include "world_editor.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -248,7 +251,7 @@ void cLayer_Line_Point_Start::Editor_Activate(void)
 
     // origin
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "layer_line_origin"));
-    Editor_Add(UTF8_("Waypoint origin"), UTF8_("Waypoint origin"), editbox, 100);
+    pWorld_Editor->Add_Config_Widget(UTF8_("Waypoint origin"), UTF8_("Waypoint origin"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(m_origin));
