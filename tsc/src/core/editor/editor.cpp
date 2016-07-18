@@ -42,6 +42,7 @@ cEditor::cEditor()
     m_menu_filename = boost::filesystem::path(path_to_utf8("Needs to be set by subclasses"));
     m_editor_item_tag = "Must be set by subclass";
     m_help_window_visible = false;
+    m_object_config_pane_shown = false;
     mp_edited_sprite_manager = NULL;
 }
 
@@ -68,6 +69,7 @@ void cEditor::Init(void)
 
     // Object settings window only pops up when selecting an object.
     mp_object_config_pane->setXPosition(CEGUI::UDim(CONFIGPANE_OUT_OF_SIGHT_X, 0.0f));
+    m_object_config_pane_shown = false;
 
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_root);
 
@@ -149,10 +151,46 @@ void cEditor::Disable(void)
     pMouseCursor->Reset(0);
     pMouseCursor->Set_Active(false);
 
+    Hide_Config_Panel();
     mp_editor_root->hide();
     m_enabled = false;
     editor_enabled = false;
     mp_edited_sprite_manager = NULL;
+}
+
+void cEditor::Add_Config_Widget(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* p_settings_widget, float obj_height /* = 28.0f */)
+{
+    // TODO
+}
+
+void cEditor::Show_Config_Panel()
+{
+    // Already shown
+    if (m_object_config_pane_shown)
+        return;
+
+    mp_object_config_pane->setXPosition(m_object_config_pane_target_x_position);
+    m_object_config_pane_shown = true;
+
+}
+
+void cEditor::Hide_Config_Panel()
+{
+    // Already hidden
+    if (!m_object_config_pane_shown)
+        return;
+
+    // Destroy all config widgets in the scrollarea
+    CEGUI::ScrollablePane* p_pane = static_cast<CEGUI::ScrollablePane*>(mp_object_config_pane->getChild("tab_config/object_config_scrollarea"));
+    while (p_pane->getChildCount() > 0) {
+        CEGUI::Window* p_window = p_pane->getChildAtIdx(0);
+        p_pane->removeChild(p_window);
+        CEGUI::WindowManager::getSingleton().destroyWindow(p_window);
+    }
+
+    // Hide config panel
+    mp_object_config_pane->setXPosition(CEGUI::UDim(CONFIGPANE_OUT_OF_SIGHT_X, 0.0f));
+    m_object_config_pane_shown = false;
 }
 
 void cEditor::Update(void)

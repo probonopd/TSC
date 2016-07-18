@@ -66,6 +66,19 @@ namespace TSC {
         virtual void Enable(cSprite_Manager* p_edited_sprite_manager);
         virtual void Disable(void);
 
+        // These methods are for interacting with the object config panel on
+        // the right side of the editor.
+
+        /// Add a label widget and its corresponding value widget to the panel.
+        void Add_Config_Widget(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* p_settings_widget, float obj_height = 28.0f);
+        /// Show the panel to the user, showing all widgets added with Add_Config_Widget().
+        void Show_Config_Panel();
+        /// Hide the panel from the user. This method destroys all widgets in the panel so you'll
+        /// need to use Add_Config_Widget() again.
+        void Hide_Config_Panel();
+        /// Is the config panel shown to the user?
+        inline bool Is_Config_Panel_Shown(){ return m_object_config_pane_shown; }
+
         bool Try_Add_Image_Item(boost::filesystem::path settings_path);
         bool Try_Add_Special_Item(cSprite* p_sprite); // FIXME: Must take std::vector<cSprite*> due to multi-sprite objects
         void Select_Same_Object_Types(const cSprite* obj);
@@ -123,6 +136,7 @@ namespace TSC {
         std::vector<CEGUI::Window*> m_editor_items;
         std::vector<cEditor_Menu_Entry*> m_menu_entries;
         bool m_help_window_visible;
+        bool m_object_config_pane_shown;
         const int CAMERA_SPEED = 35;
 
         void parse_menu_file();
