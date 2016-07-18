@@ -41,6 +41,11 @@
 #include "../scripting/events/jump_event.hpp"
 #include "../scripting/events/shoot_event.hpp"
 #include "../scripting/events/downgrade_event.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace TSC {
 
@@ -3956,13 +3961,13 @@ void cLevel_Player::Editor_Activate(void)
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_player_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Initial direction"), combobox, 100, 75);
 
     combobox->addItem(new CEGUI::ListboxTextItem("right"));
     combobox->addItem(new CEGUI::ListboxTextItem("left"));
     combobox->setText(Get_Direction_Name(m_start_direction));
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Player::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Initial direction"), combobox);
 
     // init
     Editor_Init();
