@@ -1,23 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4">
-  <Window type="TaharezLook/TabControl" name="tabcontrol_editor_level">
-    <Property name="TabHeight" value="{0,24}"/>
-    <Property name="TabPanePosition" value="Top"/>
-    <Property name="Area" value="{{0,0},{0,0},{0.2,0},{1,0}}"/>
-    <Window type="DefaultWindow" name="editor_tab_menu">
-      <Property name="Text" value="Menu"/>
-      <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
-      <Window type="TaharezLook/Listbox" name="editor_menu">
-        <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.970623,0}}"/>
+  <Window type="DefaultWindow" name="level_editor">
+    <Property name="MousePassThroughEnabled" value="True"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Window type="TaharezLook/TabControl" name="editor_tabpane">
+      <Property name="TabHeight" value="{0,24}"/>
+      <Property name="TabPanePosition" value="Top"/>
+      <Property name="Area" value="{{0,0},{0,0},{0.2,0},{1,0}}"/>
+      <Window type="DefaultWindow" name="editor_tab_menu">
+        <Property name="Text" value="Menu"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="editor_menu">
+          <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.970623,0}}"/>
+        </Window>
       </Window>
-    </Window>
-    <Window type="DefaultWindow" name="editor_tab_items">
-      <Property name="Text" value="Items"/>
-      <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
-      <!-- The following window is never actually used, it's a placeholder. -->
-      <Window type="TaharezLook/ScrollablePane" name="editor_items">
-        <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.95,0}}"/>
+      <Window type="DefaultWindow" name="editor_tab_items">
+        <Property name="Text" value="Items"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <!-- The following window is never actually used, it's a placeholder. -->
+        <Window type="TaharezLook/ScrollablePane" name="editor_items">
+          <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.95,0}}"/>
+        </Window>
       </Window>
     </Window>
   </Window>

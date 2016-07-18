@@ -58,11 +58,12 @@ cEditor::~cEditor()
  */
 void cEditor::Init(void)
 {
-    mp_editor_tabpane = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_editor_item_tag + "_editor.layout"));
+    mp_editor_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_editor_item_tag + "_editor.layout");
+    mp_editor_tabpane = static_cast<CEGUI::TabControl*>(mp_editor_root->getChild("editor_tabpane"));
     m_tabpane_target_x_position = mp_editor_tabpane->getXPosition();
     mp_editor_tabpane->hide(); // Do not show for now
 
-    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_tabpane);
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_root);
 
     mp_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
 
@@ -95,10 +96,13 @@ void cEditor::Unload(void)
     for(iter=m_menu_entries.begin(); iter != m_menu_entries.end(); iter++)
         delete *iter;
 
-    if (mp_editor_tabpane) {
-        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_editor_tabpane);
-        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_tabpane); // destroys child windows
+    if (mp_editor_root) {
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_editor_root);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_root); // destroys child windows
+        mp_editor_root = NULL;
         mp_editor_tabpane = NULL;
+        mp_menu_listbox = NULL;
+        mp_object_config_pane = NULL;
     }
 }
 

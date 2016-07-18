@@ -111,6 +111,7 @@ namespace TSC {
         virtual vector<cSprite*> Parse_Items_File() = 0;
 
     private:
+        CEGUI::Window* mp_editor_root;
         CEGUI::TabControl* mp_editor_tabpane;
         CEGUI::Listbox* mp_menu_listbox;
         CEGUI::Window* mp_object_config_pane;
