@@ -23,7 +23,7 @@
 #include "../errors.hpp"
 #include "editor.hpp"
 
-#define PANEL_OUT_OF_SIGHT_X -0.19f
+#define TABPANE_OUT_OF_SIGHT_X -0.19f
 
 #ifdef ENABLE_EDITOR
 
@@ -33,6 +33,7 @@ cEditor::cEditor()
 {
     mp_editor_tabpane = NULL;
     mp_menu_listbox = NULL;
+    mp_object_config_pane = NULL;
     m_enabled = false;
     m_rested = false;
     m_visibility_timer = 0.0f;
@@ -58,7 +59,7 @@ cEditor::~cEditor()
 void cEditor::Init(void)
 {
     mp_editor_tabpane = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_editor_item_tag + "_editor.layout"));
-    m_target_x_position = mp_editor_tabpane->getXPosition();
+    m_tabpane_target_x_position = mp_editor_tabpane->getXPosition();
     mp_editor_tabpane->hide(); // Do not show for now
 
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_tabpane);
@@ -157,7 +158,7 @@ void cEditor::Update(void)
         if (!m_rested) {
             float timeout = speedfactor_fps * 2;
             if (m_visibility_timer >= timeout) {
-                mp_editor_tabpane->setXPosition(CEGUI::UDim(PANEL_OUT_OF_SIGHT_X, 0.0f));
+                mp_editor_tabpane->setXPosition(CEGUI::UDim(TABPANE_OUT_OF_SIGHT_X, 0.0f));
                 mp_editor_tabpane->setAlpha(1.0f);
 
                 m_rested = true;
@@ -876,7 +877,7 @@ bool cEditor::on_mouse_enter(const CEGUI::EventArgs& event)
     m_rested = false;
 
     mp_editor_tabpane->setAlpha(1.0f);
-    mp_editor_tabpane->setXPosition(m_target_x_position);
+    mp_editor_tabpane->setXPosition(m_tabpane_target_x_position);
     return true;
 }
 
@@ -1080,7 +1081,7 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
     p_new_sprite->Set_Pos(pMouseCursor->m_pos_x, pMouseCursor->m_pos_y, 1);
 
     // Move the editor tabpane to the left
-    mp_tab_pane->getParent()->getParent()->getParent()->setXPosition(CEGUI::UDim(PANEL_OUT_OF_SIGHT_X, 0));
+    mp_tab_pane->getParent()->getParent()->getParent()->setXPosition(CEGUI::UDim(TABPANE_OUT_OF_SIGHT_X, 0));
 
     // Add the new sprite to the level and attach it to the mouse cursor,
     // ensuring the cursor is centered on the object.
