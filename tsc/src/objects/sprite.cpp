@@ -29,6 +29,7 @@
 #include "../scripting/events/touch_event.hpp"
 #include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
+#include "../overworld/world_editor.hpp"
 #include "../core/file_parser.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
@@ -1505,6 +1506,18 @@ void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip
     mp_editor_container->addChild(window_setting);
 }
 
+/**
+ * Configure the object configuration panel (the editor panel on the right
+ * side) for this object. This method must be overridden in subclasses
+ * *without* calling the parent cSprite::Editor_Active(), because in this
+ * class it implements the behaviour for basic sprites and only those.
+ * In your override, call Editor_Init() at the end.
+ *
+ * Use cEditor::Add_Config_Widget() to populate the configuration panel.
+ *
+ * This hook method is called when the user double-clicks an object
+ * in the editor.
+ */
 void cSprite::Editor_Activate(void)
 {
     // if this is not a basic sprite
@@ -1517,7 +1530,18 @@ void cSprite::Editor_Activate(void)
 
     // image
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sprite_image"));
-    Editor_Add(UTF8_("Image"), UTF8_("Image filename"), editbox, 200);
+
+    // Find active editor
+    cEditor* p_editor = NULL;
+
+    if (pLevel_Editor->m_enabled)
+        p_editor = pLevel_Editor;
+    else if (pWorld_Editor->m_enabled)
+        p_editor = pWorld_Editor;
+    else
+        throw(std::runtime_error("Unknown editing environment"));
+
+    p_editor->Add_Config_Widget(UTF8_("Image"), UTF8_("Image filename"), editbox);
 
     fs::path rel = pPackage_Manager->Get_Relative_Pixmap_Path(m_start_image->Get_Path());
     editbox->setText(path_to_utf8(rel));
@@ -1527,40 +1551,42 @@ void cSprite::Editor_Activate(void)
     Editor_Init();
 }
 
+/**
+ * What to do when the user leaves object editing mode.
+ * By default, this method just calls cEditor::Hide_Config_Panel()
+ * on the active editor.
+ */
 void cSprite::Editor_Deactivate(void)
 {
-    /* TODO: Destroying windows is not required, but that requires
-     * recoding of Editor_Activate() in all subclasses of cSprite to
-     * not re-create the widgets each time they're clicked. */
-    if (mp_editor_container) {
-        mp_editor_container->getParent()->removeChild(mp_editor_container);
-        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_container);
-        mp_editor_container = NULL;
-    }
+    if (pLevel_Editor->m_enabled)
+        pLevel_Editor->Hide_Config_Panel();
+    else if (pWorld_Editor->m_enabled)
+        pWorld_Editor->Hide_Config_Panel();
+    else
+        throw(std::runtime_error("Unknown editing environment"));
 }
 
-void cSprite::Editor_Init(void)
+/**
+ * Calls the Editor_State_Update() hook method and then displays the
+ * active editor's (level or world editor's) object configuration
+ * panel.
+ *
+ * You have to call this method at the end of Editor_Activate().
+ *
+ * Do not override this method.
+ */
+void cSprite::Editor_Init()
 {
     // set state
     Editor_State_Update();
 
     // Show
-    if (mp_editor_container)
-        mp_editor_container->show();
-
-    // set position
-    Editor_Position_Update();
-}
-
-void cSprite::Editor_Position_Update(void)
-{
-    // Pin editor widget container to the object's position
-    if (mp_editor_container) {
-        mp_editor_container->setPosition(
-            CEGUI::UVector2(CEGUI::UDim(0, m_start_pos_x + m_rect.m_w + 5.0f - pActive_Camera->m_x),
-                            CEGUI::UDim(0, m_start_pos_y + 5.0f - pActive_Camera->m_y))
-            );
-    }
+    if (pLevel_Editor->m_enabled)
+        pLevel_Editor->Show_Config_Panel();
+    else if (pWorld_Editor->m_enabled)
+        pWorld_Editor->Show_Config_Panel();
+    else
+        throw(std::runtime_error("Unknown editing environment"));
 }
 
 bool cSprite::Editor_Image_Text_Changed(const CEGUI::EventArgs& event)

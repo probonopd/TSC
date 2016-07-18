@@ -1260,13 +1260,6 @@ void cMouseCursor::Set_Object_Position(cSelectedObject* sel_obj)
         // set new position
         sel_obj->m_obj->Set_Pos(static_cast<float>(static_cast<int>(m_pos_x) - sel_obj->m_mouse_offset_x), static_cast<float>(static_cast<int>(m_pos_y) - sel_obj->m_mouse_offset_y), 1);
     }
-
-    // update object settings position
-#ifdef ENABLE_EDITOR
-    if (m_active_object && m_active_object == sel_obj->m_obj) {
-        m_active_object->Editor_Position_Update();
-    }
-#endif
 }
 
 void cMouseCursor::Draw_Object_Rects(void)

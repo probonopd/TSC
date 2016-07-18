@@ -158,9 +158,90 @@ void cEditor::Disable(void)
     mp_edited_sprite_manager = NULL;
 }
 
+/**
+ * Adds a widget to the editor's object configuration panel (that one on the right side).
+ * If you pass a CEGUI::Combobox as a widget, ensure that all items are added to it
+ * *before* you call this method, because this method uses the item count to calculate
+ * the height of the combobox dropdown. If there are no items in the box, the dropdown
+ * height will be zero, making the entire combobox invisible.
+ *
+ * Also, you should probably subscribe to the widget's change event handler so you
+ * get noticed if the user interacts with the widget.
+ *
+ * The widget will be added together with a label to its left side whose text
+ * is determined from the `name` parameter.
+ *
+ * \param[in] name
+ * The text to display on the left-side label widget.
+ *
+ * \param[in] tooltip
+ * A tooltip to display when hovering over the label.
+ *
+ * \param[in] p_settings_widget
+ * The settings widget to add.
+ *
+ * \param obj_height
+ * Height of the widget, defaulting to 28 pixels. There is usually no need to
+ * specify this unless you have an unusually large widget. For the special
+ * case of comboboxes, see the description above.
+ */
 void cEditor::Add_Config_Widget(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* p_settings_widget, float obj_height /* = 28.0f */)
 {
-    // TODO
+    static const float labelheight = 28.0f;
+
+    // The settings widget must at least have the height of the label widget.
+    if (obj_height < labelheight) {
+        obj_height = labelheight;
+    }
+
+    // Get scrollarea
+    CEGUI::ScrollablePane* p_pane = static_cast<CEGUI::ScrollablePane*>(mp_object_config_pane->getChild("tab_config/object_config_scrollarea"));
+    // get window manager
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+
+    CEGUI::Window* p_label = wmgr.createWindow("TaharezLook/StaticText");
+    p_label->setText(name);
+    p_label->setTooltipText(tooltip);
+
+    // set size
+    p_label->setWidth(CEGUI::UDim(0.5f, 0));
+    p_label->setHeight(CEGUI::UDim(0, labelheight * global_upscaley));
+    p_settings_widget->setWidth(CEGUI::UDim(0.5f, 0));
+    p_settings_widget->setHeight(CEGUI::UDim(0, obj_height * global_upscaley));
+
+    /* Combo boxes treat their height differently than other
+     * widgets. They use it for the height of the dropdown list, which
+     * means that we cannot simply set them to the uniform height of
+     * all other widgets, but must make them larger so that the
+     * dropdown list actually appears. We set the height in
+     * correspondance with the number of items in the list, assuming
+     * one line is `labelheight' pixels (times `global_upscaley' as
+     * always) high plus some guessing (* 3). */
+    CEGUI::Combobox* p_combo = NULL;
+    if ((p_combo = dynamic_cast<CEGUI::Combobox*>(p_settings_widget))) {
+        p_combo->setHeight(CEGUI::UDim(0, p_combo->getItemCount() * 3 * labelheight * global_upscaley));
+        //p_combo->setAutoSizeListHeightToContent(true); // While this would ease things, it does not work...
+    }
+
+    // Calculate position on the scrollarea
+    if (p_pane->getContentPane()->getChildCount() > 0) { // Place below existing rows
+        const CEGUI::Window* p_last_window = p_pane->getContentPane()->getChildAtIdx(p_pane->getContentPane()->getChildCount() - 1);
+        CEGUI::UDim new_y = p_last_window->getYPosition();
+        new_y += CEGUI::UDim(0, labelheight * global_upscaley);
+
+        p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), new_y));
+        p_settings_widget->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5f, 0), new_y));
+    }
+    else { // First entry, starting at top of container
+        p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
+        p_settings_widget->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, 0), CEGUI::UDim(0, 0)));
+    }
+
+    /* Add to scrollarea. The settings window must come last as it may
+     * be higher then the label window and its height is used in the
+     * position calculation above. */
+    p_pane->addChild(p_label);
+    p_pane->addChild(p_settings_widget);
 }
 
 void cEditor::Show_Config_Panel()
@@ -182,8 +263,8 @@ void cEditor::Hide_Config_Panel()
 
     // Destroy all config widgets in the scrollarea
     CEGUI::ScrollablePane* p_pane = static_cast<CEGUI::ScrollablePane*>(mp_object_config_pane->getChild("tab_config/object_config_scrollarea"));
-    while (p_pane->getChildCount() > 0) {
-        CEGUI::Window* p_window = p_pane->getChildAtIdx(0);
+    while (p_pane->getContentPane()->getChildCount() > 0) {
+        CEGUI::Window* p_window = p_pane->getContentPane()->getChildAtIdx(0);
         p_pane->removeChild(p_window);
         CEGUI::WindowManager::getSingleton().destroyWindow(p_window);
     }

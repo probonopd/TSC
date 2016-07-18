@@ -439,9 +439,7 @@ namespace TSC {
         // editor deactivation
         virtual void Editor_Deactivate(void);
         // editor init
-        virtual void Editor_Init(void);
-        // editor position update
-        virtual void Editor_Position_Update(void);
+        void Editor_Init();
         // editor state update
         virtual void Editor_State_Update(void) {};
 
