@@ -23,6 +23,11 @@
 #include "../level/level.hpp"
 #include "../video/animation.hpp"
 #include "../objects/box.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 using namespace TSC;
 
@@ -388,12 +393,12 @@ void cLarry::Editor_Activate()
 
     // direction
     CEGUI::Combobox* p_combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_larry_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Starting direction."), p_combobox, 100, 75);
 
     p_combobox->addItem(new CEGUI::ListboxTextItem("left"));
     p_combobox->addItem(new CEGUI::ListboxTextItem("right"));
     p_combobox->setText(Get_Direction_Name(m_start_direction));
     p_combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLarry::On_Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Starting direction."), p_combobox);
 
     Editor_Init();
 }

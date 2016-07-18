@@ -20,6 +20,11 @@
 #include "../core/property_helper.hpp"
 #include "../core/i18n.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 using namespace TSC;
 

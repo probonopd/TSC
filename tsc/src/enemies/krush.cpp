@@ -24,6 +24,11 @@
 #include "../core/i18n.hpp"
 #include "../core/sprite_manager.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace TSC {
 
@@ -354,7 +359,6 @@ void cKrush::Editor_Activate(void)
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_krush_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Starting direction."), combobox, 100, 75);
 
     combobox->addItem(new CEGUI::ListboxTextItem("left"));
     combobox->addItem(new CEGUI::ListboxTextItem("right"));
@@ -362,6 +366,7 @@ void cKrush::Editor_Activate(void)
     combobox->setText(Get_Direction_Name(m_start_direction));
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cKrush::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Starting direction."), combobox);
 
     // init
     Editor_Init();

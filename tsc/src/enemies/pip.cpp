@@ -25,6 +25,11 @@
 #include "../gui/hud.hpp"
 #include "../level/level_player.hpp"
 #include "../user/savegame/savegame.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 #include "pip.hpp"
 
 using namespace TSC;
@@ -343,12 +348,12 @@ void cPip::Editor_Activate()
 
     // direction
     CEGUI::Combobox* p_combo = static_cast<CEGUI::Combobox*>(wm.createWindow("TaharezLook/Combobox", "editor_pip_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Starting direction"), p_combo, 100, 75);
 
     p_combo->addItem(new CEGUI::ListboxTextItem("left"));
     p_combo->addItem(new CEGUI::ListboxTextItem("right"));
     p_combo->setText(Get_Direction_Name(m_start_direction));
     p_combo->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cPip::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Starting direction"), p_combo);
 
     // init
     Editor_Init();

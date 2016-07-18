@@ -25,6 +25,11 @@
 #include "../core/i18n.hpp"
 #include "../core/xml_attributes.hpp"
 #include "../core/global_basic.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 using namespace std;
 
@@ -566,7 +571,6 @@ void cRokko::Editor_Activate(void)
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_rokko_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Direction it moves into."), combobox, 100, 110);
 
     combobox->addItem(new CEGUI::ListboxTextItem("left"));
     combobox->addItem(new CEGUI::ListboxTextItem("right"));
@@ -575,10 +579,11 @@ void cRokko::Editor_Activate(void)
 
     combobox->setText(Get_Direction_Name(m_start_direction));
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cRokko::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Direction it moves into."), combobox);
 
     // speed
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_rokko_speed"));
-    Editor_Add(UTF8_("Speed"), UTF8_("Speed when activated"), editbox, 120);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Speed"), UTF8_("Speed when activated"), editbox);
 
     editbox->setValidationString("[+]?[0-9]*\\.?[0-9]*");
     editbox->setText(float_to_string(m_speed, 6, 0));

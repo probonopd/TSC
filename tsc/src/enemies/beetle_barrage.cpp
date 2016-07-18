@@ -23,6 +23,11 @@
 #include "../level/level_player.hpp"
 #include "../level/level.hpp"
 #include "beetle.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 #include "../scripting/events/spit_event.hpp"
 
 using namespace TSC;
@@ -344,20 +349,20 @@ void cBeetleBarrage::Editor_Activate()
 
     // range
     CEGUI::Editbox* p_editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_beetlebarrage_fly_distance"));
-    Editor_Add(UTF8_("Fly distance"), _("Initial beetle flying distance"), p_editbox, 90);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Fly distance"), _("Initial beetle flying distance"), p_editbox);
     p_editbox->setValidationString("^\\d+$");
     p_editbox->setText(int_to_string(static_cast<int>(m_beetle_fly_distance)));
     p_editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cBeetleBarrage::Editor_Fly_Distance_Text_Changed, this));
 
     // action area
     p_editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_beetlebarrage_range"));
-    Editor_Add(UTF8_("Action range"), _("Radius in which it reacts on Alex"), p_editbox, 90);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Action range"), _("Radius in which it reacts on Alex"), p_editbox);
     p_editbox->setValidationString("^\\d+$");
     p_editbox->setText(int_to_string(static_cast<int>(m_active_range)));
     p_editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cBeetleBarrage::Editor_Range_Text_Changed, this));
 
     p_editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_beetlebarrage_count"));
-    Editor_Add(UTF8_("Count"), _("Number of beetles spit out at a time"), p_editbox, 90);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Count"), _("Number of beetles spit out at a time"), p_editbox);
     p_editbox->setValidationString("^\\d+$");
     p_editbox->setText(int_to_string(m_beetle_spit_count));
     p_editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cBeetleBarrage::Editor_Spit_Count_Text_Changed, this));
