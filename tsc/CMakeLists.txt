@@ -65,6 +65,15 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1")
 endif()
 
+# CEGUI drops its libraries into an unusual subpath under /lib that
+# is not in the default runtime search path on most Linux distributions.
+# Thus we instruct CMake here to add some hints to the executable's
+# rpath (runtime library search path). This will make the runtime linker
+# find the CEGUI libraries at least on the system where TSC was compiled
+# on. For other systems, it is the duty of the packager to specify the
+# runtime linker search path properly.
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 execute_process(COMMAND git rev-parse --short HEAD
   WORKING_DIRECTORY ${TSC_SOURCE_DIR}
   OUTPUT_VARIABLE TSC_VERSION_GIT
