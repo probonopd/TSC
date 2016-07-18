@@ -24,6 +24,7 @@
 #include "editor.hpp"
 
 #define TABPANE_OUT_OF_SIGHT_X -0.19f
+#define CONFIGPANE_OUT_OF_SIGHT_X 0.99f
 
 #ifdef ENABLE_EDITOR
 
@@ -60,8 +61,13 @@ void cEditor::Init(void)
 {
     mp_editor_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_editor_item_tag + "_editor.layout");
     mp_editor_tabpane = static_cast<CEGUI::TabControl*>(mp_editor_root->getChild("editor_tabpane"));
+    mp_object_config_pane = mp_editor_root->getChild("object_config_pane");
     m_tabpane_target_x_position = mp_editor_tabpane->getXPosition();
-    mp_editor_tabpane->hide(); // Do not show for now
+    m_object_config_pane_target_x_position = mp_object_config_pane->getXPosition();
+    mp_editor_root->hide(); // Do not show for now
+
+    // Object settings window only pops up when selecting an object.
+    mp_object_config_pane->setXPosition(CEGUI::UDim(CONFIGPANE_OUT_OF_SIGHT_X, 0.0f));
 
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_root);
 
@@ -128,7 +134,7 @@ void cEditor::Enable(cSprite_Manager* p_edited_sprite_manager)
 
     pActive_Animation_Manager->Delete_All(); // Stop all animations
 
-    mp_editor_tabpane->show();
+    mp_editor_root->show();
     m_enabled = true;
     editor_enabled = true;
     mp_edited_sprite_manager = p_edited_sprite_manager;
@@ -143,7 +149,7 @@ void cEditor::Disable(void)
     pMouseCursor->Reset(0);
     pMouseCursor->Set_Active(false);
 
-    mp_editor_tabpane->hide();
+    mp_editor_root->hide();
     m_enabled = false;
     editor_enabled = false;
     mp_edited_sprite_manager = NULL;

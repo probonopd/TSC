@@ -117,6 +117,7 @@ namespace TSC {
         CEGUI::Window* mp_object_config_pane;
         float m_visibility_timer;
         CEGUI::UDim m_tabpane_target_x_position;
+        CEGUI::UDim m_object_config_pane_target_x_position;
         bool m_rested;
         bool m_mouse_inside;
         std::vector<CEGUI::Window*> m_editor_items;
