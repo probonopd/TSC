@@ -350,11 +350,6 @@ cSprite::~cSprite(void)
         delete m_image;
         m_image = NULL;
     }
-    if (mp_editor_container) {
-        mp_editor_container->getParent()->removeChild(mp_editor_container);
-        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_container);
-        mp_editor_container = NULL;
-    }
 }
 
 void cSprite::Init(void)
@@ -438,9 +433,6 @@ void cSprite::Init(void)
 
     m_valid_draw = 1;
     m_valid_update = 1;
-
-    m_editor_window_name_width = 0.0f;
-    mp_editor_container = NULL;
 
     m_uid = -1;
 }
@@ -1419,93 +1411,6 @@ void cSprite::Destroy(void)
 }
 
 #ifdef ENABLE_EDITOR
-/**
- * Helper function for dislaying widgets for editing an object.
- * Takes the label (name) to display before the widget, the tooltip to display
- * over the widget, the widget itself, and its dimensions. If advance_row
- * is true, increases the Y for the next widget to be added with Editor_Add().
- */
-void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height /* = labelheight */, bool advance_row /* = 1 */)
-{
-    static const float labelheight = 28.0f;
-
-    // The settings widget must at least have the height of the label widget.
-    if (obj_height < labelheight) {
-        obj_height = labelheight;
-    }
-
-    // get root window
-    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-    // get window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
-    /* If no container has been created yet, do it now. CEGUI only accepts unique
-     * window names at a given level in the window tree, the UID is required here
-     * as we use it to name the container. On object creation the UID is not set,
-     * so the container can't be created earlier. */
-    if (!mp_editor_container) {
-        if (m_uid < 0) {
-            throw(std::runtime_error("Cannot edit object without UID!"));
-        }
-
-        mp_editor_container = wmgr.createWindow("DefaultWindow", std::string("editorcontainer-") + std::to_string(m_uid));
-        mp_editor_container->setMousePassThroughEnabled(true); // Container should have no visible effect
-        p_root->addChild(mp_editor_container);
-        mp_editor_container->hide();
-    }
-
-    // create name label window
-    CEGUI::Window* window_name = wmgr.createWindow("TaharezLook/StaticText", "text_" + window_setting->getName());
-    window_name->setText(name);
-    window_name->setTooltipText(tooltip);
-    // get text width
-    CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("DejaVuSans");
-    float text_width = 12.0f + font->getTextExtent(name) * global_downscalex;
-    // all names should have the same width
-    if (text_width > m_editor_window_name_width) {
-        m_editor_window_name_width = text_width;
-
-        /* Resize all previous children to new width. Note that the even elements
-         * always refer to the label windows, and the odd elements to the actual
-         * config setting widget. The former needs to be resized, the latter to
-         * be moved to the right according to the change. */
-        for(unsigned int i=0; i < mp_editor_container->getChildCount(); i += 2) {
-            mp_editor_container->getChildAtIdx(i)->setWidth(CEGUI::UDim(0, text_width * global_upscalex));
-            mp_editor_container->getChildAtIdx(i+1)->setXPosition(CEGUI::UDim(0, text_width * global_upscalex));
-        }
-    }
-
-    // set size
-    window_name->setWidth(CEGUI::UDim(0, text_width * global_upscalex));
-    window_name->setHeight(CEGUI::UDim(0, labelheight * global_upscaley));
-    window_setting->setWidth(CEGUI::UDim(0, obj_width * global_upscalex));
-    window_setting->setHeight(CEGUI::UDim(0, obj_height * global_upscaley));
-
-    /* Position the two widgets inside the container. Note we update
-     * the container's own position later in Editor_Position_Update()
-     * to pin it to the object in the game world. */
-    if (mp_editor_container->getChildCount() > 0) {
-        const CEGUI::Window* p_last_window = mp_editor_container->getChildAtIdx(mp_editor_container->getChildCount() - 1);
-        CEGUI::UDim new_y = p_last_window->getYPosition();
-
-        if (advance_row)
-            new_y += CEGUI::UDim(0, labelheight * global_upscaley);
-
-        window_name->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), new_y));
-        window_setting->setPosition(CEGUI::UVector2(CEGUI::UDim(0, text_width * global_upscalex), new_y));
-    }
-    else { // First entry, starting at top of container
-        window_name->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
-        window_setting->setPosition(CEGUI::UVector2(CEGUI::UDim(0, text_width * global_upscalex), CEGUI::UDim(0, 0)));
-    }
-
-    /* Add to container. The settings window must come last as it may
-     * be higher then the label window and its height is used in the
-     * position calculation above. */
-    mp_editor_container->addChild(window_name);
-    mp_editor_container->addChild(window_setting);
-}
-
 /**
  * Configure the object configuration panel (the editor panel on the right
  * side) for this object. This method must be overridden in subclasses

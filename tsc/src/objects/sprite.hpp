@@ -432,8 +432,6 @@ namespace TSC {
         virtual void Destroy(void);
 
 #ifdef ENABLE_EDITOR
-        // editor add window object
-        void Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height = 28, bool advance_row = 1);
         // editor activation
         virtual void Editor_Activate(void);
         // editor deactivation
@@ -560,11 +558,6 @@ namespace TSC {
         bool m_valid_draw;
         /// if updating is valid
         bool m_valid_update;
-
-        /// Container for all editor windows
-        CEGUI::Window* mp_editor_container;
-        /// width for all name windows based on largest name text width
-        float m_editor_window_name_width;
 
         /// ID to uniquely identify this sprite (UIDS[idhere] uses this)
         int m_uid;
