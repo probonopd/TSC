@@ -98,6 +98,8 @@ namespace TSC {
 #ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
+        // editor deactivation
+        virtual void Editor_Deactivate(void);
         // editor state update
         virtual void Editor_State_Update(void);
         // editor direction option selected event
@@ -114,6 +116,10 @@ namespace TSC {
         bool Editor_Return_Entry_Text_Changed(const CEGUI::EventArgs& event);
         // editor path identifier text changed event
         bool Editor_Path_Identifier_Text_Changed(const CEGUI::EventArgs& event);
+
+        CEGUI::Editbox* mp_path_ident_box;
+        CEGUI::Editbox* mp_destination_level_box;
+        CEGUI::Combobox* mp_direction_combobox;
 #endif
 
         // level exit type
