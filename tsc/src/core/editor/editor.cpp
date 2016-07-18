@@ -1081,9 +1081,7 @@ cEditor_Menu_Entry::cEditor_Menu_Entry(std::string name)
     mp_tab_pane = static_cast<CEGUI::ScrollablePane*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/ScrollablePane", std::string("editor_items_") + name));
     mp_tab_pane->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.01, 0)));
     mp_tab_pane->setSize(CEGUI::USize(CEGUI::UDim(0.99, 0), CEGUI::UDim(0.95, 0)));
-    mp_tab_pane->setContentPaneAutoSized(false);
-    mp_tab_pane->setContentPaneArea(CEGUI::Rectf(0, 0, 1000, 4000));
-    mp_tab_pane->setShowHorzScrollbar(false);
+    mp_tab_pane->setContentPaneAutoSized(true);
 }
 
 cEditor_Menu_Entry::~cEditor_Menu_Entry()
