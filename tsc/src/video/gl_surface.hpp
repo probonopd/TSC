@@ -58,6 +58,10 @@ namespace TSC {
         // Return the filename if created from a file, otherwise an
         // empty boost::filesystem::path instance.
         boost::filesystem::path Get_Path();
+        // Like Get_Path(), but returns the path to the fully resolved PNG
+        // file that was actually loaded, with all "base" commands and
+        // .settings<->.png mappings resolved.
+        boost::filesystem::path Get_Real_PNG_Path();
         // Set a function called on destruction
         void Set_Destruction_Function(void (*nfunction)(cGL_Surface*));
 
@@ -85,7 +89,13 @@ namespace TSC {
         float m_col_h;
 
         // origin if created from a file
+        // Note this may be set to a .settings file
         boost::filesystem::path m_path;
+        // Like m_path, but this is always set to the fully resolved path
+        // of the actual PNG file, i.e. it has any .settings<->.png file
+        // mappings resolved as well as any "base" commands in a .settings file.
+        // In other words: This is the PNG file that was loaded.
+        boost::filesystem::path m_real_png_path;
         // should the image be deleted
         bool m_auto_del_img;
         // if managed over the image manager

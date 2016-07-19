@@ -24,6 +24,9 @@
 #include "../level/level_manager.hpp"
 #include "../core/sprite_manager.hpp"
 #include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 //#include "../script/events/downgrade_event.hpp"
 #include "../core/global_basic.hpp"
 
@@ -721,6 +724,7 @@ void cFurball::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
     DownGrade(true);
 }
 
+#ifdef ENABLE_EDITOR
 void cFurball::Editor_Activate(void)
 {
     // get window manager
@@ -728,10 +732,9 @@ void cFurball::Editor_Activate(void)
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_furball_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Starting direction."), combobox, 100, 75);
-
     combobox->addItem(new CEGUI::ListboxTextItem("left"));
     combobox->addItem(new CEGUI::ListboxTextItem("right"));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Starting direction."), combobox);
 
     combobox->setText(Get_Direction_Name(m_start_direction));
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cFurball::Editor_Direction_Select, this));
@@ -739,7 +742,7 @@ void cFurball::Editor_Activate(void)
     if (m_type == TYPE_FURBALL_BOSS) {
         // max downgrades
         CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_furball_max_downgrade_count"));
-        Editor_Add(UTF8_("Downgrades"), UTF8_("Downgrades until death"), editbox, 120);
+        pLevel_Editor->Add_Config_Widget(UTF8_("Downgrades"), UTF8_("Downgrades until death"), editbox);
 
         editbox->setValidationString("^[+]?\\d*$");
         editbox->setText(int_to_string(m_max_downgrade_count));
@@ -747,10 +750,9 @@ void cFurball::Editor_Activate(void)
 
         // level ends if killed
         combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_furball_level_ends_if_killed"));
-        Editor_Add(UTF8_("End Level"), UTF8_("End the level if it is killed."), combobox, 100, 75);
-
         combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Enabled")));
         combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Disabled")));
+        pLevel_Editor->Add_Config_Widget(UTF8_("End Level"), UTF8_("End the level if it is killed."), combobox);
 
         if (m_level_ends_if_killed) {
             combobox->setText(UTF8_("Enabled"));
@@ -799,6 +801,7 @@ bool cFurball::Editor_Max_Downgrade_Count_Text_Changed(const CEGUI::EventArgs& e
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

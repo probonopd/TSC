@@ -21,6 +21,11 @@
 #include "../core/global_game.hpp"
 #include "../core/i18n.hpp"
 #include "../level/level_player.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 #include "../gui/hud.hpp"
 
 using namespace TSC;
@@ -238,21 +243,21 @@ DefaultColor cBeetle::Get_Color()
     return m_color;
 }
 
+#ifdef ENABLE_EDITOR
 void cBeetle::Editor_Activate()
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
     // direction
     CEGUI::Combobox* p_combo = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_beetle_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Starting direction."), p_combo, 100, 75);
     p_combo->addItem(new CEGUI::ListboxTextItem("left"));
     p_combo->addItem(new CEGUI::ListboxTextItem("right"));
     p_combo->setText(Get_Direction_Name(m_start_direction));
     p_combo->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBeetle::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Starting direction."), p_combo);
 
     // color
     p_combo = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_beetle_color"));
-    Editor_Add(UTF8_("Color"), UTF8_("Color."), p_combo, 100, 75);
     p_combo->addItem(new CEGUI::ListboxTextItem("blue"));
     p_combo->addItem(new CEGUI::ListboxTextItem("green"));
     p_combo->addItem(new CEGUI::ListboxTextItem("red"));
@@ -260,6 +265,7 @@ void cBeetle::Editor_Activate()
     p_combo->addItem(new CEGUI::ListboxTextItem("yellow"));
     p_combo->setText(Get_Color_Name(m_color));
     p_combo->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBeetle::Editor_Color_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Color"), UTF8_("Color."), p_combo);
 
     Editor_Init();
 }
@@ -282,6 +288,7 @@ bool cBeetle::Editor_Color_Select(const CEGUI::EventArgs& event)
 
     return true;
 }
+#endif
 
 bool cBeetle::Is_Doing_Beetle_Barrage_Generation()
 {

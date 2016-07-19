@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="TaharezLook/StaticText" name="text_default">
+    <Property name="AlwaysOnTop" value="True"/>
+    <Property name="Area" value="{{0.35475,0},{0.451216,0},{0.713407,0},{0.501217,0}}"/>
+  </Window>
+</GUILayout>

@@ -89,22 +89,22 @@
 	</item>
 	<item>
 		<property name="name" value="New" />
-		<property name="tags" value="function:new" />
+		<property name="tags" value="function;new" />
 		<property name="color" value="FF0F03DF" />
 	</item>
 	<item>
 		<property name="name" value="Load" />
-		<property name="tags" value="function:load" />
+		<property name="tags" value="function;load" />
 		<property name="color" value="FFDFA30F" />
 	</item>
 	<item>
 		<property name="name" value="Save" />
-		<property name="tags" value="function:save" />
+		<property name="tags" value="function;save" />
 		<property name="color" value="FF0FC30F" />
 	</item>
 	<item>
 		<property name="name" value="Reload" />
-		<property name="tags" value="function:reload" />
+		<property name="tags" value="function;reload" />
 		<property name="color" value="FFAF8A4F" />
 	</item>
 </menu>

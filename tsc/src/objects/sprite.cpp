@@ -27,7 +27,9 @@
 #include "../core/editor/editor.hpp"
 #include "../core/i18n.hpp"
 #include "../scripting/events/touch_event.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
+#include "../overworld/world_editor.hpp"
 #include "../core/file_parser.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
@@ -260,22 +262,28 @@ void cCollidingSprite::Handle_Collision(cObjectCollision* collision)
      * and that level is not being edited at the moment.
      * Also needed as the MRuby interpreter is not initialized before
      * Level construction. */
-    if (pActive_Level && !pLevel_Editor->m_enabled) {
-        /* For whatever reason, CollidingSprite is the superclass
-         * of Sprite (I’d expect it the other way round), so we have
-         * first to check whether we got a correct sprite object prior
-         * to handing it to the event (=> downcast). As all level-relevant
-         * sprites are real Sprites (rather than bare CollidingSprites),
-         * this doesn’t exclude important sprites from being listened to
-         * in MRuby. --Marvin Gülker (aka Quintus) */
-        cSprite* p_sprite = dynamic_cast<cSprite*>(this);
-        if (p_sprite) {
-            // Fire the event for both objects, eases registering
-            Scripting::cTouch_Event evt1(collision->m_obj);
-            Scripting::cTouch_Event evt2(p_sprite);
-            evt1.Fire(pActive_Level->m_mruby, p_sprite);
-            evt2.Fire(pActive_Level->m_mruby, collision->m_obj);
+    if (pActive_Level) {
+#ifdef ENABLE_EDITOR
+        if (!pLevel_Editor->m_enabled) {
+#endif
+            /* For whatever reason, CollidingSprite is the superclass
+             * of Sprite (I’d expect it the other way round), so we have
+             * first to check whether we got a correct sprite object prior
+             * to handing it to the event (=> downcast). As all level-relevant
+             * sprites are real Sprites (rather than bare CollidingSprites),
+             * this doesn’t exclude important sprites from being listened to
+             * in MRuby. --Marvin Gülker (aka Quintus) */
+            cSprite* p_sprite = dynamic_cast<cSprite*>(this);
+            if (p_sprite) {
+                // Fire the event for both objects, eases registering
+                Scripting::cTouch_Event evt1(collision->m_obj);
+                Scripting::cTouch_Event evt2(p_sprite);
+                evt1.Fire(pActive_Level->m_mruby, p_sprite);
+                evt2.Fire(pActive_Level->m_mruby, collision->m_obj);
+            }
+#ifdef ENABLE_EDITOR
         }
+#endif
     }
 
     // player
@@ -425,8 +433,6 @@ void cSprite::Init(void)
 
     m_valid_draw = 1;
     m_valid_update = 1;
-
-    m_editor_window_name_width = 0.0f;
 
     m_uid = -1;
 }
@@ -1404,50 +1410,19 @@ void cSprite::Destroy(void)
     Set_Image(NULL, 1);
 }
 
-void cSprite::Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height /* = 28 */, bool advance_row /* = 1 */)
-{
-    if (obj_height < 28.0f) {
-        obj_height = 28.0f;
-    }
-
-    // get gui sheet
-    CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
-    // get window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
-    // create name window
-    CEGUI::Window* window_name = wmgr.createWindow("TaharezLook/StaticText", "text_" + window_setting->getName());
-    window_name->setText(name);
-    window_name->setTooltipText(tooltip);
-    // get text width
-    CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("bluebold_medium");
-    float text_width = 12.0f + font->getTextExtent(name) * global_downscalex;
-    // all names should have the same width
-    if (text_width > m_editor_window_name_width) {
-        m_editor_window_name_width = text_width;
-    }
-    // set size
-    window_name->setWidth(CEGUI::UDim(0, text_width * global_upscalex));
-    window_name->setHeight(CEGUI::UDim(0, 28 * global_upscaley));
-
-    // create settings window
-    cEditor_Object_Settings_Item* settings_item = new cEditor_Object_Settings_Item();
-
-    // set size
-    window_setting->setWidth(CEGUI::UDim(0, obj_width * global_upscalex));
-    window_setting->setHeight(CEGUI::UDim(0, obj_height * global_upscaley));
-
-    settings_item->window_name = window_name;
-    settings_item->window_setting = window_setting;
-    settings_item->advance_row = advance_row;
-
-    m_editor_windows.push_back(settings_item);
-
-    // add to main window
-    guisheet->addChildWindow(window_name);
-    guisheet->addChildWindow(window_setting);
-}
-
+#ifdef ENABLE_EDITOR
+/**
+ * Configure the object configuration panel (the editor panel on the right
+ * side) for this object. This method must be overridden in subclasses
+ * *without* calling the parent cSprite::Editor_Active(), because in this
+ * class it implements the behaviour for basic sprites and only those.
+ * In your override, call Editor_Init() at the end.
+ *
+ * Use cEditor::Add_Config_Widget() to populate the configuration panel.
+ *
+ * This hook method is called when the user double-clicks an object
+ * in the editor.
+ */
 void cSprite::Editor_Activate(void)
 {
     // if this is not a basic sprite
@@ -1460,7 +1435,18 @@ void cSprite::Editor_Activate(void)
 
     // image
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sprite_image"));
-    Editor_Add(UTF8_("Image"), UTF8_("Image filename"), editbox, 200);
+
+    // Find active editor
+    cEditor* p_editor = NULL;
+
+    if (pLevel_Editor->m_enabled)
+        p_editor = pLevel_Editor;
+    else if (pWorld_Editor->m_enabled)
+        p_editor = pWorld_Editor;
+    else
+        throw(std::runtime_error("Unknown editing environment"));
+
+    p_editor->Add_Config_Widget(UTF8_("Image"), UTF8_("Image filename"), editbox);
 
     fs::path rel = pPackage_Manager->Get_Relative_Pixmap_Path(m_start_image->Get_Path());
     editbox->setText(path_to_utf8(rel));
@@ -1470,98 +1456,42 @@ void cSprite::Editor_Activate(void)
     Editor_Init();
 }
 
+/**
+ * What to do when the user leaves object editing mode.
+ * By default, this method just calls cEditor::Hide_Config_Panel()
+ * on the active editor.
+ */
 void cSprite::Editor_Deactivate(void)
 {
-    // remove editor controls
-    for (Editor_Object_Settings_List::iterator itr = m_editor_windows.begin(); itr != m_editor_windows.end(); ++itr) {
-        cEditor_Object_Settings_Item* obj = (*itr);
-
-        delete obj;
-    }
-
-    m_editor_windows.clear();
+    if (pLevel_Editor->m_enabled)
+        pLevel_Editor->Hide_Config_Panel();
+    else if (pWorld_Editor->m_enabled)
+        pWorld_Editor->Hide_Config_Panel();
+    else
+        throw(std::runtime_error("Unknown editing environment"));
 }
 
-void cSprite::Editor_Init(void)
+/**
+ * Calls the Editor_State_Update() hook method and then displays the
+ * active editor's (level or world editor's) object configuration
+ * panel.
+ *
+ * You have to call this method at the end of Editor_Activate().
+ *
+ * Do not override this method.
+ */
+void cSprite::Editor_Init()
 {
     // set state
     Editor_State_Update();
 
-    // init
-    for (Editor_Object_Settings_List::iterator itr = m_editor_windows.begin(); itr != m_editor_windows.end(); ++itr) {
-        cEditor_Object_Settings_Item* obj = (*itr);
-        CEGUI::Window* window_name = obj->window_name;
-
-        // set first row width
-        if (obj->advance_row) {
-            window_name->setWidth(CEGUI::UDim(0, m_editor_window_name_width * global_upscalex));
-        }
-    }
-
-    // set position
-    Editor_Position_Update();
-}
-
-void cSprite::Editor_Position_Update(void)
-{
-    float obj_posx = 0.0f;
-    float obj_posy = 0.0f;
-    float row_height = 0.0f;
-
-    // set all positions
-    for (Editor_Object_Settings_List::iterator itr = m_editor_windows.begin(); itr != m_editor_windows.end(); ++itr) {
-        cEditor_Object_Settings_Item* obj = (*itr);
-        CEGUI::Window* window_name = obj->window_name;
-        CEGUI::Window* window_setting = obj->window_setting;
-
-        // start a new row
-        if (obj->advance_row) {
-            obj_posx = 0.0f;
-            obj_posy += row_height;
-            row_height = 0.0f;
-        }
-
-        // get window text width
-        float window_name_width = window_name->getWidth().asAbsolute(static_cast<float>(game_res_w)) * global_downscalex;
-        float window_name_height = window_name->getHeight().asAbsolute(static_cast<float>(game_res_h)) * global_downscaley;
-
-        // get window setting width
-        float window_setting_width;
-        float window_setting_height;
-
-        // if combobox get the editbox/droplist dimension
-        if (window_setting->getType() == "TaharezLook/Combobox") {
-            window_setting_width = static_cast<CEGUI::Combobox*>(window_setting)->getDropList()->getWidth().asAbsolute(static_cast<float>(game_res_w)) * global_downscalex;
-            window_setting_height = static_cast<CEGUI::Combobox*>(window_setting)->getEditbox()->getHeight().asAbsolute(static_cast<float>(game_res_h)) * global_downscaley;
-        }
-        // get default dimension
-        else {
-            window_setting_width = window_setting->getWidth().asAbsolute(static_cast<float>(game_res_w)) * global_downscalex;
-            window_setting_height = window_setting->getHeight().asAbsolute(static_cast<float>(game_res_h)) * global_downscaley;
-        }
-
-        // update row height
-        if (window_setting_height > row_height) {
-            row_height = window_setting_height;
-        }
-        if (window_name_height > row_height) {
-            row_height = window_name_height;
-        }
-
-        // current position
-        float object_final_pos_x = m_start_pos_x + m_rect.m_w + 5.0f + obj_posx - pActive_Camera->m_x;
-        float object_final_pos_y = m_start_pos_y + 5.0f + obj_posy - pActive_Camera->m_y;
-
-        // set name position
-        window_name->setXPosition(CEGUI::UDim(0, object_final_pos_x * global_upscalex));
-        window_name->setYPosition(CEGUI::UDim(0, object_final_pos_y * global_upscaley));
-        // set setting position
-        window_setting->setXPosition(CEGUI::UDim(0, (window_name_width + object_final_pos_x) * global_upscalex));
-        window_setting->setYPosition(CEGUI::UDim(0, object_final_pos_y * global_upscaley));
-
-        // set new position x
-        obj_posx += window_name_width + window_setting_width + 0.05f;
-    }
+    // Show
+    if (pLevel_Editor->m_enabled)
+        pLevel_Editor->Show_Config_Panel();
+    else if (pWorld_Editor->m_enabled)
+        pWorld_Editor->Show_Config_Panel();
+    else
+        throw(std::runtime_error("Unknown editing environment"));
 }
 
 bool cSprite::Editor_Image_Text_Changed(const CEGUI::EventArgs& event)
@@ -1573,6 +1503,7 @@ bool cSprite::Editor_Image_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 /**
  * This method should append all necessary components

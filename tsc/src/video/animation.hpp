@@ -268,6 +268,7 @@ namespace TSC {
         // set the clip mode
         void Set_Clip_Mode(ParticleClipMode mode);
 
+#ifdef ENABLE_EDITOR
         // editor todo : start rotation x/y/z rand, color, color_rand
         // editor activation
         virtual void Editor_Activate(void);
@@ -309,6 +310,7 @@ namespace TSC {
         bool Editor_Clip_Rect_W_Text_Changed(const CEGUI::EventArgs& event);
         bool Editor_Clip_Rect_H_Text_Changed(const CEGUI::EventArgs& event);
         bool Editor_Clip_Mode_Select(const CEGUI::EventArgs& event);
+#endif
 
         // Particle items
         typedef vector<cParticle*> ParticleList;

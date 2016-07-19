@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="TaharezLook/FrameWindow" name="box_question_window">
+    <Property name="Text" value="Question"/>
+    <Property name="TooltipText" value="Box wants an answer!"/>
+    <Property name="SizingEnabled" value="False"/>
+    <Property name="Area" value="{{0.3,0},{0.3375,0},{0.7,0},{0.6,0}}"/>
+
+    <Window type="TaharezLook/StaticText" name="box_question_text">
+      <Property name="Area" value="{{0.04,0},{0.26,0},{0.95,0},{0.75,0}}"/>
+    </Window>
+
+    <Window type="TaharezLook/Button" name="box_question_button_yes">
+      <Property name="Text" value="Yes"/>
+      <Property name="Area" value="{{0.04,0},{0.8,0},{0.28,0},{0.98,0}}"/>
+    </Window>
+
+    <Window type="TaharezLook/Button" name="box_question_button_no">
+      <Property name="Text" value="No"/>
+      <Property name="Area" value="{{0.33,0},{0.8,0},{0.58,0},{0.98,0}}"/>
+    </Window>
+
+    <Window type="TaharezLook/Button" name="box_question_button_cancel">
+      <Property name="Text" value="Cancel"/>
+      <Property name="Area" value="{{0.7,0},{0.8,0},{0.95,0},{0.98,0}}"/>
+    </Window>
+  </Window>
+</GUILayout>

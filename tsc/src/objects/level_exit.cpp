@@ -28,6 +28,11 @@
 #include "../core/i18n.hpp"
 #include "../core/filesystem/filesystem.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 #include "../scripting/events/exit_event.hpp"
 
 namespace fs = boost::filesystem;
@@ -117,6 +122,10 @@ void cLevel_Exit::Init(void)
 
     m_editor_color = red;
     m_editor_color.alpha = 128;
+
+    mp_path_ident_box = NULL;
+    mp_destination_level_box = NULL;
+    mp_direction_combobox = NULL;
 }
 
 cLevel_Exit* cLevel_Exit::Copy(void) const
@@ -442,6 +451,7 @@ bool cLevel_Exit::Is_Draw_Valid(void)
     return 1;
 }
 
+#ifdef ENABLE_EDITOR
 void cLevel_Exit::Editor_Activate(void)
 {
     // get window manager
@@ -450,21 +460,20 @@ void cLevel_Exit::Editor_Activate(void)
     // warp
     if (m_exit_type == LEVEL_EXIT_WARP) {
         // direction
-        CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "level_exit_direction"));
-        Editor_Add(UTF8_("Direction"), UTF8_("Direction to move in"), combobox, 100, 105);
+        mp_direction_combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "level_exit_direction"));
 
-        combobox->addItem(new CEGUI::ListboxTextItem("up"));
-        combobox->addItem(new CEGUI::ListboxTextItem("down"));
-        combobox->addItem(new CEGUI::ListboxTextItem("right"));
-        combobox->addItem(new CEGUI::ListboxTextItem("left"));
-        combobox->setText(Get_Direction_Name(m_start_direction));
+        mp_direction_combobox->addItem(new CEGUI::ListboxTextItem("up"));
+        mp_direction_combobox->addItem(new CEGUI::ListboxTextItem("down"));
+        mp_direction_combobox->addItem(new CEGUI::ListboxTextItem("right"));
+        mp_direction_combobox->addItem(new CEGUI::ListboxTextItem("left"));
+        mp_direction_combobox->setText(Get_Direction_Name(m_start_direction));
 
-        combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Direction_Select, this));
+        mp_direction_combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Direction_Select, this));
+        pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Direction to move in"), mp_direction_combobox);
     }
 
     // motion
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "CAMERA_MOVEotion"));
-    Editor_Add(UTF8_("Motion"), UTF8_("Camera Motion"), combobox, 100, 105);
 
     combobox->addItem(new CEGUI::ListboxTextItem("fly"));
     combobox->addItem(new CEGUI::ListboxTextItem("blink"));
@@ -485,80 +494,81 @@ void cLevel_Exit::Editor_Activate(void)
     }
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Motion_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Motion"), UTF8_("Camera Motion"), combobox);
 
     // destination level
-    CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_destination_level"));
-    Editor_Add(UTF8_("Destination Level"), UTF8_("Name of the level that should be entered. If empty uses the current level."), editbox, 150);
+    mp_destination_level_box = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_destination_level"));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Destination Level"), UTF8_("Name of the level that should be entered. If empty uses the current level."), mp_destination_level_box);
 
-    editbox->setText(Get_Level());
-    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Destination_Level_Text_Changed, this));
+    mp_destination_level_box->setText(Get_Level());
+    mp_destination_level_box->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Destination_Level_Text_Changed, this));
 
     // destination entry
-    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_destination_entry"));
-    Editor_Add(UTF8_("Destination Entry"), UTF8_("Name of the Entry in the destination level. If empty the entry point is the player start position."), editbox, 150);
+    CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_destination_entry"));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Destination Entry"), UTF8_("Name of the Entry in the destination level. If empty the entry point is the player start position."), editbox);
 
     editbox->setText(m_dest_entry.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Destination_Entry_Text_Changed, this));
 
     // return level
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_return_level"));
-    Editor_Add(UTF8_("Return Level"), UTF8_("Name of the level that should be pushed onto return stack."), editbox, 150);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Return Level"), UTF8_("Name of the level that should be pushed onto return stack."), editbox);
 
     editbox->setText(m_return_level);
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Return_Level_Text_Changed, this));
 
     // return entry
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_return_entry"));
-    Editor_Add(UTF8_("Return Entry"), UTF8_("Name of the Entry in the return level."), editbox, 150);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Return Entry"), UTF8_("Name of the Entry in the return level."), editbox);
 
     editbox->setText(m_return_entry.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Return_Entry_Text_Changed, this));
 
     // path identifier
-    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_path_identifier"));
-    Editor_Add(UTF8_("Path Identifier"), UTF8_("Name of the Path to use for the camera movement."), editbox, 150);
+    mp_path_ident_box = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_path_identifier"));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Path Identifier"), UTF8_("Name of the Path to use for the camera movement."), mp_path_ident_box);
 
-    editbox->setText(m_path_identifier.c_str());
-    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Path_Identifier_Text_Changed, this));
+    mp_path_ident_box->setText(m_path_identifier.c_str());
+    mp_path_ident_box->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Path_Identifier_Text_Changed, this));
 
 
     // init
     Editor_Init();
 }
 
+void cLevel_Exit::Editor_Deactivate(void)
+{
+    cMovingSprite::Editor_Deactivate();
+
+    // Clear pointers for sake of sane debugging
+    mp_path_ident_box        = NULL;
+    mp_destination_level_box = NULL;
+    mp_direction_combobox    = NULL;
+}
+
+
 void cLevel_Exit::Editor_State_Update(void)
 {
-    // get window manager
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
-    // path identifier
-    CEGUI::Editbox* editbox_path_identifier = static_cast<CEGUI::Editbox*>(wmgr.getWindow("level_exit_path_identifier"));
-    // destination level
-    CEGUI::Editbox* editbox_destination_level = static_cast<CEGUI::Editbox*>(wmgr.getWindow("level_exit_destination_level"));
-    // direction
-    //CEGUI::Combobox *combobox_direction = static_cast<CEGUI::Combobox *>(wmgr.getWindow( "level_exit_direction" ));
-
-
     if (m_exit_motion == CAMERA_MOVE_ALONG_PATH || m_exit_motion == CAMERA_MOVE_ALONG_PATH_BACKWARDS) {
-        editbox_path_identifier->setEnabled(1);
-        editbox_destination_level->setEnabled(0);
+        mp_path_ident_box->setEnabled(1);
+        mp_destination_level_box->setEnabled(0);
     }
     else if (m_exit_motion == CAMERA_MOVE_FLY) {
-        editbox_path_identifier->setEnabled(0);
-        editbox_destination_level->setEnabled(0);
+        mp_path_ident_box->setEnabled(0);
+        mp_destination_level_box->setEnabled(0);
     }
     else {
-        editbox_path_identifier->setEnabled(0);
-        editbox_destination_level->setEnabled(1);
+        mp_path_ident_box->setEnabled(0);
+        mp_destination_level_box->setEnabled(1);
     }
 
     /*if( m_exit_type == LEVEL_EXIT_WARP )
     {
-        combobox_direction->setEnabled( 1 );
+        mp_direction_combobox->setEnabled( 1 );
     }
     else
     {
-        combobox_direction->setEnabled( 0 );
+        mp_direction_combobox->setEnabled( 0 );
     }*/
 }
 
@@ -645,6 +655,7 @@ bool cLevel_Exit::Editor_Path_Identifier_Text_Changed(const CEGUI::EventArgs& ev
 
     return 1;
 }
+#endif
 
 void cLevel_Exit::Set_Massive_Type(MassiveType type)
 {

@@ -14,7 +14,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "../video/video.hpp"
+#include "video.hpp"
+#include "loading_screen.hpp"
 #include "../gui/hud.hpp"
 #include "../user/preferences.hpp"
 #include "../core/framerate.hpp"
@@ -31,7 +32,6 @@
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/filesystem/relative.hpp"
-#include "../gui/spinner.hpp"
 #include "../core/global_basic.hpp"
 
 using namespace std;
@@ -66,108 +66,68 @@ cVideo::cVideo(void)
 #endif
     m_render_thread = boost::thread();
 
+    mp_cegui_renderer = NULL;
+
     m_initialised = 0;
 }
 
 cVideo::~cVideo(void)
 {
+    CEGUI::System::destroy();
+    CEGUI::OpenGLRenderer::destroy(*mp_cegui_renderer);
+    mp_cegui_renderer = NULL;
+
     if (mp_window) {
         delete mp_window;
         mp_window = NULL;
     }
 }
 
-void cVideo::Init_CEGUI(void) const
+void cVideo::Init_CEGUI(void)
 {
-    // create renderer
-    try {
-        pGuiRenderer = &CEGUI::OpenGLRenderer::create(CEGUI::Size(mp_window->getSize().x, mp_window->getSize().y));
-    }
-    // catch CEGUI Exceptions
-    catch (CEGUI::Exception& ex) {
-        cerr << "CEGUI Exception occurred : " << ex.getMessage() << endl;
-        exit(EXIT_FAILURE);
-    }
+    std::string utf8_logpath = path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile());
+    debug_print("CEGUI log file is at '%s'.\n", utf8_logpath.c_str());
 
-    pGuiRenderer->enableExtraStateSettings(1);
+    // create CEGUI renderer and system objects
+    mp_cegui_renderer = &CEGUI::OpenGLRenderer::create();
+    CEGUI::System::create(*mp_cegui_renderer, NULL, NULL, NULL, NULL, "", utf8_logpath);
 
-    // create Resource Provider
-    CEGUI::DefaultResourceProvider* rp = new CEGUI::DefaultResourceProvider();
+    // Retrieve default resource provider for the OpenGLRenderer
+    CEGUI::DefaultResourceProvider* p_rp
+        = static_cast<CEGUI::DefaultResourceProvider*>(CEGUI::System::getSingleton().getResourceProvider());
 
     // set Resource Provider directories
-    rp->setResourceGroupDirectory("schemes", path_to_utf8(pResource_Manager->Get_Gui_Scheme_Directory()));
-    rp->setResourceGroupDirectory("imagesets", path_to_utf8(pResource_Manager->Get_Gui_Imageset_Directory()));
-    rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
-    rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
-    rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
+    p_rp->setResourceGroupDirectory("schemes", path_to_utf8(pResource_Manager->Get_Gui_Scheme_Directory()));
+    p_rp->setResourceGroupDirectory("imagesets", path_to_utf8(pResource_Manager->Get_Gui_Imageset_Directory()));
+    p_rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
+    p_rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
+    p_rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
+    // These resource groups are used for displaying the editor images.
+    p_rp->setResourceGroupDirectory("ingame-images", path_to_utf8(pResource_Manager->Get_Game_Pixmaps_Directory()));
+    p_rp->setResourceGroupDirectory("cache-images", path_to_utf8(pResource_Manager->Get_User_Pixmaps_Directory()));
 
-    if (CEGUI::System::getDefaultXMLParserName().compare("XercesParser") == 0) {
-        // Needed for Xerces to specify the schemas location
-        rp->setResourceGroupDirectory("schemas", path_to_utf8(pResource_Manager->Get_Game_Schema_Directory()).c_str());
-    }
-
-    // create logger
-    CEGUI::Logger* logger = new CEGUI::DefaultLogger();
-    // set logging level
-#ifdef _DEBUG
-    logger->setLoggingLevel(CEGUI::Informative);
-#else
-    logger->setLoggingLevel(CEGUI::Errors);
-#endif
-
-    // set initial mouse position
-    sf::Vector2i mousepos = sf::Mouse::getPosition(*pVideo->mp_window);
-    CEGUI::MouseCursor::setInitialMousePosition(CEGUI::Point(mousepos.x, mousepos.y));
-    // add custom widgets
-    CEGUI::WindowFactoryManager::addFactory<CEGUI::TSC_SpinnerFactory>();
-
-    // create system
-    try {
-        debug_print("CEGUI log file is at '%s'.\n", path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile()).c_str());
-        // fixme : Workaround for std::string to CEGUI::String utf8 conversion. Check again if CEGUI 0.8 works with std::string utf8
-#ifdef _WIN32
-        pGuiSystem = &CEGUI::System::create(*pGuiRenderer, rp, NULL, NULL, NULL, "", (const CEGUI::utf8*)(path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile()).c_str()));
-#else
-        pGuiSystem = &CEGUI::System::create(*pGuiRenderer, rp, NULL, NULL, NULL, "", path_to_utf8(pResource_Manager->Get_User_CEGUI_Logfile()));
-#endif
-    }
-    // catch CEGUI Exceptions
-    catch (CEGUI::Exception& ex) {
-        cerr << "CEGUI Exception occurred : " << ex.getMessage() << endl;
-        exit(EXIT_FAILURE);
-    }
-}
-
-void cVideo::Init_CEGUI_Data(void) const
-{
     // set the default resource groups to be used
     CEGUI::Scheme::setDefaultResourceGroup("schemes");
-    CEGUI::Imageset::setDefaultResourceGroup("imagesets");
+    CEGUI::ImageManager::setImagesetDefaultResourceGroup("imagesets");
     CEGUI::Font::setDefaultResourceGroup("fonts");
     CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
     CEGUI::WindowManager::setDefaultResourceGroup("layouts");
 
-    // load the scheme file, which auto-loads the imageset
-    try {
-        CEGUI::SchemeManager::getSingleton().create("TaharezLook.scheme");
-    }
-    // catch CEGUI Exceptions
-    catch (CEGUI::Exception& ex) {
-        cerr << "CEGUI Scheme Exception occurred : " << ex.getMessage() << endl;
-        exit(EXIT_FAILURE);
-    }
+    // Load our CEGUI theme
+    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
 
-    // default mouse cursor
-    pGuiSystem->setDefaultMouseCursor("TaharezLook", "MouseArrow");
-    // force new mouse image
-    CEGUI::MouseCursor::getSingleton().setImage(&CEGUI::ImagesetManager::getSingleton().get("TaharezLook").getImage("MouseArrow"));
-    // default tooltip
-    pGuiSystem->setDefaultTooltip("TaharezLook/Tooltip");
+    // Have CEGUI draw a mouse cursor
+    CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
+    gui_context.getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-    // create default root window
-    CEGUI::Window* window_root = CEGUI::WindowManager::getSingleton().loadWindowLayout("default.layout");
-    pGuiSystem->setGUISheet(window_root);
-    window_root->activate();
+    // set initial mouse position
+    sf::Vector2i mousepos = sf::Mouse::getPosition(*pVideo->mp_window);
+    CEGUI::MouseCursor::setInitialMousePosition(CEGUI::Vector2f(mousepos.x, mousepos.y));
+
+    // Create the invisible root window
+    CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
+    p_rootwindow->setMousePassThroughEnabled(true); // Ensure CEGUI doesn't eat mouse events not hitting any CEGUI window (return value of injector function)
+    gui_context.setRootWindow(p_rootwindow);
 }
 
 void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_preferences /* = true */)
@@ -223,23 +183,15 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
 
     // if reinitialization
     if (m_initialised) {
-        // check if CEGUI is initialized
-        bool cegui_initialized = pGuiSystem->getGUISheet() != NULL;
-
-        // show loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Init();
-        }
+        Loading_Screen_Init();
 
         // save textures
-        pImage_Manager->Grab_Textures(reload_textures_from_file, cegui_initialized);
-        pGuiRenderer->grabTextures();
+        pImage_Manager->Grab_Textures(reload_textures_from_file, 1);
+        mp_cegui_renderer->grabTextures();
         pImage_Manager->Delete_Hardware_Textures();
 
         // exit loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Exit();
-        }
+        Loading_Screen_Exit();
     }
 
     // For backward compatibility with old SDL. SFML is always
@@ -267,33 +219,24 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
         /* restore GUI textures
          * must be the first CEGUI call after the grabTextures function
         */
-        pGuiRenderer->restoreTextures();
+        mp_cegui_renderer->restoreTextures();
 
         // send new size to CEGUI
-        pGuiSystem->notifyDisplaySizeChanged(CEGUI::Size(static_cast<float>(videomode.width), static_cast<float>(videomode.height)));
+        CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(static_cast<float>(videomode.width), static_cast<float>(videomode.height)));
 
-        // check if CEGUI is initialized
-        bool cegui_initialized = pGuiSystem->getGUISheet() != NULL;
-
-        // show loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Init();
-        }
+        Loading_Screen_Init();
 
         // initialize new image cache
         if (reload_textures_from_file) {
-            Init_Image_Cache(0, cegui_initialized);
+            Init_Image_Cache(0);
         }
 
         // restore textures
-        pImage_Manager->Restore_Textures(cegui_initialized);
+        pImage_Manager->Restore_Textures(1);
 
-        // exit loading screen
-        if (cegui_initialized) {
-            Loading_Screen_Exit();
-        }
+        Loading_Screen_Exit();
     }
-    // finished first initialization
+    // finishing first initialization
     else {
         // get opengl version
         std::string version_str = reinterpret_cast<const char*>(glGetString(GL_VERSION));
@@ -320,6 +263,14 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
             }
 
         }
+
+        // Init CEGUI
+        Init_CEGUI();
+
+        // On game startup, Loading_Screen_Init() etc. are called from
+        // the Init_Game() function. Only on recreation (see above) they're
+        // called from here.
+        // TODO: That's bad code design.
 
         m_initialised = 1;
     }
@@ -446,7 +397,19 @@ void cVideo::Init_Resolution_Scale(void) const
     global_downscaley = static_cast<float>(game_res_h) / static_cast<float>(pPreferences->m_video_screen_h);
 }
 
-void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
+/**
+ * Create the cache of downscaled images. This function
+ * expects to be run while the loading screen is active,
+ * i.e. the caller must make sure to have called Loading_Screen_Init()
+ * prior to this function and has to call Loading_Screen_Exit() when
+ * he is done with this function (and everything else he wants to
+ * do while the loading screen is active).
+ *
+ * \param recreate
+ * If this is true (it's false by default), recreate the image cache even
+ * if it already exists.
+ */
+void cVideo::Init_Image_Cache(bool recreate /* = 0 */)
 {
     m_imgcache_dir = pResource_Manager->Get_User_Imgcache_Directory();
     fs::path imgcache_dir_active = m_imgcache_dir / utf8_to_path(int_to_string(pPreferences->m_video_screen_w) + "x" + int_to_string(pPreferences->m_video_screen_h));
@@ -467,11 +430,8 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
             catch (const std::exception& ex) {
                 cerr << ex.what() << endl;
 
-                if (draw_gui) {
-                    // caching failed
-                    Loading_Screen_Draw_Text(_("Caching Images failed : Could not remove old images"));
-                    sleep(2);
-                }
+                Loading_Screen_Draw_Text(_("Caching Images failed : Could not remove old images"));
+                sleep(2);
             }
         }
 
@@ -492,16 +452,8 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
     float real_texture_detail = m_texture_quality;
     m_texture_quality = 1;
 
-    CEGUI::ProgressBar* progress_bar = NULL;
-
-    if (draw_gui) {
-        // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
-        progress_bar->setProgress(0);
-
-        // set loading screen text
-        Loading_Screen_Draw_Text(_("Caching Images"));
-    }
+    // set loading screen text
+    Loading_Screen_Draw_Text(_("Caching Images"));
 
     // get all files
     vector<fs::path> image_files = Get_Directory_Files(pResource_Manager->Get_Game_Pixmaps_Directory(), ".settings", true);
@@ -623,9 +575,8 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
         loaded_files++;
 
         // draw
-        if (draw_gui) {
-            // update progress
-            progress_bar->setProgress(static_cast<float>(loaded_files) / static_cast<float>(file_count));
+        // update progress
+        Loading_Screen_Set_Progress(static_cast<float>(loaded_files) / static_cast<float>(file_count));
 
 // OLD #ifdef _DEBUG
 // OLD             // update filename
@@ -638,7 +589,6 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */, bool draw_gui /* = 0 */)
 // OLD             // delete
 // OLD             delete surface_filename;
 // OLD #endif
-        }
     }
 
     // set back texture detail
@@ -721,7 +671,7 @@ void cVideo::Render(bool threaded /* = 0 */)
     Render_Finish();
 
     if (threaded) {
-        pGuiSystem->renderGUI();
+        CEGUI::System::getSingleton().renderAllGUIContexts();
 
         // update performance timer
         pFramerate->m_perf_timer[PERF_RENDER_GUI]->Update();
@@ -754,7 +704,8 @@ void cVideo::Render(bool threaded /* = 0 */)
         // update performance timer
         pFramerate->m_perf_timer[PERF_RENDER_GAME]->Update();
 
-        pGuiSystem->renderGUI();
+        // Render GUI after everything else, i.e. on top of everything
+        CEGUI::System::getSingleton().renderAllGUIContexts();
 
         // update performance timer
         pFramerate->m_perf_timer[PERF_RENDER_GUI]->Update();
@@ -872,6 +823,7 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
     sf::Image* p_sf_image = new sf::Image();
     bool successfully_loaded = false;
     cImage_Settings_Data* settings = NULL;
+    fs::path final_png_path;
 
     // load settings if available
     if (load_settings) {
@@ -896,8 +848,13 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
                 img_filename_cache = m_imgcache_dir / rel; // Why add .png here? Should be in the return value of fs_relative() anyway.
 
             // check if image cache file exists
-            if (!img_filename_cache.empty() && fs::exists(img_filename_cache) && fs::is_regular_file(img_filename_cache))
+            if (!img_filename_cache.empty() && fs::exists(img_filename_cache) && fs::is_regular_file(img_filename_cache)) {
                 successfully_loaded = p_sf_image->loadFromFile(path_to_utf8(img_filename_cache));
+
+                if (successfully_loaded) {
+                    final_png_path = img_filename_cache;
+                }
+            }
             // image given in base settings
             else if (!settings->m_base.empty()) {
                 // use current directory
@@ -915,6 +872,10 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
                 }
 
                 successfully_loaded = p_sf_image->loadFromFile(path_to_utf8(img_filename));
+
+                if (successfully_loaded) {
+                    final_png_path = img_filename;
+                }
             }
         }
     }
@@ -922,6 +883,10 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
     // if not set in image settings and file exists
     if (!successfully_loaded && exists(filename) && (!settings || settings->m_base.empty())) {
         successfully_loaded = p_sf_image->loadFromFile(path_to_utf8(filename));
+
+        if (successfully_loaded) {
+            final_png_path = filename;
+        }
     }
 
     if (!successfully_loaded) {
@@ -940,6 +905,7 @@ cVideo::cSoftware_Image cVideo :: Load_Image_Helper(boost::filesystem::path file
 
     software_image.m_sf_image = p_sf_image;
     software_image.m_settings = settings;
+    software_image.m_real_png_path = final_png_path;
     return software_image;
 }
 
@@ -992,9 +958,10 @@ cGL_Surface* cVideo :: Load_GL_Surface_Helper(boost::filesystem::path filename, 
     else {
         image = Create_Texture(p_sf_image);
     }
-    // set filename
+    // set filenames
     if (image) {
         image->m_path = filename;
+        image->m_real_png_path = software_image.m_real_png_path;
     }
     // print error
     else if (print_errors) {
@@ -2032,93 +1999,9 @@ void Draw_Effect_In(Effect_Fadein effect /* = EFFECT_IN_RANDOM */, float speed /
     pFramerate->Update();
 }
 
-void Loading_Screen_Init(void)
-{
-    if (CEGUI::WindowManager::getSingleton().isWindowPresent("loading")) {
-        cerr << "Warning: Loading Screen already initialized.";
-        return;
-    }
-
-    CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
-
-    // hide all windows
-    for (unsigned int i = 0, gui_windows = guisheet->getChildCount(); i < gui_windows; i++) {
-        guisheet->getChildAtIdx(i)->hide();
-    }
-
-    // Create loading window
-    CEGUI::Window* loading_window = CEGUI::WindowManager::getSingleton().loadWindowLayout("loading.layout");
-    guisheet->addChildWindow(loading_window);
-
-    // Set license info as translatable string
-    CEGUI::Window* license_text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_gpl"));
-    // TRANS: Be careful with the length of this line, if
-    // TRANS: it is much longer than the English version,
-    // TRANS: it will be cut off.
-    license_text->setText(UTF8_("This program is distributed under the terms of the GPLv3"));
-
-    // set info text
-    CEGUI::Window* text_default = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_loading"));
-    text_default->setText(_("Loading"));
-}
-
-void Loading_Screen_Draw_Text(const std::string& str_info /* = "Loading" */)
-{
-    // set info text
-    CEGUI::Window* text_default = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_loading"));
-    if (!text_default) {
-        cerr << "Warning: Loading Screen not initialized.";
-        return;
-    }
-    text_default->setText(reinterpret_cast<const CEGUI::utf8*>(str_info.c_str()));
-
-    Loading_Screen_Draw();
-}
-
-void Loading_Screen_Draw(void)
-{
-    // limit fps or vsync will slow down the loading
-    if (!Is_Frame_Time(60)) {
-        pRenderer->Fake_Render();
-        return;
-    }
-
-    // clear screen
-    pVideo->Clear_Screen();
-    pVideo->Draw_Rect(NULL, 0.00001f, &black);
-
-    // Render
-    pRenderer->Render();
-    pGuiSystem->renderGUI();
-    pVideo->mp_window->display();
-}
-
-void Loading_Screen_Exit(void)
-{
-    CEGUI::Window* loading_window = CEGUI::WindowManager::getSingleton().getWindow("loading");
-
-    // loading window is present
-    if (loading_window) {
-        CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
-
-        // delete loading window
-        guisheet->removeChildWindow(loading_window);
-        CEGUI::WindowManager::getSingleton().destroyWindow(loading_window);
-
-        // show windows again
-        // fixme : this should only show the hidden windows again
-        for (unsigned int i = 0, gui_windows = guisheet->getChildCount(); i < gui_windows; i++) {
-            guisheet->getChildAtIdx(i)->show();
-        }
-    }
-}
-
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
 cVideo* pVideo = NULL;
-
-CEGUI::OpenGLRenderer* pGuiRenderer = NULL;
-CEGUI::System* pGuiSystem = NULL;
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

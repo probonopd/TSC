@@ -86,10 +86,12 @@ namespace TSC {
         virtual void Handle_Collision_Massive(cObjectCollision* collision);
         virtual void Handle_Collision_Box( ObjectDirection cdirection, GL_rect *r2 );
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
         bool Editor_Direction_Select(const CEGUI::EventArgs& event);
+#endif
 
         // Save to XML node
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);

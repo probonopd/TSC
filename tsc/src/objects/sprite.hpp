@@ -431,21 +431,19 @@ namespace TSC {
         */
         virtual void Destroy(void);
 
-        // editor add window object
-        void Editor_Add(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* window_setting, float obj_width, float obj_height = 28, bool advance_row = 1);
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor deactivation
         virtual void Editor_Deactivate(void);
         // editor init
-        virtual void Editor_Init(void);
-        // editor position update
-        virtual void Editor_Position_Update(void);
+        void Editor_Init();
         // editor state update
         virtual void Editor_State_Update(void) {};
 
         // editor image text changed event
         bool Editor_Image_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         /// current image used for drawing
         cGL_Surface* m_image;
@@ -524,7 +522,10 @@ namespace TSC {
         /// massive collision type
         MassiveType m_massive_type;
 
-        /// sprite editor tags
+        /// sprite editor tags. Only populated and used in relation
+        /// with the editor's object menu. See
+        /// cEditor::load_special_items() function. In normal
+        /// gameplay, this is empty.
         std::string m_editor_tags;
 
         /// true if not using the camera position
@@ -557,12 +558,6 @@ namespace TSC {
         bool m_valid_draw;
         /// if updating is valid
         bool m_valid_update;
-
-        /// editor active window list
-        typedef vector<cEditor_Object_Settings_Item*> Editor_Object_Settings_List;
-        Editor_Object_Settings_List m_editor_windows;
-        /// width for all name windows based on largest name text width
-        float m_editor_window_name_width;
 
         /// ID to uniquely identify this sprite (UIDS[idhere] uses this)
         int m_uid;

@@ -25,6 +25,11 @@
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/xml_attributes.hpp"
 #include "../core/global_basic.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -243,6 +248,7 @@ void cEato::Handle_Collision_Player(cObjectCollision* collision)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cEato::Editor_Activate(void)
 {
     // get window manager
@@ -250,7 +256,6 @@ void cEato::Editor_Activate(void)
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_eato_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Direction"), combobox, 100, 200);
 
     combobox->addItem(new CEGUI::ListboxTextItem("top_left"));
     combobox->addItem(new CEGUI::ListboxTextItem("top_right"));
@@ -263,10 +268,11 @@ void cEato::Editor_Activate(void)
 
     combobox->setText(Get_Direction_Name(m_start_direction));
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cEato::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Direction"), combobox);
 
     // image dir
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_eato_image_dir"));
-    Editor_Add(UTF8_("Image directory"), UTF8_("Directory containing the images"), editbox, 200);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Image directory"), UTF8_("Directory containing the images"), editbox);
 
     editbox->setText(path_to_utf8(m_img_dir).c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cEato::Editor_Image_Dir_Text_Changed, this));
@@ -293,6 +299,7 @@ bool cEato::Editor_Image_Dir_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 std::string cEato::Create_Name(void) const
 {

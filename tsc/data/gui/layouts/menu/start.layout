@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="menu_overworld">
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Property name="MousePassThroughEnabled" value="True"/>
+    <Window type="TaharezLook/TabControl" name="tabcontrol_main">
+      <Property name="TabHeight" value="{0,22.4934}"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="TabPanePosition" value="Top"/>
+      <Property name="Area" value="{{0.182812,0},{0.241666,0},{0.840625,0},{0.793749,0}}"/>
+      <Window type="DefaultWindow" name="tab_package">
+        <Property name="Text" value="Package"/>
+	<Property name="Visible" value="True"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="listbox_packages">
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0.105,0},{0.5,0},{0.9,0}}"/>
+        </Window>
+        <Window type="TaharezLook/MultiLineEditbox" name="editbox_package_description">
+          <Property name="Text"></Property>
+          <Property name="ReadOnly" value="True"/>
+          <Property name="MaxTextLength" value="1073741823"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.53,0},{0.21,0},{0.98,0},{0.6,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_package_description">
+          <Property name="Text" value="Description"/>
+          <Property name="TooltipText" value="Package Description"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.53,0},{0.11,0},{0.8,0},{0.19,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_package_select">
+          <Property name="Text" value="Select Package"/>
+          <Property name="TextColours" value="tl:FFAAFFAA tr:FFAAFFAA bl:FFAAFFAA br:FFAAFFAA"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="HorzFormatting" value="HorzCentred"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0,0},{0.497184,0},{0.1,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+      </Window>
+      <Window type="DefaultWindow" name="tab_campaign">
+        <Property name="Text" value="Campaign"/>
+	<Property name="Visible" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="listbox_campaigns">
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0.105,0},{0.5,0},{0.9,0}}"/>
+        </Window>
+        <Window type="TaharezLook/MultiLineEditbox" name="editbox_campaign_description">
+          <Property name="Text"></Property>
+          <Property name="ReadOnly" value="True"/>
+          <Property name="MaxTextLength" value="1073741823"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.53,0},{0.21,0},{0.98,0},{0.6,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_campaign_description">
+          <Property name="TooltipText" value="Campaign Description"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.53,0},{0.11,0},{0.8,0},{0.19,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_campaign_select">
+          <Property name="Text" value="Select Campaign"/>
+          <Property name="TextColours" value="tl:FFAAFFAA tr:FFAAFFAA bl:FFAAFFAA br:FFAAFFAA"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="HorzFormatting" value="HorzCentred"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0,0},{0.497184,0},{0.1,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+      </Window>
+      <Window type="DefaultWindow" name="tab_world">
+        <Property name="Text" value="World"/>
+        <Property name="Visible" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="listbox_worlds">
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0.105,0},{0.5,0},{0.9,0}}"/>
+        </Window>
+        <Window type="TaharezLook/MultiLineEditbox" name="editbox_world_description">
+          <Property name="Text"></Property>
+          <Property name="ReadOnly" value="True"/>
+          <Property name="MaxTextLength" value="1073741823"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.53,0},{0.21,0},{0.98,0},{0.6,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_world_description">
+          <Property name="TooltipText" value="World Description"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.53,0},{0.11,0},{0.8,0},{0.19,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_world_select">
+          <Property name="Text" value="Select Overworld"/>
+          <Property name="TextColours" value="tl:FFAAFFAA tr:FFAAFFAA bl:FFAAFFAA br:FFAAFFAA"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="HorzFormatting" value="HorzCentred"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0,0},{0.497184,0},{0.1,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+      </Window>
+      <Window type="DefaultWindow" name="tab_level">
+        <Property name="Text" value="Level"/>
+        <Property name="Visible" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/Listbox" name="listbox_levels">
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0.105,0},{0.5,0},{0.9,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_level_select">
+          <Property name="Text" value="Select Level"/>
+          <Property name="TextColours" value="tl:FFAAFFAA tr:FFAAFFAA bl:FFAAFFAA br:FFAAFFAA"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="HorzFormatting" value="HorzCentred"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.015,0},{0,0},{0.5,0},{0.1,0}}"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_level_info">
+          <Property name="TextColours" value="tl:FFF8BF26 tr:FFF8BF26 bl:FFF8BF26 br:FFF8BF26"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="VertFormatting" value="TopAligned"/>
+          <Property name="Area" value="{{0.55,0},{0.105,0},{0.940903,0},{0.488335,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Button" name="button_level_new">
+          <Property name="Text" value="New"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.02,0},{0.92,0},{0.13,0},{0.99,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Button" name="button_level_edit">
+          <Property name="Text" value="Edit"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.16,0},{0.92,0},{0.28,0},{0.99,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Button" name="button_level_delete">
+          <Property name="Text" value="Delete"/>
+          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+          <Property name="Area" value="{{0.31,0},{0.92,0},{0.45,0},{0.99,0}}"/>
+        </Window>
+      </Window>
+    </Window>
+    <Window type="TaharezLook/Button" name="button_back">
+      <Property name="Text" value="Back"/>
+      <Property name="AlwaysOnTop" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.63,0},{0.75,0},{0.71,0},{0.79,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Button" name="button_enter">
+      <Property name="Text" value="Enter"/>
+      <Property name="AlwaysOnTop" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.74,0},{0.75,0},{0.83,0},{0.79,0}}"/>
+    </Window>
+  </Window>
+</GUILayout>

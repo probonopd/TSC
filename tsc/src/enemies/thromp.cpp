@@ -30,6 +30,11 @@
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/xml_attributes.hpp"
 #include "../core/global_basic.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -654,6 +659,7 @@ void cThromp::Handle_out_of_Level(ObjectDirection dir)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cThromp::Editor_Activate(void)
 {
     // get window manager
@@ -661,7 +667,6 @@ void cThromp::Editor_Activate(void)
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_thromp_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Direction it moves into."), combobox, 100, 110);
 
     combobox->addItem(new CEGUI::ListboxTextItem("up"));
     combobox->addItem(new CEGUI::ListboxTextItem("down"));
@@ -670,17 +675,18 @@ void cThromp::Editor_Activate(void)
 
     combobox->setText(Get_Direction_Name(m_start_direction));
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cThromp::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Direction it moves into."), combobox);
 
     // image dir
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_thromp_image_dir"));
-    Editor_Add(UTF8_("Image directory"), UTF8_("Directory containing the images"), editbox, 200);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Image directory"), UTF8_("Directory containing the images"), editbox);
 
     editbox->setText(path_to_utf8(m_img_dir).c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cThromp::Editor_Image_Dir_Text_Changed, this));
 
     // max distance
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_thromp_max_distance"));
-    Editor_Add(UTF8_("Distance"), UTF8_("Detection distance into its direction"), editbox, 90);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Distance"), UTF8_("Detection distance into its direction"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(static_cast<int>(m_max_distance)));
@@ -688,7 +694,7 @@ void cThromp::Editor_Activate(void)
 
     // speed
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_thromp_speed"));
-    Editor_Add(UTF8_("Speed"), UTF8_("Speed when activated"), editbox, 120);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Speed"), UTF8_("Speed when activated"), editbox);
 
     editbox->setValidationString("[+]?[0-9]*\\.?[0-9]*");
     editbox->setText(float_to_string(m_speed, 6, 0));
@@ -737,6 +743,7 @@ bool cThromp::Editor_Speed_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 std::string cThromp::Create_Name(void) const
 {

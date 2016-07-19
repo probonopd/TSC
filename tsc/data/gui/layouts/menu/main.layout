@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+      <Window type="DefaultWindow" name="menu_main">
+        <Property name="InheritsAlpha" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Property name="MousePassThroughEnabled" value="True"/>
+        <Window type="TaharezLook/StaticText" name="text_version">
+            <Property name="Text" value="Version"/>
+            <Property name="TooltipText" value="Current Game Version."/>
+            <Property name="TextColours" value="tl:FF00BB00 tr:FF00CC00 bl:FF00CC00 br:FF00FF00"/>
+            <Property name="HorzFormatting" value="HorzCentred"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.8,0},{0.94,0},{0.99,0},{0.99,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_website">
+            <Property name="Text" value="www.secretchronicles.de"/>
+            <Property name="TooltipText" value="Latest News, User Levels and Worlds, Wiki and a Community Forum."/>
+            <Property name="TextColours" value="tl:FFFFAA22 tr:FFFFAA22 bl:FFFF8822 br:FFFF8822"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="ClippedByParent" value="False"/>
+            <Property name="Area" value="{{0.7,0},{0.1325,0},{0.95,0},{0.1925,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+    </Window>
+</GUILayout>

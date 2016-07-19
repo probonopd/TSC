@@ -39,7 +39,7 @@ cFont_Manager::~cFont_Manager(void)
 
 void cFont_Manager::Init(void)
 {
-    if (!m_font_normal.loadFromFile(path_to_utf8(pResource_Manager->Get_Gui_Font_Directory() / utf8_to_path("default_bold.ttf")))) {
+    if (!m_font_normal.loadFromFile(path_to_utf8(pResource_Manager->Get_Gui_Font_Directory() / utf8_to_path("DejaVuSans-Bold.ttf")))) {
         // FIXME: Throw a proper exception
         throw "Font loading failed";
     }

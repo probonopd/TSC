@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+    <Window type="DefaultWindow" name="level_settings_tab_main">
+        <Property name="Text" value="Main"/>
+        <Property name="InheritsAlpha" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/StaticText" name="text_level_filename">
+            <Property name="Text" value="Name"/>
+            <Property name="TooltipText" value="If the filename is changed the file is automatically renamed."/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.01,0},{0.1,0},{0.06,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_music_filename">
+            <Property name="Text" value="Music"/>
+            <Property name="TooltipText" value="Music filename"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.5,0},{0.01,0},{0.61,0},{0.06,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_author">
+            <Property name="Text" value="Author"/>
+            <Property name="TooltipText" value="Level Author name(s)"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.07,0},{0.1,0},{0.12,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_version">
+            <Property name="Text" value="Version"/>
+            <Property name="TooltipText" value="Level version"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.13,0},{0.1,0},{0.18,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_camera_limit_w">
+            <Property name="Text" value="Limit Width"/>
+            <Property name="TooltipText" value="Camera Limit width"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.51,0},{0.16,0},{0.56,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_last_saved">
+            <Property name="Text" value="Last save time"/>
+            <Property name="TooltipText" value="The last time this level was saved"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.94,0},{0.17,0},{0.99,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/Editbox" name="editbox_level_filename">
+            <Property name="MaxTextLength" value="1073741823"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.1,0},{0.01,0},{0.35,0},{0.06,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Editbox" name="editbox_music_filename">
+            <Property name="MaxTextLength" value="1073741823"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.61,0},{0.01,0},{0.98,0},{0.06,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Editbox" name="editbox_author">
+            <Property name="MaxTextLength" value="30"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.1,0},{0.07,0},{0.46,0},{0.12,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Editbox" name="editbox_version">
+            <Property name="MaxTextLength" value="20"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.1,0},{0.13,0},{0.35,0},{0.18,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Editbox" name="editbox_save_time">
+            <Property name="ReadOnly" value="True"/>
+            <Property name="MaxTextLength" value="60"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.18,0},{0.94,0},{0.6,0},{0.99,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Spinner" name="spinner_camera_limit_w">
+            <Property name="StepSize" value="1"/>
+            <Property name="CurrentValue" value="0"/>
+            <Property name="MaximumValue" value="32767"/>
+            <Property name="MinimumValue" value="0"/>
+            <Property name="TextInputMode" value="FloatingPoint"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.16,0},{0.51,0},{0.3,0},{0.56,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Spinner" name="spinner_camera_limit_h">
+            <Property name="StepSize" value="1"/>
+            <Property name="CurrentValue" value="0"/>
+            <Property name="MaximumValue" value="0"/>
+            <Property name="MinimumValue" value="-32767"/>
+            <Property name="TextInputMode" value="FloatingPoint"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.4,0},{0.51,0},{0.54,0},{0.56,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Spinner" name="spinner_camera_hor_vel">
+            <Property name="StepSize" value="0.5"/>
+            <Property name="CurrentValue" value="0"/>
+            <Property name="MaximumValue" value="100"/>
+            <Property name="MinimumValue" value="-100"/>
+            <Property name="TextInputMode" value="FloatingPoint"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.16,0},{0.57,0},{0.3,0},{0.62,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_camera_fixed_hor_vel">
+            <Property name="Text" value="Fixed Velocity"/>
+            <Property name="TooltipText" value="Camera fixed horizontal velocity"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.57,0},{0.16,0},{0.62,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_camera">
+            <Property name="Text" value="Camera"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.45,0},{0.12,0},{0.5,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_camera_limit_h">
+            <Property name="Text" value="Height"/>
+            <Property name="TooltipText" value="Camera Limit height"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.31,0},{0.51,0},{0.39,0},{0.56,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_description">
+            <Property name="Text" value="Description"/>
+            <Property name="HorzFormatting" value="HorzCentred"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.42,0},{0.19,0},{0.56,0},{0.24,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_difficulty">
+            <Property name="Text" value="Difficulty"/>
+            <Property name="TooltipText" value="Difficulty of this level"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.5,0},{0.07,0},{0.61,0},{0.12,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/Spinner" name="spinner_difficulty">
+            <Property name="StepSize" value="1"/>
+            <Property name="CurrentValue" value="0"/>
+            <Property name="MaximumValue" value="100"/>
+            <Property name="MinimumValue" value="0"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.61,0},{0.07,0},{0.68,0},{0.12,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_land_type">
+            <Property name="Text" value="Land Type"/>
+            <Property name="TooltipText" value="The mainly used type of land sprites"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.5,0},{0.13,0},{0.61,0},{0.18,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/Combobox" name="combo_land_type">
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.61,0},{0.13,0},{0.86,0},{0.38,0}}"/>
+            <Property name="MaxTextLength" value="1073741823"/>
+        </Window>
+        <Window type="TaharezLook/MultiLineEditbox" name="multieditbox_description">
+            <Property name="Text"></Property>
+            <Property name="MaxTextLength" value="300"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.22,0},{0.25,0},{0.78,0},{0.4,0}}"/>
+        </Window>
+        <Window type="TaharezLook/Slider" name="slider_difficulty">
+            <Property name="CurrentValue" value="0"/>
+            <Property name="MaximumValue" value="100"/>
+            <Property name="ClickStepSize" value="5"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.69,0},{0.07,0},{0.84,0},{0.12,0}}"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_difficulty_name">
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.84,0},{0.07,0},{0.98,0},{0.12,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/StaticText" name="text_unload_after_exit">
+            <Property name="Text" value="Unload"/>
+            <Property name="FrameEnabled" value="False"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.75,0},{0.20,0},{0.81,0}}"/>
+            <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+        <Window type="TaharezLook/Combobox" name="unload_after_exit">
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.21,0},{0.75,0},{0.50,0},{0.91,0}}"/>
+            <Property name="MaxTextLength" value="1073741823"/>
+        </Window>
+    </Window>
+</GUILayout>

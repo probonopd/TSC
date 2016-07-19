@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="tab_audio">
+    <Property name="Text" value="Audio"/>
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Window type="TaharezLook/Combobox" name="audio_combo_music">
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.13,0},{0.42,0},{0.37,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="audio_combo_sounds">
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.21,0},{0.42,0},{0.45,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Slider" name="audio_slider_music_volume">
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="128"/>
+      <Property name="ClickStepSize" value="8"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.43,0},{0.13,0},{0.57,0},{0.2,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Slider" name="audio_slider_sound_volume">
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="128"/>
+      <Property name="ClickStepSize" value="8"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.43,0},{0.21,0},{0.57,0},{0.28,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="audio_combo_hz">
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.05,0},{0.46,0},{0.34,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="audio_text_hz">
+      <Property name="Text" value="_Hz"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.05,0},{0.3,0},{0.12,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="audio_text_music">
+      <Property name="Text" value="_Music"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.13,0},{0.3,0},{0.2,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="audio_text_sound">
+      <Property name="Text" value="_Sound"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.21,0},{0.3,0},{0.28,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/Button" name="audio_button_reset">
+      <Property name="Text" value="_Reset"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.02,0},{0.9,0},{0.16,0},{0.98,0}}"/>
+    </Window>
+  </Window>
+</GUILayout>

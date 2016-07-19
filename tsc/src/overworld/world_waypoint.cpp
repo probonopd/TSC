@@ -29,6 +29,9 @@
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/xml_attributes.hpp"
 #include "../core/global_basic.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../core/editor/editor.hpp"
+#include "world_editor.hpp"
 
 using namespace std;
 
@@ -357,6 +360,7 @@ boost::filesystem::path cWaypoint::Get_Destination_Path()
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cWaypoint::Editor_Activate(void)
 {
     // get window manager
@@ -364,7 +368,6 @@ void cWaypoint::Editor_Activate(void)
 
     // Type
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_type"));
-    Editor_Add(UTF8_("Type"), UTF8_("Destination type"), combobox, 120, 80);
 
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Level")));
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("World")));
@@ -377,18 +380,17 @@ void cWaypoint::Editor_Activate(void)
     }
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Type_Select, this));
-
+    pWorld_Editor->Add_Config_Widget(UTF8_("Type"), UTF8_("Destination type"), combobox);
 
     // destination
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_destination"));
-    Editor_Add(UTF8_("Destination"), UTF8_("Destination level or world"), editbox, 150);
+    pWorld_Editor->Add_Config_Widget(UTF8_("Destination"), UTF8_("Destination level or world"), editbox);
 
     editbox->setText(Get_Destination());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Destination_Text_Changed, this));
 
     // backward direction
     combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_backward_direction"));
-    Editor_Add(UTF8_("Backward Direction"), UTF8_("Backward Direction"), combobox, 100, 105);
 
     combobox->addItem(new CEGUI::ListboxTextItem("up"));
     combobox->addItem(new CEGUI::ListboxTextItem("down"));
@@ -397,10 +399,10 @@ void cWaypoint::Editor_Activate(void)
     combobox->setText(Get_Direction_Name(m_direction_backward));
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Backward_Direction_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Backward Direction"), UTF8_("Backward Direction"), combobox);
 
     // forward direction
     combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_forward_direction"));
-    Editor_Add(UTF8_("Forward Direction"), UTF8_("Forward Direction"), combobox, 100, 105);
 
     combobox->addItem(new CEGUI::ListboxTextItem("up"));
     combobox->addItem(new CEGUI::ListboxTextItem("down"));
@@ -409,10 +411,10 @@ void cWaypoint::Editor_Activate(void)
     combobox->setText(Get_Direction_Name(m_direction_forward));
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Forward_Direction_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Forward Direction"), UTF8_("Forward Direction"), combobox);
 
     // Access
     combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_access"));
-    Editor_Add(UTF8_("Default Access"), UTF8_("Enable if the Waypoint should be always accessible."), combobox, 120, 80);
 
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Enabled")));
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Disabled")));
@@ -425,6 +427,7 @@ void cWaypoint::Editor_Activate(void)
     }
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Access_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Default Access"), UTF8_("Enable if the Waypoint should be always accessible."), combobox);
 
     // init
     Editor_Init();
@@ -489,6 +492,7 @@ bool cWaypoint::Editor_Access_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

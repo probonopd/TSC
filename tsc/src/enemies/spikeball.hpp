@@ -91,10 +91,12 @@ namespace TSC {
         // collision from a box
         virtual void Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
         bool Editor_Direction_Select(const CEGUI::EventArgs& event);
+#endif
 
         // Color
         DefaultColor m_color_type;

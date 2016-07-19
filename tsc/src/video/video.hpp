@@ -55,29 +55,20 @@ namespace TSC {
         cVideo(void);
         ~cVideo(void);
 
-        // Initialize the CEGUI System and Renderer
-        void Init_CEGUI(void) const;
-        // Initialize the basic CEGUI data and configuration
-        void Init_CEGUI_Data(void) const;
         /* Initialize the screen surface
          * reload_textures_from_file: if set reloads all textures from the original file
          * use_preferences: if set use user preferences settings
          * shows an error if failed and exits
+         * Calls several subinitialisations.
         */
         void Init_Video(bool reload_textures_from_file = 0, bool use_preferences = 1);
-        // Initialize OpenGL with current settings
-        void Init_OpenGL(void);
-        // Initialize Geometry with current settings
-        void Init_Geometry(void);
-        // Initialize Texture detail settings
-        void Init_Texture_Detail(void);
-        // initialize the up/down scaling value for the current resolution ( image/mouse scale )
-        void Init_Resolution_Scale(void) const;
+
         /* Initialize the image cache and recreates cache if game version changed
          * recreate : if set force cache recreation
-         * draw_gui : if set use the loading screen gui for drawing
+         * Sets the CEGUI root window to the loading screen. If you own a CEGUI
+         * root window, destroy it before calling this function.
         */
-        void Init_Image_Cache(bool recreate = 0, bool draw_gui = 0);
+        void Init_Image_Cache(bool recreate = 0);
 
         /* Test if the given resolution and bits per pixel are valid
          * if flags aren't set they are auto set from the preferences
@@ -124,6 +115,7 @@ namespace TSC {
 
             sf::Image* m_sf_image;
             cImage_Settings_Data* m_settings;
+            boost::filesystem::path m_real_png_path; /// The fully resolved path to the loaded PNG image file.
         };
 
         /* Load and return the software image with the settings data
@@ -241,7 +233,21 @@ namespace TSC {
         // rendering thread
         boost::thread m_render_thread;
 
-    private:
+        // GUI System
+        CEGUI::OpenGLRenderer* mp_cegui_renderer;
+
+        //private: // FIXME: Make these private:
+        // Initialize OpenGL with current settings
+        void Init_OpenGL(void);
+        // Initialize the CEGUI System and Renderer
+        void Init_CEGUI(void);
+        // Initialize Geometry with current settings
+        void Init_Geometry(void);
+        // Initialize Texture detail settings
+        void Init_Texture_Detail(void);
+        // initialize the up/down scaling value for the current resolution ( image/mouse scale )
+        void Init_Resolution_Scale(void) const;
+
         // if set video is initialized successfully
         bool m_initialised;
     };
@@ -256,23 +262,10 @@ namespace TSC {
     */
     void Draw_Effect_In(Effect_Fadein effect = EFFECT_IN_RANDOM, float speed = 1);
 
-// initialize loading screen
-    void Loading_Screen_Init(void);
-// set the loading screen info string and draw it
-    void Loading_Screen_Draw_Text(const std::string& str_info = "Loading");
-// draw the loading screen
-    void Loading_Screen_Draw(void);
-// exit loading screen
-    void Loading_Screen_Exit(void);
-
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
 // Video Handler
     extern cVideo* pVideo;
-
-// GUI System
-    extern CEGUI::OpenGLRenderer* pGuiRenderer;
-    extern CEGUI::System* pGuiSystem;
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

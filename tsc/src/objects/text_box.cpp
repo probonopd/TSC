@@ -25,6 +25,11 @@
 #include "../core/i18n.hpp"
 #include "../audio/audio.hpp"
 #include "../level/level.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace TSC {
 
@@ -102,8 +107,7 @@ void cText_Box::Activate(void)
     CEGUI::MultiLineEditbox* editbox = static_cast<CEGUI::MultiLineEditbox*>(wmgr.createWindow("TaharezLook/MultiLineEditbox", "text_box_text"));
 
     // add to main window
-    pGuiSystem->getGUISheet()->addChildWindow(editbox);
-
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(editbox);
 
     // set on top
     editbox->setAlwaysOnTop(1);
@@ -217,6 +221,7 @@ void cText_Box::Set_Text(const std::string& str_text)
     m_text = str_text;
 }
 
+#ifdef ENABLE_EDITOR
 void cText_Box::Editor_Activate(void)
 {
     // BaseBox Settings first
@@ -227,8 +232,9 @@ void cText_Box::Editor_Activate(void)
 
     // text
     CEGUI::MultiLineEditbox* editbox = static_cast<CEGUI::MultiLineEditbox*>(wmgr.createWindow("TaharezLook/MultiLineEditbox", "text_box_text"));
-    Editor_Add(UTF8_("Text"), UTF8_("Text to display when activated"), editbox, static_cast<float>(text_box_window_width), static_cast<float>(text_box_window_height));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Text"), UTF8_("Text to display when activated"), editbox, static_cast<float>(text_box_window_height));
 
+    editbox->setWordWrapping(false);
     editbox->setText(reinterpret_cast<const CEGUI::utf8*>(m_text.c_str()));
     editbox->subscribeEvent(CEGUI::MultiLineEditbox::EventTextChanged, CEGUI::Event::Subscriber(&cText_Box::Editor_Text_Text_Changed, this));
 
@@ -245,6 +251,7 @@ bool cText_Box::Editor_Text_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

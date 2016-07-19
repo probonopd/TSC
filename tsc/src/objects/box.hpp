@@ -106,12 +106,14 @@ namespace TSC {
         // handle the basic box enemy collision
         virtual void Handle_Collision_Enemy(cObjectCollision* collision);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor useable count text changed event
         bool Editor_Useable_Count_Text_Changed(const CEGUI::EventArgs& event);
         // editor invisible option selected event
         bool Editor_Invisible_Select(const CEGUI::EventArgs& event);
+#endif
 
         // animation type
         std::string m_anim_type;

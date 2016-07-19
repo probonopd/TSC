@@ -23,6 +23,11 @@
 #include "../core/math/utilities.hpp"
 #include "../core/i18n.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_settings.hpp"
+#include "../level/level_editor.hpp"
+#include "../overworld/world_editor.hpp"
 
 namespace TSC {
 
@@ -434,27 +439,38 @@ void cRandom_Sound::Event_Out_Of_Range(void) const
     pAudio->Fadeout_Sounds(500, m_filename);
 }
 
+#ifdef ENABLE_EDITOR
 void cRandom_Sound::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
+    // Find active editor
+    cEditor* p_editor = NULL;
+
+    if (pLevel_Editor->m_enabled)
+        p_editor = pLevel_Editor;
+    else if (pWorld_Editor->m_enabled)
+        p_editor = pWorld_Editor;
+    else
+        throw(std::runtime_error("Unknown editing environment"));
+
     // filename
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_filename"));
-    Editor_Add(UTF8_("Filename"), UTF8_("Sound filename"), editbox, 200);
+    p_editor->Add_Config_Widget(UTF8_("Filename"), UTF8_("Sound filename"), editbox);
 
     editbox->setText(m_filename.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Filename_Text_Changed, this));
 
     // continuous
-    CEGUI::Checkbox* checkbox = static_cast<CEGUI::Checkbox*>(wmgr.createWindow("TaharezLook/Checkbox", "editor_sound_continuous"));
-    Editor_Add(UTF8_("Continuous"), UTF8_("Check if the sound should be played continuously instead of randomly"), checkbox, 50);
+    CEGUI::ToggleButton* checkbox = static_cast<CEGUI::ToggleButton*>(wmgr.createWindow("TaharezLook/Checkbox", "editor_sound_continuous"));
+    p_editor->Add_Config_Widget(UTF8_("Continuous"), UTF8_("Check if the sound should be played continuously instead of randomly"), checkbox);
 
     checkbox->setSelected(m_continuous);
-    checkbox->subscribeEvent(CEGUI::Checkbox::EventCheckStateChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Continuous_Changed, this));
+    checkbox->subscribeEvent(CEGUI::ToggleButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&cRandom_Sound::Editor_Continuous_Changed, this));
 
     // delay min
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_delay_min"));
-    Editor_Add(UTF8_("Delay Minimum"), UTF8_("Minimal delay until played again"), editbox, 90);
+    p_editor->Add_Config_Widget(UTF8_("Delay Minimum"), UTF8_("Minimal delay until played again"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(m_delay_min));
@@ -462,7 +478,7 @@ void cRandom_Sound::Editor_Activate(void)
 
     // delay max
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_delay_max"));
-    Editor_Add(UTF8_("Maximum"), UTF8_("Maximal delay until played again"), editbox, 90, 28, 0);
+    p_editor->Add_Config_Widget(UTF8_("Maximum"), UTF8_("Maximal delay until played again"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(m_delay_max));
@@ -470,7 +486,7 @@ void cRandom_Sound::Editor_Activate(void)
 
     // volume min
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_volume_min"));
-    Editor_Add(UTF8_("Volume Minimum"), UTF8_("Minimal random volume for each play"), editbox, 90);
+    p_editor->Add_Config_Widget(UTF8_("Volume Minimum"), UTF8_("Minimal random volume for each play"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(static_cast<int>(m_volume_min)));
@@ -478,7 +494,7 @@ void cRandom_Sound::Editor_Activate(void)
 
     // volume max
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_volume_max"));
-    Editor_Add(UTF8_("Maximum"), UTF8_("Maximal random volume for each play"), editbox, 90, 28, 0);
+    p_editor->Add_Config_Widget(UTF8_("Maximum"), UTF8_("Maximal random volume for each play"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(static_cast<int>(m_volume_max)));
@@ -486,7 +502,7 @@ void cRandom_Sound::Editor_Activate(void)
 
     // volume reduction begin
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_volume_reduction_begin"));
-    Editor_Add(UTF8_("Volume Reduction Begin"), UTF8_("Volume reduction begins gradually at this distance"), editbox, 90);
+    p_editor->Add_Config_Widget(UTF8_("Volume Reduction Begin"), UTF8_("Volume reduction begins gradually at this distance"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(static_cast<int>(m_volume_reduction_begin)));
@@ -494,7 +510,7 @@ void cRandom_Sound::Editor_Activate(void)
 
     // volume reduction end
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_sound_volume_reduction_end"));
-    Editor_Add(UTF8_("End"), UTF8_("Volume reduction ends at this distance. Sound is not played beyond this."), editbox, 90, 28, 0);
+    p_editor->Add_Config_Widget(UTF8_("End"), UTF8_("Volume reduction ends at this distance. Sound is not played beyond this."), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(static_cast<int>(m_volume_reduction_end)));
@@ -515,7 +531,7 @@ bool cRandom_Sound::Editor_Filename_Text_Changed(const CEGUI::EventArgs& event)
 bool cRandom_Sound::Editor_Continuous_Changed(const CEGUI::EventArgs& event)
 {
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    bool enabled = static_cast<CEGUI::Checkbox*>(windowEventArgs.window)->isSelected();
+    bool enabled = static_cast<CEGUI::ToggleButton*>(windowEventArgs.window)->isSelected();
 
     Set_Continuous(enabled);
 
@@ -581,6 +597,7 @@ bool cRandom_Sound::Editor_Volume_Reduction_End_Text_Changed(const CEGUI::EventA
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

@@ -25,7 +25,7 @@ namespace TSC {
     /* *** *** *** *** *** *** *** Level Settings *** *** *** *** *** *** *** *** *** *** */
     class cLevel_Settings {
     public:
-        cLevel_Settings(cSprite_Manager* sprite_manager, cLevel* level);
+        cLevel_Settings();
         ~cLevel_Settings(void);
 
         void Init(void);
@@ -46,8 +46,6 @@ namespace TSC {
 
         // Set the parent level
         void Set_Level(cLevel* level);
-        // Set the parent sprite manager
-        void Set_Sprite_Manager(cSprite_Manager* sprite_manager);
 
         // Adds a Background image
         bool Add_Background_Image(const CEGUI::EventArgs& event);

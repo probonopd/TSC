@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="tab_video">
+    <Property name="Text" value="Video"/>
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Window type="TaharezLook/Combobox" name="video_combo_resolution">
+      <Property name="TooltipText" value="Set the Screen Resolution. Lowering this value boosts FPS but lowers Visual Detail."/>
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.05,0},{0.5,0},{0.38,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="video_combo_bpp">
+      <Property name="TooltipText" value="Set the Bits per Pixel. Only lower this value if you don&apos;t support it."/>
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.13,0},{0.5,0},{0.38,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="video_combo_fullscreen">
+      <Property name="TooltipText" value="Should the Game run in Fullscreen or in Windowed Mode. Windowed Mode is usually used for bug hunting"/>
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.21,0},{0.5,0},{0.46,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="video_combo_vsync">
+      <Property name="TooltipText" value="Vertical synchronization synchronizes each frame with the vertical refresh, thus ensuring that only whole frames are seen on-screen which removes visual tearing. This looks smoother and should be enabled."/>
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.29,0},{0.5,0},{0.54,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Spinner" name="video_spinner_fps_limit">
+      <Property name="TooltipText" value="Frames per second (FPS) limit. 0 disables it."/>
+      <Property name="StepSize" value="5"/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="32767"/>
+      <Property name="MinimumValue" value="0"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.3,0},{0.37,0},{0.44,0},{0.44,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Slider" name="video_slider_geometry_quality">
+      <Property name="TooltipText" value="Set the geometry quality. Affects the quality of point, line and color drawing and texture coordinate interpolation."/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="1"/>
+      <Property name="ClickStepSize" value="0.1"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.3,0},{0.45,0},{0.5,0},{0.52,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Slider" name="video_slider_texture_quality">
+      <Property name="TooltipText" value="Set the texture quality. Affects filter quality and texture size."/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="1"/>
+      <Property name="ClickStepSize" value="0.1"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.3,0},{0.53,0},{0.5,0},{0.6,0}}"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_resolution">
+      <Property name="Text" value="_Resolution"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.05,0},{0.3,0},{0.12,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_bpp">
+      <Property name="Text" value="_Bpp"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.13,0},{0.3,0},{0.2,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_fullscreen">
+      <Property name="Text" value="_Fullscreen"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.21,0},{0.3,0},{0.28,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_vsync">
+      <Property name="Text" value="_VSync"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.29,0},{0.3,0},{0.36,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_fps_limit">
+      <Property name="Text" value="_FPS Limit"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.37,0},{0.3,0},{0.44,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_geometry_quality">
+      <Property name="Text" value="_Geometry Quality"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.45,0},{0.3,0},{0.52,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="video_text_texture_quality">
+      <Property name="Text" value="_Texture Quality"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.53,0},{0.3,0},{0.6,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/Button" name="video_button_apply">
+      <Property name="Text" value="_Apply"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.82,0},{0.9,0},{0.98,0},{0.98,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Button" name="video_button_recreate_cache">
+      <Property name="Text" value="_Recreate Cache"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.5,0},{0.9,0},{0.8,0},{0.98,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Button" name="video_button_reset">
+      <Property name="Text" value="_Reset"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.02,0},{0.9,0},{0.16,0},{0.98,0}}"/>
+    </Window>
+  </Window>
+</GUILayout>

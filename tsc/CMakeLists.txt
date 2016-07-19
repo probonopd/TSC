@@ -38,6 +38,7 @@ set(TSC_VERSION_POSTFIX "dev")
 
 option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
+option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
 set(FIXED_DATA_DIR "" CACHE FILEPATH "Enforce a static directory to look up graphics, music, etc. under rather than having TSC determine it dynamically.")
 set(BINARY_DIR "" CACHE FILEPATH "Enforce a path to install the binary to. If you use this, you MUST also set FIXED_DATA_DIR.")
@@ -63,6 +64,15 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wno-deprecated-declarations"
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1")
 endif()
+
+# CEGUI drops its libraries into an unusual subpath under /lib that
+# is not in the default runtime search path on most Linux distributions.
+# Thus we instruct CMake here to add some hints to the executable's
+# rpath (runtime library search path). This will make the runtime linker
+# find the CEGUI libraries at least on the system where TSC was compiled
+# on. For other systems, it is the duty of the packager to specify the
+# runtime linker search path properly.
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 execute_process(COMMAND git rev-parse --short HEAD
   WORKING_DIRECTORY ${TSC_SOURCE_DIR}
@@ -144,36 +154,6 @@ else()
   set(Tinyclipboard_INCLUDE_DIRS "${TSC_SOURCE_DIR}/../tinyclipboard/include")
 endif()
 
-########################################
-# CEGUI 0.7.x
-# Many Linux distributions do not provide CEGUI 0.7.x anymore.
-# Hence, if we do not detect it, try to download and compile it
-# ourselves.
-
-if (NOT(WIN32))
-  find_package(CEGUI COMPONENTS OPENGL)
-
-  if (NOT(CEGUI_FOUND))
-    message("CEGUI 0.7.x was not found. It will be downloaded and compiled during the build process.")
-
-    set(CEGUI_ROOT_DIR "${TSC_BINARY_DIR}/cegui")
-    set(CEGUI_SOURCE_DIR "${CEGUI_ROOT_DIR}/src/cegui07")
-
-    ExternalProject_Add(cegui07
-      PREFIX "${CEGUI_ROOT_DIR}"
-      URL "http://sourceforge.net/projects/crayzedsgui/files/CEGUI%20Mk-2/0.7.9/CEGUI-0.7.9.tar.gz"
-      URL_MD5 a8b682daf82e383edc169c2e6eb2b321
-      BUILD_IN_SOURCE 1
-      CONFIGURE_COMMAND ./configure --disable-samples --disable-python-module --disable-lua-module --enable-static --disable-shared --prefix=${CEGUI_ROOT_DIR}
-      BUILD_COMMAND make -j${NUM_CPUCORES}
-      INSTALL_COMMAND make install)
-
-    set(CEGUI_INCLUDE_DIR ${CEGUI_ROOT_DIR}/include)
-    set(CEGUI_LIBRARY ${CEGUI_ROOT_DIR}/lib/libCEGUIOpenGLRenderer.a ${CEGUI_ROOT_DIR}/lib/libCEGUIBase.a ${CEGUI_ROOT_DIR}/lib/libCEGUIDevILImageCodec.a ${CEGUI_ROOT_DIR}/lib/libCEGUIFalagardWRBase.a ${CEGUI_ROOT_DIR}/lib/libCEGUILibxmlParser.a)
-    set(CEGUI_DEFINITIONS " -DCEGUI_STATIC")
-  endif()
-endif()
-
 ################################################################################
 # Check for the actual libraries and programs.
 ################################################################################
@@ -195,6 +175,7 @@ endif()
 # Several libraries we depend on
 find_package(PkgConfig REQUIRED)
 find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+find_package(CEGUI COMPONENTS OpenGL REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(Gettext)
@@ -202,7 +183,6 @@ find_package(BISON REQUIRED)
 find_package(Freetype REQUIRED)
 
 if (WIN32)
-  find_package(CEGUI COMPONENTS OPENGL REQUIRED) # Old CEGUI 0.7.x is provided by MXE
   find_package(LibIntl REQUIRED)
   find_package(FreeImage REQUIRED)
 
@@ -217,7 +197,7 @@ if (WIN32)
       REQUIRED)
   endif()
 
-  # Boost-thread and CEGUI need to be explicitely told that they’re
+  # Boost-thread needs to be explicitely told that they’re
   # linked in statically on Windows.
   add_definitions(-DBOOST_THREAD_USE_LIB)
 else()
@@ -338,7 +318,7 @@ endif()
 # TODO: Make the mruby config automatically include the correct path to the PCRE library
 if (WIN32)
   target_link_libraries(tsc
-    ${CEGUI_LIBRARY}
+    ${CEGUI_LIBRARIES}
     ${SFML_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}
@@ -358,9 +338,8 @@ if (WIN32)
   # However, as we already require Gettext anyway, linking libintl in directly
   # should be safe.
 else()
-  add_dependencies(tsc cegui07)
   target_link_libraries(tsc
-    ${CEGUI_LIBRARY}
+    ${CEGUI_LIBRARIES}
     ${SFML_LIBRARIES}
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}

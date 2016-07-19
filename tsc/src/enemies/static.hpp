@@ -87,6 +87,7 @@ namespace TSC {
         // collision from an enemy
         virtual void Handle_Collision_Enemy(cObjectCollision* collision);
 
+#ifdef ENABLE_EDITOR
         // leveleditor activation
         virtual void Editor_Activate(void);
         // editor image text changed event
@@ -101,6 +102,7 @@ namespace TSC {
         bool Editor_Fire_Resistant_Select(const CEGUI::EventArgs& event);
         // editor ice resistance text changed event
         bool Editor_Ice_Resistance_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         // rotation speed
         float m_rotation_speed;

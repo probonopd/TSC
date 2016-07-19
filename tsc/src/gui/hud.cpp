@@ -945,11 +945,9 @@ cDebugDisplay::cDebugDisplay(cSprite_Manager* sprite_manager)
     m_type = TYPE_HUD_DEBUG;
     m_name = "HUD Debug";
 
-    // debug text window
-    m_window_debug_text = CEGUI::WindowManager::getSingleton().loadWindowLayout("debugtext.layout");
-    pGuiSystem->getGUISheet()->addChildWindow(m_window_debug_text);
     // debug text
-    m_text_debug_text = static_cast<CEGUI::Window*>(CEGUI::WindowManager::getSingleton().getWindow("text_debugmessage"));
+    m_text_debug_text = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("debugtext.layout");
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(m_text_debug_text);
     // hide
     m_text_debug_text->setVisible(0);
 
@@ -958,8 +956,8 @@ cDebugDisplay::cDebugDisplay(cSprite_Manager* sprite_manager)
 
 cDebugDisplay::~cDebugDisplay(void)
 {
-    pGuiSystem->getGUISheet()->removeChildWindow(m_window_debug_text);
-    CEGUI::WindowManager::getSingleton().destroyWindow(m_window_debug_text);
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(m_text_debug_text);
+    CEGUI::WindowManager::getSingleton().destroyWindow(m_text_debug_text);
 }
 
 void cDebugDisplay::Update(void)
@@ -991,7 +989,7 @@ void cDebugDisplay::Update(void)
         m_text_debug_text->setVisible(1);
 
         // update position
-        CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("bluebold_medium");
+        CEGUI::Font* font = &CEGUI::FontManager::getSingleton().get("DejaVuSans");
         float text_width = font->getTextExtent(gui_text) * global_downscalex;
         float text_height = font->getLineSpacing() * global_downscaley;
 
@@ -1005,7 +1003,7 @@ void cDebugDisplay::Update(void)
         // add newlines
         text_height *= 1 + std::count(m_text.begin(), m_text.end(), '\n');
 
-        m_text_debug_text->setSize(CEGUI::UVector2(CEGUI::UDim(0, (text_width + 15) * global_upscalex), CEGUI::UDim(0, (text_height + 15) * global_upscaley)));
+        m_text_debug_text->setSize(CEGUI::USize(CEGUI::UDim(0, (text_width + 15) * global_upscalex), CEGUI::UDim(0, (text_height + 15) * global_upscaley)));
         m_text_debug_text->setXPosition(CEGUI::UDim(0, ((game_res_w * 0.5f) - text_width * 0.5f) * global_upscalex));
     }
 }

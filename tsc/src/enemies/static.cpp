@@ -28,6 +28,11 @@
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/filesystem/relative.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -298,6 +303,7 @@ void cStaticEnemy::Handle_Collision_Enemy(cObjectCollision* collision)
     enemy->DownGrade(1);
 }
 
+#ifdef ENABLE_EDITOR
 void cStaticEnemy::Editor_Activate(void)
 {
     // get window manager
@@ -305,14 +311,14 @@ void cStaticEnemy::Editor_Activate(void)
 
     // image
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_static_enemy_image"));
-    Editor_Add(UTF8_("Image"), UTF8_("Image filename"), editbox, 200);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Image"), UTF8_("Image filename"), editbox);
 
     editbox->setText(m_image_filename.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cStaticEnemy::Editor_Image_Text_Changed, this));
 
     // rotation speed
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_static_enemy_rotation_speed"));
-    Editor_Add(UTF8_("Rotation Speed"), UTF8_("Rotation Speed"), editbox, 120);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Rotation Speed"), UTF8_("Rotation Speed"), editbox);
 
     editbox->setValidationString("[-+]?[0-9]*\\.?[0-9]*");
     editbox->setText(float_to_string(m_rotation_speed, 6, 0));
@@ -320,14 +326,14 @@ void cStaticEnemy::Editor_Activate(void)
 
     // path
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_static_enemy_path_identifier"));
-    Editor_Add(UTF8_("Path Identifier"), UTF8_("Name of the Path to move along."), editbox, 120);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Path Identifier"), UTF8_("Name of the Path to move along."), editbox);
 
     editbox->setText(m_path_state.m_path_identifier.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cStaticEnemy::Editor_Path_Identifier_Text_Changed, this));
 
     // speed
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_static_enemy_speed"));
-    Editor_Add(UTF8_("Speed"), UTF8_("Maximum speed"), editbox, 120);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Speed"), UTF8_("Maximum speed"), editbox);
 
     editbox->setValidationString("[-+]?[0-9]*\\.?[0-9]*");
     editbox->setText(float_to_string(m_speed, 6, 0));
@@ -335,7 +341,6 @@ void cStaticEnemy::Editor_Activate(void)
 
     // fire resistant
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_static_enemy_fire_resistant"));
-    Editor_Add(UTF8_("Fire Resistant"), UTF8_("If it is resistant against fire"), combobox, 120, 80);
 
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Enabled")));
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Disabled")));
@@ -348,10 +353,11 @@ void cStaticEnemy::Editor_Activate(void)
     }
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cStaticEnemy::Editor_Fire_Resistant_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Fire Resistant"), UTF8_("If it is resistant against fire"), combobox);
 
     // ice resistance
     editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_static_enemy_ice_resistance"));
-    Editor_Add(UTF8_("Ice Resistance"), UTF8_("Resistance against Ice (0.0-1.0)"), editbox, 120);
+    pLevel_Editor->Add_Config_Widget(UTF8_("Ice Resistance"), UTF8_("Resistance against Ice (0.0-1.0)"), editbox);
 
     editbox->setValidationString("[+]?[0-9]*\\.?[0-9]*");
     editbox->setText(float_to_string(m_ice_resistance, 6, 0));
@@ -432,6 +438,7 @@ bool cStaticEnemy::Editor_Ice_Resistance_Text_Changed(const CEGUI::EventArgs& ev
 
     return 1;
 }
+#endif // ENABLE_EDITOR
 
 std::string cStaticEnemy::Create_Name(void) const
 {

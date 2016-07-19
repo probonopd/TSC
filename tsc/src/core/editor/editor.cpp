@@ -1,21 +1,4 @@
-/***************************************************************************
- * editor.cpp  -  class for the basic editor
- *
- * Copyright © 2006 - 2011 Florian Richter
- * Copyright © 2013 - 2014 The TSC Contributors
- ***************************************************************************/
-/*
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-#include "editor.hpp"
-#include "editor_items_loader.hpp"
+#include "../global_basic.hpp"
 #include "../game_core.hpp"
 #include "../../gui/generic.hpp"
 #include "../framerate.hpp"
@@ -34,378 +17,292 @@
 #include "../../overworld/overworld.hpp"
 #include "../i18n.hpp"
 #include "../filesystem/filesystem.hpp"
+#include "../filesystem/relative.hpp"
 #include "../filesystem/resource_manager.hpp"
+#include "../../video/img_settings.hpp"
 #include "../errors.hpp"
-#include "../global_basic.hpp"
+#include "editor.hpp"
 
-using namespace std;
+#define TABPANE_OUT_OF_SIGHT_X -0.19f
+#define CONFIGPANE_OUT_OF_SIGHT_X 0.99f
 
-namespace fs = boost::filesystem;
+#ifdef ENABLE_EDITOR
 
-namespace TSC {
+using namespace TSC;
 
-/* *** *** *** *** *** *** *** cEditor_Object_Settings_Item *** *** *** *** *** *** *** *** *** *** */
-
-cEditor_Object_Settings_Item::cEditor_Object_Settings_Item(void)
+cEditor::cEditor()
 {
-    window_name = NULL;
-    window_setting = NULL;
-    advance_row = 1;
+    mp_editor_tabpane = NULL;
+    mp_menu_listbox = NULL;
+    mp_object_config_pane = NULL;
+    m_enabled = false;
+    m_rested = false;
+    m_visibility_timer = 0.0f;
+    m_mouse_inside = false;
+    m_menu_filename = boost::filesystem::path(path_to_utf8("Needs to be set by subclasses"));
+    m_editor_item_tag = "Must be set by subclass";
+    m_help_window_visible = false;
+    m_object_config_pane_shown = false;
+    mp_edited_sprite_manager = NULL;
 }
 
-cEditor_Object_Settings_Item::~cEditor_Object_Settings_Item(void)
+cEditor::~cEditor()
 {
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
-    wmgr.destroyWindow(window_name);
-    wmgr.destroyWindow(window_setting);
+    Unload();
 }
 
-/* *** *** *** *** *** *** *** *** cEditor_CEGUI_Texture *** *** *** *** *** *** *** *** *** */
-
-cEditor_CEGUI_Texture::cEditor_CEGUI_Texture(CEGUI::OpenGLRenderer& owner, GLuint tex, const CEGUI::Size& size)
-    : CEGUI::OpenGLTexture(owner, tex, size)
-{
-
-}
-
-cEditor_CEGUI_Texture::~cEditor_CEGUI_Texture(void)
-{
-    cleanupOpenGLTexture();
-}
-
-void cEditor_CEGUI_Texture::cleanupOpenGLTexture(void)
-{
-    // from cegui
-    if (d_grabBuffer) {
-        delete[] d_grabBuffer;
-        d_grabBuffer = 0;
-    }
-    // do not delete it
-    else {
-        d_ogltexture = 0;
-    }
-}
-
-/* *** *** *** *** *** *** *** *** cEditor_Item_Object *** *** *** *** *** *** *** *** *** */
-
-cEditor_Item_Object::cEditor_Item_Object(const std::string& text, const CEGUI::Listbox* parent)
-    : CEGUI::ListboxItem("")
-{
-    m_parent = parent;
-    list_text = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(text.c_str()));
-    list_text->setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-    list_text->setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
-
-    m_image = NULL;
-    sprite_obj = NULL;
-    preview_scale = 1;
-}
-
-cEditor_Item_Object::~cEditor_Item_Object(void)
-{
-    delete list_text;
-
-    if (m_image) {
-        delete m_image->getTexture();
-        CEGUI::ImagesetManager::getSingleton().destroy(*m_image);
-        m_image = NULL;
-    }
-
-    if (sprite_obj) {
-        delete sprite_obj;
-    }
-}
-
-void cEditor_Item_Object::Init(cSprite* sprite)
-{
-    if (m_image) {
-        cerr << "cEditor_Item_Object::Init: Warning: Image is already set" << endl;
-        return;
-    }
-
-    /* Don't set sprite settings which could get copied
-     * into the level/world like shadow and z position
-    */
-    sprite_obj = sprite;
-
-    // CEGUI settings
-    list_text->setTextColours(Get_Massive_Type_Color(sprite_obj->m_massive_type).Get_cegui_Color());
-
-    if (!sprite_obj->m_start_image || !pPreferences->m_editor_show_item_images) {
-        return;
-    }
-
-    // get scale
-    preview_scale = pVideo->Get_Scale(sprite_obj->m_start_image, static_cast<float>(pPreferences->m_editor_item_image_size) * 2.0f, static_cast<float>(pPreferences->m_editor_item_image_size));
-
-    // create CEGUI link
-    cEditor_CEGUI_Texture* texture = new cEditor_CEGUI_Texture(*pGuiRenderer, sprite_obj->m_start_image->m_image, CEGUI::Size(sprite_obj->m_start_image->m_tex_w, sprite_obj->m_start_image->m_tex_h));
-    CEGUI::String imageset_name = "editor_item " + list_text->getText() + " " + CEGUI::PropertyHelper::uintToString(m_parent->getItemCount());
-    m_image = &CEGUI::ImagesetManager::getSingleton().create(imageset_name, *texture);
-    m_image->defineImage("default", CEGUI::Point(0, 0), texture->getSize(), CEGUI::Point(0, 0));
-}
-
-CEGUI::Size cEditor_Item_Object::getPixelSize(void) const
-{
-    CEGUI::Size tmp = list_text->getPixelSize();
-
-    if (pPreferences->m_editor_show_item_images) {
-        tmp.d_height += (pPreferences->m_editor_item_image_size + 10) * global_upscaley;
-    }
-
-    return tmp;
-}
-
-void cEditor_Item_Object::draw(CEGUI::GeometryBuffer& buffer, const CEGUI::Rect& targetRect, float alpha, const CEGUI::Rect* clipper) const
-{
-    // image
-    if (m_image && pPreferences->m_editor_show_item_images) {
-        m_image->draw(buffer, CEGUI::Rect(CEGUI::Point(0, 0), m_image->getTexture()->getSize()), CEGUI::Rect(targetRect.d_left + 15, targetRect.d_top + 22, targetRect.d_left + 15 + (sprite_obj->m_start_image->m_start_w * preview_scale * global_upscalex), targetRect.d_top + 22 + (sprite_obj->m_start_image->m_start_h * preview_scale * global_upscaley)), clipper, CEGUI::ColourRect(CEGUI::colour(1.0f, 1.0f, 1.0f, alpha)), CEGUI::TopLeftToBottomRight);
-    }
-    // name text
-    list_text->draw(buffer, targetRect, alpha, clipper);
-}
-
-/* *** *** *** *** *** *** *** *** cEditor_Menu_Object *** *** *** *** *** *** *** *** *** */
-
-cEditor_Menu_Object::cEditor_Menu_Object(const std::string& text)
-    : ListboxTextItem(text.c_str())
-{
-    bfunction = 0;
-    header = 0;
-}
-
-cEditor_Menu_Object::~cEditor_Menu_Object(void)
-{
-
-}
-
-void cEditor_Menu_Object::Init(void)
-{
-    setSelectionColours(CEGUI::colour(0.33f, 0.33f, 0.33f));
-    setSelectionBrushImage("TaharezLook", "ListboxSelectionBrush");
-}
-
-/* *** *** *** *** *** *** *** cEditor *** *** *** *** *** *** *** *** *** *** */
-
-cEditor::cEditor(cSprite_Manager* sprite_manager)
-{
-    m_sprite_manager = sprite_manager;
-    m_enabled = 0;
-
-    m_camera_speed = 35;
-    m_menu_timer = 0;
-    m_editor_window = NULL;
-    m_listbox_menu = NULL;
-    m_listbox_items = NULL;
-    m_tabcontrol_menu = NULL;
-}
-
-cEditor::~cEditor(void)
-{
-    cEditor::Unload();
-}
-
+/**
+ * Load the CEGUI layout from disk and attach it to the root window.
+ * Does not show it, use Enable() for that.
+ *
+ * Override in subclasses to fill the editor pane with your custom
+ * items. Be sure to call this parent method before doing so, though.
+ */
 void cEditor::Init(void)
 {
-    // already loaded
-    if (m_editor_window) {
-        return;
-    }
+    mp_editor_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("editor.layout");
+    mp_editor_tabpane = static_cast<CEGUI::TabControl*>(mp_editor_root->getChild("editor_tabpane"));
+    mp_object_config_pane = mp_editor_root->getChild("object_config_pane");
+    m_tabpane_target_x_position = mp_editor_tabpane->getXPosition();
+    m_object_config_pane_target_x_position = mp_object_config_pane->getXPosition();
+    mp_editor_root->hide(); // Do not show for now
 
-    // Create Editor CEGUI Window
-    m_editor_window = CEGUI::WindowManager::getSingleton().loadWindowLayout("editor.layout");
-    pGuiSystem->getGUISheet()->addChildWindow(m_editor_window);
+    // Object settings window only pops up when selecting an object.
+    mp_object_config_pane->setXPosition(CEGUI::UDim(CONFIGPANE_OUT_OF_SIGHT_X, 0.0f));
+    m_object_config_pane_shown = false;
 
-    // Get TabControl
-    m_tabcontrol_menu = static_cast<CEGUI::TabControl*>(CEGUI::WindowManager::getSingleton().getWindow("tabcontrol_editor"));
-    // fixme : CEGUI does not detect the mouse enter event if in the listbox or any other window in it
-    // TabControl Menu Tab Events
-    m_tabcontrol_menu->getTabContents("editor_tab_menu")->subscribeEvent(CEGUI::Window::EventMouseEnters, CEGUI::Event::Subscriber(&cEditor::Editor_Mouse_Enter, this));
-    // TabControl Items Tab Events
-    m_tabcontrol_menu->getTabContents("editor_tab_items")->subscribeEvent(CEGUI::Window::EventMouseEnters, CEGUI::Event::Subscriber(&cEditor::Editor_Mouse_Enter, this));
+    // Ensure multiple editors (level and world) can coexist. CEGUI requires unique
+    // window names in that case; m_editor_item_tag must be set by subclasses, so
+    // it is a good fit for making a unique name.
+    mp_editor_root->setName(m_editor_item_tag + "_editor_root");
 
-    // Get Menu Listbox
-    m_listbox_menu = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("editor_menu"));
-    // Menu Listbox events
-    m_listbox_menu->subscribeEvent(CEGUI::Window::EventMouseEnters, CEGUI::Event::Subscriber(&cEditor::Editor_Mouse_Enter, this));
-    m_listbox_menu->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cEditor::Menu_Select, this));
-    // Get Items Listbox
-    m_listbox_items = static_cast<CEGUI::Listbox*>(CEGUI::WindowManager::getSingleton().getWindow("editor_items"));
-    // Items Listbox events
-    m_listbox_items->subscribeEvent(CEGUI::Window::EventMouseEnters, CEGUI::Event::Subscriber(&cEditor::Editor_Mouse_Enter, this));
-    m_listbox_items->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cEditor::Item_Select, this));
+    // Add it to the GUI root window
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_root);
 
-    // Get Items
-    if (!File_Exists(m_items_filename)) {
-        cerr << "Error : Editor Loading : No Item file found: " << path_to_utf8(m_items_filename) << endl;
-        return;
-    }
+    mp_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
 
-    Parse_Items_File(path_to_utf8(m_items_filename));
-    Load_Image_Items(pResource_Manager->Get_Game_Pixmaps_Directory());
-    Parse_Menu_File(path_to_utf8(m_menu_filename));
+    // Create the menu hierarchy
+    parse_menu_file();
+    populate_menu();
+
+    /* Fill in the creatable objects for each menu entry; first the
+     * image items (= static sprites with a .settings file), then the
+     * special items (= everything else, such as enemies).  The
+     * function menu entries are handled in the
+     * on_menu_selection_changed() event handler function. */
+    load_image_items();
+    load_special_items();
+
+    mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_enter, this));
+    mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_leave, this));
+
+    mp_menu_listbox->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cEditor::on_menu_selection_changed, this));
 }
 
+/**
+ * Empties the editor panel, detaches it from the CEGUI root window
+ * and destroys it. After calling this you need to call Init()
+ * again to use the editor.
+ */
 void cEditor::Unload(void)
 {
-    // Unload Items
-    Unload_Item_Menu();
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
+    for(iter=m_menu_entries.begin(); iter != m_menu_entries.end(); iter++)
+        delete *iter;
 
-    // close help window
-    if (CEGUI::WindowManager::getSingleton().isWindowPresent("editor_help_window")) {
-        Window_Help_Exit_Clicked(CEGUI::EventArgs());
+    if (mp_editor_root) {
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_editor_root);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_editor_root); // destroys child windows
+        mp_editor_root = NULL;
+        mp_editor_tabpane = NULL;
+        mp_menu_listbox = NULL;
+        mp_object_config_pane = NULL;
     }
-
-    // if editor window is loaded
-    if (m_editor_window) {
-        pGuiSystem->getGUISheet()->removeChildWindow(m_editor_window);
-        CEGUI::WindowManager::getSingleton().destroyWindow(m_editor_window);
-        m_editor_window = NULL;
-        m_listbox_menu = NULL;
-        m_listbox_items = NULL;
-        m_tabcontrol_menu = NULL;
-    }
-
-    // Tagged Items
-    for (TaggedItemObjectsList::iterator itr = m_tagged_item_objects.begin(); itr != m_tagged_item_objects.end(); ++itr) {
-        delete *itr;
-    }
-
-    m_tagged_item_objects.clear();
-
-    // Tagged Image Settings
-    for (TaggedItemImageSettingsList::iterator itr = m_tagged_item_images.begin(); itr != m_tagged_item_images.end(); ++itr) {
-        delete *itr;
-    }
-
-    m_tagged_item_images.clear();
 }
 
-void cEditor::Toggle(void)
+void cEditor::Toggle(cSprite_Manager* p_sprite_manager)
 {
-    // enable
-    if (!m_enabled) {
-        Enable();
-    }
-    // disable
-    else {
+    if (m_enabled)
         Disable();
-    }
+    else
+        Enable(p_sprite_manager);
 }
 
-void cEditor::Enable(void)
+void cEditor::Enable(cSprite_Manager* p_edited_sprite_manager)
 {
-    // already enabled
-    if (m_enabled) {
+    if (m_enabled)
         return;
-    }
 
     // TRANS: displayed to the user when opening the editor
     Draw_Static_Text(_("Loading"), &orange, NULL, 0);
 
-    // Basic Initialize
-    Init();
-
     pAudio->Play_Sound("editor/enter.ogg");
     pHud_Debug->Set_Text(_("Editor enabled"));
-    pActive_Animation_Manager->Delete_All();
+    pMouseCursor->Set_Active(true);
 
-    pMouseCursor->Set_Active(1);
+    pActive_Animation_Manager->Delete_All(); // Stop all animations
 
-    // update player position rect
-    pActive_Player->Update_Position_Rect();
-    // update sprite manager position rect
-    for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
-        (*itr)->Update_Position_Rect();
-    }
-
-    pActive_Camera->Update_Position();
-    m_enabled = 1;
+    mp_editor_root->show();
+    m_enabled = true;
+    editor_enabled = true;
+    mp_edited_sprite_manager = p_edited_sprite_manager;
 }
 
-void cEditor::Disable(bool native_mode /* = 1 */)
+void cEditor::Disable(void)
 {
-    // already disabled
-    if (!m_enabled) {
+    if (!m_enabled)
         return;
+
+    pAudio->Play_Sound("editor/leave.ogg");
+    pMouseCursor->Reset(0);
+    pMouseCursor->Set_Active(false);
+
+    Hide_Config_Panel();
+    mp_editor_root->hide();
+    m_enabled = false;
+    editor_enabled = false;
+    mp_edited_sprite_manager = NULL;
+}
+
+/**
+ * Adds a widget to the editor's object configuration panel (that one on the right side).
+ * If you pass a CEGUI::Combobox as a widget, ensure that all items are added to it
+ * *before* you call this method, because this method uses the item count to calculate
+ * the height of the combobox dropdown. If there are no items in the box, the dropdown
+ * height will be zero, making the entire combobox invisible.
+ *
+ * Also, you should probably subscribe to the widget's change event handler so you
+ * get noticed if the user interacts with the widget.
+ *
+ * The widget will be added together with a label to its left side whose text
+ * is determined from the `name` parameter.
+ *
+ * \param[in] name
+ * The text to display on the left-side label widget.
+ *
+ * \param[in] tooltip
+ * A tooltip to display when hovering over the label.
+ *
+ * \param[in] p_settings_widget
+ * The settings widget to add.
+ *
+ * \param obj_height
+ * Height of the widget, defaulting to 28 pixels. There is usually no need to
+ * specify this unless you have an unusually large widget. For the special
+ * case of comboboxes, see the description above.
+ */
+void cEditor::Add_Config_Widget(const CEGUI::String& name, const CEGUI::String& tooltip, CEGUI::Window* p_settings_widget, float obj_height /* = 28.0f */)
+{
+    static const float labelheight = 28.0f;
+
+    // The settings widget must at least have the height of the label widget.
+    if (obj_height < labelheight) {
+        obj_height = labelheight;
     }
 
-    Unload();
+    // Get scrollarea
+    CEGUI::ScrollablePane* p_pane = static_cast<CEGUI::ScrollablePane*>(mp_object_config_pane->getChild("tab_config/object_config_scrollarea"));
+    // get window manager
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
-    m_enabled = 0;
+    CEGUI::Window* p_label = wmgr.createWindow("TaharezLook/StaticText");
+    p_label->setText(name);
+    p_label->setTooltipText(tooltip);
 
-    if (native_mode) {
-        pAudio->Play_Sound("editor/leave.ogg");
+    // set size
+    p_label->setWidth(CEGUI::UDim(0.5f, 0));
+    p_label->setHeight(CEGUI::UDim(0, labelheight * global_upscaley));
+    p_settings_widget->setWidth(CEGUI::UDim(0.5f, 0));
+    p_settings_widget->setHeight(CEGUI::UDim(0, obj_height * global_upscaley));
 
-        // player
-        pActive_Player->Update_Position_Rect();
-        // sprite manager
-        for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
-            (*itr)->Update_Position_Rect();
-        }
-
-        pActive_Camera->Center();
-        pMouseCursor->Reset(0);
-
-        // ask if editor should save
-        Function_Save(1);
-
-        pMouseCursor->Set_Active(0);
+    /* Combo boxes treat their height differently than other
+     * widgets. They use it for the height of the dropdown list, which
+     * means that we cannot simply set them to the uniform height of
+     * all other widgets, but must make them larger so that the
+     * dropdown list actually appears. We set the height in
+     * correspondance with the number of items in the list, assuming
+     * one line is `labelheight' pixels (times `global_upscaley' as
+     * always) high plus some guessing (* 3). */
+    CEGUI::Combobox* p_combo = NULL;
+    if ((p_combo = dynamic_cast<CEGUI::Combobox*>(p_settings_widget))) {
+        p_combo->setHeight(CEGUI::UDim(0, p_combo->getItemCount() * 3 * labelheight * global_upscaley));
+        //p_combo->setAutoSizeListHeightToContent(true); // While this would ease things, it does not work...
     }
+
+    // Calculate position on the scrollarea
+    if (p_pane->getContentPane()->getChildCount() > 0) { // Place below existing rows
+        const CEGUI::Window* p_last_window = p_pane->getContentPane()->getChildAtIdx(p_pane->getContentPane()->getChildCount() - 1);
+        CEGUI::UDim new_y = p_last_window->getYPosition();
+        new_y += CEGUI::UDim(0, labelheight * global_upscaley);
+
+        p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), new_y));
+        p_settings_widget->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5f, 0), new_y));
+    }
+    else { // First entry, starting at top of container
+        p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
+        p_settings_widget->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, 0), CEGUI::UDim(0, 0)));
+    }
+
+    /* Add to scrollarea. The settings window must come last as it may
+     * be higher then the label window and its height is used in the
+     * position calculation above. */
+    p_pane->addChild(p_label);
+    p_pane->addChild(p_settings_widget);
+}
+
+void cEditor::Show_Config_Panel()
+{
+    // Already shown
+    if (m_object_config_pane_shown)
+        return;
+
+    mp_object_config_pane->setXPosition(m_object_config_pane_target_x_position);
+    m_object_config_pane_shown = true;
+
+}
+
+void cEditor::Hide_Config_Panel()
+{
+    // Already hidden
+    if (!m_object_config_pane_shown)
+        return;
+
+    // Destroy all config widgets in the scrollarea
+    CEGUI::ScrollablePane* p_pane = static_cast<CEGUI::ScrollablePane*>(mp_object_config_pane->getChild("tab_config/object_config_scrollarea"));
+    while (p_pane->getContentPane()->getChildCount() > 0) {
+        CEGUI::Window* p_window = p_pane->getContentPane()->getChildAtIdx(0);
+        p_pane->removeChild(p_window);
+        CEGUI::WindowManager::getSingleton().destroyWindow(p_window);
+    }
+
+    // Hide config panel
+    mp_object_config_pane->setXPosition(CEGUI::UDim(CONFIGPANE_OUT_OF_SIGHT_X, 0.0f));
+    m_object_config_pane_shown = false;
 }
 
 void cEditor::Update(void)
 {
-    if (!m_enabled) {
+    if (!m_enabled)
         return;
-    }
 
-    // if visible
-    if (m_listbox_menu->isVisible(1)) {
-        // if timed out
-        if (m_menu_timer >= speedfactor_fps * 2) {
-            // fade out
-            float new_alpha = m_editor_window->getAlpha() - (pFramerate->m_speed_factor * 0.05f);
+    // If the mouse is in the editor panel, do not fade it out.
+    if (!m_mouse_inside) {
+        // Otherwise, slowly fade the panel out until it is invisible.
+        // When it reaches transparency, set to fully visible again
+        // and place it on the side.
+        if (!m_rested) {
+            float timeout = speedfactor_fps * 2;
+            if (m_visibility_timer >= timeout) {
+                mp_editor_tabpane->setXPosition(CEGUI::UDim(TABPANE_OUT_OF_SIGHT_X, 0.0f));
+                mp_editor_tabpane->setAlpha(1.0f);
 
-            if (new_alpha <= 0.0f) {
-                new_alpha = 1.0f;
-
-                /* move editor window out
-                 * fixme: this could fire an mouse enter event if mouse is over it
-                */
-                m_editor_window->setXPosition(CEGUI::UDim(-0.19f, 0.0f));
-                // Hide Listbox
-                m_listbox_menu->hide();
-                m_listbox_items->hide();
-                m_menu_timer = 0.0f;
+                m_rested = true;
+                m_visibility_timer = 0.0f;
             }
-
-            m_editor_window->setAlpha(new_alpha);
-        }
-        // if active
-        else {
-            // fade in
-            if (m_editor_window->getAlpha() < 1.0f) {
-                float new_alpha = m_editor_window->getAlpha() + pFramerate->m_speed_factor * 0.1f;
-
-                if (new_alpha > 1.0f) {
-                    new_alpha = 1.0f;
-                }
-
-                m_editor_window->setAlpha(new_alpha);
-            }
-            // inactive counter
-            else if (Is_Float_Equal(m_editor_window->getXPosition().asRelative(1), 0.0f)) {
-                // if mouse is over the window
-                if (m_tabcontrol_menu->isHit(CEGUI::MouseCursor::getSingletonPtr()->getPosition())) {
-                    m_menu_timer = 0.0f;
-                }
-                // inactive
-                else {
-                    m_menu_timer += pFramerate->m_speed_factor;
-                }
+            else {
+                m_visibility_timer += pFramerate->m_speed_factor;
+                float alpha_max = 1.0f;
+                mp_editor_tabpane->setAlpha(alpha_max - ((alpha_max * m_visibility_timer) / timeout));
             }
         }
     }
@@ -473,86 +370,10 @@ void cEditor::Draw(void)
     }
 }
 
-void cEditor::Process_Input(void)
-{
-    if (!m_enabled) {
-        return;
-    }
-
-    // Drag Delete
-    if (pKeyboard->Is_Ctrl_Down() && pMouseCursor->m_right) {
-        cObjectCollision* col = pMouseCursor->Get_First_Editor_Collsion();
-
-        if (col) {
-            pMouseCursor->Delete(col->m_obj);
-            delete col;
-        }
-    }
-
-    // Camera Movement
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || pJoystick->m_right) {
-        if (pKeyboard->Is_Shift_Down()) {
-            pActive_Camera->Move(m_camera_speed * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed, 0.0f);
-        }
-        else {
-            pActive_Camera->Move(m_camera_speed * pFramerate->m_speed_factor * pPreferences->m_scroll_speed, 0.0f);
-        }
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || pJoystick->m_left) {
-        if (pKeyboard->Is_Shift_Down()) {
-            pActive_Camera->Move(-(m_camera_speed * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed), 0.0f);
-        }
-        else {
-            pActive_Camera->Move(-(m_camera_speed * pFramerate->m_speed_factor * pPreferences->m_scroll_speed), 0.0f);
-        }
-    }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || pJoystick->m_up) {
-        if (pKeyboard->Is_Shift_Down()) {
-            pActive_Camera->Move(0.0f, -(m_camera_speed * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed));
-        }
-        else {
-            pActive_Camera->Move(0.0f, -(m_camera_speed * pFramerate->m_speed_factor * pPreferences->m_scroll_speed));
-        }
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || pJoystick->m_down) {
-        if (pKeyboard->Is_Shift_Down()) {
-            pActive_Camera->Move(0.0f, m_camera_speed * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed);
-        }
-        else {
-            pActive_Camera->Move(0.0f, m_camera_speed * pFramerate->m_speed_factor * pPreferences->m_scroll_speed);
-        }
-    }
-}
-
-bool cEditor::Handle_Event(const sf::Event& evt)
-{
-    if (!m_enabled) {
-        return 0;
-    }
-
-    switch (evt.type) {
-    case sf::Event::MouseMoved: {
-        if (pMouseCursor->m_mover_mode) {
-            sf::Vector2i pos = sf::Mouse::getPosition(*pVideo->mp_window);
-
-            pMouseCursor->Mover_Update(pos.x, pos.y);
-        }
-
-        break;
-    }
-    default: { // other events
-        break;
-    }
-    }
-
-    return 0;
-}
-
 bool cEditor::Key_Down(const sf::Event& evt)
 {
-    if (!m_enabled) {
-        return 0;
-    }
+    if (!m_enabled)
+        return false;
 
     // New level
     if (evt.key.code == sf::Keyboard::N && evt.key.control) {
@@ -566,80 +387,82 @@ bool cEditor::Key_Down(const sf::Event& evt)
     else if (evt.key.code == sf::Keyboard::S && evt.key.control && evt.key.shift) {
         Function_Save_as();
     }
-    // help
     else if (evt.key.code == sf::Keyboard::F1) {
-        if (CEGUI::WindowManager::getSingleton().isWindowPresent("editor_help_window")) {
-            Window_Help_Exit_Clicked(CEGUI::EventArgs());
+        if (m_help_window_visible) {
+            on_help_window_exit_clicked(CEGUI::EventArgs());
         }
         else {
-            CEGUI::FrameWindow* window_help = static_cast<CEGUI::FrameWindow*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/FrameWindow", "editor_help_window"));
-            window_help->setPosition(CEGUI::UVector2(CEGUI::UDim(0, (game_res_w * 0.1f) * global_upscalex), CEGUI::UDim(0, (game_res_h * 0.1f) * global_upscalex)));
-            window_help->setSize(CEGUI::UVector2(CEGUI::UDim(0, (game_res_w * 0.8f) * global_upscalex), CEGUI::UDim(0, (game_res_h * 0.8f) * global_upscalex)));
-            window_help->getCloseButton()->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cEditor::Window_Help_Exit_Clicked, this));
-            // TRANS: Title of the help window
-            window_help->setText(UTF8_("Editor Help"));
+            CEGUI::FrameWindow* p_helpframe = static_cast<CEGUI::FrameWindow*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/FrameWindow", "editor_help"));
+            p_helpframe->setPosition(CEGUI::UVector2(CEGUI::UDim(0, (game_res_w * 0.1f) * global_upscalex), CEGUI::UDim(0, (game_res_h * 0.1f) * global_upscalex)));
+            p_helpframe->setSize(CEGUI::USize(CEGUI::UDim(0, (game_res_w * 0.8f) * global_upscalex), CEGUI::UDim(0, (game_res_h * 0.8f) * global_upscalex)));
+            // TRANS: Title of the editor help window
+            p_helpframe->setText(UTF8_("Editor Help"));
 
-            CEGUI::Window* text_help = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", "editor_help_text");
-            text_help->setPosition(CEGUI::UVector2(CEGUI::UDim(0.00f, 0.0f), CEGUI::UDim(0.00f, 0.0f)));
-            text_help->setSize(CEGUI::UVector2(CEGUI::UDim(1, 0.0f), CEGUI::UDim(1, 0.0f)));
-            text_help->setProperty("VertScrollbar", "True");
-            text_help->setProperty("FrameEnabled", "False");
-            text_help->setProperty("BackgroundEnabled", "False");
-            text_help->setProperty("VertFormatting", "TopAligned");
+            p_helpframe->getCloseButton()->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cEditor::on_help_window_exit_clicked, this));
+
+            CEGUI::Window* p_helptext = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText", "editor_help_text");
+            p_helptext->setPosition(CEGUI::UVector2(CEGUI::UDim(0.00f, 0.0f), CEGUI::UDim(0.00f, 0.0f)));
+            p_helptext->setSize(CEGUI::USize(CEGUI::UDim(1, 0.0f), CEGUI::UDim(1, 0.0f)));
+            p_helptext->setProperty("VertScrollbar", "True");
+            p_helptext->setProperty("FrameEnabled", "False");
+            p_helptext->setProperty("BackgroundEnabled", "False");
+            p_helptext->setProperty("VertFormatting", "TopAligned");
 
             // TRANS: This is the help window in the editor. Do not translate
             // TRANS: the color codes in the string.
-            text_help->setText(UTF8_(" \n"
-                               "----- [colour='FFFFCF5F']General[colour='FFFFFFFF'] -----\n"
-                               " \n"
-                               "F1 - Toggle this Help Window\n"
-                               "F8 - Open/Close the Editor\n"
-                               "F10 - Toggle sound effects\n"
-                               "F11 - Toggle music play\n"
-                               "Home - Focus level start\n"
-                               "End - Focus last level exit\n"
-                               "Ctrl + G - Goto Camera position\n"
-                               "N - Step one screen to the right ( Next Screen )\n"
-                               "P - Step one screen to the left ( Previous Screen )\n"
-                               "Ctrl + N - Create a new Level\n"
-                               "Ctrl + L - Load a Level\n"
-                               "Ctrl + W - Load an Overworld\n"
-                               "Ctrl + S - Save the current Level/World\n"
-                               "Ctrl + Shift + S - Save the current Level/World under a new name\n"
-                               "Ctrl + D - Toggle debug mode\n"
-                               "Ctrl + P - Toggle performance mode\n"
-                               " \n"
-                               "----- [colour='FFFFCF5F']Objects[colour='FFFFFFFF'] -----\n"
-                               " \n"
-                               "M - Cycle selected object(s) through massive types\n"
-                               "Massive types with their color:\n"
-                               "   [colour='FFFF2F0F']Massive[colour='FFFFFFFF']->[colour='FFFFAF2F']Halfmassive[colour='FFFFFFFF']->[colour='FFDF00FF']Climbable[colour='FFFFFFFF']->[colour='FF1FFF1F']Passive[colour='FFFFFFFF']->[colour='FF1FFF1F']Front Passive[colour='FFFFFFFF']\n"
-                               "O - Enable snap to object mode\n"
-                               "Ctrl + A - Select all objects\n"
-                               "Ctrl + X - Cut currently selected objects\n"
-                               "Ctrl + C - Copy currently selected objects\n"
-                               "Ctrl + V or Insert - Paste current copied / cutted objects\n"
-                               "Ctrl + R - Replace the selected basic sprite(s) image with another one\n"
-                               "Del - If Mouse is over an object: Delete current object\n"
-                               "Del - If Mouse has nothing selected: Delete selected objects\n"
-                               "Numpad:\n"
-                               " + - Bring object to front\n"
-                               " - - Send object to back\n"
-                               " 2/4/6/8 - Move selected object 1 pixel into the direction\n"
-                               "Mouse:\n"
-                               " Left (Hold) - Drag objects\n"
-                               " Left (Click) - With shift to select / deselect single objects\n"
-                               " Right - Delete intersecting Object\n"
-                               " Middle - Toggle Mover Mode\n"
-                               " Ctrl + Shift + Left (Click) - Select objects with the same type\n"
-                               "Arrow keys:\n"
-                               " Use arrow keys to move around. Press shift for faster movement\n"
-                               " \n")
-                              );
+            p_helptext->setText(UTF8_(" \n"
+                                      "----- [colour='FFFFCF5F']General[colour='FFFFFFFF'] -----\n"
+                                      " \n"
+                                      "F1 - Toggle this Help Window\n"
+                                      "F8 - Open/Close the Editor\n"
+                                      "F10 - Toggle sound effects\n"
+                                      "F11 - Toggle music play\n"
+                                      "Home - Focus level start\n"
+                                      "End - Focus last level exit\n"
+                                      "Ctrl + G - Goto Camera position\n"
+                                      "N - Step one screen to the right ( Next Screen )\n"
+                                      "P - Step one screen to the left ( Previous Screen )\n"
+                                      "Ctrl + N - Create a new Level\n"
+                                      "Ctrl + L - Load a Level\n"
+                                      "Ctrl + W - Load an Overworld\n"
+                                      "Ctrl + S - Save the current Level/World\n"
+                                      "Ctrl + Shift + S - Save the current Level/World under a new name\n"
+                                      "Ctrl + D - Toggle debug mode\n"
+                                      "Ctrl + P - Toggle performance mode\n"
+                                      " \n"
+                                      "----- [colour='FFFFCF5F']Objects[colour='FFFFFFFF'] -----\n"
+                                      " \n"
+                                      "M - Cycle selected object(s) through massive types\n"
+                                      "Massive types with their color:\n"
+                                      "   [colour='FFFF2F0F']Massive[colour='FFFFFFFF']->[colour='FFFFAF2F']Halfmassive[colour='FFFFFFFF']->[colour='FFDF00FF']Climbable[colour='FFFFFFFF']->[colour='FF1FFF1F']Passive[colour='FFFFFFFF']->[colour='FF1FFF1F']Front Passive[colour='FFFFFFFF']\n"
+                                      "O - Enable snap to object mode\n"
+                                      "Ctrl + A - Select all objects\n"
+                                      "Ctrl + X - Cut currently selected objects\n"
+                                      "Ctrl + C - Copy currently selected objects\n"
+                                      "Ctrl + V or Insert - Paste current copied / cutted objects\n"
+                                      "Ctrl + R - Replace the selected basic sprite(s) image with another one\n"
+                                      "Del - If Mouse is over an object: Delete current object\n"
+                                      "Del - If Mouse has nothing selected: Delete selected objects\n"
+                                      "Numpad:\n"
+                                      " + - Bring object to front\n"
+                                      " - - Send object to back\n"
+                                      " 2/4/6/8 - Move selected object 1 pixel into the direction\n"
+                                      "Mouse:\n"
+                                      " Left (Hold) - Drag objects\n"
+                                      " Left (Click) - With shift to select / deselect single objects\n"
+                                      " Right - Delete intersecting Object\n"
+                                      " Middle - Toggle Mover Mode\n"
+                                      " Ctrl + Shift + Left (Click) - Select objects with the same type\n"
+                                      "Arrow keys:\n"
+                                      " Use arrow keys to move around. Press shift for faster movement\n"
+                                      " \n")
+                );
 
-            CEGUI::Window* guisheet = pGuiSystem->getGUISheet();
-            window_help->addChildWindow(text_help);
-            guisheet->addChildWindow(window_help);
+            CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+            p_helpframe->addChild(p_helptext);
+            p_root->addChild(p_helpframe);
+
+            m_help_window_visible = true;
         }
     }
     // focus level start
@@ -671,7 +494,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
             }
 
             // last object is in front of others
-            m_sprite_manager->Move_To_Back(sel_obj->m_obj);
+            mp_edited_sprite_manager->Move_To_Back(sel_obj->m_obj);
         }
     }
     // push selected objects into the back
@@ -684,7 +507,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
             }
 
             // first object is behind others
-            m_sprite_manager->Move_To_Front(sel_obj->m_obj);
+            mp_edited_sprite_manager->Move_To_Front(sel_obj->m_obj);
         }
     }
     // copy into direction
@@ -707,7 +530,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
         // get currently selected objects
         cSprite_List objects = pMouseCursor->Get_Selected_Objects();
         // copy objects
-        cSprite_List new_objects = Copy_Direction(objects, dir);
+        cSprite_List new_objects = copy_direction(objects, dir);
 
         // add new objects
         for (cSprite_List::iterator itr = new_objects.begin(); itr != new_objects.end(); ++itr) {
@@ -759,7 +582,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
         // player
         pMouseCursor->Add_Selected_Object(pActive_Player, 1);
         // sprite manager
-        for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
+        for (cSprite_List::iterator itr = mp_edited_sprite_manager->objects.begin(); itr != mp_edited_sprite_manager->objects.end(); ++itr) {
             cSprite* obj = (*itr);
 
             pMouseCursor->Add_Selected_Object(obj, 1);
@@ -793,7 +616,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
     }
     // Replace sprites
     else if (evt.key.code == sf::Keyboard::R && evt.key.control) {
-        Replace_Sprites();
+        replace_sprites();
     }
     // Delete mouse object
     else if (evt.key.code == sf::Keyboard::Delete && pMouseCursor->m_hovering_object->m_obj) {
@@ -813,11 +636,12 @@ bool cEditor::Key_Down(const sf::Event& evt)
     }
     else {
         // not processed
-        return 0;
+        return false;
     }
 
     // key got processed
-    return 1;
+    return true;
+
 }
 
 bool cEditor::Mouse_Down(sf::Mouse::Button button)
@@ -904,307 +728,598 @@ bool cEditor::Mouse_Up(sf::Mouse::Button button)
     return 1;
 }
 
-void cEditor::Set_Sprite_Manager(cSprite_Manager* sprite_manager)
+bool cEditor::Mouse_Move(const sf::Event& evt)
 {
-    m_sprite_manager = sprite_manager;
+    if (!m_enabled)
+        return false;
+
+    if (pMouseCursor->m_mover_mode) {
+        sf::Vector2i pos = sf::Mouse::getPosition(*pVideo->mp_window);
+        pMouseCursor->Mover_Update(pos.x, pos.y);
+    }
+
+    return false; // Bubble up
 }
 
-void cEditor::Add_Menu_Object(const std::string& name, std::string tags, CEGUI::colour normal_color /* = CEGUI::colour( 1, 1, 1 ) */)
+/**
+ * Adds a graphic for a static .settings-file based object to the
+ * editor menu. The settings file of this graphic will be parsed and
+ * it will be placed in the menu accordingly (subclasses have to set
+ * the `m_editor_item_tag` member variable the the master tag required
+ * for graphics to show up in this editor; these are "level" and
+ * "world" for the level and world editor subclasses,
+ * respectively. That is, a graphic tagged with "world" will never
+ * appear in the level editor, and vice-versa.).
+ *
+ * \param settings_path
+ * Absolute path that refers to the settings file
+ * of the graphic to add.
+ *
+ * \returns false if the item was not added because the master tag
+ * was missing, true otherwise.
+ */
+bool cEditor::Try_Add_Image_Item(boost::filesystem::path settings_path)
 {
-    // Create Menu Object
-    cEditor_Menu_Object* new_menu = new cEditor_Menu_Object(name);
+    // Parse the image's settings file
+    cImage_Settings_Parser parser;
+    cImage_Settings_Data* p_settings = parser.Get(settings_path);
+    std::vector<std::string> available_tags = string_split(p_settings->m_editor_tags, ";");
 
-    // if function
-    if (tags.find("function:") == 0) {
-        new_menu->bfunction = 1;
-        // cut out the function identifier
-        tags.erase(0, 9);
-    }
+    // If the master tag is not in the tag list, do not add this graphic to the
+    // editor.
+    if (std::find(available_tags.begin(), available_tags.end(), m_editor_item_tag) == available_tags.end())
+        return false;
 
-    // if header
-    if (tags.find("header") == 0) {
-        new_menu->header = 1;
-        // cut out the function identifier
-        tags.erase(0, 6);
+    // Find the menu entries that contain the tags this graphic has set.
+    std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(available_tags);
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
 
-        // header color rect
-        new_menu->setTextColours(normal_color, normal_color, CEGUI::colour(0.5f, 0.5f, 0.5f), CEGUI::colour(0.5f, 0.5f, 0.5f));
-        // not selectable
-        new_menu->setDisabled(1);
-        // set tooltip
-        new_menu->setTooltipText("Header " + name);
-    }
-    // if not a header
-    else {
-        new_menu->setTextColours(normal_color);
-    }
-
-    // if default items menu
-    if (!new_menu->bfunction && !new_menu->header) {
-        // set tooltip
-        new_menu->setTooltipText("Tags used " + tags);
-    }
-
-    new_menu->tags = tags;
-    new_menu->Init();
-
-    // Add Listbox item
-    m_listbox_menu->addItem(new_menu);
-}
-
-void cEditor::Activate_Menu_Item(cEditor_Menu_Object* entry)
-{
-    // Function
-    if (entry->bfunction) {
-        if (entry->tags.compare("exit") == 0) {
-            Function_Exit();
+    // Find the PNG of this settings file. If an equally named .png exists,
+    // assume that file, otherwise check the settings 'base' property. If
+    // that also doesn't exist, that's an error.
+    boost::filesystem::path pixmap_path(settings_path); // Copy
+    pixmap_path.replace_extension(utf8_to_path(".png"));
+    if (!boost::filesystem::exists(pixmap_path)) {
+        if (p_settings->m_base.empty()) { // Error
+            std::cerr << "PNG file for settings file '" << path_to_utf8(settings_path) << "' not found (no .png found and no 'base' setting)." << std::endl;
+            std::cerr << "Using dummy image instead." << std::endl;
+            pixmap_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
         }
         else {
-            cerr << "Unknown Function " << entry->tags << endl;
+            pixmap_path = pixmap_path.parent_path() / p_settings->m_base;
+            if (!boost::filesystem::exists(pixmap_path)) {
+                std::cerr << "PNG base file not found at '" << path_to_utf8(pixmap_path) << "'." << std::endl;
+                std::cerr << "Using dummy image instead." << std::endl;
+                pixmap_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
+            }
         }
     }
-    // Header
-    else if (entry->header) {
-        return;
+
+    // Create the template sprite that will be copied each time the
+    // user wants to add this object.
+    // Cf. cSprite::cSprite(XmlAtributes) constructor on how to create
+    // a sprite correctly.
+    cSprite* p_template_sprite = new cSprite(&m_sprite_manager);
+    p_template_sprite->Set_Image(pVideo->Get_Surface(settings_path), 1); // FIXME: handle .imgset files?
+    p_template_sprite->Set_Massive_Type(p_settings->m_massive_type);
+    m_sprite_manager.Add(p_template_sprite); // Memory-manage it
+
+    // Add the graphics to the respective menu entries' GUI panels.
+    for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
+        (*iter)->Add_Item(
+            p_template_sprite,
+            load_cegui_image(pixmap_path),
+            p_settings->m_name,
+            CEGUI::Quaternion::eulerAnglesDegrees(
+                p_settings->m_rotation_x,
+                p_settings->m_rotation_y,
+                p_settings->m_rotation_z
+                )
+            );
     }
-    // Item Menu
-    else {
-        if (Load_Item_Menu(entry->tags)) {
-            // Select Items Tab
-            m_tabcontrol_menu->setSelectedTab("editor_tab_items");
-        }
-        // failed
-        else {
-            cerr << "Unknown Menu Type " << entry->tags << endl;
-        }
+
+    delete p_settings;
+    return true;
+}
+
+/**
+ * Similar to Try_Add_Image_Item(), but this method instead adds
+ * a special object that is not based on a .settings file (e.g. enemies)
+ * to the editor menu. Regarding tags, the function works exactly the same
+ * way as Try_Add_Image_Item(), except the tags for each object are not
+ * specified in a .settings file (as they don't have one), but in the
+ * editor/level_items.xml or editor/world_items.xml file.
+ */
+bool cEditor::Try_Add_Special_Item(cSprite* p_sprite)
+{
+    // Get the list of tags attached to this graphic.
+    std::vector<std::string> available_tags = string_split(p_sprite->m_editor_tags, ";");
+
+    // If the master tag is not in the tag list, do not add this graphic to the
+    // editor.
+    if (std::find(available_tags.begin(), available_tags.end(), m_editor_item_tag) == available_tags.end())
+        return false;
+
+    // Find the menu entries that contain the tags this graphic has set.
+    std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(available_tags);
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
+
+    // Some objects (like pathes) have no image at all. For those we can directly
+    // jump to the dummy image.
+    boost::filesystem::path image_path;
+    if (p_sprite->Get_Image(0))
+        image_path = p_sprite->Get_Image(0)->Get_Real_PNG_Path();
+    else
+        image_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
+
+    // Add the graphics to the respective menu entries' GUI panels.
+    for(iter=target_menu_entries.begin(); iter != target_menu_entries.end(); iter++) {
+        (*iter)->Add_Item(
+            p_sprite,
+            load_cegui_image(image_path),
+            p_sprite->Create_Name(),
+            CEGUI::Quaternion::eulerAnglesDegrees(
+                p_sprite->m_start_rot_x,
+                p_sprite->m_start_rot_y,
+                p_sprite->m_start_rot_z
+                )
+            );
+    }
+
+    return true;
+}
+
+void cEditor::parse_menu_file()
+{
+    std::string menu_file = path_to_utf8(m_menu_filename);
+
+    // The menu XML file is so dead simple that a SAX parser would
+    // simply be overkill. Leightweight XPath queries are enough.
+    xmlpp::DomParser parser;
+    parser.parse_file(menu_file);
+
+    xmlpp::Element* p_root = parser.get_document()->get_root_node();
+    xmlpp::NodeSet items = p_root->find("item");
+
+    xmlpp::NodeSet::const_iterator iter;
+    for (iter=items.begin(); iter != items.end(); iter++) {
+        xmlpp::Element* p_node = dynamic_cast<xmlpp::Element*>(*iter);
+
+        std::string name   = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='name']")[0])->get_attribute("value")->get_value();
+        std::string tagstr = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='tags']")[0])->get_attribute("value")->get_value();
+
+        // Set color if available (---header--- elements have no color property)
+        std::string colorstr = "FFFFFFFF";
+        xmlpp::NodeSet results = p_node->find("property[@name='color']");
+        if (!results.empty())
+            colorstr = dynamic_cast<xmlpp::Element*>(results[0])->get_attribute("value")->get_value();
+
+        // Burst the tag list into its elements
+        std::vector<std::string> tags = string_split(tagstr, ";");
+
+        // Prepare informational menu object
+        cEditor_Menu_Entry* p_entry = new cEditor_Menu_Entry(name);
+        p_entry->Set_Color(Color(colorstr));
+        p_entry->Set_Required_Tags(tags);
+
+        // Mark as header element if the tag "header" is encountered.
+        std::vector<std::string>::iterator iter;
+        iter = std::find(tags.begin(), tags.end(), std::string("header"));
+        p_entry->Set_Header((iter != tags.end()));
+
+        // Mark as a function element (= does something special if clicked)
+        // if the tag "function" is encountered.
+        iter = std::find(tags.begin(), tags.end(), std::string("function"));
+        p_entry->Set_Function((iter != tags.end()));
+
+        // Store
+        m_menu_entries.push_back(p_entry);
     }
 }
 
-bool cEditor::Load_Item_Menu(std::string item_tags)
+void cEditor::populate_menu()
 {
-    if (item_tags.empty()) {
-        return 0;
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
+
+    for(iter = m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
+        CEGUI::ListboxTextItem* p_item = new CEGUI::ListboxTextItem((*iter)->Get_Name());
+        p_item->setTextColours(CEGUI::ColourRect((*iter)->Get_Color().Get_cegui_Color()));
+        p_item->setUserData(*iter);
+        mp_menu_listbox->addItem(p_item);
     }
+}
 
-    Unload_Item_Menu();
+/// Load the static .settings-file based objects into the editor menu.
+void cEditor::load_image_items()
+{
+    std::vector<boost::filesystem::path> image_files = Get_Directory_Files(pResource_Manager->Get_Game_Pixmaps_Directory(), ".settings");
+    std::vector<boost::filesystem::path>::iterator iter;
 
-    // Convert to Array Tags
-    vector<std::string> array_tags;
+    for(iter=image_files.begin(); iter != image_files.end(); iter++) {
+        Try_Add_Image_Item(*iter);
+    }
+}
 
-    // Convert
-    while (item_tags.length()) {
-        std::string::size_type pos = item_tags.find(";");
+/// Load the special objects into the editor menu (e.g. enemies).
+void cEditor::load_special_items()
+{
+    std::vector<cSprite*> tagged_sprites = Parse_Items_File();
+    std::vector<cSprite*>::iterator iter;
 
-        // last item
-        if (pos == std::string::npos) {
-            array_tags.push_back(item_tags);
-            item_tags.clear();
-            break;
+    for(iter=tagged_sprites.begin(); iter != tagged_sprites.end(); iter++) {
+        Try_Add_Special_Item(*iter);
+    }
+}
+
+cEditor_Menu_Entry* cEditor::get_menu_entry(const std::string& name)
+{
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
+    for(iter=m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
+        if ((*iter)->Get_Name() == name) {
+            return (*iter);
         }
-
-        // add tag
-        array_tags.push_back(item_tags.substr(0, pos));
-        // remove tag
-        item_tags.erase(0, pos + 1);
     }
 
-    unsigned int tag_pos = 0;
+    throw(std::runtime_error(std::string("Element '") + name + "' not in editor menu list!"));
+}
 
-    // Get all Images with the Tags
-    for (TaggedItemImageSettingsList::const_iterator itr = m_tagged_item_images.begin(); itr != m_tagged_item_images.end(); ++itr) {
-        const cImage_Settings_Data* settings = (*itr);
+/**
+ * Iterates the list of menu entries and returns a list of those whose
+ * requirements match the given taglist. That is, a menu entry declares
+ * a set of required tags, and if the passed graphic has all of these
+ * tags set, the menu entry is included in the return list. If more
+ * than the required tags are set, the entry is returned nevertheless.
+ *
+ * \param[in] available_tags
+ * A list of tags the target graphics has set. This is what you
+ * find in a .settings file of a graphic or for special items
+ * in the editor/level_items.xml resp. editor/world_items.xml file.
+ */
+std::vector<cEditor_Menu_Entry*> cEditor::find_target_menu_entries_for(const std::vector<std::string>& available_tags)
+{
+    std::vector<cEditor_Menu_Entry*> results;
 
-        // search
-        while (Is_Tag_Available(settings->m_editor_tags, array_tags[tag_pos])) {
-            tag_pos++;
+    /* To show up in the editor, a graphic needs to have all tags set
+     * on it that are required by a menu entry (except for the master
+     * editor tag, which is checked elsewhere). */
+    std::vector<cEditor_Menu_Entry*>::iterator iter;
+    for(iter=m_menu_entries.begin(); iter != m_menu_entries.end(); iter++) {
+        cEditor_Menu_Entry* p_menu_entry = *iter;
+        std::vector<std::string>::iterator tag_iterator;
 
-            // found all tags
-            if (tag_pos >= array_tags.size()) {
-                cGL_Surface* image = pVideo->Get_Surface(settings->m_base);
-
-                if (!image) {
-                    cerr << "Warning : Could not load editor sprite image base : " << settings->m_base.c_str() << endl;
-                    break;
-                }
-
-                // Create sprite
-                cSprite* new_sprite = new cSprite(m_sprite_manager);
-                new_sprite->Set_Image(image);
-                // default massivetype
-                new_sprite->Set_Massive_Type(static_cast<MassiveType>(image->m_massive_type));
-                // Add new Sprite
-                Add_Item_Object(new_sprite);
-
+        // Check if all of this menu's tags are on the graphic.
+        bool all_tags_available = true;
+        for(tag_iterator=p_menu_entry->Get_Required_Tags().begin(); tag_iterator != p_menu_entry->Get_Required_Tags().end(); tag_iterator++) {
+            if (std::find(available_tags.begin(), available_tags.end(), *tag_iterator) == available_tags.end()) {
+                // Tag is missing.
+                all_tags_available = false;
                 break;
             }
         }
 
-        tag_pos = 0;
-    }
-
-    // Get all Objects with the Tags
-    for (TaggedItemObjectsList::const_iterator itr = m_tagged_item_objects.begin(); itr != m_tagged_item_objects.end(); ++itr) {
-        cSprite* object = (*itr);
-
-        // search
-        while (Is_Tag_Available(object->m_editor_tags, array_tags[tag_pos])) {
-            tag_pos++;
-
-            // found all tags
-            if (tag_pos >= array_tags.size()) {
-                // Add Objects
-                Add_Item_Object(object->Copy());
-
-                break;
-            }
+        if (all_tags_available) {
+            results.push_back(p_menu_entry);
         }
-
-        tag_pos = 0;
     }
 
-    return 1;
+    return results;
 }
 
-void cEditor::Unload_Item_Menu(void)
+bool cEditor::on_mouse_enter(const CEGUI::EventArgs& event)
 {
-    // already unloaded
-    if (!CEGUI::WindowManager::getSingleton().isWindowPresent("editor_items")) {
-        return;
-    }
+    m_mouse_inside = true;
+    m_visibility_timer = 0.0f;
+    m_rested = false;
 
-    // Clear Listbox
-    if (m_listbox_items) {
-        m_listbox_items->resetList();
-    }
+    mp_editor_tabpane->setAlpha(1.0f);
+    mp_editor_tabpane->setXPosition(m_tabpane_target_x_position);
+    return true;
 }
 
-
-void cEditor::Add_Item_Object(cSprite* sprite, std::string new_name /* = "" */, cGL_Surface* image /* = NULL */)
+bool cEditor::on_mouse_leave(const CEGUI::EventArgs& event)
 {
-    // if invalid
-    if (!sprite) {
-        cerr << "Warning : Invalid Editor Item" << endl;
-        return;
-    }
-
-    // set correct array if not given
-    if (sprite->m_sprite_array == ARRAY_UNDEFINED) {
-        cerr << "Warning: Editor sprite '" << sprite->Create_Name() << "' array not set" << endl;
-
-        if (sprite->m_massive_type == MASS_PASSIVE) {
-            sprite->m_sprite_array = ARRAY_PASSIVE;
-        }
-        else if (sprite->m_massive_type == MASS_MASSIVE) {
-            sprite->m_sprite_array = ARRAY_MASSIVE;
-        }
-        else if (sprite->m_massive_type == MASS_HALFMASSIVE) {
-            sprite->m_sprite_array = ARRAY_ACTIVE;
-        }
-    }
-
-    // warn if correct type is not given
-    if (sprite->m_type == TYPE_UNDEFINED) {
-        cerr << "Warning: Editor sprite '" << sprite->Create_Name() << "' type not set" << endl;
-    }
-
-    // if no image is given use the sprite start image
-    if (!image) {
-        // special object
-        if (sprite->m_type == TYPE_ENEMY_STOPPER || sprite->m_type == TYPE_LEVEL_EXIT || sprite->m_type == TYPE_LEVEL_ENTRY || sprite->m_type == TYPE_SOUND || sprite->m_type == TYPE_ANIMATION || sprite->m_type == TYPE_PATH) {
-            sprite->m_image = pVideo->Get_Surface("game/editor/special.png");
-            sprite->m_start_image = sprite->m_image;
-        }
-
-        image = sprite->m_start_image;
-    }
-
-    // set object name
-    std::string obj_name;
-
-    if (new_name.length()) {
-        obj_name = new_name;
-    }
-    else if (sprite->Create_Name().length()) {
-        obj_name = sprite->Create_Name();
-    }
-    // no object name available
-    else {
-        if (image) {
-            fs::path imgpath = image->Get_Path().filename();
-            imgpath.replace_extension();
-            obj_name = path_to_utf8(imgpath);
-        }
-
-        // Warn if using filename
-        cerr << "Warning : editor object '" << obj_name << "' with no name given" << endl;
-    }
-
-    cEditor_Item_Object* new_item = new cEditor_Item_Object(obj_name, m_listbox_items);
-    // Initialize
-    new_item->Init(sprite);
-
-    // Add Item
-    m_listbox_items->addItem(new_item);
+    m_mouse_inside = false;
+    return true;
 }
 
-void cEditor::Load_Image_Items(fs::path dir)
+bool cEditor::on_menu_selection_changed(const CEGUI::EventArgs& event)
 {
-    vector<fs::path> image_files = Get_Directory_Files(dir, ".settings");
+    CEGUI::ListboxItem* p_current_item = mp_menu_listbox->getFirstSelectedItem();
 
-    // load all available objects
-    for (vector<fs::path>::const_iterator itr = image_files.begin(); itr != image_files.end(); ++itr) {
-        // get filename
-        fs::path filename = (*itr);
+    // Ignore if no selection
+    if (!p_current_item)
+        return false;
 
-        // load settings
-        cImage_Settings_Data* settings = pSettingsParser->Get(filename);
+    cEditor_Menu_Entry* p_menu_entry = static_cast<cEditor_Menu_Entry*>(p_current_item->getUserData());
 
-        // if settings are available
-        if (settings) {
-            // if required editor tag is available
-            if (settings->m_editor_tags.find(m_editor_item_tag) != std::string::npos) {
-                // set base to the filename
-                settings->m_base = filename;
-                // add real image
-                m_tagged_item_images.push_back(settings);
-            }
-        }
+    // Ignore clicks on headings
+    if (p_menu_entry->Is_Header())
+        return false;
+
+    // Treat clicks on function elements specifically
+    if (p_menu_entry->Is_Function()) {
+        Activate_Function_Entry(p_menu_entry);
+        return true;
     }
+
+    // Ordinary menu item (i.e. submenu with game objects).
+    p_menu_entry->Activate(mp_editor_tabpane);
+
+    return true;
 }
 
-void cEditor::Activate_Item(cEditor_Item_Object* entry)
+/**
+ * Takes a function menu entry and executes the Function_*() function it
+ * belongs to. These functions are intended to be overridden in subclasses.
+ */
+void cEditor::Activate_Function_Entry(cEditor_Menu_Entry* p_function_entry)
 {
-    // invalid
-    if (!entry)
-        throw(EditorError("Invalid Editor Item!"));
+    std::vector<std::string>& tags = p_function_entry->Get_Required_Tags();
+    std::vector<std::string>::const_iterator iter;
 
-    // create copy from editor item
-    cSprite* new_sprite = entry->sprite_obj->Copy();
+    // HIER! Führt zu einer Exception!
 
-    // if copying failed
-    if (!new_sprite)
-        throw(EditorSpriteCopyFailedError(entry->sprite_obj));
+    if (std::find(tags.begin(), tags.end(), std::string("new")) != tags.end())
+        Function_New();
+    else if (std::find(tags.begin(), tags.end(), std::string("load")) != tags.end())
+        Function_Load();
+    else if (std::find(tags.begin(), tags.end(), std::string("save")) != tags.end())
+        Function_Save(); // TODO: optional argument?
+    else if (std::find(tags.begin(), tags.end(), std::string("save_as")) != tags.end())
+        Function_Save_as();
+    else if (std::find(tags.begin(), tags.end(), std::string("delete")) != tags.end())
+        Function_Delete();
+    else if (std::find(tags.begin(), tags.end(), std::string("reload")) != tags.end())
+        Function_Reload();
+    else if (std::find(tags.begin(), tags.end(), std::string("settings")) != tags.end())
+        Function_Settings();
+    else
+        throw(std::runtime_error("Invalid function menu item!"));
+}
 
-    new_sprite->Set_Sprite_Manager(m_sprite_manager);
-    new_sprite->Set_Pos(pMouseCursor->m_pos_x, pMouseCursor->m_pos_y, 1);
+cEditor_Menu_Entry::cEditor_Menu_Entry(std::string name)
+{
+    m_name = name;
+    m_element_y = 0;
 
-    // hide editor window
-    m_editor_window->setXPosition(CEGUI::UDim(-0.19f, 0));
-    // Hide Listbox
-    m_listbox_menu->hide();
-    m_listbox_items->hide();
+    // Prepare the CEGUI items window. This will be shown whenever
+    // this menu entry is clicked.
+    mp_tab_pane = static_cast<CEGUI::ScrollablePane*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/ScrollablePane", std::string("editor_items_") + name));
+    mp_tab_pane->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0.01, 0)));
+    mp_tab_pane->setSize(CEGUI::USize(CEGUI::UDim(0.99, 0), CEGUI::UDim(0.95, 0)));
+    mp_tab_pane->setContentPaneAutoSized(true);
+}
 
-    // add item
-    m_sprite_manager->Add(new_sprite);
+cEditor_Menu_Entry::~cEditor_Menu_Entry()
+{
+    // TODO: Detach if still attached and destroy
+    // Nonattached windows will not get destroyed, obviously
+    // CEGUI::Window* p_editor_tabpane = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("tabcontrol_editor/editor_tab_items")
+}
 
-    // Set mouse objects
+/**
+ * Looks up if the given file is available in the CEGUI image manager, and
+ * if so, returns the CEGUI image reference string to add (you can pass
+ * this into cEditor_Menu_Entry::Add_Item()). If not, loads the file into
+ * the image manager and returns the same; further calls will return the
+ * reference to the stored image. I.e., the image gets cached.
+ *
+ * \param path
+ * Absolute path to the PNG file to load.
+ *
+ * \returns CEGUI image identifier that can be used everywhere CEGUI
+ * expects an image.
+ */
+std::string cEditor::load_cegui_image(boost::filesystem::path path)
+{
+    std::string escaped_path(path_to_utf8(path));
+    string_replace_all(escaped_path, "/", "+"); // CEGUI doesn't like / in ImageManager image names
+
+    /* CEGUI only knows about image sets, not about single images.
+     * Thus we effectively add one-image imagesets here to have CEGUI
+     * display our image. Note CEGUI also caches these images and will
+     * throw a CEGUI::AlreadyExsitsException in addFromImageFile() if
+     * an image is added multiple times (like multiple loads of the
+     * editor or just the same item being added to multiple menus).
+     * Thus we have to check if the item graphic has been cached before,
+     * and only if that isn't the case, load the file from disk in the
+     * way described. */
+    if (!CEGUI::ImageManager::getSingleton().isDefined(escaped_path)) {
+        std::string string_path(path_to_utf8(path));
+        std::string target_group;
+        boost::filesystem::path reltarget;
+
+        // Find out whether we need to specify a path relative to the cache
+        // or to the game pixmaps directory. CEGUI does not accept absolute
+        // pathes as we receive them here.
+        if (string_path.find(path_to_utf8(pResource_Manager->Get_User_Pixmaps_Directory())) != string::npos) {
+            target_group = "cache-images";
+            reltarget = pResource_Manager->Get_User_Pixmaps_Directory();
+        }
+        else {
+            target_group = "ingame-images";
+            reltarget = pResource_Manager->Get_Game_Pixmaps_Directory();
+        }
+
+        try {
+            boost::filesystem::path relative_path = fs_relative(reltarget, path);
+            CEGUI::ImageManager::getSingleton().addFromImageFile(escaped_path, path_to_utf8(relative_path), target_group);
+        }
+        catch(CEGUI::RendererException& e) {
+            std::cerr << "Warning: Failed to load as editor item image: " << path << std::endl;
+            std::cerr << "Using dummy image instead." << std::endl;
+            return load_cegui_image(pResource_Manager->Get_Game_Pixmap("game/image_not_found.png"));
+        }
+    }
+
+    return escaped_path;
+}
+
+void cEditor_Menu_Entry::Add_Item(cSprite* p_template_sprite, std::string cegui_img_ident, std::string name, CEGUI::Quaternion rotation)
+{
+    static const int labelheight = 24;
+    static const int imageheight = 48; /* Also image width (square) */
+    static const int yskip = 24;
+
+    CEGUI::Window* p_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText"/* , std::string("label-of-") + name */);
+    p_label->setText(name);
+    p_label->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0, labelheight)));
+    p_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, m_element_y)));
+    p_label->setProperty("FrameEnabled", "False");
+
+    CEGUI::Window* p_image = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage"/* , std::string("image-of-") + name */);
+    p_image->setProperty("Image", cegui_img_ident);
+    p_image->setSize(CEGUI::USize(CEGUI::UDim(0, imageheight), CEGUI::UDim(0, imageheight)));
+    p_image->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5, -imageheight/2) /* center on X */, CEGUI::UDim(0, m_element_y + labelheight)));
+    p_image->setProperty("FrameEnabled", "False");
+    p_image->setUserData(p_template_sprite);
+    p_image->subscribeEvent(CEGUI::Window::EventMouseButtonDown, CEGUI::Event::Subscriber(&cEditor_Menu_Entry::on_image_mouse_down, this));
+
+    // Apply rotation
+    p_image->setRotation(rotation);
+
+    mp_tab_pane->addChild(p_label);
+    mp_tab_pane->addChild(p_image);
+
+    // Remember where we stopped for the next call.
+    m_element_y += labelheight + imageheight + yskip;
+}
+
+/// Activate this entry's panel in the handed tabbook.
+void cEditor_Menu_Entry::Activate(CEGUI::TabControl* p_tabcontrol)
+{
+    CEGUI::Window* p_container = p_tabcontrol->getTabContents("editor_tab_items");
+
+    // Detach the current scrollable pane.
+    CEGUI::ScrollablePane* p_current_pane = static_cast<CEGUI::ScrollablePane*>(p_container->getChildElementAtIdx(0));
+    p_container->removeChild(p_current_pane);
+
+    // Attach our content instead.
+    p_container->addChild(mp_tab_pane);
+
+    // Switch to the items page
+    p_tabcontrol->setSelectedTab("editor_tab_items");
+}
+
+bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
+{
+    // EventMouseButtonDown event handler receives a CEGUI::MouseEventArgs in reality,
+    // see http://static.cegui.org.uk/docs/0.8.7/classCEGUI_1_1Window.html#a073c0f8e07cad39c21dce04cc2e49b3c.
+    const CEGUI::MouseEventArgs& event = static_cast<const CEGUI::MouseEventArgs&>(ev);
+
+    const cSprite* p_template_sprite = static_cast<const cSprite*>(event.window->getUserData());
+
+    // Create the new sprite
+    cSprite* p_new_sprite = p_template_sprite->Copy();
+    p_new_sprite->Set_Pos(pMouseCursor->m_pos_x, pMouseCursor->m_pos_y, 1);
+
+    // Move the editor tabpane to the left
+    mp_tab_pane->getParent()->getParent()->getParent()->setXPosition(CEGUI::UDim(TABPANE_OUT_OF_SIGHT_X, 0));
+
+    // Add the new sprite to the level and attach it to the mouse cursor,
+    // ensuring the cursor is centered on the object.
+    p_new_sprite->Set_Sprite_Manager(pActive_Level->m_sprite_manager);
+    pActive_Level->m_sprite_manager->Add(p_new_sprite);
+    pMouseCursor->Set_Hovered_Object(p_new_sprite);
     pMouseCursor->m_left = 1;
-    pMouseCursor->m_hovering_object->m_mouse_offset_y = static_cast<int>(new_sprite->m_col_rect.m_h / 2);
-    pMouseCursor->m_hovering_object->m_mouse_offset_x = static_cast<int>(new_sprite->m_col_rect.m_w / 2);
-    pMouseCursor->Set_Hovered_Object(new_sprite);
+    pMouseCursor->m_hovering_object->m_mouse_offset_y = static_cast<int>(p_new_sprite->m_col_rect.m_h / 2);
+    pMouseCursor->m_hovering_object->m_mouse_offset_x = static_cast<int>(p_new_sprite->m_col_rect.m_w / 2);
+
+    return true;
 }
 
-cSprite_List cEditor::Copy_Direction(const cSprite_List& objects, const ObjectDirection dir) const
+void cEditor::Select_Same_Object_Types(const cSprite* obj)
+{
+    if (!obj) {
+        return;
+    }
+
+    bool is_basic_sprite = 0;
+
+    if (obj->Is_Basic_Sprite()) {
+        if (!obj->m_start_image) {
+            return;
+        }
+
+        is_basic_sprite = 1;
+    }
+
+    // sprite manager
+    for (cSprite_List::iterator itr = mp_edited_sprite_manager->objects.begin(); itr != mp_edited_sprite_manager->objects.end(); ++itr) {
+        cSprite* game_obj = (*itr);
+
+        if (game_obj->m_type != obj->m_type) {
+            continue;
+        }
+
+        if (is_basic_sprite && game_obj->m_start_image != obj->m_start_image) {
+            continue;
+        }
+
+        pMouseCursor->Add_Selected_Object(game_obj, 1);
+    }
+}
+
+void cEditor::Process_Input(void)
+{
+    if (!m_enabled) {
+        return;
+    }
+
+    // Drag Delete
+    if (pKeyboard->Is_Ctrl_Down() && pMouseCursor->m_right) {
+        cObjectCollision* col = pMouseCursor->Get_First_Editor_Collsion();
+
+        if (col) {
+            pMouseCursor->Delete(col->m_obj);
+            delete col;
+        }
+    }
+
+    // Camera Movement
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || pJoystick->m_right) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed, 0.0f);
+        }
+        else {
+            pActive_Camera->Move(CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed, 0.0f);
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || pJoystick->m_left) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(-(CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed), 0.0f);
+        }
+        else {
+            pActive_Camera->Move(-(CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed), 0.0f);
+        }
+    }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || pJoystick->m_up) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(0.0f, -(CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed));
+        }
+        else {
+            pActive_Camera->Move(0.0f, -(CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed));
+        }
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || pJoystick->m_down) {
+        if (pKeyboard->Is_Shift_Down()) {
+            pActive_Camera->Move(0.0f, CAMERA_SPEED * pFramerate->m_speed_factor * 3 * pPreferences->m_scroll_speed);
+        }
+        else {
+            pActive_Camera->Move(0.0f, CAMERA_SPEED * pFramerate->m_speed_factor * pPreferences->m_scroll_speed);
+        }
+    }
+}
+
+void cEditor::Function_Exit(void)
+{
+    sf::Event newevt;
+    newevt.type = sf::Event::KeyPressed;
+    newevt.key.code = sf::Keyboard::F8;
+    pKeyboard->Key_Down(newevt);
+}
+
+cSprite_List cEditor::copy_direction(const cSprite_List& objects, const ObjectDirection dir) const
 {
     // additional direction objects offset
     unsigned int offset = 0;
@@ -1261,14 +1376,14 @@ cSprite_List cEditor::Copy_Direction(const cSprite_List& objects, const ObjectDi
     for (cSprite_List::const_iterator itr = objects.begin(); itr != objects.end(); ++itr) {
         const cSprite* obj = (*itr);
 
-        new_objects.push_back(Copy_Direction(obj, dir, offset));
+        new_objects.push_back(copy_direction(obj, dir, offset));
     }
 
     // return only new objects
     return new_objects;
 }
 
-cSprite* cEditor::Copy_Direction(const cSprite* obj, const ObjectDirection dir, int offset /* = 0 */) const
+cSprite* cEditor::copy_direction(const cSprite* obj, const ObjectDirection dir, int offset /* = 0 */) const
 {
     float w = 0.0f;
     float h = 0.0f;
@@ -1314,100 +1429,7 @@ cSprite* cEditor::Copy_Direction(const cSprite* obj, const ObjectDirection dir, 
     return pMouseCursor->Copy(obj, obj->m_start_pos_x + w, obj->m_start_pos_y + h);
 }
 
-void cEditor::Select_Same_Object_Types(const cSprite* obj)
-{
-    if (!obj) {
-        return;
-    }
-
-    bool is_basic_sprite = 0;
-
-    if (obj->Is_Basic_Sprite()) {
-        if (!obj->m_start_image) {
-            return;
-        }
-
-        is_basic_sprite = 1;
-    }
-
-    // sprite manager
-    for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
-        cSprite* game_obj = (*itr);
-
-        if (game_obj->m_type != obj->m_type) {
-            continue;
-        }
-
-        if (is_basic_sprite && game_obj->m_start_image != obj->m_start_image) {
-            continue;
-        }
-
-        pMouseCursor->Add_Selected_Object(game_obj, 1);
-    }
-}
-
-bool cEditor::Editor_Mouse_Enter(const CEGUI::EventArgs& event)
-{
-    // ignore if a button is pressed
-    if (pMouseCursor->m_left || pMouseCursor->m_middle || pMouseCursor->m_right) {
-        return 1;
-    }
-
-    // if not visible
-    if (!m_listbox_items->isVisible(1)) {
-        // fade in
-        m_editor_window->setXPosition(CEGUI::UDim(0, 0));
-        m_editor_window->setAlpha(0.0f);
-
-        // Show Listbox
-        m_listbox_menu->show();
-        m_listbox_items->show();
-    }
-
-    m_menu_timer = 0.0f;
-
-    return 1;
-}
-
-bool cEditor::Menu_Select(const CEGUI::EventArgs& event)
-{
-    const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
-
-    // set item
-    if (item) {
-        Activate_Menu_Item(static_cast<cEditor_Menu_Object*>(item));
-    }
-    // clear ?
-    else {
-        // todo : clear
-    }
-
-    return 1;
-}
-
-bool cEditor::Item_Select(const CEGUI::EventArgs& event)
-{
-    const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
-
-    // activate item
-    if (item) {
-        Activate_Item(static_cast<cEditor_Item_Object*>(item));
-    }
-
-    return 1;
-}
-
-void cEditor::Function_Exit(void)
-{
-    sf::Event newevt;
-    newevt.type = sf::Event::KeyPressed;
-    newevt.key.code = sf::Keyboard::F8;
-    pKeyboard->Key_Down(newevt);
-}
-
-void cEditor::Replace_Sprites(void)
+void cEditor::replace_sprites(void)
 {
     if (pMouseCursor->Get_Selected_Object_Size() == 0) {
         return;
@@ -1445,78 +1467,16 @@ void cEditor::Replace_Sprites(void)
     }
 }
 
-bool cEditor::Is_Tag_Available(const std::string& str, const std::string& tag, unsigned int search_pos /* = 0 */)
+bool cEditor::on_help_window_exit_clicked(const CEGUI::EventArgs& args)
 {
-    // found tag position
-    std::string::size_type pos = str.find(tag, search_pos);
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::FrameWindow* p_helpframe = static_cast<CEGUI::FrameWindow*>(p_root->getChild("editor_help"));
 
-    // not found
-    if (pos == std::string::npos) {
-        return 0;
-    }
+    p_root->removeChild(p_helpframe);
+    CEGUI::WindowManager::getSingleton().destroyWindow(p_helpframe);
+    m_help_window_visible = false;
 
-    // tag end position
-    std::string::size_type end_pos = pos + tag.length();
-
-    // if tag starting position is valid
-    if (pos == 0 || str.substr(pos - 1, 1).compare(";") == 0) {
-        // if tag ending position is valid
-        if (end_pos == str.length() || str.substr(end_pos, 1).compare(";") == 0) {
-            return 1;
-        }
-    }
-
-    // not valid - continue search
-    return Is_Tag_Available(str, tag, end_pos);
+    return true;
 }
 
-bool cEditor::Window_Help_Exit_Clicked(const CEGUI::EventArgs& event)
-{
-    CEGUI::Window* window_help = CEGUI::WindowManager::getSingleton().getWindow("editor_help_window");
-    pGuiSystem->getGUISheet()->removeChildWindow(window_help);
-    CEGUI::WindowManager::getSingleton().destroyWindow(window_help);
-
-    return 1;
-}
-
-// virtual
-// This function must set m_tagged_item_objects in the subclasses!
-// Instanciate cEditorItemsLoader for parsing the items file.
-void cEditor::Parse_Items_File(fs::path filename)
-{
-    throw (NotImplementedError("Parse_Items_File() must be overridden in a subclass."));
-    //cEditorItemsLoader parser;
-    //parser.parse_file(filename, cLevelLoader::Create_Level_Objects_From_XML_Tag);
-    //m_tagged_item_objects = parser.get_tagged_sprites();
-}
-
-void cEditor::Parse_Menu_File(fs::path filename)
-{
-    // The menu XML file is so dead simple that a SAX parser would
-    // simply be overkill. Leightweight XPath queries are enough.
-    xmlpp::DomParser parser;
-    parser.parse_file(path_to_utf8(filename));
-
-    xmlpp::Element* p_root = parser.get_document()->get_root_node();
-    xmlpp::NodeSet items = p_root->find("item");
-
-    xmlpp::NodeSet::const_iterator iter;
-    for (iter=items.begin(); iter != items.end(); iter++) {
-        xmlpp::Element* p_node = dynamic_cast<xmlpp::Element*>(*iter);
-
-        std::string name = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='name']")[0])->get_attribute("value")->get_value();
-        std::string tags = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='tags']")[0])->get_attribute("value")->get_value();
-
-        // Set color if available (---header--- elements have no color property)
-        std::string color = "FFFFFFFF";
-        xmlpp::NodeSet results = p_node->find("property[@name='color']");
-        if (!results.empty())
-            color = dynamic_cast<xmlpp::Element*>(results[0])->get_attribute("value")->get_value();
-
-        Add_Menu_Object(name, tags, CEGUI::PropertyHelper::stringToColour(color));
-    }
-}
-
-/* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
-
-} // namespace TSC
+#endif

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="tab_game">
+    <Property name="Text" value="Game"/>
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Property name="MousePassThroughEnabled" value="True"/>
+    <Window type="TaharezLook/Combobox" name="game_combo_always_run">
+      <Property name="TooltipText" value="Enable this to always run without the need of pressing the run key."/>
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.05,0},{0.42,0},{0.29,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Spinner" name="game_spinner_camera_hor_speed">
+      <Property name="TooltipText" value="Camera Horizontal Speed"/>
+      <Property name="StepSize" value="0.1"/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="32767"/>
+      <Property name="MinimumValue" value="0"/>
+      <Property name="TextInputMode" value="FloatingPoint"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.3,0},{0.13,0},{0.42,0},{0.2,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Spinner" name="game_spinner_camera_ver_speed">
+      <Property name="TooltipText" value="Camera Vertical Speed"/>
+      <Property name="StepSize" value="0.1"/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="32767"/>
+      <Property name="MinimumValue" value="0"/>
+      <Property name="TextInputMode" value="FloatingPoint"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.3,0},{0.21,0},{0.42,0},{0.28,0}}"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="game_text_always_run">
+      <Property name="Text" value="_Always Run"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.05,0},{0.3,0},{0.12,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="game_text_camera_hor_speed">
+      <Property name="Text" value="_Camera Hor Speed"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.13,0},{0.3,0},{0.2,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="game_text_camera_ver_speed">
+      <Property name="Text" value="_Camera Ver Speed"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.21,0},{0.3,0},{0.28,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="game_text_language">
+      <Property name="Text" value="_Language"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.29,0},{0.3,0},{0.36,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="game_combo_language">
+      <Property name="TooltipText" value="Select the game Language."/>
+      <Property name="ReadOnly" value="True"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.29,0},{0.5,0},{0.6,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="game_text_menu_level">
+      <Property name="Text" value="_Menu Level"/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.37,0},{0.3,0},{0.44,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/Combobox" name="game_combo_menu_level">
+      <Property name="TooltipText" value="Select the menu level."/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="ClippedByParent" value="False"/>
+      <Property name="Area" value="{{0.3,0},{0.37,0},{0.5,0},{0.68,0}}"/>
+      <Property name="MaxTextLength" value="1073741823"/>
+    </Window>
+    <Window type="TaharezLook/Button" name="game_button_reset">
+      <Property name="Text" value="_Reset"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.02,0},{0.9,0},{0.16,0},{0.98,0}}"/>
+    </Window>
+  </Window>
+</GUILayout>

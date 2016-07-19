@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="level_settings_tab_script">
+    <Property name="Text" value="Script"/>
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area"
+	      value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Window type="TaharezLook/MultiLineEditbox" name="multieditbox_script">
+      <Property name="Text" value="# Your script code here"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.01,0},{0.99,0},{0.92,0}}"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="script_reload_info">
+      <Property name="Text" value="NOTE: Changing the script code will force its re-evaluation!"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.93,0},{0.99,0},{0.99,0}}"/>
+    </Window>
+  </Window>
+</GUILayout>

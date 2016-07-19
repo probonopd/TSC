@@ -392,14 +392,6 @@ void cCamera::Update_Position(void) const
         pActive_Player->Update_Valid_Draw();
         // update sprite manager
         m_sprite_manager->Update_Items_Valid_Draw();
-
-        // editor
-        if (editor_enabled) {
-            // update settings activated object position
-            if (pMouseCursor->m_active_object) {
-                pMouseCursor->m_active_object->Editor_Position_Update();
-            }
-        }
     }
     else if (Game_Mode == MODE_MENU) {
         // update player

@@ -41,6 +41,11 @@
 #include "../scripting/events/jump_event.hpp"
 #include "../scripting/events/shoot_event.hpp"
 #include "../scripting/events/downgrade_event.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 namespace TSC {
 
@@ -428,11 +433,11 @@ animation_end:
 
     // fade out
     Game_Action_Data_Start.add("music_fadeout", "1500");
-    Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_BLACK));
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
     Game_Action_Data_Start.add("screen_fadeout_speed", "3");
     // delay unload level
     Game_Action_Data_Middle.add("unload_levels", "1");
-    Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_BLACK));
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
 }
 
 void cLevel_Player::Move_Player(float velocity, float vel_wrongway)
@@ -3949,19 +3954,20 @@ void cLevel_Player::Handle_out_of_Level(ObjectDirection dir)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cLevel_Player::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
 
     // direction
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_player_direction"));
-    Editor_Add(UTF8_("Direction"), UTF8_("Initial direction"), combobox, 100, 75);
 
     combobox->addItem(new CEGUI::ListboxTextItem("right"));
     combobox->addItem(new CEGUI::ListboxTextItem("left"));
     combobox->setText(Get_Direction_Name(m_start_direction));
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Player::Editor_Direction_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("Initial direction"), combobox);
 
     // init
     Editor_Init();
@@ -3976,6 +3982,7 @@ bool cLevel_Player::Editor_Direction_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 void cLevel_Player::Push_Return(const std::string& level, const std::string& entry)
 {

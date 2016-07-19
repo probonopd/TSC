@@ -26,6 +26,7 @@
 #include "../audio/audio.hpp"
 #include "../level/level.hpp"
 #include "../user/preferences.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 
@@ -46,7 +47,7 @@ cKeyboard::~cKeyboard(void)
 bool cKeyboard::CEGUI_Handle_Key_Up(sf::Keyboard::Key key) const
 {
     // inject the scancode directly
-    if (pGuiSystem->injectKeyUp(SFMLKey_to_CEGUIKey(key))) {
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(SFMLKey_to_CEGUIKey(key))) {
         // input was processed by the gui system
         return 1;
     }
@@ -81,7 +82,7 @@ bool cKeyboard::Key_Up(const sf::Event& evt)
 bool cKeyboard::CEGUI_Handle_Key_Down(sf::Keyboard::Key key) const
 {
     // inject the scancode
-    if (pGuiSystem->injectKeyDown(SFMLKey_to_CEGUIKey(key)) == 1) {
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SFMLKey_to_CEGUIKey(key)) == 1) {
         // input got processed by the gui system
         return 1;
     }
@@ -147,10 +148,14 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
         }
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
+#ifdef ENABLE_EDITOR
         // processed by the level settings
-        if (pLevel_Editor->m_settings_screen->Key_Down(evt)) {
+        if (pLevel_Editor->m_settings_screen.Key_Down(evt)) {
             return 1;
         }
+#else
+        return 0;
+#endif
     }
 
     // set fixed speed factor mode
@@ -182,11 +187,19 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
     }
     // load a level
     else if (evt.key.code == sf::Keyboard::L && evt.key.control && !(Game_Mode == MODE_OVERWORLD && pOverworld_Manager->m_debug_mode) && Game_Mode != MODE_LEVEL_SETTINGS) {
+#ifdef ENABLE_EDITOR
         pLevel_Editor->Function_Load();
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
     // load an overworld
     else if (evt.key.code == sf::Keyboard::W && evt.key.control && !(Game_Mode == MODE_OVERWORLD && pOverworld_Manager->m_debug_mode) && Game_Mode != MODE_LEVEL_SETTINGS) {
+#ifdef ENABLE_EDITOR
         pWorld_Editor->Function_Load();
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
     // sound toggle
     else if (evt.key.code == sf::Keyboard::F10) {
@@ -242,7 +255,7 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
 
 bool cKeyboard::CEGUI_Handle_Text_Entered(uint32_t character)
 {
-    if (pGuiSystem->injectChar(character)) {
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(character)) {
         // input got processed by the gui system
         return 1;
     }
@@ -260,7 +273,7 @@ bool cKeyboard::Text_Entered(const sf::Event& evt)
     return 0;
 }
 
-unsigned int cKeyboard::SFMLKey_to_CEGUIKey(const sf::Keyboard::Key key) const
+CEGUI::Key::Scan cKeyboard::SFMLKey_to_CEGUIKey(const sf::Keyboard::Key key) const
 {
     switch (key) {
     case sf::Keyboard::BackSpace:
@@ -440,7 +453,8 @@ unsigned int cKeyboard::SFMLKey_to_CEGUIKey(const sf::Keyboard::Key key) const
     case sf::Keyboard::F15:
         return CEGUI::Key::F15;
     default:
-        return 0;
+        std::cerr << "Warning: Unknown key received, treating as CEGUI::Key::Unknown." << std::endl;
+        return CEGUI::Key::Unknown;
     }
 }
 

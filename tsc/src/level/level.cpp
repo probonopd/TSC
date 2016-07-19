@@ -15,6 +15,8 @@
 */
 
 #include "../level/level.hpp"
+#include "level_settings.hpp"
+#include "../core/sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "level_loader.hpp"
 #include "../core/game_core.hpp"
@@ -474,8 +476,9 @@ void cLevel::Set_Sprite_Manager(void)
 {
     pHud_Manager->Set_Sprite_Manager(m_sprite_manager);
     pMouseCursor->Set_Sprite_Manager(m_sprite_manager);
-    pLevel_Editor->Set_Sprite_Manager(m_sprite_manager);
+#ifdef ENABLE_EDITOR
     pLevel_Editor->Set_Level(this);
+#endif
     // camera
     pLevel_Manager->m_camera->Set_Sprite_Manager(m_sprite_manager);
     pLevel_Manager->m_camera->Set_Limits(m_camera_limits);
@@ -499,6 +502,7 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     // set animation manager
     pActive_Animation_Manager = m_animation_manager;
 
+#ifdef ENABLE_EDITOR
     // disable world editor
     pWorld_Editor->Disable();
 
@@ -507,12 +511,11 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     editor_enabled = pLevel_Editor->m_enabled;
 
     if (pLevel_Editor->m_enabled) {
-        if (!pLevel_Editor->m_editor_window->isVisible()) {
-            pLevel_Editor->m_editor_window->show();
-            pMouseCursor->Set_Active(1);
-        }
+        pMouseCursor->Set_Active(1);
     }
+#endif
 
+#ifdef ENABLE_EDITOR
     // camera
     if (pLevel_Editor->m_enabled) {
         pActive_Camera->Update_Position();
@@ -520,6 +523,9 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     else {
         pLevel_Manager->m_camera->Center();
     }
+#else
+    pLevel_Manager->m_camera->Center();
+#endif
 
     // play music
     if (m_valid_music) {
@@ -567,12 +573,10 @@ void cLevel::Leave(const GameMode next_mode /* = MODE_NOTHING */)
 
     pJoystick->Reset_keys();
 
-    // hide editor window if visible
-    if (pLevel_Editor->m_enabled) {
-        if (pLevel_Editor->m_editor_window->isVisible()) {
-            pLevel_Editor->m_editor_window->hide();
-        }
-    }
+#ifdef ENABLE_EDITOR
+    pLevel_Editor->Disable();
+    editor_enabled = false;
+#endif
 }
 
 void cLevel::Update(void)
@@ -725,7 +729,11 @@ bool cLevel::Key_Down(const sf::Event& evt)
     }
     // Toggle leveleditor
     else if (evt.key.code == sf::Keyboard::F8) {
-        pLevel_Editor->Toggle();
+#ifdef ENABLE_EDITOR
+        pLevel_Editor->Toggle(m_sprite_manager);
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
     // ## Game
     // Shoot
@@ -796,10 +804,12 @@ bool cLevel::Key_Down(const sf::Event& evt)
         pLevel_Player->Action_Interact(INP_EXIT);
     }
     // ## editor
+#ifdef ENABLE_EDITOR
     else if (pLevel_Editor->Key_Down(evt)) {
         // processed by the editor
         return 1;
     }
+#endif
     else {
         // not processed
         return 0;
@@ -846,6 +856,7 @@ bool cLevel::Key_Up(const sf::Event& evt)
 
 bool cLevel::Mouse_Down(sf::Mouse::Button button)
 {
+#ifdef ENABLE_EDITOR
     // ## editor
     if (pLevel_Editor->Mouse_Down(button)) {
         // processed by the editor
@@ -858,10 +869,14 @@ bool cLevel::Mouse_Down(sf::Mouse::Button button)
 
     // button got processed
     return 1;
+#else
+    return 0;
+#endif
 }
 
 bool cLevel::Mouse_Up(sf::Mouse::Button button)
 {
+#ifdef ENABLE_EDITOR
     // ## editor
     if (pLevel_Editor->Mouse_Up(button)) {
         // processed by the editor
@@ -874,6 +889,9 @@ bool cLevel::Mouse_Up(sf::Mouse::Button button)
 
     // button got processed
     return 1;
+#else
+    return 0;
+#endif
 }
 
 bool cLevel::Joy_Button_Down(unsigned int button)

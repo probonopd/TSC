@@ -20,6 +20,8 @@
 #include "overworld.hpp"
 #include "../core/global_basic.hpp"
 
+#ifdef ENABLE_EDITOR
+
 namespace fs = boost::filesystem;
 using namespace TSC;
 
@@ -275,3 +277,5 @@ cSprite* cOverworldLoader::Create_Line_From_XML_Tag(XmlAttributes& attributes, i
 
     return new cLayer_Line_Point_Start(attributes, p_sprite_manager, p_overworld);
 }
+
+#endif

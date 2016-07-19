@@ -41,7 +41,10 @@ namespace TSC {
         virtual void Turn_Around(ObjectDirection col_dir = DIR_UNDEFINED);
         virtual void Set_Moving_State(Moving_state new_state);
 
+#ifdef ENABLE_EDITOR
         virtual void Editor_Activate();
+#endif
+
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
 
         // Create the MRuby object for this
@@ -68,7 +71,9 @@ namespace TSC {
         void Init();
         void Explosion_Animation();
 
+#ifdef ENABLE_EDITOR
         bool On_Editor_Direction_Select(const CEGUI::EventArgs& event);
+#endif
     };
 
 }

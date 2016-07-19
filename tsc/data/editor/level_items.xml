@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+This file contains the editor descpiption for all
+objects which are not specified by individual *.settings
+files in their directory, i.e. all objects that are not
+simple static sprites. For example, to have a new enemy
+show up in the editor, it must be entered into this file.
+The entries in this file are just the very same as in level
+XML; the object created by that XML will be copied each
+time the user requests to add such an object to the game
+by selecting it from the editor's menu.
+-->
 <items>
 	<item>
 		<property name="object_name" value="box" />
@@ -534,7 +545,8 @@
 		<property name="color" value="green" />
 		<property name="direction" value="vertical" />
 	</item>
-	<!-- Turtle boss disabled for now due to lack of replacements. -->
+	<!-- Turtle boss disabled for now due to lack of
+	     replacements. -->
 	<!-- See https://github.com/Secretchronicles/TSC/issues/77 -->
 	<!--
 	<item>
@@ -687,7 +699,7 @@
 		<property name="segment_2_y1" value="200" />
 		<property name="segment_2_x2" value="500" />
 		<property name="segment_2_y2" value="0" />
-	</item>
+	        </item>
 	<item>
 	  <property name="object_name" value="lava"/>
 	  <property name="object_tags" value="level;special"/>

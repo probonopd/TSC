@@ -58,6 +58,10 @@ namespace TSC {
         string_trim_from_end(str, search);
     };
 
+    // Cut the string `str` at the delimiter `delim`. The returned
+    // vector does not include `delim` characters anymore.
+    std::vector<std::string> string_split(std::string str, std::string delim);
+
 // Return the number as a string
     std::string int_to_string(const int number);
     std::string int64_to_string(const uint64_t number);

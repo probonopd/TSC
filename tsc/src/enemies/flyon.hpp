@@ -94,6 +94,7 @@ namespace TSC {
         // flyon does not die in abyss
         virtual void Handle_out_of_Level(ObjectDirection dir);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
@@ -104,6 +105,7 @@ namespace TSC {
         bool Editor_Max_Distance_Text_Changed(const CEGUI::EventArgs& event);
         // editor speed text changed event
         bool Editor_Speed_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         // image directory
         boost::filesystem::path m_img_dir;

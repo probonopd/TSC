@@ -69,8 +69,10 @@ namespace TSC {
         // init defaults
         void Init(void);
 
+#ifdef ENABLE_EDITOR
         // copy (end point can not be copied)
         virtual cLayer_Line_Point_Start* Copy(void) const;
+#endif
 
         // Set the parent sprite manager
         virtual void Set_Sprite_Manager(cSprite_Manager* sprite_manager);
@@ -86,10 +88,12 @@ namespace TSC {
         */
         cWaypoint* Get_End_Waypoint(void) const;
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor origin text changed event
         bool Editor_Origin_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         /* animation type
          * 0 = normal walking, 1 = swimming

@@ -24,6 +24,7 @@
 #include "../core/framerate.hpp"
 #include "../objects/path.hpp"
 #include "../audio/audio.hpp"
+#include "level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
@@ -228,7 +229,10 @@ void cLevel_Manager::Update(void)
 {
     // input
     pActive_Level->Process_Input();
+#ifdef ENABLE_EDITOR
+    // TODO: Why is this not in cEditor::Update()?
     pLevel_Editor->Process_Input();
+#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_PROCESS_INPUT]->Update();
@@ -239,11 +243,13 @@ void cLevel_Manager::Update(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL]->Update();
 
+#ifdef ENABLE_EDITOR
     // editor
     pLevel_Editor->Update();
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL_EDITOR]->Update();
+#endif
 
     // hud
     pHud_Manager->Update();
@@ -316,8 +322,10 @@ void cLevel_Manager::Draw(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_HUD]->Update();
 
+#ifdef ENABLE_EDITOR
     // level editor
     pLevel_Editor->Draw();
+#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_EDITOR]->Update();
@@ -348,13 +356,13 @@ void cLevel_Manager::Finish_Level(bool win_music /* = 0 */)
     }
 
     Game_Action_Data_Start.add("music_fadeout", "1500");
-    Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_RANDOM));
+    Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_RANDOM));
     if (win_music) {
         Game_Action_Data_Middle.add("play_music", "game/courseclear_A.ogg");
     }
     // delay unload level
     Game_Action_Data_Middle.add("unload_levels", "1");
-    Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_RANDOM));
+    Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
 }
 
 void cLevel_Manager::Goto_Sub_Level(std::string str_level, const std::string& str_entry, Camera_movement move_camera /* = CAMERA_MOVE_FLY */, const std::string& path_identifier /* = "" */)
@@ -491,12 +499,12 @@ void cLevel_Manager::Goto_Sub_Level(std::string str_level, const std::string& st
             if (pActive_Level->Get_Music_Filename().filename().compare(level->Get_Music_Filename().filename()) != 0) {
                 Game_Action_Data_Start.add("music_fadeout", "1000");
             }
-            Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_HORIZONTAL_VERTICAL));
+            Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_HORIZONTAL_VERTICAL));
             Game_Action_Data_Start.add("screen_fadeout_speed", "3");
             Game_Action_Data_Middle.add("load_level", str_level.c_str());
             Game_Action_Data_Middle.add("load_level_entry", str_entry.c_str());
             Game_Action_Data_Middle.add("load_level_sublevel", "1");
-            Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_BLACK));
+            Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
             Game_Action_Data_End.add("screen_fadein_speed", "3");
             Game_Action_Data_End.add("activate_level_entry", str_entry.c_str());
         }

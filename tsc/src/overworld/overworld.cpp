@@ -18,6 +18,7 @@
 #include "../overworld/overworld.hpp"
 #include "../audio/audio.hpp"
 #include "../core/game_core.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../core/framerate.hpp"
@@ -355,18 +356,18 @@ void cOverworld::Enter(const GameMode old_mode /* = MODE_NOTHING */)
         Game_Mode_Type = MODE_TYPE_DEFAULT;
     }
 
+#ifdef ENABLE_EDITOR
     // disable level editor
     pLevel_Editor->Disable();
 
     // set editor enabled state
+    // FIXME: Duplicates the information in pWorld_Editor->m_enabled
     editor_enabled = pWorld_Editor->m_enabled;
 
     if (pWorld_Editor->m_enabled) {
-        if (!pWorld_Editor->m_editor_window->isVisible()) {
-            pWorld_Editor->m_editor_window->show();
-            pMouseCursor->Set_Active(1);
-        }
+        pMouseCursor->Set_Active(1);
     }
+#endif
 
     // Update Hud Text and position
     pHud_Manager->Update_Text();
@@ -396,12 +397,10 @@ void cOverworld::Leave(const GameMode next_mode /* = MODE_NOTHING */)
         m_animation_manager->Delete_All();
     }
 
-    // hide editor window if visible
-    if (pWorld_Editor->m_enabled) {
-        if (pWorld_Editor->m_editor_window->isVisible()) {
-            pWorld_Editor->m_editor_window->hide();
-        }
-    }
+#ifdef ENABLE_EDITOR
+    pWorld_Editor->Disable();
+    editor_enabled = false;
+#endif
 
     // if new mode is not menu
     if (next_mode != MODE_MENU) {
@@ -424,8 +423,10 @@ void cOverworld::Draw(void)
     // Hud
     Draw_HUD();
 
+#ifdef ENABLE_EDITOR
     // Editor
     pWorld_Editor->Draw();
+#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_OVERWORLD]->Update();
@@ -463,9 +464,6 @@ void cOverworld::Draw_HUD(void)
 
 void cOverworld::Update(void)
 {
-    // editor
-    pWorld_Editor->Process_Input();
-
     if (!editor_world_enabled) {
         // Camera
         Update_Camera();
@@ -490,8 +488,11 @@ void cOverworld::Update(void)
 
     // hud
     pHud_Manager->Update();
+
+#ifdef ENABLE_EDITOR
     // Editor
     pWorld_Editor->Update();
+#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_OVERWORLD]->Update();
@@ -554,7 +555,11 @@ bool cOverworld::Key_Down(const sf::Event& evt)
         pOverworld_Manager->m_camera_mode = !pOverworld_Manager->m_camera_mode;
     }
     else if (evt.key.code == sf::Keyboard::F8) {
-        pWorld_Editor->Toggle();
+#ifdef ENABLE_EDITOR
+        pWorld_Editor->Toggle(m_sprite_manager);
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
     else if (evt.key.code == sf::Keyboard::D && evt.key.control) {
         pOverworld_Manager->m_debug_mode = !pOverworld_Manager->m_debug_mode;
@@ -579,11 +584,13 @@ bool cOverworld::Key_Down(const sf::Event& evt)
     else if (evt.key.code == sf::Keyboard::Return || evt.key.code == sf::Keyboard::Space) {
         pOverworld_Player->Action_Interact(INP_ACTION);
     }
+#ifdef ENABLE_EDITOR
     // ## editor
     else if (pWorld_Editor->Key_Down(evt)) {
         // processed by the editor
         return 1;
     }
+#endif
     else {
         // not processed
         return 0;
@@ -610,6 +617,7 @@ bool cOverworld::Key_Up(const sf::Event& evt)
 
 bool cOverworld::Mouse_Down(sf::Mouse::Button button)
 {
+#ifdef ENABLE_EDITOR
     // ## editor
     if (pWorld_Editor->Mouse_Down(button)) {
         // processed by the editor
@@ -622,10 +630,14 @@ bool cOverworld::Mouse_Down(sf::Mouse::Button button)
 
     // button got processed
     return 1;
+#else
+    return 0;
+#endif
 }
 
 bool cOverworld::Mouse_Up(sf::Mouse::Button button)
 {
+#ifdef ENABLE_EDITOR
     // ## editor
     if (pWorld_Editor->Mouse_Up(button)) {
         // processed by the editor
@@ -638,6 +650,9 @@ bool cOverworld::Mouse_Up(sf::Mouse::Button button)
 
     // button got processed
     return 1;
+#else
+    return 0;
+#endif
 }
 
 bool cOverworld::Joy_Button_Down(unsigned int button)

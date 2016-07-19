@@ -27,6 +27,8 @@
 #include "../user/preferences.hpp"
 #include "../audio/sound_manager.hpp"
 #include "../audio/audio.hpp"
+#include "sprite_manager.hpp"
+#include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../input/joystick.hpp"
@@ -37,6 +39,8 @@
 #include "../user/savegame/savegame.hpp"
 #include "../input/keyboard.hpp"
 #include "../video/renderer.hpp"
+#include "../video/loading_screen.hpp"
+#include "../video/img_settings.hpp"
 #include "../core/i18n.hpp"
 #include "../gui/generic.hpp"
 
@@ -190,9 +194,9 @@ int main(int argc, char** argv)
             Game_Action_Data_Middle.add("load_menu", int_to_string(MENU_MAIN));
         }
 
-        Game_Action_Data_Start.add("screen_fadeout", CEGUI::PropertyHelper::intToString(EFFECT_OUT_BLACK));
+        Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
         Game_Action_Data_Start.add("screen_fadeout_speed", "3");
-        Game_Action_Data_End.add("screen_fadein", CEGUI::PropertyHelper::intToString(EFFECT_IN_BLACK));
+        Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
         Game_Action_Data_End.add("screen_fadein_speed", "3");
 
         // game loop
@@ -262,15 +266,13 @@ void Init_Game(void)
         pPackage_Manager->Set_Current_Package(g_cmdline_package);
     else
         pPackage_Manager->Set_Current_Package(pPreferences->m_package);
-    // video init
-    pVideo->Init_Video();
-    pVideo->Init_CEGUI();
-    pVideo->Init_CEGUI_Data();
-    pFont->Init();
     // framerate init
     pFramerate->Init();
     // audio init
     pAudio->Init();
+    // video init
+    pFont->Init();
+    pVideo->Init_Video();
 
     debug_print("Loading campaigns\n");
     pCampaign_Manager = new cCampaign_Manager();
@@ -295,17 +297,21 @@ void Init_Game(void)
     // draw generic loading screen
     Loading_Screen_Init();
     // initialize image cache
-    pVideo->Init_Image_Cache(0, 1);
+    pVideo->Init_Image_Cache(0);
 
     // Init Stage 3 - game classes
     // note : set any sprite manager as it is set again on game mode switch
     pHud_Manager = new cHud_Manager(pActive_Level->m_sprite_manager);
     pLevel_Player->Init();
-    pLevel_Editor = new cEditor_Level(pActive_Level->m_sprite_manager, pActive_Level);
-    /* note : set any sprite manager as cOverworld_Manager::Load sets it again
-     * parent overworld is also set from there again
-    */
-    pWorld_Editor = new cEditor_World(pActive_Level->m_sprite_manager, NULL);
+
+#ifdef ENABLE_EDITOR
+    pLevel_Editor = new cEditor_Level();
+    pLevel_Editor->Init();
+
+    pWorld_Editor = new cEditor_World();
+    pWorld_Editor->Init();
+#endif
+
     pMouseCursor = new cMouseCursor(pActive_Level->m_sprite_manager);
     pKeyboard = new cKeyboard();
     pJoystick = new cJoystick();
@@ -357,6 +363,7 @@ void Exit_Game(void)
         pSound_Manager = NULL;
     }
 
+#ifdef ENABLE_EDITOR
     if (pLevel_Editor) {
         delete pLevel_Editor;
         pLevel_Editor = NULL;
@@ -366,6 +373,7 @@ void Exit_Game(void)
         delete pWorld_Editor;
         pWorld_Editor = NULL;
     }
+#endif
 
     if (pPreferences) {
         delete pPreferences;
@@ -427,20 +435,6 @@ void Exit_Game(void)
         pRenderer_current = NULL;
     }
 
-    if (pGuiSystem) {
-        CEGUI::ResourceProvider* rp = pGuiSystem->getResourceProvider();
-        CEGUI::Logger* logger = CEGUI::Logger::getSingletonPtr();
-        pGuiSystem->destroy();
-        pGuiSystem = NULL;
-        delete rp;
-        delete logger;
-    }
-
-    if (pGuiRenderer) {
-        pGuiRenderer->destroy(*pGuiRenderer);
-        pGuiRenderer = NULL;
-    }
-
     if (pVideo) {
         delete pVideo;
         pVideo = NULL;
@@ -483,7 +477,7 @@ bool Handle_Input_Global(const sf::Event& ev)
         return 0;
     }
     case sf::Event::Resized: {
-        pGuiSystem->notifyDisplaySizeChanged(CEGUI::Size(static_cast<float>(ev.size.width), static_cast<float>(ev.size.height)));
+        CEGUI::System::getSingleton().notifyDisplaySizeChanged(CEGUI::Sizef(static_cast<float>(ev.size.width), static_cast<float>(ev.size.height)));
         break;
     }
     case sf::Event::TextEntered: {
@@ -551,23 +545,7 @@ bool Handle_Input_Global(const sf::Event& ev)
         }
 
         // send events
-        if (Game_Mode == MODE_LEVEL) {
-            // editor events
-            if (pLevel_Editor->m_enabled) {
-                if (pLevel_Editor->Handle_Event(ev)) {
-                    return 1;
-                }
-            }
-        }
-        else if (Game_Mode == MODE_OVERWORLD) {
-            // editor events
-            if (pWorld_Editor->m_enabled) {
-                if (pWorld_Editor->Handle_Event(ev)) {
-                    return 1;
-                }
-            }
-        }
-        else if (Game_Mode == MODE_MENU) {
+        if (Game_Mode == MODE_MENU) {
             if (pMenuCore->Handle_Event(ev)) {
                 return 1;
             }
@@ -630,7 +608,9 @@ void Update_Game(void)
         pMenuCore->Update();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-        pLevel_Editor->m_settings_screen->Update();
+#ifdef ENABLE_EDITOR
+        pLevel_Editor->m_settings_screen.Update();
+#endif
     }
 
     // gui
@@ -657,7 +637,9 @@ void Draw_Game(void)
         pMenuCore->Draw();
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-        pLevel_Editor->m_settings_screen->Draw();
+#ifdef ENABLE_EDITOR
+        pLevel_Editor->m_settings_screen.Draw();
+#endif
     }
 
     // Mouse

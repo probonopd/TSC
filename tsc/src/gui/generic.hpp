@@ -17,9 +17,6 @@
 #ifndef TSC_GENERIC_HPP
 #define TSC_GENERIC_HPP
 
-#include "../core/global_basic.hpp"
-#include "../video/video.hpp"
-
 namespace TSC {
 
     /* *** *** *** *** *** *** *** *** DialogBox *** *** *** *** *** *** *** *** *** */

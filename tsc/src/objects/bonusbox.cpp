@@ -21,12 +21,20 @@
 #include "../audio/audio.hpp"
 #include "../core/framerate.hpp"
 #include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "../core/game_core.hpp"
 #include "../objects/goldpiece.hpp"
 #include "../core/sprite_manager.hpp"
 #include "../core/i18n.hpp"
 #include "../core/global_basic.hpp"
+#include "../video/gl_surface.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 using namespace std;
 
@@ -69,6 +77,9 @@ void cBonusBox::Init(void)
 
     box_type = TYPE_UNDEFINED;
     m_name = _("Bonusbox Empty");
+
+    mp_force_best_item_box = NULL;
+    mp_gold_color_box      = NULL;
 }
 
 cBonusBox* cBonusBox::Copy(void) const
@@ -422,6 +433,7 @@ bool cBonusBox::Is_Update_Valid()
     return cBaseBox::Is_Update_Valid();
 }
 
+#ifdef ENABLE_EDITOR
 void cBonusBox::Editor_Activate(void)
 {
     // BaseBox Settings first
@@ -432,7 +444,6 @@ void cBonusBox::Editor_Activate(void)
 
     // Animation
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_bonusbox_animation"));
-    Editor_Add(UTF8_("Animation"), UTF8_("Use the Power animation if the box has a good or needed item for this level"), combobox, 120, 100);
 
     combobox->addItem(new CEGUI::ListboxTextItem("Default"));
     combobox->addItem(new CEGUI::ListboxTextItem("Bonus"));
@@ -441,10 +452,10 @@ void cBonusBox::Editor_Activate(void)
     combobox->setText(reinterpret_cast<const CEGUI::utf8*>(m_anim_type.c_str()));
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBonusBox::Editor_Animation_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Animation"), UTF8_("Use the Power animation if the box has a good or needed item for this level"), combobox);
 
     // Item
     combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_bonusbox_item"));
-    Editor_Add(UTF8_("Item"), UTF8_("The item that gets spawned"), combobox, 160, 140);
 
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Empty")));
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Random")));
@@ -489,60 +500,64 @@ void cBonusBox::Editor_Activate(void)
     }
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBonusBox::Editor_Item_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Item"), UTF8_("The item that gets spawned"), combobox);
 
     // Force best item
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_bonusbox_force_best_item"));
-    Editor_Add(UTF8_("Force item"), UTF8_("Force best available item when activated"), combobox, 120, 80);
+    mp_force_best_item_box = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_bonusbox_force_best_item"));
 
-    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Enabled")));
-    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Disabled")));
+    mp_force_best_item_box->addItem(new CEGUI::ListboxTextItem(UTF8_("Enabled")));
+    mp_force_best_item_box->addItem(new CEGUI::ListboxTextItem(UTF8_("Disabled")));
 
     if (m_force_best_item) {
-        combobox->setText(UTF8_("Enabled"));
+        mp_force_best_item_box->setText(UTF8_("Enabled"));
     }
     else {
-        combobox->setText(UTF8_("Disabled"));
+        mp_force_best_item_box->setText(UTF8_("Disabled"));
     }
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBonusBox::Editor_Force_best_item_Select, this));
+    mp_force_best_item_box->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBonusBox::Editor_Force_best_item_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Force item"), UTF8_("Force best available item when activated"), mp_force_best_item_box);
 
     // gold color
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_bonusbox_gold_color"));
-    Editor_Add(UTF8_("Jewel color"), UTF8_("Jewel color if the item is a jewel"), combobox, 100, 80);
+    mp_gold_color_box = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_bonusbox_gold_color"));
 
-    combobox->addItem(new CEGUI::ListboxTextItem("yellow"));
-    combobox->addItem(new CEGUI::ListboxTextItem("red"));
-    combobox->setText(Get_Color_Name(m_gold_color));
+    mp_gold_color_box->addItem(new CEGUI::ListboxTextItem("yellow"));
+    mp_gold_color_box->addItem(new CEGUI::ListboxTextItem("red"));
+    mp_gold_color_box->setText(Get_Color_Name(m_gold_color));
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBonusBox::Editor_Gold_Color_Select, this));
+    mp_gold_color_box->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBonusBox::Editor_Gold_Color_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Jewel color"), UTF8_("Jewel color if the item is a jewel"), mp_gold_color_box);
 
     // init
     Editor_Init();
 }
 
+void cBonusBox::Editor_Deactivate(void)
+{
+    cBaseBox::Editor_Deactivate();
+
+    // Clear pointers for sane debugging
+    mp_force_best_item_box = NULL;
+    mp_gold_color_box      = NULL;
+}
+
 void cBonusBox::Editor_State_Update(void)
 {
-    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-
     // Force best item
-    CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_bonusbox_force_best_item"));
-
     if (box_type == TYPE_UNDEFINED || box_type == TYPE_POWERUP || box_type == TYPE_MUSHROOM_DEFAULT || box_type == TYPE_MUSHROOM_LIVE_1 || box_type == TYPE_MUSHROOM_POISON ||
             box_type == TYPE_MUSHROOM_GHOST || box_type == TYPE_STAR || box_type == TYPE_GOLDPIECE) {
-        combobox->setEnabled(0);
+        mp_force_best_item_box->setEnabled(0);
     }
     else {
-        combobox->setEnabled(1);
+        mp_force_best_item_box->setEnabled(1);
     }
 
     // gold color
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.getWindow("editor_bonusbox_gold_color"));
-
     if (box_type != TYPE_GOLDPIECE) {
-        combobox->setEnabled(0);
+        mp_gold_color_box->setEnabled(0);
     }
     else {
-        combobox->setEnabled(1);
+        mp_gold_color_box->setEnabled(1);
     }
 }
 
@@ -621,6 +636,7 @@ bool cBonusBox::Editor_Gold_Color_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

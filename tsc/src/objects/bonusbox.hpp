@@ -83,8 +83,11 @@ namespace TSC {
         // if update is valid for the current state
         virtual bool Is_Update_Valid();
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
+        // editor deactivation
+        virtual void Editor_Deactivate(void);
         // editor state update
         virtual void Editor_State_Update(void);
         // editor animation option selected event
@@ -95,6 +98,10 @@ namespace TSC {
         bool Editor_Force_best_item_Select(const CEGUI::EventArgs& event);
         // editor gold color option selected event
         bool Editor_Gold_Color_Select(const CEGUI::EventArgs& event);
+
+        CEGUI::Combobox* mp_force_best_item_box;
+        CEGUI::Combobox* mp_gold_color_box;
+#endif
 
         // force best possible item
         bool m_force_best_item;

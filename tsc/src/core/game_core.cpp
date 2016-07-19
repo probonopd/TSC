@@ -19,8 +19,11 @@
 #include "../input/keyboard.hpp"
 #include "../input/mouse.hpp"
 #include "../input/joystick.hpp"
+#include "../level/level_settings.hpp"
+#include "sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "../level/level_player.hpp"
+#include "../video/loading_screen.hpp"
 #include "../video/renderer.hpp"
 #include "../level/level.hpp"
 #include "../core/sprite_manager.hpp"
@@ -262,12 +265,16 @@ void Handle_Generic_Game_Events(const CEGUI::XMLAttributes& action_data)
         }
     }
     if (action_data.getValueAsBool("activate_editor")) {
+#ifdef ENABLE_EDITOR
         if (Game_Mode == MODE_LEVEL) {
-            pLevel_Editor->Enable();
+            pLevel_Editor->Enable(pActive_Level->m_sprite_manager);
         }
         else if (Game_Mode == MODE_OVERWORLD) {
-            pWorld_Editor->Enable();
+            pWorld_Editor->Enable(pActive_Overworld->m_sprite_manager);
         }
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
 }
 
@@ -283,7 +290,11 @@ void Leave_Game_Mode(const GameMode next_mode)
         pMenuCore->Leave(next_mode);
     }
     else if (Game_Mode == MODE_LEVEL_SETTINGS) {
-        pLevel_Editor->m_settings_screen->Leave();
+#ifdef ENABLE_EDITOR
+        pLevel_Editor->m_settings_screen.Leave();
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
 }
 
@@ -308,7 +319,11 @@ void Enter_Game_Mode(const GameMode new_mode)
     }
     // mode gets settings
     else if (new_mode == MODE_LEVEL_SETTINGS) {
-        pLevel_Editor->m_settings_screen->Enter();
+#ifdef ENABLE_EDITOR
+        pLevel_Editor->m_settings_screen.Enter();
+#else
+        std::cerr << "In-game editor disabled by compilation option." << std::endl;
+#endif
     }
 }
 
@@ -326,12 +341,13 @@ void Clear_Input_Events(void)
 
 void Preload_Images(bool draw_gui /* = 0 */)
 {
+    CEGUI::Window* p_rootwindow = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
     // progress bar
     CEGUI::ProgressBar* progress_bar = NULL;
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(p_rootwindow->getChild("loadingroot/progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Loading Images"));
@@ -473,7 +489,7 @@ void Preload_Sounds(bool draw_gui /* = 0 */)
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::WindowManager::getSingleton().getWindow("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("loadingroot/progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Loading Sounds"));

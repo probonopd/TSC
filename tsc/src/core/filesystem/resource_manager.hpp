@@ -98,6 +98,7 @@ namespace TSC {
         boost::filesystem::path Get_User_World_Directory();
         boost::filesystem::path Get_User_Campaign_Directory();
         boost::filesystem::path Get_User_Imgcache_Directory();
+        boost::filesystem::path Get_User_Pixmaps_Directory();
         boost::filesystem::path Get_User_CEGUI_Logfile();
 
         // Get files from the various directories in the user’s data directory

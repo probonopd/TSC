@@ -292,7 +292,6 @@ namespace TSC {
         std::string m_text_old;
 
         // CEGUI debug text
-        CEGUI::Window* m_window_debug_text;
         CEGUI::Window* m_text_debug_text;
 
         // text counter

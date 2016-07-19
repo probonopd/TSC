@@ -32,6 +32,11 @@
 #include "../scripting/events/activate_event.hpp"
 #include "../level/level.hpp"
 #include "../core/global_basic.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 
 using namespace std;
 
@@ -666,7 +671,7 @@ void cBaseBox::Handle_Collision_Enemy(cObjectCollision* collision)
     }
 }
 
-
+#ifdef ENABLE_EDITOR
 void cBaseBox::Editor_Activate(void)
 {
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
@@ -674,7 +679,7 @@ void cBaseBox::Editor_Activate(void)
     if (m_type != TYPE_TEXT_BOX) {
         // useable count
         CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "editor_basebox_useable_count"));
-        Editor_Add(UTF8_("Useable Count"), UTF8_("Useable Count"), editbox, 80);
+        pLevel_Editor->Add_Config_Widget(UTF8_("Useable Count"), UTF8_("Useable Count"), editbox);
 
         editbox->setText(int_to_string(m_start_useable_count));
         editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cBaseBox::Editor_Useable_Count_Text_Changed, this));
@@ -682,7 +687,6 @@ void cBaseBox::Editor_Activate(void)
 
     // Invisible
     CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "editor_basebox_invisible"));
-    Editor_Add(UTF8_("Invisible"), UTF8_("Massive is invisible until activated.\nGhost is only visible and activateable if in ghost mode.\nSemi Massive is like Massive but only touchable in the activation direction."), combobox, 120, 100);
 
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Disabled")));
     combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Massive")));
@@ -703,6 +707,7 @@ void cBaseBox::Editor_Activate(void)
     }
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cBaseBox::Editor_Invisible_Select, this));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Invisible"), UTF8_("Massive is invisible until activated.\nGhost is only visible and activateable if in ghost mode.\nSemi Massive is like Massive but only touchable in the activation direction."), combobox);
 
     if (m_type == TYPE_SPIN_BOX) {
         // init
@@ -740,6 +745,7 @@ bool cBaseBox::Editor_Invisible_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 std::string cBaseBox::Create_Name(void) const
 {

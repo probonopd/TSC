@@ -79,12 +79,14 @@ namespace TSC {
         // if draw is valid for the current state and position
         virtual bool Is_Draw_Valid(void);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
         // editor direction option selected event
         bool Editor_Direction_Select(const CEGUI::EventArgs& event);
         // editor name text changed event
         bool Editor_Name_Text_Changed(const CEGUI::EventArgs& event);
+#endif
 
         // level entry type
         Level_Entry_type m_entry_type;

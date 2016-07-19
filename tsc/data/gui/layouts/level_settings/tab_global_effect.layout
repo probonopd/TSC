@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+    <Window type="DefaultWindow" name="level_settings_tab_global_effects">
+        <Property name="Text" value="Global Effect"/>
+        <Property name="InheritsAlpha" value="False"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/StaticText" name="text_global_effect_emitter">
+            <Property name="Text" value="The Global Effect is now a Particle Emitter."/>
+            <Property name="HorzFormatting" value="HorzCentred"/>
+            <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+            <Property name="Area" value="{{0.01,0},{0.01,0},{0.99,0},{0.06,0}}"/>
+        </Window>
+    </Window>
+</GUILayout>

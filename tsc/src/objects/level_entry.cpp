@@ -27,6 +27,11 @@
 #include "../core/i18n.hpp"
 #include "../core/sprite_manager.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../level/level.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/editor/editor.hpp"
+#include "../level/level_editor.hpp"
 #include "../scripting/events/enter_event.hpp"
 
 namespace TSC {
@@ -356,6 +361,7 @@ bool cLevel_Entry::Is_Draw_Valid(void)
     return 1;
 }
 
+#ifdef ENABLE_EDITOR
 void cLevel_Entry::Editor_Activate(void)
 {
     // get window manager
@@ -365,7 +371,6 @@ void cLevel_Entry::Editor_Activate(void)
     if (m_entry_type == LEVEL_ENTRY_WARP) {
         // direction
         CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "level_entry_direction"));
-        Editor_Add(UTF8_("Direction"), UTF8_("The direction to come out"), combobox, 100, 105);
 
         combobox->addItem(new CEGUI::ListboxTextItem("up"));
         combobox->addItem(new CEGUI::ListboxTextItem("down"));
@@ -374,11 +379,12 @@ void cLevel_Entry::Editor_Activate(void)
         combobox->setText(Get_Direction_Name(m_start_direction));
 
         combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Entry::Editor_Direction_Select, this));
+        pLevel_Editor->Add_Config_Widget(UTF8_("Direction"), UTF8_("The direction to come out"), combobox);
     }
 
     // destination entry
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_entry_name"));
-    Editor_Add(reinterpret_cast<const CEGUI::utf8*>(C_("level", "Name")), UTF8_("Name for identification"), editbox, 150);
+    pLevel_Editor->Add_Config_Widget(reinterpret_cast<const CEGUI::utf8*>(C_("level", "Name")), UTF8_("Name for identification"), editbox);
 
     editbox->setText(m_entry_name.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Entry::Editor_Name_Text_Changed, this));
@@ -406,6 +412,7 @@ bool cLevel_Entry::Editor_Name_Text_Changed(const CEGUI::EventArgs& event)
 
     return 1;
 }
+#endif
 
 void cLevel_Entry::Set_Massive_Type(MassiveType type)
 {

@@ -46,16 +46,20 @@ namespace TSC {
         virtual void Draw(cSurface_Request* p_request = NULL);
         virtual void Update();
 
+#ifdef ENABLE_EDITOR
         virtual void Editor_Activate();
+#endif
 
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
 
     protected:
         virtual std::string Get_XML_Type_Name();
 
+#ifdef ENABLE_EDITOR
         // Editor callbacks
         bool Editor_Direction_Select(const CEGUI::EventArgs& event);
         bool Editor_Color_Select(const CEGUI::EventArgs& event);
+#endif
 
     private:
         // Constructor common stuff

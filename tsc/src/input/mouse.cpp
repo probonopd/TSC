@@ -18,6 +18,8 @@
 #include "../input/mouse.hpp"
 #include "../input/keyboard.hpp"
 #include "../core/game_core.hpp"
+#include "../level/level_settings.hpp"
+#include "../core/sprite_manager.hpp"
 #include "../level/level_editor.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../overworld/overworld.hpp"
@@ -107,7 +109,7 @@ cMouseCursor::~cMouseCursor(void)
 void cMouseCursor::Set_Active(bool enabled)
 {
     cMovingSprite::Set_Active(enabled);
-    CEGUI::MouseCursor::getSingleton().setVisible(enabled);
+    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible(enabled);
 }
 
 void cMouseCursor::Reset(bool clear_copy_buffer /* = 1 */)
@@ -122,7 +124,7 @@ void cMouseCursor::Reset(bool clear_copy_buffer /* = 1 */)
 
     // change to default cursor
     if (m_mover_mode) {
-        CEGUI::MouseCursor::getSingleton().setImage("TaharezLook", "MouseArrow");
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setImage("TaharezLook/MouseArrow");
     }
 
     m_mover_mode = 0;
@@ -141,8 +143,13 @@ bool cMouseCursor::Handle_Event(const sf::Event& ev)
 {
     switch (ev.type) {
     case sf::Event::MouseMoved: {
-        pGuiSystem->injectMousePosition(static_cast<float>(ev.mouseMove.x), static_cast<float>(ev.mouseMove.y));
+        CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(static_cast<float>(ev.mouseMove.x), static_cast<float>(ev.mouseMove.y));
         Update_Position();
+
+        if (Handle_Mouse_Move(ev)) {
+            // processed
+            return 1;
+        }
         break;
     }
     case sf::Event::MouseButtonReleased: {
@@ -178,24 +185,26 @@ bool cMouseCursor::Handle_Event(const sf::Event& ev)
 
 bool cMouseCursor::Handle_Mouse_Down(sf::Mouse::Button button)
 {
+    CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
+
     switch (button) {
     // mouse buttons
     case sf::Mouse::Left: {
-        if (CEGUI::System::getSingleton().injectMouseButtonDown(CEGUI::LeftButton)) {
+        if (gui_context.injectMouseButtonDown(CEGUI::LeftButton)) {
             return 1;
         }
         m_left = 1;
         break;
     }
     case sf::Mouse::Middle: {
-        if (CEGUI::System::getSingleton().injectMouseButtonDown(CEGUI::MiddleButton)) {
+        if (gui_context.injectMouseButtonDown(CEGUI::MiddleButton)) {
             return 1;
         }
         m_middle = 1;
         break;
     }
     case sf::Mouse::Right: {
-        if (CEGUI::System::getSingleton().injectMouseButtonDown(CEGUI::RightButton)) {
+        if (gui_context.injectMouseButtonDown(CEGUI::RightButton)) {
             return 1;
         }
         m_right = 1;
@@ -232,7 +241,7 @@ bool cMouseCursor::Handle_Mouse_Down(sf::Mouse::Button button)
 bool cMouseCursor::Handle_Mouse_Wheel(float delta)
 {
     // mouse wheel
-    if (CEGUI::System::getSingleton().injectMouseWheelChange(delta))
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseWheelChange(delta))
         return true;
     else
         return false;
@@ -240,24 +249,26 @@ bool cMouseCursor::Handle_Mouse_Wheel(float delta)
 
 bool cMouseCursor::Handle_Mouse_Up(sf::Mouse::Button button)
 {
+    CEGUI::GUIContext& gui_context = CEGUI::System::getSingleton().getDefaultGUIContext();
+
     switch (button) {
     case sf::Mouse::Left: {
         m_left = 0;
-        if (CEGUI::System::getSingleton().injectMouseButtonUp(CEGUI::LeftButton)) {
+        if (gui_context.injectMouseButtonUp(CEGUI::LeftButton)) {
             return 1;
         }
     }
     break;
     case sf::Mouse::Middle: {
         m_middle = 0;
-        if (CEGUI::System::getSingleton().injectMouseButtonUp(CEGUI::MiddleButton)) {
+        if (gui_context.injectMouseButtonUp(CEGUI::MiddleButton)) {
             return 1;
         }
     }
     break;
     case sf::Mouse::Right: {
         m_right = 0;
-        if (CEGUI::System::getSingleton().injectMouseButtonUp(CEGUI::RightButton)) {
+        if (gui_context.injectMouseButtonUp(CEGUI::RightButton)) {
             return 1;
         }
     }
@@ -290,6 +301,26 @@ bool cMouseCursor::Handle_Mouse_Up(sf::Mouse::Button button)
     return 0;
 }
 
+bool cMouseCursor::Handle_Mouse_Move(const sf::Event& evt)
+{
+#ifdef ENABLE_EDITOR
+    if (Game_Mode == MODE_LEVEL && pLevel_Editor->m_enabled) {
+        if (pLevel_Editor->Mouse_Move(evt)) {
+            return true;
+        }
+    }
+
+    if (Game_Mode == MODE_OVERWORLD && pWorld_Editor->m_enabled) {
+        if (pWorld_Editor->Mouse_Move(evt)) {
+            return true;
+        }
+    }
+#endif
+
+    return false;
+}
+
+#ifdef ENABLE_EDITOR
 cObjectCollision* cMouseCursor::Get_First_Editor_Collsion(float px /* = 0.0f */, float py /* = 0.0f */)
 {
     if (m_mover_mode) {
@@ -297,7 +328,7 @@ cObjectCollision* cMouseCursor::Get_First_Editor_Collsion(float px /* = 0.0f */,
     }
 
     // Get CEGUI Window containing the mouse
-    CEGUI::Window* mouse_window = pGuiSystem->getWindowContainingMouse();
+    CEGUI::Window* mouse_window = CEGUI::System::getSingleton().getDefaultGUIContext().getWindowContainingMouse();
 
     // if mouse is over a blocking CEGUI window
     if (mouse_window && !mouse_window->isMousePassThroughEnabled()) {
@@ -329,6 +360,7 @@ cObjectCollision* cMouseCursor::Get_First_Editor_Collsion(float px /* = 0.0f */,
     // no collisions
     return Get_First_Mouse_Collision(mouse_rect);
 }
+#endif
 
 cObjectCollision* cMouseCursor::Get_First_Mouse_Collision(const GL_rect& mouse_rect)
 {
@@ -416,6 +448,7 @@ void cMouseCursor::Update_Doubleclick(void)
 
 void cMouseCursor::Left_Click_Down(void)
 {
+#ifdef ENABLE_EDITOR
     if (m_mover_mode) {
         return;
     }
@@ -476,10 +509,12 @@ void cMouseCursor::Left_Click_Down(void)
         // save last clicked object
         m_last_clicked_object = m_hovering_object->m_obj;
     }
+#endif
 }
 
 void cMouseCursor::Double_Click(bool activate /* = 1 */)
 {
+#ifdef ENABLE_EDITOR
     Clear_Active_Object();
 
     // add new
@@ -488,10 +523,12 @@ void cMouseCursor::Double_Click(bool activate /* = 1 */)
     }
 
     m_click_counter = 0.0f;
+#endif
 }
 
 void cMouseCursor::Set_Hovered_Object(cSprite* sprite)
 {
+#ifdef ENABLE_EDITOR
     // return if mouse object is the same or in mouse selection mode
     if (m_hovering_object->m_obj == sprite || (sprite && m_selection_mode)) {
         return;
@@ -511,10 +548,12 @@ void cMouseCursor::Set_Hovered_Object(cSprite* sprite)
     }
 
     Update_Selected_Object_Offset(m_hovering_object);
+#endif
 }
 
 void cMouseCursor::Update_Hovered_Object(void)
 {
+#ifdef ENABLE_EDITOR
     if (!editor_enabled || !m_hovering_object->m_obj || (m_mover_mode && (Game_Mode == MODE_LEVEL || Game_Mode == MODE_OVERWORLD))) {
         return;
     }
@@ -527,10 +566,12 @@ void cMouseCursor::Update_Hovered_Object(void)
     else {
         Update_Selected_Object_Offset(m_hovering_object);
     }
+#endif
 }
 
 void cMouseCursor::Add_Copy_Object(cSprite* sprite)
 {
+#ifdef ENABLE_EDITOR
     if (!sprite) {
         return;
     }
@@ -553,10 +594,12 @@ void cMouseCursor::Add_Copy_Object(cSprite* sprite)
     cCopyObject* copy_object = new cCopyObject();
     copy_object->m_obj = copy;
     m_copy_objects.push_back(copy_object);
+#endif
 }
 
 void cMouseCursor::Add_Copy_Objects(cSprite_List& spritelist)
 {
+#ifdef ENABLE_EDITOR
     if (spritelist.empty()) {
         return;
     }
@@ -567,10 +610,12 @@ void cMouseCursor::Add_Copy_Objects(cSprite_List& spritelist)
 
         Add_Copy_Object(obj);
     }
+#endif
 }
 
 bool cMouseCursor::Remove_Copy_Object(const cSprite* sprite)
 {
+#ifdef ENABLE_EDITOR
     if (!sprite) {
         return 0;
     }
@@ -587,15 +632,20 @@ bool cMouseCursor::Remove_Copy_Object(const cSprite* sprite)
     }
 
     return 0;
+#else
+    return 0;
+#endif
 }
 
 void cMouseCursor::Clear_Copy_Objects(void)
 {
+#ifdef ENABLE_EDITOR
     for (CopyObjectList::iterator itr = m_copy_objects.begin(); itr != m_copy_objects.end(); ++itr) {
         delete *itr;
     }
 
     m_copy_objects.clear();
+#endif
 }
 
 GL_Vector cMouseCursor::Get_Copy_Object_Base(float px, float py)
@@ -1111,7 +1161,9 @@ void cMouseCursor::Set_Active_Object(cSprite* sprite)
 
     if (sprite) {
         m_active_object = sprite;
+#ifdef ENABLE_EDITOR
         m_active_object->Editor_Activate();
+#endif
     }
 }
 
@@ -1121,7 +1173,10 @@ void cMouseCursor::Clear_Active_Object(void)
         return;
     }
 
+#ifdef ENABLE_EDITOR
     m_active_object->Editor_Deactivate();
+#endif
+
     m_active_object = NULL;
 }
 
@@ -1204,11 +1259,6 @@ void cMouseCursor::Set_Object_Position(cSelectedObject* sel_obj)
     else {
         // set new position
         sel_obj->m_obj->Set_Pos(static_cast<float>(static_cast<int>(m_pos_x) - sel_obj->m_mouse_offset_x), static_cast<float>(static_cast<int>(m_pos_y) - sel_obj->m_mouse_offset_y), 1);
-    }
-
-    // update object settings position
-    if (m_active_object && m_active_object == sel_obj->m_obj) {
-        m_active_object->Editor_Position_Update();
     }
 }
 
@@ -1418,10 +1468,10 @@ void cMouseCursor::Toggle_Mover_Mode(void)
     m_mover_center_y = m_y * global_upscaley;
 
     if (m_mover_mode) {
-        CEGUI::MouseCursor::getSingleton().setImage("TaharezLook", "MouseMoveCursor");
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setImage("TaharezLook/MouseMoveCursor");
     }
     else {
-        CEGUI::MouseCursor::getSingleton().setImage("TaharezLook", "MouseArrow");
+        CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setImage("TaharezLook/MouseArrow");
     }
 }
 
@@ -1465,6 +1515,7 @@ void cMouseCursor::Mover_Update(int move_x, int move_y)
     }
 }
 
+#ifdef ENABLE_EDITOR
 void cMouseCursor::Editor_Update(void)
 {
     if (!editor_enabled) {
@@ -1572,6 +1623,7 @@ void cMouseCursor::Editor_Update(void)
 
     delete col;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

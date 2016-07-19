@@ -22,6 +22,9 @@
 #include "../overworld/world_editor.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/xml_attributes.hpp"
+#include "../core/sprite_manager.hpp"
+#include "../core/editor/editor.hpp"
+#include "world_editor.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -162,11 +165,12 @@ void cLayer_Line_Point_Start::Init(void)
     m_linked_point->m_linked_point = this;
 }
 
+#ifdef ENABLE_EDITOR
 cLayer_Line_Point_Start* cLayer_Line_Point_Start::Copy(void) const
 {
     // create layer line
     // hack : assume it's copied with the editor
-    cLayer_Line_Point_Start* layer_line = new cLayer_Line_Point_Start(m_sprite_manager, pWorld_Editor->m_overworld);
+    cLayer_Line_Point_Start* layer_line = new cLayer_Line_Point_Start(m_sprite_manager, pWorld_Editor->mp_overworld);
     // start position
     layer_line->Set_Pos(m_pos_x, m_pos_y, 1);
     // end position
@@ -175,6 +179,7 @@ cLayer_Line_Point_Start* cLayer_Line_Point_Start::Copy(void) const
     layer_line->m_origin = m_origin;
     return layer_line;
 }
+#endif
 
 void cLayer_Line_Point_Start::Set_Sprite_Manager(cSprite_Manager* sprite_manager)
 {
@@ -238,6 +243,7 @@ cWaypoint* cLayer_Line_Point_Start::Get_End_Waypoint(void) const
     return m_overworld->Get_Waypoint(wp_num);
 }
 
+#ifdef ENABLE_EDITOR
 void cLayer_Line_Point_Start::Editor_Activate(void)
 {
     // get window manager
@@ -245,7 +251,7 @@ void cLayer_Line_Point_Start::Editor_Activate(void)
 
     // origin
     CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "layer_line_origin"));
-    Editor_Add(UTF8_("Waypoint origin"), UTF8_("Waypoint origin"), editbox, 100);
+    pWorld_Editor->Add_Config_Widget(UTF8_("Waypoint origin"), UTF8_("Waypoint origin"), editbox);
 
     editbox->setValidationString("^[+]?\\d*$");
     editbox->setText(int_to_string(m_origin));
@@ -264,6 +270,7 @@ bool cLayer_Line_Point_Start::Editor_Origin_Text_Changed(const CEGUI::EventArgs&
 
     return 1;
 }
+#endif
 
 /* *** *** *** *** *** *** *** *** Line Collision *** *** *** *** *** *** *** *** *** */
 

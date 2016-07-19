@@ -139,8 +139,11 @@ namespace TSC {
         // collision from an enemy
         virtual void Handle_Collision_Enemy(cObjectCollision* collision);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
+        // editor deactivation
+        virtual void Editor_Deactivate(void);
         // editor state update
         virtual void Editor_State_Update(void);
         // editor events
@@ -156,6 +159,11 @@ namespace TSC {
         bool Editor_Touch_Time_Text_Changed(const CEGUI::EventArgs& event);
         bool Editor_Shake_Time_Text_Changed(const CEGUI::EventArgs& event);
         bool Editor_Touch_Move_Time_Text_Changed(const CEGUI::EventArgs& event);
+
+        CEGUI::Editbox* mp_path_box;
+        CEGUI::Editbox* mp_distance_box;
+        CEGUI::Combobox* mp_direction_box;
+#endif
 
         // platform moving type
         Moving_Platform_Type m_move_type;

@@ -95,8 +95,11 @@ namespace TSC {
         // if draw is valid for the current state and position
         virtual bool Is_Draw_Valid(void);
 
+#ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);
+        // editor deactivation
+        virtual void Editor_Deactivate(void);
         // editor state update
         virtual void Editor_State_Update(void);
         // editor direction option selected event
@@ -113,6 +116,11 @@ namespace TSC {
         bool Editor_Return_Entry_Text_Changed(const CEGUI::EventArgs& event);
         // editor path identifier text changed event
         bool Editor_Path_Identifier_Text_Changed(const CEGUI::EventArgs& event);
+
+        CEGUI::Editbox* mp_path_ident_box;
+        CEGUI::Editbox* mp_destination_level_box;
+        CEGUI::Combobox* mp_direction_combobox;
+#endif
 
         // level exit type
         Level_Exit_type m_exit_type;

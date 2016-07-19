@@ -1,63 +1,20 @@
-/***************************************************************************
- * level_editor.h
- *
- * Copyright © 2006 - 2011 Florian Richter
- * Copyright © 2013 - 2014 The TSC Contributors
- ***************************************************************************/
-/*
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 3 of the License, or
-   (at your option) any later version.
-
-   You should have received a copy of the GNU General Public License
-   along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 #ifndef TSC_LEVEL_EDITOR_HPP
 #define TSC_LEVEL_EDITOR_HPP
-
+#ifdef ENABLE_EDITOR
 #include "../core/editor/editor.hpp"
-#include "../level/level_settings.hpp"
 
 namespace TSC {
-
-    /* *** *** *** *** *** *** *** cEditor_Level *** *** *** *** *** *** *** *** *** *** */
-
-    class cEditor_Level : public cEditor {
+    class cEditor_Level: public cEditor
+    {
     public:
-        cEditor_Level(cSprite_Manager* sprite_manager, cLevel* level);
-        virtual ~cEditor_Level(void);
+        cEditor_Level();
+        virtual ~cEditor_Level();
 
-        // Initialize
-        virtual void Init(void);
+        virtual void Enable(cSprite_Manager* p_sprite_manager);
+        virtual void Disable(void);
+        void Set_Level(cLevel* p_level);
 
-        // Enable
-        virtual void Enable(void);
-        /* Disable
-         * native_mode : if unset the current game mode isn't altered
-        */
-        virtual void Disable(bool native_mode = 0);
-
-
-        /* handle key down event
-         * returns true if the key was processed
-        */
         virtual bool Key_Down(const sf::Event& evt);
-
-        // Set the parent level
-        void Set_Level(cLevel* level);
-        // Set the parent sprite manager
-        virtual void Set_Sprite_Manager(cSprite_Manager* sprite_manager);
-
-        // Set Active Menu Entry
-        virtual void Activate_Menu_Item(cEditor_Menu_Object* entry);
-
-        // #### editor Functions
-        /* switch the object state of the given object
-         * returns true if successful
-        */
-        bool Switch_Object_State(cSprite* obj) const;
 
         // Menu functions
         virtual bool Function_New(void);
@@ -68,22 +25,18 @@ namespace TSC {
         virtual void Function_Reload(void);
         virtual void Function_Settings(void);
 
-        // parent level
-        cLevel* m_level;
-        // Level Settings
-        cLevel_Settings* m_settings_screen;
-    protected:
+        virtual vector<cSprite*> Parse_Items_File();
+
+        cLevel_Settings m_settings_screen;
+
+    private:
         static std::vector<cSprite*> items_loader_callback(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager, void* p_data);
-        virtual void Parse_Items_File(boost::filesystem::path filename);
+        bool cycle_object_massive_type(cSprite* obj) const;
+        cLevel* mp_level;
     };
 
-    /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
-
-// The Level Editor
     extern cEditor_Level* pLevel_Editor;
+}
 
-    /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
-
-} // namespace TSC
-
+#endif
 #endif

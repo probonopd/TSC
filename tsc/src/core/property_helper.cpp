@@ -55,6 +55,25 @@ std::string string_trim_from_end(std::string str, const char search)
     }
 }
 
+std::vector<std::string> string_split(std::string str, std::string delim)
+{
+    std::vector<std::string> result;
+    size_t pos = 0;
+    size_t lastpos = 0;
+
+    while ((pos = str.find(delim, pos)) != std::string::npos)
+    {
+        result.push_back(str.substr(lastpos, pos - lastpos));
+        pos += delim.length(); // Move behind the delimiter
+        lastpos = pos;
+    }
+
+    // Don't forget the last element
+    result.push_back(str.substr(lastpos));
+
+    return result;
+}
+
 std::string int_to_string(const int number)
 {
     std::ostringstream os;

@@ -295,6 +295,11 @@ fs::path cGL_Surface::Get_Path()
     return m_path;
 }
 
+fs::path cGL_Surface::Get_Real_PNG_Path()
+{
+    return m_real_png_path;
+}
+
 void cGL_Surface::Set_Destruction_Function(void (*nfunction)(cGL_Surface*))
 {
     destruction_function = nfunction;
