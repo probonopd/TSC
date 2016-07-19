@@ -40,9 +40,12 @@ install to.
 * The libPCRE regular expression library.
 * The libxml++ library.
 * The Freetype library.
+* CEGUI >= 0.8.5
+  * Lower versions of CEGUI do not work due to CEGUI bug #1063, which
+    was resolved first with CEGUI 0.8.5.
 * Boost >= 1.50.0 (to be exact: boost_system, boost_filesystem, boost_thread)
-* Simple and fast cross-platform multimedia library `libsfml-dev` 
-* For generating the docs:
+* SFML >= 2.3.0
+* Optionally for generating the docs:
   * `kramdown` RubyGem.
   * The `coderay` RubyGem.
   * The `dot` program.
@@ -53,27 +56,19 @@ install to.
 
 * The DevIL library.
 
-Additionally, TSC needs CEGUI version 0.7.x. However, as this old
-version is not provided by most modern Linux distributions anymore, the
-build system has been set up to download and compile it on its own and
-then link it in statically. **For Windows** (see below) this does not
-hold true, you have to provide CEGUI 0.7.x libraries yourself (or just
-use MXE as described below). We are working on the issue and hope to
-get it resolved with the next feature release of TSC.
-
 The following commandline installs all dependencies required to built
 TSC on Ubuntu Linux 14.04:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # apt-get install ruby-full rake gperf pkg-config bison libglew-dev \
   freeglut3-dev gettext libpng12-dev libpcre3-dev libxml++2.6-dev \
-  libfreetype6-dev libdevil-dev libboost1.55-all-dev libsfml-dev
+  libfreetype6-dev libdevil-dev libboost1.55-all-dev libsfml-dev \
+  libcegui-mk2-dev
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Windows dependencies ###
 
 * The FreeImage library.
-* CEGUI version 0.7.x. CEGUI 0.8.x is not yet supported.
 * For generating a setup installer:
   * The NSIS tools.
 
