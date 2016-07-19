@@ -60,7 +60,7 @@ cEditor::~cEditor()
  */
 void cEditor::Init(void)
 {
-    mp_editor_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile(m_editor_item_tag + "_editor.layout");
+    mp_editor_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("editor.layout");
     mp_editor_tabpane = static_cast<CEGUI::TabControl*>(mp_editor_root->getChild("editor_tabpane"));
     mp_object_config_pane = mp_editor_root->getChild("object_config_pane");
     m_tabpane_target_x_position = mp_editor_tabpane->getXPosition();
@@ -71,6 +71,12 @@ void cEditor::Init(void)
     mp_object_config_pane->setXPosition(CEGUI::UDim(CONFIGPANE_OUT_OF_SIGHT_X, 0.0f));
     m_object_config_pane_shown = false;
 
+    // Ensure multiple editors (level and world) can coexist. CEGUI requires unique
+    // window names in that case; m_editor_item_tag must be set by subclasses, so
+    // it is a good fit for making a unique name.
+    mp_editor_root->setName(m_editor_item_tag + "_editor_root");
+
+    // Add it to the GUI root window
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_root);
 
     mp_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));

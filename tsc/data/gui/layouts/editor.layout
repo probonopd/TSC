@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <GUILayout version="4">
-  <Window type="DefaultWindow" name="world_editor">
+  <Window type="DefaultWindow" name="editor">
     <Property name="MousePassThroughEnabled" value="True"/>
     <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
     <Window type="TaharezLook/TabControl" name="editor_tabpane">
