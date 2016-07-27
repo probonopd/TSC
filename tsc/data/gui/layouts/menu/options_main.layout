@@ -8,7 +8,7 @@
     <Window type="TaharezLook/FrameWindow" name="window_options">
       <Property name="Alpha" value="0.5"/>
       <Property name="FrameEnabled" value="False"/>
-      <Property name="TitlebarFont" value="bluebold_medium"/>
+      <Property name="TitlebarFont" value="DejaVuSans"/>
       <Property name="SizingEnabled" value="False"/>
       <Property name="MaxSize" value="{{1,0},{1,0}}"/>
       <Property name="TitlebarEnabled" value="False"/>
