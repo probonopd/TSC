@@ -1,16 +1,17 @@
 # As long as the MXE ticket at https://github.com/mxe/mxe/pull/1447 is
 # not resolved, we need to build CEGUI for Windows ourselves. On all
 # other platforms, we rely on the user to provide it.
-if (Win32)
+if (WIN32)
   message("-- Building CEGUI ourselves for Win32")
 
   ExternalProject_Add(CEGUI
-    SOURCE_DIR "${TSC_SOURCE_DIR}/../cegui-0.8.7"
+    URL "http://downloads.sourceforge.net/crayzedsgui/cegui-0.8.7.tar.bz2"
+    URL_MD5 cebcc95e205b9ad353db0d65b9b2d505
     CMAKE_ARGS -DCEGUI_BUILD_IMAGECODEC_DEVIL=ON -DCEGUI_BUILD_RENDERER_OPENGL=ON -DCEGUI_BUILD_XMLPARSER_LIBXML2=ON
     INSTALL_COMMAND "")
 
   set(CEGUI_LIBRARIES "CEGUICoreWindowRendererSet CEGUIDevILImageCodec CEGUILibXMLParser CEGUIOpenGLRenderer-0 CEGUIBase-0")
-  set(CEGUI_INCLUDE_DIR "${TSC_SORUCE_DIR}/../cegui-0.8.7/cegui/include")
+  set(CEGUI_INCLUDE_DIR "${TSC_BINARY_DIR}/cegui-0.8.7/cegui/include")
 
   ## CEGUI build configuration
   #set(CEGUI_BUILD_IMAGECODEC_CORONA OFF)

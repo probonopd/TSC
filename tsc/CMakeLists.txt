@@ -66,23 +66,34 @@ if(${CMAKE_BUILD_TYPE} MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1")
 endif()
 
+# Find out the host triplet if we are crosscompiling.
+# This is needed because the mruby build system uses it
+# as the output directory name.
+if (CMAKE_CROSSCOMPILING)
+  get_filename_component(HOST_TRIPLET ${CMAKE_C_COMPILER} NAME)
+  string(REGEX REPLACE "(.*)-.*$" "\\1" HOST_TRIPLET "${HOST_TRIPLET}")
+endif()
+
 ########################################
 # Dependencies
 
 # External libraries we depend on
 find_package(PkgConfig REQUIRED)
-find_package(SFML COMPONENTS audio graphics window system REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(Gettext)
-find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
 find_package(PNG REQUIRED)
 find_package(Ruby REQUIRED)
 
-if (NOT(Win32))
+if (WIN32)
+  set(Boost_USE_STATIC_LIBS ON)
+  find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread_win32 system REQUIRED)
+else()
+  find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
   find_package(X11 REQUIRED)
 endif()
 
 # Use pkg-config for those which have no Find module available
+pkg_search_module(SFML sfml sfml-all)
 pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 pkg_check_modules(PCRE REQUIRED libpcre)
 
@@ -123,6 +134,9 @@ include_directories(
   ${MRuby_INCLUDE_DIR}
   ${X11_INCLUDE_DIR}
   ${PNG_INCLUDE_DIRS})
+
+add_definitions(
+  ${SFML_CFLAGS})
 
 ########################################
 # Source files
@@ -309,7 +323,7 @@ message(STATUS "--------------- Build info summary ----------------")
 message(STATUS "TSC version:    ${TSC_VERSION_MAJOR}.${TSC_VERSION_MINOR}.${TSC_VERSION_PATCH}${TSC_VERSION_POSTFIX}")
 message(STATUS "Build type:     ${CMAKE_BUILD_TYPE}")
 if (CMAKE_CROSSCOMPILING)
-  message(STATUS "Crosscompiling: ${CMAKE_CXX_COMPILER_TARGET}")
+  message(STATUS "Crosscompiling: ${HOST_TRIPLET}")
 else()
   message(STATUS "Crosscompiling: No")
 endif()
