@@ -3446,14 +3446,15 @@ void cMenu_Credits::Init(void)
     // Load all our credits from the g_credits global string.
     size_t position = 0;
     size_t last_position = 0;
+    std::string credits(g_credits);
     while (true) {
-        position = g_credits.find("\n", last_position + 1);
+        position = credits.find("\n", last_position + 1);
 
         if (position == std::string::npos)
             break;
 
         if (position != last_position + 1) { // Not empty line
-            std::string line = g_credits.substr(last_position, position - last_position);
+            std::string line = credits.substr(last_position, position - last_position);
 
             // Strip leading newline if any (first line has none)
             if (line[0] == '\n')

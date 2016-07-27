@@ -26,58 +26,6 @@ TSC_VERSION_PATCH = str.match(/^set\(TSC_VERSION_PATCH (\d+)\)/)[1]
 
 TSC_SOURCE_FILES = FileList["src/**/*.cpp"] + FileList["src/**/*.hpp"]
 
-# This is called from CMake for generating the credits file.
-rule %r{credits.cpp} => ["docs/authors.txt", "docs/specialthanks.txt"] do |t|
-  puts "Converting docs/authors.txt and docs/specialthanks.txt to C++ source file"
-
-  File.open(t.name, "w:utf-8") do |f|
-    # Write first part
-    f.puts(%Q!#include "#{Dir.pwd}/src/core/global_game.hpp"
-#include "#{Dir.pwd}/src/core/main.hpp"
-
-namespace TSC {
-
-	const std::string g_credits = "\\\n!)
-
-    File.open("docs/authors.txt", "r:utf-8") do |f2|
-      # Skip to real content
-      loop do
-        line = f2.gets
-        break if line.start_with?("=-=-=-")
-      end
-      f2.gets
-
-      # Write out the remaining part to the cpp file
-      while (line = f2.gets)
-        f.write(line.chomp.gsub(/<.*>/, "").strip) # Remove email address
-        f.puts("\\n\\")
-      end
-    end
-
-    f.puts("\\n\\")
-    f.puts("-- Special Thanks --\\n\\")
-    f.puts("\\n\\")
-
-    File.open("docs/specialthanks.txt", "r:utf-8") do |f2|
-      # Skip to real content
-      loop do
-        line = f2.gets
-        break if line.start_with?("=-=-=-")
-      end
-      f2.gets
-
-      # Write out the remaining part to the cpp file
-      while (line = f2.gets)
-        f.write(line.chomp.gsub(/<.*>/, "").strip) # Remove email address
-        f.puts("\\n\\")
-      end
-    end
-
-    # Write final part
-    f.write("\";\n}\n")
-  end
-end
-
 # Note that strictly the .po files depend on the .pot file, but
 # the .pot file should only ever be updated on purpose and not
 # as part of updating the .po files, as it is the reference file

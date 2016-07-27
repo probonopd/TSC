@@ -78,16 +78,67 @@ Configuration options
 This section describes possible configuration you may apply before
 building. If you just want to build the game, you can skip it. If you
 want custom configuration or want to package it for e.g. a Linux
-distribution, read on.
+distribution, read on. Each of the flags described in this section
+needs to be passed when invoking cmake by use of a `-D` option,
+e.g. `-DENABLE_EDITOR=OFF`. Default values are indicated in brackets.
 
-You may pass the following optional variables to the `cmake` command:
+The following options are available:
 
-* `FIXED_DATA_DIR=/some/dir`: Overrides the default installation path for the
-  game data with this fixed directory.
-* `BINARY_DIR=/some/dir`: Overrides the default installation path for
-  the game binary.
-* `ENABLE_EDITOR=ON/OFF`: Enables or disables the in-game editor.
-  By default, this option is set to ON, i.e. the editor is built.
+ENABLE_EDITOR [ON]
+: Enables or disables the in-game editor. Switching this off is not
+  yet supported.
+
+ENABLE_MRUBY [ON]
+: Enables or disables the scripting engine. Switching this off is not
+  yet supported.
+
+ENABLE_NLS [ON]
+: Enables or disables use of translations. If disabled, TSC will use
+  English only.
+
+USE_SYSTEM_TINYCLIPBOARD [OFF]
+: For clipboard access, TSC uses the `tinyclipboard` library written
+  by Marvin Gülker (Quintus). The library is not part of many Linux
+  distributions yet, so it is build as part of building TSC itself
+  as a static library. If you *are* on a Linux distribution where
+  this library is packaged, set this value to ON and the build
+  system will dynamically link to the tinyclipboard library of
+  the system and not build its own variant.
+
+The following path options are available:
+
+CMAKE_INSTALL_PREFIX [/usr/local]
+: Prefix value for all other CMAKE_INSTALL variables.
+
+CMAKE_INSTALL_BINDIR [(prefix)/bin]
+: Binary directory, i.e. where the `tsc` executable will be installed.
+  Do not change this option when compiling for Windows (see below
+  for further information).
+
+CMAKE_INSTALL_DATADIR [(prefix)/share]
+: Directory where the main data (levels, graphics, etc.) will be
+  installed. Do not change this option when compiling for
+  Windows (see below for further information).
+
+CMAKE_INSTALL_DATAROOTDIR [(prefix)/share]
+: Installation target of non-program-specific data, namely the
+  `.desktop` starter file, icons and the manpage by default.
+  Only change this if you have good reasons.
+
+CMAKE_INSTALL_MANDIR [(datarootdir)/man]
+: Where TSC will install its manpage under. Note that the
+  installer will create a subdirectory `man6`, i.e. the
+  manpage is installed into (mandir)/man6/tsc.6.
+
+**Do not change CMAKE_INSTALL_BINDIR or CMAKE_INSTALL_DATADIR when
+compiling for Windows**! The `tsc` executable when run on Windows
+searches for the data directory relative to its own path on the
+filesystem, and it assumes the default layout. If you change this
+option, the `tsc` executable will be unable to locate the data
+directory and crash. On all other systems, the `tsc` executable will
+take value of `CMAKE_INSTALL_DATADIR` as the data directory, hence you
+can change it to your likening (handy for Linux distribution
+packagers).
 
 Especially if you are packaging, you will most likely also find it
 useful to execute the install step like this:

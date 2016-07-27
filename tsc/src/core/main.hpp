@@ -44,7 +44,7 @@ namespace TSC {
     */
     void Draw_Game(void);
 
-    extern const std::string g_credits;
+    extern const char* g_credits;
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 

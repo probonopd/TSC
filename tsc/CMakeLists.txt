@@ -1,7 +1,7 @@
 #############################################################################
 # CMakeLists.txt  -  Build file
 #
-# Copyright © 2013-2014 The TSC Contributors
+# Copyright © 2013-2016 The TSC Contributors
 #############################################################################
 #
 # This program is free software; you can redistribute it and/or modify
@@ -12,18 +12,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-cmake_minimum_required(VERSION 2.8)
-enable_language(CXX)
-project(TSC)
+########################################
+# Configuring CMake
 
-# Ensure our custom CMake modules get found
+cmake_minimum_required(VERSION 3.0)
+project(TSC C CXX)
+
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
-
-# Some CMake modules we use
 include(ExternalProject)
+include(GNUInstallDirs)
 
 ########################################
-# Version number
+# TSC version number
 
 # If you get a merge conflict below, always keep "dev" on the
 # "devel" branch. The postfix is only to be altered on release
@@ -33,6 +33,12 @@ set(TSC_VERSION_MINOR 1)
 set(TSC_VERSION_PATCH 0)
 set(TSC_VERSION_POSTFIX "dev")
 
+# Set TSC_VERSION_GIT if possible
+execute_process(COMMAND git rev-parse --short HEAD
+  WORKING_DIRECTORY ${TSC_SOURCE_DIR}
+  OUTPUT_VARIABLE TSC_VERSION_GIT
+  OUTPUT_STRIP_TRAILING_WHITESPACE)
+
 ###############################################
 # Flags & Options
 
@@ -40,221 +46,52 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
-set(FIXED_DATA_DIR "" CACHE FILEPATH "Enforce a static directory to look up graphics, music, etc. under rather than having TSC determine it dynamically.")
-set(BINARY_DIR "" CACHE FILEPATH "Enforce a path to install the binary to. If you use this, you MUST also set FIXED_DATA_DIR.")
 
-#FIXME: Actually use ENABLE_MRUBY
-
-# Verbose compilation for better code quality
-if(CMAKE_COMPILER_IS_GNUCC)
-  add_definitions("-Wall")
-endif()
+########################################
+# Compiler config
 
 # We use some C++11. For portability it's important to not rely on
 # compiler-specific extensions, so we'll disable them.
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# On current Linux distros dependencies start to use C++11 features,
-# so we need to compile with C++11 standard also (because otherwise
-# the compilation fails due to the dependencies wanting C++11,
-# although TSC itself currently doesn’t need it). However, we do not
-# want to see warnings from other not yet C++-11 dependencies using
-# deprecated declarations (glibmm!). Thus those warnings are disabled.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-declarations")
+# Include CEGUI's weird location into the runtime library search path.
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-# Extra flags for debugging TSC, additional to those
-# already added by CMake itself when doing a debug
-# build (e.g. -g is added for GCC by CMake).
+# -Wall for better code quality, and -Wno-deprecated-delcarations to prevent
+# useless warnings from not-yet-c++11-ready dependencies (glibmm!).
+# The _DEBUG macro is used in TSC's own codebase for debugging code.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1")
 endif()
 
-# CEGUI drops its libraries into an unusual subpath under /lib that
-# is not in the default runtime search path on most Linux distributions.
-# Thus we instruct CMake here to add some hints to the executable's
-# rpath (runtime library search path). This will make the runtime linker
-# find the CEGUI libraries at least on the system where TSC was compiled
-# on. For other systems, it is the duty of the packager to specify the
-# runtime linker search path properly.
-set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-
-execute_process(COMMAND git rev-parse --short HEAD
-  WORKING_DIRECTORY ${TSC_SOURCE_DIR}
-  OUTPUT_VARIABLE TSC_VERSION_GIT
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-execute_process(COMMAND nproc
-  OUTPUT_VARIABLE NUM_CPUCORES
-  OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-# Configuration options for the library finding
-# functions.
-set(Boost_USE_STATIC_LIBS    ON)
-set(Boost_USE_STATIC_RUNTIME OFF)
-
 ########################################
-# Cross-compilation
+# Dependencies
 
-if (TOOLCHAIN_PREFIX)
-  message(STATUS "Cross-compilation detected: ${TOOLCHAIN_PREFIX}")
-endif()
-
-################################################################################
-# EXTERNAL PROJECTS
-################################################################################
-
-###############################################
-# mruby
-
-if (ENABLE_MRUBY)
-  # Rake, for building mruby
-  find_program(RAKE_EXECUTABLE rake)
-
-  # Tell CMake how to compile mruby
-  set(MRUBY_TOPDIR ${TSC_SOURCE_DIR}/../mruby)
-  set(MRUBY_ROOT_DIR ${MRUBY_TOPDIR}/mruby)
-  set(MRUBY_MGEMS_DIR ${MRUBY_TOPDIR}/mgems)
-
-  message("-- Building mruby statically")
-  ExternalProject_Add(
-    mruby
-    PREFIX "${TSC_BINARY_DIR}/mruby"
-    DOWNLOAD_COMMAND ""
-    UPDATE_COMMAND ""
-    SOURCE_DIR "${MRUBY_ROOT_DIR}"
-    BUILD_IN_SOURCE 1
-    CONFIGURE_COMMAND ""
-    BUILD_COMMAND ${RAKE_EXECUTABLE} MRUBY_CONFIG=${TSC_SOURCE_DIR}/mruby_tsc_build_config.rb CROSSCOMPILE_TARGET=${TOOLCHAIN_PREFIX}
-    INSTALL_COMMAND "")
-
-  set(MRuby_INCLUDE_DIR ${MRUBY_ROOT_DIR}/include)
-
-  if(TOOLCHAIN_PREFIX)
-    set(MRuby_LIBRARIES "${MRUBY_ROOT_DIR}/build/${TOOLCHAIN_PREFIX}/lib/libmruby.a" "${MRUBY_ROOT_DIR}/build/${TOOLCHAIN_PREFIX}/lib/libmruby_core.a")
-  else()
-    set(MRuby_LIBRARIES "${MRUBY_ROOT_DIR}/build/host/lib/libmruby.a" "${MRUBY_ROOT_DIR}/build/host/lib/libmruby_core.a")
-  endif()
-else() # Disable it
-  set(MRuby_LIBRARIES "")
-endif()
-
-###############################################
-# tinyclipboard
-
-if (USE_SYSTEM_TINYCLIPBOARD)
-  find_library(Tinyclipboard_LIBRARIES tinyclipboard)
-  find_file(Tinyclipboard_INCLUDE_DIRS tinyclipboard.h)
-else()
-  message("-- Building tinyclipboard statically")
-  add_library(tinyclipboard STATIC
-    "../tinyclipboard/src/tinyclipboard.c"
-    "../tinyclipboard/include/tinyclipboard.h")
-
-  # Resolves to a real CMake target
-  # (imitates setting of Tinyclipboard_LIBRARIES by
-  # find_library() above so they can be treated
-  # the same further below).
-  set(Tinyclipboard_LIBRARIES tinyclipboard)
-  set(Tinyclipboard_INCLUDE_DIRS "${TSC_SOURCE_DIR}/../tinyclipboard/include")
-endif()
-
-################################################################################
-# Check for the actual libraries and programs.
-################################################################################
-
-if (ENABLE_MRUBY)
-  find_program(GPERF_EXECUTABLE gperf)
-  if(RAKE_EXECUTABLE)
-    message(STATUS "Found rake: ${RAKE_EXECUTABLE}")
-  else()
-    message(SEND_ERROR "Cannot find a rake executable")
-  endif()
-  if(GPERF_EXECUTABLE)
-    message(STATUS "Found gperf: ${GPERF_EXECUTABLE}")
-  else()
-    message(SEND_ERROR "Cannot find a gperf executable")
-  endif()
-endif()
-
-# Several libraries we depend on
+# External libraries we depend on
 find_package(PkgConfig REQUIRED)
 find_package(SFML COMPONENTS audio graphics window system REQUIRED)
-find_package(CEGUI COMPONENTS OpenGL REQUIRED)
 find_package(OpenGL REQUIRED)
-find_package(GLEW REQUIRED)
 find_package(Gettext)
-find_package(BISON REQUIRED)
-find_package(Freetype REQUIRED)
+find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
+find_package(PNG REQUIRED)
+find_package(Ruby REQUIRED)
 
-if (WIN32)
-  find_package(LibIntl REQUIRED)
-  find_package(FreeImage REQUIRED)
-
-  # Boost thread lib is named thread_win32 only under crosscompilation
-  if (TOOLCHAIN_PREFIX)
-    find_package(Boost 1.50.0
-      COMPONENTS filesystem chrono thread_win32 system
-      REQUIRED)
-  else()
-    find_package(Boost 1.50.0
-      COMPONENTS filesystem chrono thread system
-      REQUIRED)
-  endif()
-
-  # Boost-thread needs to be explicitely told that they’re
-  # linked in statically on Windows.
-  add_definitions(-DBOOST_THREAD_USE_LIB)
-else()
-  set(Boost_USE_STATIC_LIBS OFF)
-  find_package(DevIL REQUIRED)
+if (NOT(Win32))
   find_package(X11 REQUIRED)
-  find_package(Boost 1.50.0
-    COMPONENTS filesystem chrono thread system
-    REQUIRED)
 endif()
 
-pkg_check_modules(PNG REQUIRED libpng)
-pkg_check_modules(PCRE REQUIRED libpcre)
+# Use pkg-config for those which have no Find module available
 pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
+pkg_check_modules(PCRE REQUIRED libpcre)
 
-###############################################
-# Definitions etc.
-
-# Add any definitiony required by libraries
-add_definitions(
-  ${CEGUI_DEFINITIONS}
-  ${PNG_DEFINITIONS}
-  )
-
-# Add all our libraries to our -I-nclude path
-include_directories(
-  ${MRuby_INCLUDE_DIR}
-  ${Tinyclipboard_INCLUDE_DIRS}
-  ${SFML_INCLUDE_DIRS}
-  ${OPENGL_INCLUDE_DIR}
-  ${GLEW_INCLUDE_DIRS}
-  ${CEGUI_INCLUDE_DIR}
-  ${Boost_INCLUDE_DIRS}
-  ${PNG_INCLUDE_DIRS}
-#  ${IL_INCLUDE_DIR}
-  ${PCRE_INCLUDE_DIRS}
-  ${LibXmlPP_INCLUDE_DIRS}
-  ${FREETYPE_INCLUDE_DIRS}
-  )
-
-if (WIN32)
-  include_directories(${FreeImage_INCLUDE_DIRS})
-else()
-  include_directories(${IL_INCLUDE_DIR})
+# Libraries we can build ourselves under certain cirumstances if missing
+include("ProvideTinyclipboard")
+include("ProvideCEGUI")
+if (ENABLE_MRUBY)
+  include("ProvideMRuby")
 endif()
-
-########################################
-# Gettext internationalization
-
-# Process all PO files into MO files usable at runtime.
-file(GLOB po_files "data/translations/*.po")
-gettext_process_po_files(languages ALL PO_FILES ${po_files})
 
 ###############################################
 # Configuration header
@@ -269,195 +106,157 @@ include_directories(${TSC_BINARY_DIR})
 set_source_files_properties(${TSC_BINARY_DIR}/credits.cpp
   PROPERTIES GENERATED true)
 add_custom_command(OUTPUT ${TSC_BINARY_DIR}/credits.cpp
-  COMMAND rake ${TSC_BINARY_DIR}/credits.cpp
-  DEPENDS ${TSC_SOURCE_DIR}/docs/authors.txt
-  WORKING_DIRECTORY ${TSC_SOURCE_DIR})
+  COMMAND ${RUBY_EXECUTABLE} ${TSC_SOURCE_DIR}/generate_credits.rb ${TSC_BINARY_DIR}/credits.cpp
+  DEPENDS ${TSC_SOURCE_DIR}/docs/authors.txt ${TSC_SOURCE_DIR}/docs/specialthanks.txt)
 
 ########################################
-# Windows icon resource
-# See http://stackoverflow.com/a/708382
+# Compiler flags by dependencies
 
-if(WIN32)
-  # First find the windres command
-  if(TOOLCHAIN_PREFIX)
-    set(WINDRES_COMMAND "${TOOLCHAIN_PREFIX}-windres")
-  else()
-    set(WINDRES_COMMAND windres)
-  endif()
+include_directories(
+  ${SFML_INCLUDE_DIRS}
+  ${Boost_INCLUDE_DIRS}
+  ${LibXmlPP_INCLUDE_DIRS}
+  ${Tinyclipboard_INCLUDE_DIRS}
+  ${CEGUI_INCLUDE_DIR}
+  ${OPENGL_INCLUDE_DIR}
+  ${PCRE_INCLUDE_DIRS}
+  ${MRuby_INCLUDE_DIR}
+  ${X11_INCLUDE_DIR}
+  ${PNG_INCLUDE_DIRS})
 
-  # Generate the RC file, then compile it.
-  configure_file(${TSC_SOURCE_DIR}/icon.rc.in
-    ${TSC_BINARY_DIR}/icon.rc)
-  add_custom_command(OUTPUT ${TSC_BINARY_DIR}/icon.res
-    COMMAND ${WINDRES_COMMAND} ${TSC_BINARY_DIR}/icon.rc -O coff -o ${TSC_BINARY_DIR}/icon.res
-    DEPENDS ${TSC_BINARY_DIR}/icon.rc)
-endif()
-
-###############################################
+########################################
 # Source files
 
-# For now, just assume ALL cpp files to be requisites
-# of TSC.
 file(GLOB_RECURSE tsc_sources
   "src/*.cpp"
   "src/*.hpp")
 
-###############################################
-# Targets
-
-# Now add our build targets and their dependencies.
+# Windows icon resource
+# See http://stackoverflow.com/a/708382
 if (WIN32)
-  add_executable(tsc ${tsc_sources} ${TSC_BINARY_DIR}/credits.cpp icon.res)
+  enable_language(RC)
+  list(APPEND tsc_sources icon.rc)
+endif()
+
+
+########################################
+# Gettext internationalization
+
+# Process all PO files into MO files usable at runtime.
+file(GLOB po_files "data/translations/*.po")
+gettext_process_po_files(languages ALL PO_FILES ${po_files})
+
+########################################
+# Main target
+
+add_executable(tsc ${tsc_sources} ${TSC_BINARY_DIR}/credits.cpp)
+
+target_link_libraries(tsc
+  ${CEGUI_LIBRARIES}
+  ${SFML_LIBRARIES}
+  ${Boost_LIBRARIES}
+  ${OPENGL_LIBRARIES}
+  ${PNG_LIBRARY}
+  ${MRuby_LIBRARIES}
+  ${Tinyclipboard_LIBRARIES})
+
+if (WIN32)
+  target_link_libraries(tsc
+    ${LibXmlPP_STATIC_LIBRARIES}
+    ${PCRE_STATIC_LIBRARIES})
+
+  add_dependencies(tsc CEGUI)
 else()
-  add_executable(tsc ${tsc_sources} ${TSC_BINARY_DIR}/credits.cpp)
+  target_link_libraries(tsc
+    ${LibXmlPP_LIBRARIES}
+    ${PCRE_LIBRARIES}
+    ${X11_LIBRARIES}
+    ${CMAKE_DL_LIBS})
 endif()
 
 if (ENABLE_MRUBY)
   add_dependencies(tsc mruby)
 endif()
 
-if (NOT(USE_SYSTEM_TINYCLIPBOARD))
-  add_dependencies(tsc tinyclipboard)
-endif()
-
-# TODO: Make the mruby config automatically include the correct path to the PCRE library
-if (WIN32)
-  target_link_libraries(tsc
-    ${CEGUI_LIBRARIES}
-    ${SFML_LIBRARIES}
-    ${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARIES}
-    ${FreeImage_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${MRuby_LIBRARIES}
-    ${Tinyclipboard_LIBRARIES}
-    ${PCRE_STATIC_LIBRARIES}
-    ${LibXmlPP_STATIC_LIBRARIES}
-    ${PNG_STATIC_LIBRARIES}
-    ${FREETYPE_LIBRARIES}
-    intl
-    ws2_32
-    ${TSC_BINARY_DIR}/icon.res
-    )
-  # For some unknown reason, nobody knows how to properly detect libintl?
-  # However, as we already require Gettext anyway, linking libintl in directly
-  # should be safe.
-else()
-  target_link_libraries(tsc
-    ${CEGUI_LIBRARIES}
-    ${SFML_LIBRARIES}
-    ${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARIES}
-    ${IL_LIBRARIES}
-    ${ILU_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${MRuby_LIBRARIES}
-    ${Tinyclipboard_LIBRARIES}
-    ${PCRE_LIBRARIES}
-    ${LibXmlPP_LIBRARIES}
-    ${PNG_LIBRARIES}
-    ${FREETYPE_LIBRARIES}
-    ${X11_LIBRARIES}
-    ${CMAKE_DL_LIBS}
-    )
-endif()
-
-# User-definable installation variables
-unset(sharedir)
-if (NOT("${FIXED_DATA_DIR}" STREQUAL ""))
-  set(sharedir "${FIXED_DATA_DIR}")
-else()
-  set(sharedir share/tsc)
-endif()
-unset(binary_dir)
-if (NOT("${BINARY_DIR}" STREQUAL ""))
-  set(binary_dir "${BINARY_DIR}")
-else()
-  set(binary_dir bin)
-endif()
-
-message(STATUS "----- Path configuration -----")
-message(STATUS "Install prefix:   ${CMAKE_INSTALL_PREFIX}")
-message(STATUS "Data directory:   ${sharedir}")
-message(STATUS "Binary directory: ${binary_dir}")
-message(STATUS "(relative pathes are relative to the install prefix)")
-message(STATUS "------------------------------")
-
+########################################
 # Installation instructions
+
 install(TARGETS tsc
-  DESTINATION ${binary_dir}
+  DESTINATION ${CMAKE_INSTALL_BINDIR}
   COMPONENT base)
+
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/campaigns/" # Note trailing slash for content copy
-  DESTINATION ${sharedir}/campaigns
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/campaigns
   COMPONENT campaigns)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/editor/"
-  DESTINATION ${sharedir}/editor
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/editor
   COMPONENT base)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/gui/"
-  DESTINATION ${sharedir}/gui
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/gui
   COMPONENT base)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/icon/"
-  DESTINATION ${sharedir}/icon
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/icon
   COMPONENT base)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/levels/"
-  DESTINATION ${sharedir}/levels
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/levels
   COMPONENT levels)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/music/"
-  DESTINATION ${sharedir}/music
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/music
   COMPONENT music)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/pixmaps/"
-  DESTINATION ${sharedir}/pixmaps
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/pixmaps
   COMPONENT base)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/schema/"
-  DESTINATION ${sharedir}/schema
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/schema
   COMPONENT base)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/scripting/"
-  DESTINATION ${sharedir}/scripting
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/scripting
   COMPONENT base)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/sounds/"
-  DESTINATION ${sharedir}/sounds
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/sounds
   COMPONENT sounds)
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/worlds/"
-  DESTINATION ${sharedir}/worlds
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/worlds
   COMPONENT worlds)
+
 install(FILES "${TSC_SOURCE_DIR}/docs/man/tsc.6"
-  DESTINATION share/man/man6
+  DESTINATION ${CMAKE_INSTALL_MANDIR}/man6
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_16.png"
-  DESTINATION share/icons/hicolor/16x16/apps
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16/apps
   RENAME tsc.png
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_32.png"
-  DESTINATION share/icons/hicolor/32x32/apps
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/32x32/apps
   RENAME tsc.png
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_48.png"
-  DESTINATION share/icons/hicolor/48x48/apps
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/48x48/apps
   RENAME tsc.png
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_64.png"
-  DESTINATION share/icons/hicolor/64x64/apps
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/64x64/apps
   RENAME tsc.png
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_128.png"
-  DESTINATION share/icons/hicolor/128x128/apps
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/128x128/apps
   RENAME tsc.png
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/tsc.desktop"
-  DESTINATION share/applications
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
   COMPONENT base)
 
 foreach(pofile ${po_files})
   get_filename_component(lang ${pofile} NAME_WE)
 
   install(FILES "${TSC_BINARY_DIR}/${lang}.gmo" # .gmo is generated by gettext_process_po_files() further above
-    DESTINATION ${sharedir}/translations/${lang}/LC_MESSAGES
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/translations/${lang}/LC_MESSAGES
     RENAME "Secretchronicles.mo" # This must match TSC_GETTEXT_DOMAIN from global_game.hpp so Gettext finds the files
     COMPONENT base)
 endforeach()
 
 ########################################
-# Packager
+# CPack
 
 # Main info
 set(CPACK_PACKAGE_NAME "TSC")
@@ -502,3 +301,31 @@ set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tsc.exe") # Icon for system control p
 set(CPACK_PACKAGE_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer window bar icon
 
 include(CPack)
+
+########################################
+# Print summary
+
+message(STATUS "--------------- Build info summary ----------------")
+message(STATUS "TSC version:    ${TSC_VERSION_MAJOR}.${TSC_VERSION_MINOR}.${TSC_VERSION_PATCH}${TSC_VERSION_POSTFIX}")
+message(STATUS "Build type:     ${CMAKE_BUILD_TYPE}")
+if (CMAKE_CROSSCOMPILING)
+  message(STATUS "Crosscompiling: ${CMAKE_CXX_COMPILER_TARGET}")
+else()
+  message(STATUS "Crosscompiling: No")
+endif()
+
+message(STATUS "--------------- Configuration summary -------------")
+message(STATUS "Enable the in-game editor:         ${ENABLE_EDITOR}")
+message(STATUS "Enable the mruby scripting engine: ${ENABLE_MRUBY}")
+message(STATUS "Enable native language support:    ${ENABLE_NLS}")
+message(STATUS "Use system-provided tinyclipboard: ${USE_SYSTEM_TINYCLIPBOARD}")
+
+message(STATUS "--------------- Path configuration -----------------")
+message(STATUS "Install prefix:        ${CMAKE_INSTALL_PREFIX}")
+message(STATUS "Binary directory:      ${CMAKE_INSTALL_BINDIR}")
+message(STATUS "Shared data directory: ${CMAKE_INSTALL_DATADIR}")
+message(STATUS "Manpage directory:     ${CMAKE_INSTALL_MANDIR}")
+message(STATUS "(relative pathes are relative to the install prefix;")
+message(STATUS "the directory /tsc will be appended to the shared")
+message(STATUS "data directory indicated above.)")
+message(STATUS "----------------------------------------------------")

@@ -25,7 +25,7 @@ find_package(PkgConfig)
 # Check if we can find it with pkg-config.
 # (No, I don’t know why they decided to rename
 # themselves to CEGUI-0, really!)
-pkg_search_module(PKG_CEGUI CEGUI CEGUI-0)
+pkg_search_module(PKG_CEGUI QUIET CEGUI CEGUI-0)
 
 ########################################
 # Include dir

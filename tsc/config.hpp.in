@@ -34,10 +34,11 @@
 // If unset, TSC will be built without the in-game editor.
 #cmakedefine ENABLE_EDITOR 1
 
-// Enforce a specifc, static directory for graphics, music,
-// etc. If this is unset, TSC determines the data directory
-// dynamically by looking for a directory ../share/tsc,
-// relative to the `tsc' executable.
-#cmakedefine FIXED_DATA_DIR "@FIXED_DATA_DIR@"
+// Indicate where the "make install" step put its data to.
+// The value of these macros is ignored on Windows, where
+// the TSC data directory is determined relative to
+// the `tsc' executable.
+#define INSTALL_PREFIX  "@CMAKE_INSTALL_PREFIX@"
+#define INSTALL_DATADIR "@CMAKE_INSTALL_DATADIR@"
 
 #endif
