@@ -61,9 +61,9 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # -Wall for better code quality, and -Wno-deprecated-delcarations to prevent
 # useless warnings from not-yet-c++11-ready dependencies (glibmm!).
 # The _DEBUG macro is used in TSC's own codebase for debugging code.
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-  set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} -D_DEBUG=1)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1")
 endif()
 
 # Find out the host triplet if we are crosscompiling.
