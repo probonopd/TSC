@@ -63,7 +63,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # The _DEBUG macro is used in TSC's own codebase for debugging code.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1 -fno-inline")
 endif()
 
 # Find out the host triplet if we are crosscompiling.
