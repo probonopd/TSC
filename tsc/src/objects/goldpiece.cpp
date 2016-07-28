@@ -31,10 +31,10 @@ namespace TSC {
 
 /* *** *** *** *** *** *** cGoldpiece *** *** *** *** *** *** *** *** *** *** *** */
 
-cGoldpiece::cGoldpiece(cSprite_Manager* sprite_manager)
+cGoldpiece::cGoldpiece(cSprite_Manager* sprite_manager, DefaultColor color /* = COL_YELLOW */)
     : cMovingSprite(sprite_manager, "item")
 {
-    cGoldpiece::Init();
+    cGoldpiece::Init(color);
 }
 
 cGoldpiece::cGoldpiece(XmlAttributes& attributes, cSprite_Manager* sprite_manager)
@@ -53,7 +53,7 @@ cGoldpiece::~cGoldpiece(void)
     //
 }
 
-void cGoldpiece::Init(void)
+void cGoldpiece::Init(DefaultColor color /* = COL_YELLOW */)
 {
     m_sprite_array = ARRAY_ACTIVE;
     m_massive_type = MASS_PASSIVE;
@@ -61,7 +61,7 @@ void cGoldpiece::Init(void)
     m_pos_z = 0.041f;
     m_can_be_on_ground = 0;
 
-    Set_Gold_Color(COL_YELLOW);
+    Set_Gold_Color(color);
 }
 
 cGoldpiece* cGoldpiece::Copy(void) const
@@ -238,13 +238,11 @@ void cGoldpiece::Handle_Collision_Lava(cObjectCollision* collision)
 
 /* *** *** *** *** *** *** cJGoldpiecee *** *** *** *** *** *** *** *** *** *** *** */
 
-cJGoldpiece::cJGoldpiece(cSprite_Manager* sprite_manager)
-    : cGoldpiece(sprite_manager)
+cJGoldpiece::cJGoldpiece(cSprite_Manager* sprite_manager, DefaultColor color /* = COL_YELLOW */)
+        : cGoldpiece(sprite_manager, color)
 {
     m_type = TYPE_JUMPING_GOLDPIECE;
     Set_Spawned(1);
-
-    cJGoldpiece::Set_Gold_Color(COL_YELLOW);
 
     m_vely = -18.0f;
 }
@@ -279,8 +277,8 @@ Col_Valid_Type cJGoldpiece::Validate_Collision(cSprite* obj)
 
 /* *** *** *** *** *** *** cFGoldpiecee *** *** *** *** *** *** *** *** *** *** *** */
 
-cFGoldpiece::cFGoldpiece(cSprite_Manager* sprite_manager, ObjectDirection dir /* = DIR_NOTHING */)
-    : cGoldpiece(sprite_manager)
+cFGoldpiece::cFGoldpiece(cSprite_Manager* sprite_manager, ObjectDirection dir /* = DIR_NOTHING */, DefaultColor color /* = COL_YELLOW */)
+        : cGoldpiece(sprite_manager, color)
 {
     m_type = TYPE_FALLING_GOLDPIECE;
     m_camera_range = 2000;
@@ -307,8 +305,6 @@ cFGoldpiece::cFGoldpiece(cSprite_Manager* sprite_manager, ObjectDirection dir /*
     else {
         m_velx = -5.0f;
     }
-
-    cFGoldpiece::Set_Gold_Color(COL_YELLOW);
 }
 
 cFGoldpiece::~cFGoldpiece(void)

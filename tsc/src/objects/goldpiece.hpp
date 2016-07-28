@@ -31,14 +31,14 @@ namespace TSC {
     class cGoldpiece : public cMovingSprite {
     public:
         // constructor
-        cGoldpiece(cSprite_Manager* sprite_manager);
+        cGoldpiece(cSprite_Manager* sprite_manager, DefaultColor gold_color = COL_YELLOW);
         // create from stream
         cGoldpiece(XmlAttributes& attributes, cSprite_Manager* sprite_manager);
         // destructor
         virtual ~cGoldpiece(void);
 
         // init defaults
-        void Init(void);
+        void Init(DefaultColor color = COL_YELLOW);
 
         // copy
         virtual cGoldpiece* Copy(void) const;
@@ -89,7 +89,7 @@ namespace TSC {
     */
     class cJGoldpiece : public cGoldpiece {
     public:
-        cJGoldpiece(cSprite_Manager* sprite_manager);
+        cJGoldpiece(cSprite_Manager* sprite_manager, DefaultColor color = COL_YELLOW);
         virtual ~cJGoldpiece(void);
 
         // update
@@ -115,7 +115,7 @@ namespace TSC {
     class cFGoldpiece : public cGoldpiece {
     public:
         // if direction is undefined it moves into a random direction
-        cFGoldpiece(cSprite_Manager* sprite_manager, ObjectDirection dir = DIR_UNDEFINED);
+        cFGoldpiece(cSprite_Manager* sprite_manager, ObjectDirection dir = DIR_UNDEFINED, DefaultColor color = COL_YELLOW);
         virtual ~cFGoldpiece(void);
 
         // update
