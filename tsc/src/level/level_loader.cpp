@@ -13,6 +13,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <chrono>
 #include "level_loader.hpp"
 #include "level_player.hpp"
 #include "../core/sprite_manager.hpp"
@@ -93,6 +94,7 @@ void cLevelLoader::on_start_document()
     if (mp_level)
         throw("Restarted XML parser after already starting it."); // FIXME: proper exception
 
+    m_start_time = std::chrono::high_resolution_clock::now();
     mp_level = new cLevel();
     m_in_script_tag = false;
 }
@@ -104,6 +106,13 @@ void cLevelLoader::on_end_document()
     // engine version entry not set
     if (mp_level->m_engine_version < 0)
         mp_level->m_engine_version = 0;
+
+    std::chrono::high_resolution_clock::time_point end_time = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> timespan = std::chrono::duration_cast<std::chrono::duration<double>>(end_time - m_start_time);
+
+    std::cout << "************* Benchmark result ***************" << std::endl;
+    std::cout << timespan.count() << " seconds" << std::endl;
+    std::cout << "************* End Benchmark result ***********" << std::endl;
 }
 
 void cLevelLoader::on_start_element(const Glib::ustring& name, const xmlpp::SaxParser::AttributeList& properties)
@@ -151,8 +160,10 @@ void cLevelLoader::on_end_element(const Glib::ustring& name)
         Parse_Tag_Background();
     else if (name == "player")
         Parse_Tag_Player();
+#ifndef BENCHMARK_RAW_LOADING
     else if (cLevel::Is_Level_Object_Element(std::string(name))) // CEGUI doesn’t like Glib::ustring
         Parse_Level_Object_Tag(name);
+#endif
     else if (name == "level") {
         /* Ignore the root <level> tag */
     }

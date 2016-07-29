@@ -34,6 +34,8 @@
 // If unset, TSC will be built without the in-game editor.
 #cmakedefine ENABLE_EDITOR 1
 
+#cmakedefine BENCHMARK_RAW_LOADING 1
+
 // Indicate where the "make install" step put its data to.
 // The value of these macros is ignored on Windows, where
 // the TSC data directory is determined relative to

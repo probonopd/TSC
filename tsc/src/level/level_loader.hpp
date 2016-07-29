@@ -101,6 +101,8 @@ namespace TSC {
         XmlAttributes m_current_properties;
         // True if we’re currently parsing a <script> tag.
         bool m_in_script_tag;
+
+        std::chrono::high_resolution_clock::time_point m_start_time;
     };
 
 }

@@ -46,6 +46,7 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
+option(BENCHMARK_RAW_LOADING "Don't create the level, measure the raw parsing" OFF)
 
 ########################################
 # Compiler config
@@ -333,6 +334,7 @@ message(STATUS "Enable the in-game editor:         ${ENABLE_EDITOR}")
 message(STATUS "Enable the mruby scripting engine: ${ENABLE_MRUBY}")
 message(STATUS "Enable native language support:    ${ENABLE_NLS}")
 message(STATUS "Use system-provided tinyclipboard: ${USE_SYSTEM_TINYCLIPBOARD}")
+message(STATUS "Benchmark raw XML parsing only:    ${BENCHMARK_RAW_LOADING}")
 
 message(STATUS "--------------- Path configuration -----------------")
 message(STATUS "Install prefix:        ${CMAKE_INSTALL_PREFIX}")
