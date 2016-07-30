@@ -80,6 +80,7 @@ endif()
 # External libraries we depend on
 find_package(PkgConfig REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(SFML COMPONENTS audio graphics window system REQUIRED)
 find_package(Gettext)
 find_package(PNG REQUIRED)
 find_package(Ruby REQUIRED)
@@ -93,7 +94,6 @@ else()
 endif()
 
 # Use pkg-config for those which have no Find module available
-pkg_search_module(SFML sfml sfml-all)
 pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 pkg_check_modules(PCRE REQUIRED libpcre)
 
@@ -124,7 +124,7 @@ add_custom_command(OUTPUT ${TSC_BINARY_DIR}/credits.cpp
 # Compiler flags by dependencies
 
 include_directories(
-  ${SFML_INCLUDE_DIRS}
+  ${SFML_INCLUDE_DIR}
   ${Boost_INCLUDE_DIRS}
   ${LibXmlPP_INCLUDE_DIRS}
   ${Tinyclipboard_INCLUDE_DIRS}
@@ -134,9 +134,6 @@ include_directories(
   ${MRuby_INCLUDE_DIR}
   ${X11_INCLUDE_DIR}
   ${PNG_INCLUDE_DIRS})
-
-add_definitions(
-  ${SFML_CFLAGS})
 
 ########################################
 # Source files
@@ -168,6 +165,7 @@ add_executable(tsc ${tsc_sources} ${TSC_BINARY_DIR}/credits.cpp)
 target_link_libraries(tsc
   ${CEGUI_LIBRARIES}
   ${SFML_LIBRARIES}
+  ${SFML_DEPENDENCIES}
   ${Boost_LIBRARIES}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
