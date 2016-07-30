@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Secret Maryo Chronicles\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-08-30 18:31+0200\n"
+"POT-Creation-Date: 2016-07-30 17:17+0300\n"
 "PO-Revision-Date: 2014-08-30 19:39+0200\n"
 "Last-Translator: Florian Richter <fluxey@gmail.com>\n"
 "Language-Team: UNMAINTANED\n"
@@ -13,135 +13,201 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../src/audio/random_sound.cpp:484 ../../src/video/animation.cpp:1528
+#: ../../src/audio/random_sound.cpp:459 ../../src/video/animation.cpp:1403
 msgid "Filename"
 msgstr "Αρχείο"
 
-#: ../../src/audio/random_sound.cpp:484
+#: ../../src/audio/random_sound.cpp:459
 msgid "Sound filename"
 msgstr "Αρχείο ήχου"
 
-#: ../../src/audio/random_sound.cpp:491
+#: ../../src/audio/random_sound.cpp:466
 msgid "Continuous"
 msgstr "Συνεχές"
 
-#: ../../src/audio/random_sound.cpp:491
+#: ../../src/audio/random_sound.cpp:466
 msgid "Check if the sound should be played continuously instead of randomly"
 msgstr "Επιλέξτε εαν ο ήχος πρέπει να παίζει συνεχόμενα και όχι τυχαία"
 
-#: ../../src/audio/random_sound.cpp:498
+#: ../../src/audio/random_sound.cpp:473
 msgid "Delay Minimum"
 msgstr "Ελάχιστη Καθυστέρηση"
 
-#: ../../src/audio/random_sound.cpp:498
+#: ../../src/audio/random_sound.cpp:473
 msgid "Minimal delay until played again"
 msgstr "Ελάχιστη καθυστέρηση μέχρι την επόμενη αναπαραγωγή"
 
-#: ../../src/audio/random_sound.cpp:506 ../../src/audio/random_sound.cpp:522
+#: ../../src/audio/random_sound.cpp:481 ../../src/audio/random_sound.cpp:497
 msgid "Maximum"
 msgstr "Μέγιστη"
 
-#: ../../src/audio/random_sound.cpp:506
+#: ../../src/audio/random_sound.cpp:481
 msgid "Maximal delay until played again"
 msgstr "Μέγιστη καθυστέρηση μέχρι την επόμενη αναπαραγωγή"
 
-#: ../../src/audio/random_sound.cpp:514
+#: ../../src/audio/random_sound.cpp:489
 msgid "Volume Minimum"
 msgstr "Ελάχιστη Ένταση"
 
-#: ../../src/audio/random_sound.cpp:514
+#: ../../src/audio/random_sound.cpp:489
 msgid "Minimal random volume for each play"
 msgstr "Ελάχιστη τυχαία ένταση για κάθε αναπαραγωγή"
 
-#: ../../src/audio/random_sound.cpp:522
+#: ../../src/audio/random_sound.cpp:497
 msgid "Maximal random volume for each play"
 msgstr "Μέγιστη τυχαία ένταση για κάθε αναπαραγωγή"
 
-#: ../../src/audio/random_sound.cpp:530
+#: ../../src/audio/random_sound.cpp:505
 msgid "Volume Reduction Begin"
 msgstr "Έναρξη Μείωσης Έντασης"
 
-#: ../../src/audio/random_sound.cpp:530
+#: ../../src/audio/random_sound.cpp:505
 msgid "Volume reduction begins gradually at this distance"
 msgstr "Η σταδιακή μείωση έντασης να ξεκινά σε αυτή την απόσταση"
 
-#: ../../src/audio/random_sound.cpp:538
+#: ../../src/audio/random_sound.cpp:513
 msgid "End"
 msgstr "Τέλος"
 
-#: ../../src/audio/random_sound.cpp:538
+#: ../../src/audio/random_sound.cpp:513
 msgid ""
 "Volume reduction ends at this distance. Sound is not played beyond this."
 msgstr ""
 "Η σταδιακή μείωση έντασης να σταματά σε αυτή την απόσταση. Δεν αναπαράγεται "
 "ήχος μετά από αυτό το σημείο."
 
-#: ../../src/core/editor/editor.cpp:320 ../../src/video/video.cpp:2358
+#. TRANS: displayed to the user when opening the editor
+#: ../../src/core/editor/editor.cpp:137 ../../src/video/loading_screen.cpp:68
 msgid "Loading"
 msgstr "Φόρτωση"
 
-#: ../../src/core/editor/editor.cpp:326
+#: ../../src/core/editor/editor.cpp:140
 msgid "Editor enabled"
 msgstr "Ενεργοποίηση επεξεργαστή"
 
-#: ../../src/core/editor/editor.cpp:1594
-msgid "Change selected Sprite(s) image to"
+#. TRANS: Title of the editor help window
+#: ../../src/core/editor/editor.cpp:399
+#, fuzzy
+msgid "Editor Help"
+msgstr "Ενεργοποίηση επεξεργαστή"
+
+#. TRANS: This is the help window in the editor. Do not translate
+#. TRANS: the color codes in the string.
+#: ../../src/core/editor/editor.cpp:413
+msgid ""
+" \n"
+"----- [colour='FFFFCF5F']General[colour='FFFFFFFF'] -----\n"
+" \n"
+"F1 - Toggle this Help Window\n"
+"F8 - Open/Close the Editor\n"
+"F10 - Toggle sound effects\n"
+"F11 - Toggle music play\n"
+"Home - Focus level start\n"
+"End - Focus last level exit\n"
+"Ctrl + G - Goto Camera position\n"
+"N - Step one screen to the right ( Next Screen )\n"
+"P - Step one screen to the left ( Previous Screen )\n"
+"Ctrl + N - Create a new Level\n"
+"Ctrl + L - Load a Level\n"
+"Ctrl + W - Load an Overworld\n"
+"Ctrl + S - Save the current Level/World\n"
+"Ctrl + Shift + S - Save the current Level/World under a new name\n"
+"Ctrl + D - Toggle debug mode\n"
+"Ctrl + P - Toggle performance mode\n"
+" \n"
+"----- [colour='FFFFCF5F']Objects[colour='FFFFFFFF'] -----\n"
+" \n"
+"M - Cycle selected object(s) through massive types\n"
+"Massive types with their color:\n"
+"   [colour='FFFF2F0F']Massive[colour='FFFFFFFF']-"
+">[colour='FFFFAF2F']Halfmassive[colour='FFFFFFFF']-"
+">[colour='FFDF00FF']Climbable[colour='FFFFFFFF']-"
+">[colour='FF1FFF1F']Passive[colour='FFFFFFFF']->[colour='FF1FFF1F']Front "
+"Passive[colour='FFFFFFFF']\n"
+"O - Enable snap to object mode\n"
+"Ctrl + A - Select all objects\n"
+"Ctrl + X - Cut currently selected objects\n"
+"Ctrl + C - Copy currently selected objects\n"
+"Ctrl + V or Insert - Paste current copied / cutted objects\n"
+"Ctrl + R - Replace the selected basic sprite(s) image with another one\n"
+"Del - If Mouse is over an object: Delete current object\n"
+"Del - If Mouse has nothing selected: Delete selected objects\n"
+"Numpad:\n"
+" + - Bring object to front\n"
+" - - Send object to back\n"
+" 2/4/6/8 - Move selected object 1 pixel into the direction\n"
+"Mouse:\n"
+" Left (Hold) - Drag objects\n"
+" Left (Click) - With shift to select / deselect single objects\n"
+" Right - Delete intersecting Object\n"
+" Middle - Toggle Mover Mode\n"
+" Ctrl + Shift + Left (Click) - Select objects with the same type\n"
+"Arrow keys:\n"
+" Use arrow keys to move around. Press shift for faster movement\n"
+" \n"
 msgstr ""
 
-#: ../../src/core/game_core.cpp:240
+#: ../../src/core/editor/editor.cpp:1443
+#, c-format
+msgid "Change selected sprite's image"
+msgid_plural "Change selected %d sprites' images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: ../../src/core/game_core.cpp:242
 msgid "Loading Level failed : "
 msgstr ""
 
-#: ../../src/core/game_core.cpp:358
+#: ../../src/core/game_core.cpp:353
 msgid "Loading Images"
 msgstr "Φόρτωση Εικόνων"
 
-#: ../../src/core/game_core.cpp:504
+#: ../../src/core/game_core.cpp:495
 msgid "Loading Sounds"
 msgstr "Φόρτωση Ήχων"
 
-#: ../../src/core/property_helper.cpp:517
-#: ../../src/core/property_helper.cpp:772
+#: ../../src/core/property_helper.cpp:506
+#: ../../src/core/property_helper.cpp:756
 msgid "undefined"
 msgstr "αόριστο"
 
-#: ../../src/core/property_helper.cpp:518
+#: ../../src/core/property_helper.cpp:508
 msgid "left"
 msgstr "αριστερά"
 
-#: ../../src/core/property_helper.cpp:519
+#: ../../src/core/property_helper.cpp:510
 msgid "right"
 msgstr "δεξιά"
 
-#: ../../src/core/property_helper.cpp:520
+#: ../../src/core/property_helper.cpp:512
 msgid "up"
 msgstr "πάνω"
 
-#: ../../src/core/property_helper.cpp:521
+#: ../../src/core/property_helper.cpp:514
 msgid "down"
 msgstr "κάτω"
 
-#: ../../src/core/property_helper.cpp:522
+#: ../../src/core/property_helper.cpp:516
 msgid "top_left"
 msgstr "πάνω_αριστερά"
 
-#: ../../src/core/property_helper.cpp:523
+#: ../../src/core/property_helper.cpp:518
 msgid "top_right"
 msgstr "πάνω_δεξιά"
 
-#: ../../src/core/property_helper.cpp:524
+#: ../../src/core/property_helper.cpp:520
 msgid "bottom_left"
 msgstr "κάτω_αριστερά"
 
-#: ../../src/core/property_helper.cpp:525
+#: ../../src/core/property_helper.cpp:522
 msgid "bottom_right"
 msgstr "κάτω_δεξιά"
 
-#: ../../src/core/property_helper.cpp:526
+#: ../../src/core/property_helper.cpp:524
 msgid "left_top"
 msgstr "αριστερά_πάνω"
 
-#: ../../src/core/property_helper.cpp:527
+#: ../../src/core/property_helper.cpp:526
 msgid "left_bottom"
 msgstr "αριστερά_κάτω"
 
@@ -149,355 +215,353 @@ msgstr "αριστερά_κάτω"
 msgid "right_top"
 msgstr "δεξιά_πάνω"
 
-#: ../../src/core/property_helper.cpp:529
+#: ../../src/core/property_helper.cpp:530
 msgid "right_bottom"
 msgstr "δεξιά_κάτω"
 
-#: ../../src/core/property_helper.cpp:530
+#: ../../src/core/property_helper.cpp:532
 msgid "horizontal"
 msgstr "ευθεία"
 
-#: ../../src/core/property_helper.cpp:531
+#: ../../src/core/property_helper.cpp:534
 msgid "vertical"
 msgstr "καθέτα"
 
-#: ../../src/core/property_helper.cpp:532
+#: ../../src/core/property_helper.cpp:536
 msgid "all"
 msgstr "όλα"
 
-#: ../../src/core/property_helper.cpp:533
+#: ../../src/core/property_helper.cpp:538
 msgid "first"
 msgstr "πρώτο"
 
-#: ../../src/core/property_helper.cpp:534
+#: ../../src/core/property_helper.cpp:540
 msgid "last"
 msgstr "τελευταίο"
 
-#: ../../src/core/property_helper.cpp:773
-#: ../../src/core/property_helper.cpp:874
+#: ../../src/core/property_helper.cpp:758
+#: ../../src/core/property_helper.cpp:864
 msgid "green"
 msgstr "πράσινο"
 
-#: ../../src/core/property_helper.cpp:774
+#: ../../src/core/property_helper.cpp:760
 msgid "jungle"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:775
+#: ../../src/core/property_helper.cpp:762
 msgid "ice"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:776
+#: ../../src/core/property_helper.cpp:764
 msgid "snow"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:777
+#: ../../src/core/property_helper.cpp:766
 msgid "water"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:778
+#: ../../src/core/property_helper.cpp:768
 msgid "candy"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:779
+#: ../../src/core/property_helper.cpp:770
 msgid "desert"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:780
+#: ../../src/core/property_helper.cpp:772
 msgid "sand"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:781
+#: ../../src/core/property_helper.cpp:774
 msgid "castle"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:782
+#: ../../src/core/property_helper.cpp:776
 #, fuzzy
 msgid "underground"
 msgstr "αόριστο"
 
-#: ../../src/core/property_helper.cpp:783
+#: ../../src/core/property_helper.cpp:778
 msgid "crystal"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:784
+#: ../../src/core/property_helper.cpp:780
 #, fuzzy
 msgid "ghost"
 msgstr "Φάντασμα"
 
-#: ../../src/core/property_helper.cpp:785
+#: ../../src/core/property_helper.cpp:782
 #, fuzzy
 msgid "mushroom"
 msgstr "Μανιτάρι"
 
-#: ../../src/core/property_helper.cpp:786
+#: ../../src/core/property_helper.cpp:784
 msgid "sky"
 msgstr ""
 
-#: ../../src/core/property_helper.cpp:787
+#: ../../src/core/property_helper.cpp:786
 #, fuzzy
 msgid "plastic"
 msgstr "τελευταίο"
 
-#: ../../src/core/property_helper.cpp:868 ../../src/gui/menu_data.cpp:1297
-#: ../../src/gui/menu_data.cpp:1322 ../../src/gui/menu_data.cpp:2358
+#: ../../src/core/property_helper.cpp:852 ../../src/gui/menu_data.cpp:1583
+#: ../../src/gui/menu_data.cpp:1606 ../../src/gui/menu_data.cpp:2547
 msgid "default"
 msgstr "προεπιλογμένο"
 
-#: ../../src/core/property_helper.cpp:869
+#: ../../src/core/property_helper.cpp:854
 msgid "white"
 msgstr "άσπρο"
 
-#: ../../src/core/property_helper.cpp:870
+#: ../../src/core/property_helper.cpp:856
 msgid "black"
 msgstr "μαύρο"
 
-#: ../../src/core/property_helper.cpp:871
+#: ../../src/core/property_helper.cpp:858
 msgid "red"
 msgstr "κόκκινο"
 
-#: ../../src/core/property_helper.cpp:872
+#: ../../src/core/property_helper.cpp:860
 msgid "orange"
 msgstr "πορτοκαλί"
 
-#: ../../src/core/property_helper.cpp:873
+#: ../../src/core/property_helper.cpp:862
 msgid "yellow"
 msgstr "κίτρινο"
 
-#: ../../src/core/property_helper.cpp:875
+#: ../../src/core/property_helper.cpp:866
 msgid "blue"
 msgstr "μπλε"
 
-#: ../../src/core/property_helper.cpp:876
+#: ../../src/core/property_helper.cpp:868
 msgid "brown"
 msgstr "καφέ"
 
-#: ../../src/core/property_helper.cpp:877
+#: ../../src/core/property_helper.cpp:870
 msgid "grey"
 msgstr "γκρίζο"
 
-#: ../../src/core/property_helper.cpp:878
+#: ../../src/core/property_helper.cpp:872
 msgid "violet"
 msgstr ""
 
-#: ../../src/enemies/beetle.cpp:255
-#: ../../src/enemies/bosses/turtle_boss.cpp:1153
-#: ../../src/enemies/eato.cpp:279 ../../src/enemies/flyon.cpp:627
-#: ../../src/enemies/furball.cpp:853 ../../src/enemies/gee.cpp:642
-#: ../../src/enemies/krush.cpp:410 ../../src/enemies/larry.cpp:400
-#: ../../src/enemies/pip.cpp:352 ../../src/enemies/rokko.cpp:621
-#: ../../src/enemies/spikeball.cpp:574 ../../src/enemies/thromp.cpp:730
-#: ../../src/enemies/turtle.cpp:1069 ../../src/level/level_player.cpp:4601
-#: ../../src/objects/level_entry.cpp:425 ../../src/objects/level_exit.cpp:504
-#: ../../src/objects/moving_platform.cpp:1109
-#: ../../src/video/animation.cpp:1702
+#: ../../src/enemies/army.cpp:915 ../../src/enemies/beetle.cpp:257
+#: ../../src/enemies/bosses/turtle_boss.cpp:1003 ../../src/enemies/eato.cpp:271
+#: ../../src/enemies/flyon.cpp:565 ../../src/enemies/furball.cpp:737
+#: ../../src/enemies/gee.cpp:573 ../../src/enemies/krush.cpp:369
+#: ../../src/enemies/larry.cpp:401 ../../src/enemies/pip.cpp:356
+#: ../../src/enemies/rokko.cpp:582 ../../src/enemies/spikeball.cpp:507
+#: ../../src/enemies/thromp.cpp:678 ../../src/level/level_player.cpp:3970
+#: ../../src/objects/level_entry.cpp:382 ../../src/objects/level_exit.cpp:472
+#: ../../src/objects/moving_platform.cpp:960 ../../src/video/animation.cpp:1577
 msgid "Direction"
 msgstr "Κατεύθυνση"
 
-#: ../../src/enemies/beetle.cpp:255
-#: ../../src/enemies/bosses/turtle_boss.cpp:1153
-#: ../../src/enemies/furball.cpp:853 ../../src/enemies/gee.cpp:642
-#: ../../src/enemies/krush.cpp:410 ../../src/enemies/larry.cpp:400
-#: ../../src/enemies/spikeball.cpp:574 ../../src/enemies/turtle.cpp:1069
-#: ../../src/objects/moving_platform.cpp:1109
+#: ../../src/enemies/army.cpp:915 ../../src/enemies/beetle.cpp:257
+#: ../../src/enemies/bosses/turtle_boss.cpp:1003
+#: ../../src/enemies/furball.cpp:737 ../../src/enemies/gee.cpp:573
+#: ../../src/enemies/krush.cpp:369 ../../src/enemies/larry.cpp:401
+#: ../../src/enemies/spikeball.cpp:507
+#: ../../src/objects/moving_platform.cpp:960
 msgid "Starting direction."
 msgstr ""
 
-#: ../../src/enemies/beetle.cpp:263
+#: ../../src/enemies/beetle.cpp:268
 msgid "Color"
 msgstr ""
 
-#: ../../src/enemies/beetle.cpp:263
+#: ../../src/enemies/beetle.cpp:268
 msgid "Color."
 msgstr ""
 
-#: ../../src/enemies/beetle_barrage.cpp:340 ../../src/enemies/gee.cpp:686
+#: ../../src/enemies/beetle_barrage.cpp:352 ../../src/enemies/gee.cpp:609
 msgid "Fly distance"
 msgstr "Απόσταση πτήσης"
 
-#: ../../src/enemies/beetle_barrage.cpp:340
+#: ../../src/enemies/beetle_barrage.cpp:352
 msgid "Initial beetle flying distance"
 msgstr ""
 
-#: ../../src/enemies/beetle_barrage.cpp:347
+#: ../../src/enemies/beetle_barrage.cpp:359
 #, fuzzy
 msgid "Action range"
 msgstr "Δράση"
 
-#: ../../src/enemies/beetle_barrage.cpp:347
-msgid "Radius in which it reacts on Maryo"
+#: ../../src/enemies/beetle_barrage.cpp:359
+msgid "Radius in which it reacts on Alex"
 msgstr ""
 
-#: ../../src/enemies/beetle_barrage.cpp:353
+#: ../../src/enemies/beetle_barrage.cpp:365
 msgid "Count"
 msgstr ""
 
-#: ../../src/enemies/beetle_barrage.cpp:353
+#: ../../src/enemies/beetle_barrage.cpp:365
 msgid "Number of beetles spit out at a time"
 msgstr ""
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1163
+#: ../../src/enemies/bosses/turtle_boss.cpp:1007
 msgid "Hits"
 msgstr "Βαθμοί"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1163
+#: ../../src/enemies/bosses/turtle_boss.cpp:1007
 msgid "Hits until a downgrade"
 msgstr "Βαθμοί μέχρι μια υποβάθμιση"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1171
-#: ../../src/enemies/furball.cpp:865
+#: ../../src/enemies/bosses/turtle_boss.cpp:1015
+#: ../../src/enemies/furball.cpp:745
 msgid "Downgrades"
 msgstr "Υποβαθμίσεις"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1171
-#: ../../src/enemies/furball.cpp:865
+#: ../../src/enemies/bosses/turtle_boss.cpp:1015
+#: ../../src/enemies/furball.cpp:745
 msgid "Downgrades until death"
 msgstr "Υποβαθμίσεις μέχρι το θάνατο"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1179
+#: ../../src/enemies/bosses/turtle_boss.cpp:1023
 msgid "Shell Time"
 msgstr "Χρόνος Κέλυφους"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1179
+#: ../../src/enemies/bosses/turtle_boss.cpp:1023
 msgid "Time running as shell to rise again"
 msgstr "Τρεχούμενος χρόνος ως κέλυφος για να ξανα-αναστηθεί"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1187
-#: ../../src/enemies/furball.cpp:873
+#: ../../src/enemies/bosses/turtle_boss.cpp:1032
+#: ../../src/enemies/bosses/turtle_boss.cpp:1036
+#: ../../src/enemies/bosses/turtle_boss.cpp:1093
+#: ../../src/enemies/furball.cpp:753 ../../src/enemies/furball.cpp:758
+#: ../../src/enemies/furball.cpp:775 ../../src/enemies/gee.cpp:586
+#: ../../src/enemies/gee.cpp:591 ../../src/enemies/gee.cpp:644
+#: ../../src/enemies/static.cpp:345 ../../src/enemies/static.cpp:349
+#: ../../src/enemies/static.cpp:418 ../../src/objects/bonusbox.cpp:507
+#: ../../src/objects/bonusbox.cpp:511 ../../src/objects/bonusbox.cpp:619
+#: ../../src/overworld/world_waypoint.cpp:419
+#: ../../src/overworld/world_waypoint.cpp:423
+#: ../../src/overworld/world_waypoint.cpp:486
+msgid "Enabled"
+msgstr "Ενεργοποιημένο"
+
+#: ../../src/enemies/bosses/turtle_boss.cpp:1033
+#: ../../src/enemies/bosses/turtle_boss.cpp:1039
+#: ../../src/enemies/furball.cpp:754 ../../src/enemies/furball.cpp:761
+#: ../../src/enemies/gee.cpp:587 ../../src/enemies/gee.cpp:594
+#: ../../src/enemies/static.cpp:346 ../../src/enemies/static.cpp:352
+#: ../../src/objects/bonusbox.cpp:508 ../../src/objects/bonusbox.cpp:514
+#: ../../src/objects/box.cpp:691 ../../src/objects/box.cpp:706
+#: ../../src/overworld/world_waypoint.cpp:420
+#: ../../src/overworld/world_waypoint.cpp:426
+msgid "Disabled"
+msgstr "Απενεργοποιημένο"
+
+#: ../../src/enemies/bosses/turtle_boss.cpp:1042
+#: ../../src/enemies/furball.cpp:755
 #, fuzzy
 msgid "End Level"
 msgstr "Επίπεδο"
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1187
-#: ../../src/enemies/furball.cpp:873
+#: ../../src/enemies/bosses/turtle_boss.cpp:1042
+#: ../../src/enemies/furball.cpp:755
 msgid "End the level if it is killed."
 msgstr ""
 
-#: ../../src/enemies/bosses/turtle_boss.cpp:1189
-#: ../../src/enemies/bosses/turtle_boss.cpp:1194
-#: ../../src/enemies/bosses/turtle_boss.cpp:1251
-#: ../../src/enemies/furball.cpp:875 ../../src/enemies/furball.cpp:880
-#: ../../src/enemies/furball.cpp:898 ../../src/enemies/gee.cpp:662
-#: ../../src/enemies/gee.cpp:667 ../../src/enemies/gee.cpp:721
-#: ../../src/enemies/static.cpp:344 ../../src/enemies/static.cpp:349
-#: ../../src/enemies/static.cpp:417 ../../src/objects/bonusbox.cpp:535
-#: ../../src/objects/bonusbox.cpp:540 ../../src/objects/bonusbox.cpp:659
-#: ../../src/overworld/world_waypoint.cpp:438
-#: ../../src/overworld/world_waypoint.cpp:443
-#: ../../src/overworld/world_waypoint.cpp:508
-msgid "Enabled"
-msgstr "Ενεργοποιημένο"
-
-#: ../../src/enemies/bosses/turtle_boss.cpp:1190
-#: ../../src/enemies/bosses/turtle_boss.cpp:1198
-#: ../../src/enemies/furball.cpp:876 ../../src/enemies/furball.cpp:884
-#: ../../src/enemies/gee.cpp:663 ../../src/enemies/gee.cpp:671
-#: ../../src/enemies/static.cpp:345 ../../src/enemies/static.cpp:353
-#: ../../src/objects/bonusbox.cpp:536 ../../src/objects/bonusbox.cpp:544
-#: ../../src/objects/box.cpp:814 ../../src/objects/box.cpp:833
-#: ../../src/overworld/world_waypoint.cpp:439
-#: ../../src/overworld/world_waypoint.cpp:447
-msgid "Disabled"
-msgstr "Απενεργοποιημένο"
-
-#: ../../src/enemies/eato.cpp:295 ../../src/enemies/flyon.cpp:639
-#: ../../src/enemies/thromp.cpp:742
+#: ../../src/enemies/eato.cpp:275 ../../src/enemies/flyon.cpp:569
+#: ../../src/enemies/thromp.cpp:682
 msgid "Image directory"
 msgstr "Κατάλογος εικόνων"
 
-#: ../../src/enemies/eato.cpp:295 ../../src/enemies/flyon.cpp:639
-#: ../../src/enemies/thromp.cpp:742
+#: ../../src/enemies/eato.cpp:275 ../../src/enemies/flyon.cpp:569
+#: ../../src/enemies/thromp.cpp:682
 msgid "Directory containing the images"
 msgstr "Κατάλογος που περιέχει τις εικόνες"
 
-#: ../../src/enemies/flyon.cpp:627 ../../src/enemies/rokko.cpp:621
-#: ../../src/enemies/thromp.cpp:730
+#: ../../src/enemies/flyon.cpp:565 ../../src/enemies/rokko.cpp:582
+#: ../../src/enemies/thromp.cpp:678
 msgid "Direction it moves into."
 msgstr ""
 
-#: ../../src/enemies/flyon.cpp:646 ../../src/enemies/gee.cpp:652
-#: ../../src/enemies/thromp.cpp:749 ../../src/objects/moving_platform.cpp:1121
+#: ../../src/enemies/flyon.cpp:576 ../../src/enemies/gee.cpp:577
+#: ../../src/enemies/thromp.cpp:689 ../../src/objects/moving_platform.cpp:964
 msgid "Distance"
 msgstr "Απόσταση"
 
-#: ../../src/enemies/flyon.cpp:646
+#: ../../src/enemies/flyon.cpp:576
 msgid "Movable Distance into its direction"
 msgstr "Απόσταση Κίνησης μεσα στην κατεύθυνση"
 
-#: ../../src/enemies/flyon.cpp:654 ../../src/enemies/rokko.cpp:633
-#: ../../src/enemies/static.cpp:334 ../../src/enemies/thromp.cpp:757
-#: ../../src/objects/moving_platform.cpp:1129
+#: ../../src/enemies/flyon.cpp:584 ../../src/enemies/rokko.cpp:586
+#: ../../src/enemies/static.cpp:336 ../../src/enemies/thromp.cpp:697
+#: ../../src/objects/moving_platform.cpp:972
 msgid "Speed"
 msgstr "Ταχύτητα"
 
-#: ../../src/enemies/flyon.cpp:654
+#: ../../src/enemies/flyon.cpp:584
 msgid "Initial speed when jumping out"
 msgstr "Αρχική ταχύτητα όταν πηδάει"
 
-#: ../../src/enemies/gee.cpp:652
+#: ../../src/enemies/gee.cpp:577
 msgid "Movable distance"
 msgstr "Απόσταση κίνησης"
 
-#: ../../src/enemies/gee.cpp:660
+#: ../../src/enemies/gee.cpp:588
 msgid "Always fly"
 msgstr "Πάντα να πετά"
 
-#: ../../src/enemies/gee.cpp:660
+#: ../../src/enemies/gee.cpp:588
 msgid "Move without stopping at the fly distance"
 msgstr "Απόσταση κίνησης χωρίς να σταματά αμέσως"
 
-#: ../../src/enemies/gee.cpp:678
+#: ../../src/enemies/gee.cpp:601
 msgid "Wait time"
 msgstr "Χρόνος αναμονής"
 
-#: ../../src/enemies/gee.cpp:678
+#: ../../src/enemies/gee.cpp:601
 msgid "Time to wait until moving again after a stop"
 msgstr "Χρόνος αναμονής μέχρι την επόμενη κίνηση μετά από μια διακοπή"
 
-#: ../../src/enemies/gee.cpp:686
+#: ../../src/enemies/gee.cpp:609
 msgid "The distance to move each time"
 msgstr "Απόσταση κίνησης κάθε φορά"
 
-#: ../../src/enemies/pip.cpp:352
+#: ../../src/enemies/pip.cpp:356
 #, fuzzy
 msgid "Starting direction"
 msgstr "Κατάλογος εικόνων"
 
-#: ../../src/enemies/rokko.cpp:633 ../../src/enemies/thromp.cpp:757
+#: ../../src/enemies/rokko.cpp:586 ../../src/enemies/thromp.cpp:697
 msgid "Speed when activated"
 msgstr "Ταχύτητα όταν ενεργοποιηθεί"
 
-#: ../../src/enemies/static.cpp:312 ../../src/objects/sprite.cpp:1542
+#: ../../src/enemies/static.cpp:314 ../../src/objects/sprite.cpp:1449
 msgid "Image"
 msgstr "Εικόνα"
 
-#: ../../src/enemies/static.cpp:312 ../../src/objects/sprite.cpp:1542
-#: ../../src/video/animation.cpp:1528
+#: ../../src/enemies/static.cpp:314 ../../src/objects/sprite.cpp:1449
+#: ../../src/video/animation.cpp:1403
 msgid "Image filename"
 msgstr "Αρχείο εικόνας"
 
-#: ../../src/enemies/static.cpp:319
+#: ../../src/enemies/static.cpp:321
 msgid "Rotation Speed"
 msgstr "Ταχύτητα περιστροφής"
 
-#: ../../src/enemies/static.cpp:327 ../../src/objects/level_exit.cpp:573
-#: ../../src/objects/moving_platform.cpp:1102
+#: ../../src/enemies/static.cpp:329 ../../src/objects/level_exit.cpp:529
+#: ../../src/objects/moving_platform.cpp:945
 msgid "Path Identifier"
 msgstr ""
 
-#: ../../src/enemies/static.cpp:327 ../../src/objects/moving_platform.cpp:1102
+#: ../../src/enemies/static.cpp:329 ../../src/objects/moving_platform.cpp:945
 msgid "Name of the Path to move along."
 msgstr ""
 
-#: ../../src/enemies/static.cpp:334 ../../src/objects/moving_platform.cpp:1129
+#: ../../src/enemies/static.cpp:336 ../../src/objects/moving_platform.cpp:972
 msgid "Maximum speed"
 msgstr ""
 
-#: ../../src/enemies/static.cpp:342
+#: ../../src/enemies/static.cpp:356
 #, fuzzy
 msgid "Fire Resistant"
 msgstr "Φυτό-φωτιά"
 
-#: ../../src/enemies/static.cpp:342
+#: ../../src/enemies/static.cpp:356
 msgid "If it is resistant against fire"
 msgstr ""
 
@@ -510,551 +574,420 @@ msgstr "Απόσταση"
 msgid "Resistance against Ice (0.0-1.0)"
 msgstr ""
 
-#: ../../src/enemies/thromp.cpp:749
+#: ../../src/enemies/thromp.cpp:689
 msgid "Detection distance into its direction"
 msgstr "Ανίχνευση απόστασης προς την κατεύθυνση"
 
-#: ../../src/gui/hud.cpp:450
+#: ../../src/gui/hud.cpp:461
 #, c-format
 msgid "Points %08d"
 msgstr "Βαθμοί %08d"
 
-#: ../../src/gui/hud.cpp:606
+#: ../../src/gui/hud.cpp:596
 msgid "Lives : "
 msgstr ""
 
-#: ../../src/gui/hud.cpp:669
+#: ../../src/gui/hud.cpp:645
 #, c-format
 msgid "Time %02d:%02d"
 msgstr "Χρόνος %02d:%02d"
 
-#: ../../src/gui/hud.cpp:1008 ../../src/overworld/world_waypoint.cpp:388
-#: ../../src/overworld/world_waypoint.cpp:393
-#: ../../src/overworld/world_waypoint.cpp:461
-msgid "Level"
-msgstr "Επίπεδο"
-
-#: ../../src/gui/hud.cpp:1009
-msgid "Player"
-msgstr "Παίκτης"
-
-#: ../../src/gui/hud.cpp:1105
-msgid "FPS : best "
-msgstr "FPS : το καλύτερο"
-
-#: ../../src/gui/hud.cpp:1105
-msgid ", worst "
-msgstr ", το χειρότερο"
-
-#: ../../src/gui/hud.cpp:1105
-msgid ", current "
-msgstr ", τρέχων"
-
-#: ../../src/gui/hud.cpp:1107
-msgid "average "
-msgstr "μέσος"
-
-#: ../../src/gui/hud.cpp:1109
-msgid "Speed factor "
+#. TRANS: HUD Clock is reset to 00:00, the digits are shown a second later for 00:01.
+#: ../../src/gui/hud.cpp:661
+#, c-format
+msgid "Time"
 msgstr ""
 
-#: ../../src/gui/hud.cpp:1139
-msgid "Camera : X "
-msgstr "Κάμερα : X"
-
-#: ../../src/gui/hud.cpp:1145
-msgid "Name : "
-msgstr "Όνομα : "
-
-#: ../../src/gui/hud.cpp:1156
-msgid "Objects : "
-msgstr "Αντικείμενα : "
-
-#: ../../src/gui/hud.cpp:1164
-msgid "Passive : "
-msgstr "Παθητικό : "
-
-#: ../../src/gui/hud.cpp:1172
-msgid "Massive : "
-msgstr "Μαζικό : "
-
-#: ../../src/gui/hud.cpp:1180
-msgid "Enemy : "
-msgstr "Εχθρός : "
-
-#: ../../src/gui/hud.cpp:1188
-msgid "Active : "
-msgstr "Ενεργό : "
-
-#: ../../src/gui/hud.cpp:1205
-msgid "Halfmassive : "
-msgstr "Μεσο-μαζικό : "
-
-#: ../../src/gui/hud.cpp:1222
-msgid "Moving Platform : "
-msgstr "Κινιτή πλατφόρμα : "
-
-#: ../../src/gui/hud.cpp:1244
-msgid "Goldbox : "
-msgstr "Χρυσο κουτί : "
-
-#: ../../src/gui/hud.cpp:1266
-msgid "Bonusbox : "
-msgstr "Bonus κουτί : "
-
-#: ../../src/gui/hud.cpp:1272
-msgid "Other : "
-msgstr "Άλλο : "
-
-#: ../../src/gui/hud.cpp:1284
-msgid "Velocity X "
-msgstr "Ταχύτητα X "
-
-#: ../../src/gui/hud.cpp:1287
-msgid "Moving State "
-msgstr "Κατάσταση κίνησης "
-
-#: ../../src/gui/hud.cpp:1295
-msgid "Ground "
-msgstr "Έδαφος "
-
-#: ../../src/gui/hud.cpp:1300
-msgid "Game Mode : "
-msgstr "Λειτουργία παιχνιδιού : "
-
-#: ../../src/gui/hud.cpp:1336
-msgid "Draw"
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1340 ../../src/gui/hud.cpp:1379
-msgid "World : "
-msgstr "Κόσμος : "
-
-#: ../../src/gui/hud.cpp:1349 ../../src/gui/hud.cpp:1392
-msgid "Menu : "
-msgstr "Μενού : "
-
-#: ../../src/gui/hud.cpp:1358 ../../src/gui/hud.cpp:1405
-msgid "Level Settings : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1367
-msgid "Level Layer 1 : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1368
-msgid "Level Player : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1369
-msgid "Level Layer 2 : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1370
-msgid "Level Hud : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1371
-msgid "Level Editor : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1373
-msgid "Mouse : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1375
-msgid "Update"
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1418
-msgid "process input : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1419
-msgid "level : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1420
-msgid "level editor : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1421
-msgid "hud : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1422
-msgid "player : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1423
-msgid "player collisions : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1424
-msgid "level late : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1425
-msgid "level collisions : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1426
-msgid "camera : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1430
-msgid "Render"
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1431
-msgid "Game : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1432
-msgid "Gui : "
-msgstr ""
-
-#: ../../src/gui/hud.cpp:1433
-msgid "Buffer : "
-msgstr ""
-
-#: ../../src/gui/menu_data.cpp:218
+#: ../../src/gui/menu_data.cpp:325
 msgid "Credits"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:248
+#: ../../src/gui/menu_data.cpp:353
 msgid "Version "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:664 ../../src/gui/menu_data.cpp:704
-#: ../../src/gui/menu_data.cpp:733
+#: ../../src/gui/menu_data.cpp:652
+msgid "New"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:653
+msgid "Edit"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:654 ../../src/objects/path.cpp:769
+msgid "Delete"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:655
+msgid "Enter"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:656 ../../src/gui/menu_data.cpp:1501
+#: ../../src/gui/menu_data.cpp:3132 ../../src/gui/menu_data.cpp:3496
+msgid "Back"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:660
+#, fuzzy
+msgid "Select Level"
+msgstr "Δημιουργία καινούργιου Επιπέδου"
+
+#: ../../src/gui/menu_data.cpp:662
+msgid "Select Campaign"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:664
+#, fuzzy
+msgid "Select Overworld"
+msgstr "Φόρτωση ενός Υπερκόσμου"
+
+#: ../../src/gui/menu_data.cpp:666 ../../src/gui/menu_data.cpp:668
+#, fuzzy
+msgid "Description"
+msgstr "Δεν υπάρχει επεξήγηση"
+
+#. TRANS: The colour names refer to the colours the level names can
+#. TRANS: be in. "Game" means the level is shipped by the game,
+#. TRANS: "user" means the level has been created by the user.
+#. TRANS: If the user edited a system level, it gets copied to his
+#. TRANS: personal level directory and is coloured mixedly to indicate
+#. TRANS: that. "Deprecated" are levels from very old versions
+#. TRANS: of the game.
+#: ../../src/gui/menu_data.cpp:678
+msgid ""
+"- Level Colors -\n"
+"\n"
+"Orange: Game\n"
+"Green: User\n"
+"Grey: Deprecated\n"
+"Mixed: See the colors"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:853
+msgid ""
+"This will take affect after restarting.\n"
+"Continue ?"
+msgstr ""
+
+#: ../../src/gui/menu_data.cpp:864 ../../src/gui/menu_data.cpp:899
+#: ../../src/gui/menu_data.cpp:925
 msgid ""
 "This will reset your current progress.\n"
 "Continue ?"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:674
+#: ../../src/gui/menu_data.cpp:872
 #, fuzzy
 msgid "Couldn't load campaign "
 msgstr "Δε μπορούσε να αποθηκευτεί η επεξήγηση του κόσμου "
 
-#: ../../src/gui/menu_data.cpp:714
+#: ../../src/gui/menu_data.cpp:907
 msgid "Couldn't load overworld "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:743
+#: ../../src/gui/menu_data.cpp:933
 msgid "Couldn't load level "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1136
+#: ../../src/gui/menu_data.cpp:1429
 msgid "Delete "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1212 ../../src/gui/menu_data.cpp:2998
-#: ../../src/gui/menu_data.cpp:3303
-msgid "Back"
-msgstr ""
-
-#: ../../src/gui/menu_data.cpp:1251
+#: ../../src/gui/menu_data.cpp:1539
 msgid "Always Run"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1255 ../../src/gui/menu_data.cpp:1264
-#: ../../src/gui/menu_data.cpp:1438 ../../src/gui/menu_data.cpp:1447
-#: ../../src/gui/menu_data.cpp:1462 ../../src/gui/menu_data.cpp:1471
-#: ../../src/gui/menu_data.cpp:1556 ../../src/gui/menu_data.cpp:1565
-#: ../../src/gui/menu_data.cpp:1589 ../../src/gui/menu_data.cpp:1598
-#: ../../src/gui/menu_data.cpp:1713 ../../src/gui/menu_data.cpp:1722
-#: ../../src/gui/menu_data.cpp:1776 ../../src/gui/menu_data.cpp:1785
-#: ../../src/gui/menu_data.cpp:1809 ../../src/gui/menu_data.cpp:1818
-#: ../../src/gui/menu_data.cpp:1879 ../../src/gui/menu_data.cpp:1988
-#: ../../src/gui/menu_data.cpp:2002 ../../src/gui/menu_data.cpp:2047
-#: ../../src/gui/menu_data.cpp:2061 ../../src/gui/menu_data.cpp:2089
-#: ../../src/gui/menu_data.cpp:2108 ../../src/gui/menu_data.cpp:2320
-#: ../../src/gui/menu_data.cpp:2460 ../../src/gui/menu_data.cpp:2477
-#: ../../src/gui/menu_data.cpp:2535 ../../src/gui/menu_data.cpp:2545
-#: ../../src/gui/menu_data.cpp:2632 ../../src/gui/menu_data.cpp:2670
-#: ../../src/gui/menu_data.cpp:2840 ../../src/gui/menu_data.cpp:2904
-#: ../../src/gui/menu_data.cpp:2931
+#: ../../src/gui/menu_data.cpp:1543 ../../src/gui/menu_data.cpp:1551
+#: ../../src/gui/menu_data.cpp:1714 ../../src/gui/menu_data.cpp:1722
+#: ../../src/gui/menu_data.cpp:1736 ../../src/gui/menu_data.cpp:1744
+#: ../../src/gui/menu_data.cpp:1827 ../../src/gui/menu_data.cpp:1835
+#: ../../src/gui/menu_data.cpp:1858 ../../src/gui/menu_data.cpp:1866
+#: ../../src/gui/menu_data.cpp:1975 ../../src/gui/menu_data.cpp:1983
+#: ../../src/gui/menu_data.cpp:2035 ../../src/gui/menu_data.cpp:2043
+#: ../../src/gui/menu_data.cpp:2066 ../../src/gui/menu_data.cpp:2074
+#: ../../src/gui/menu_data.cpp:2129 ../../src/gui/menu_data.cpp:2221
+#: ../../src/gui/menu_data.cpp:2232 ../../src/gui/menu_data.cpp:2270
+#: ../../src/gui/menu_data.cpp:2281 ../../src/gui/menu_data.cpp:2306
+#: ../../src/gui/menu_data.cpp:2321 ../../src/gui/menu_data.cpp:2510
+#: ../../src/gui/menu_data.cpp:2643 ../../src/gui/menu_data.cpp:2659
+#: ../../src/gui/menu_data.cpp:2713 ../../src/gui/menu_data.cpp:2721
+#: ../../src/gui/menu_data.cpp:2806 ../../src/gui/menu_data.cpp:2841
+#: ../../src/gui/menu_data.cpp:2997 ../../src/gui/menu_data.cpp:3058
+#: ../../src/gui/menu_data.cpp:3084
 msgid "On"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1258 ../../src/gui/menu_data.cpp:1268
-#: ../../src/gui/menu_data.cpp:1441 ../../src/gui/menu_data.cpp:1451
-#: ../../src/gui/menu_data.cpp:1465 ../../src/gui/menu_data.cpp:1475
-#: ../../src/gui/menu_data.cpp:1559 ../../src/gui/menu_data.cpp:1569
-#: ../../src/gui/menu_data.cpp:1592 ../../src/gui/menu_data.cpp:1602
-#: ../../src/gui/menu_data.cpp:1716 ../../src/gui/menu_data.cpp:1726
-#: ../../src/gui/menu_data.cpp:1779 ../../src/gui/menu_data.cpp:1789
-#: ../../src/gui/menu_data.cpp:1812 ../../src/gui/menu_data.cpp:1822
-#: ../../src/gui/menu_data.cpp:1883 ../../src/gui/menu_data.cpp:1992
-#: ../../src/gui/menu_data.cpp:2006 ../../src/gui/menu_data.cpp:2051
-#: ../../src/gui/menu_data.cpp:2065 ../../src/gui/menu_data.cpp:2093
-#: ../../src/gui/menu_data.cpp:2112 ../../src/gui/menu_data.cpp:2539
-#: ../../src/gui/menu_data.cpp:2549
+#: ../../src/gui/menu_data.cpp:1546 ../../src/gui/menu_data.cpp:1554
+#: ../../src/gui/menu_data.cpp:1717 ../../src/gui/menu_data.cpp:1725
+#: ../../src/gui/menu_data.cpp:1739 ../../src/gui/menu_data.cpp:1747
+#: ../../src/gui/menu_data.cpp:1830 ../../src/gui/menu_data.cpp:1838
+#: ../../src/gui/menu_data.cpp:1861 ../../src/gui/menu_data.cpp:1869
+#: ../../src/gui/menu_data.cpp:1978 ../../src/gui/menu_data.cpp:1986
+#: ../../src/gui/menu_data.cpp:2038 ../../src/gui/menu_data.cpp:2046
+#: ../../src/gui/menu_data.cpp:2069 ../../src/gui/menu_data.cpp:2077
+#: ../../src/gui/menu_data.cpp:2132 ../../src/gui/menu_data.cpp:2224
+#: ../../src/gui/menu_data.cpp:2235 ../../src/gui/menu_data.cpp:2273
+#: ../../src/gui/menu_data.cpp:2284 ../../src/gui/menu_data.cpp:2309
+#: ../../src/gui/menu_data.cpp:2324 ../../src/gui/menu_data.cpp:2716
+#: ../../src/gui/menu_data.cpp:2724
 msgid "Off"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1275
+#: ../../src/gui/menu_data.cpp:1561
 msgid "Camera Hor Speed"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1284
+#: ../../src/gui/menu_data.cpp:1570
 msgid "Camera Ver Speed"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1293
+#: ../../src/gui/menu_data.cpp:1579
 msgid "Language"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1333
+#: ../../src/gui/menu_data.cpp:1616
 msgid "Menu Level"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1349 ../../src/gui/menu_data.cpp:1508
-#: ../../src/gui/menu_data.cpp:1617 ../../src/gui/menu_data.cpp:1648
-#: ../../src/gui/menu_data.cpp:1762 ../../src/gui/menu_data.cpp:1830
+#: ../../src/gui/menu_data.cpp:1632 ../../src/gui/menu_data.cpp:1780
+#: ../../src/gui/menu_data.cpp:1884 ../../src/gui/menu_data.cpp:1914
+#: ../../src/gui/menu_data.cpp:2022 ../../src/gui/menu_data.cpp:2085
 msgid "Reset"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1359
+#: ../../src/gui/menu_data.cpp:1641
 msgid "Resolution"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1417
+#: ../../src/gui/menu_data.cpp:1693
 msgid "Bpp"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1434
+#: ../../src/gui/menu_data.cpp:1710
 msgid "Fullscreen"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1458
+#: ../../src/gui/menu_data.cpp:1732
 msgid "VSync"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1482
+#: ../../src/gui/menu_data.cpp:1754
 msgid "FPS Limit"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1491
+#: ../../src/gui/menu_data.cpp:1763
 msgid "Geometry Quality"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1499
+#: ../../src/gui/menu_data.cpp:1771
 msgid "Texture Quality"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1513
+#: ../../src/gui/menu_data.cpp:1785
 msgid "Apply"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1518
+#: ../../src/gui/menu_data.cpp:1790
 msgid "Recreate Cache"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1528
+#: ../../src/gui/menu_data.cpp:1799
 msgid "Hertz (Hz)"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1529
+#: ../../src/gui/menu_data.cpp:1800
 msgid "You should only change the value if the audio is scratchy."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1551
+#: ../../src/gui/menu_data.cpp:1822
 msgid "Music"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1552
+#: ../../src/gui/menu_data.cpp:1823
 msgid "Enable to play music. You need to have the Music Addon installed."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1576
+#: ../../src/gui/menu_data.cpp:1845
 msgid "Set the Music Volume."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1584
+#: ../../src/gui/menu_data.cpp:1853
 msgid "Sound"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1585
+#: ../../src/gui/menu_data.cpp:1854
 msgid "Enable to play Sounds."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1609
+#: ../../src/gui/menu_data.cpp:1876
 msgid "Set the Sound Volume."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1627 ../../src/gui/menu_data.cpp:1749
+#: ../../src/gui/menu_data.cpp:1893 ../../src/gui/menu_data.cpp:2009
 msgid "Shortcuts"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1631 ../../src/gui/menu_data.cpp:1753
-#: ../../src/level/level_editor.cpp:311 ../../src/level/level_editor.cpp:340
-#: ../../src/level/level_editor.cpp:345 ../../src/objects/level_entry.cpp:438
-#: ../../src/overworld/world_editor.cpp:176
-#: ../../src/overworld/world_editor.cpp:206
-#: ../../src/overworld/world_editor.cpp:211
+#: ../../src/gui/menu_data.cpp:1897 ../../src/gui/menu_data.cpp:2013
 msgid "Name"
 msgstr "Όνομα"
 
-#: ../../src/gui/menu_data.cpp:1632
+#: ../../src/gui/menu_data.cpp:1898
 msgid "Key"
 msgstr "Κλειδί"
 
-#: ../../src/gui/menu_data.cpp:1639
+#: ../../src/gui/menu_data.cpp:1905
 msgid "Scroll Speed"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1658
+#: ../../src/gui/menu_data.cpp:1923
 msgid "Sensitivity"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1662
+#: ../../src/gui/menu_data.cpp:1927
 msgid "Analog Jump"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1666
+#: ../../src/gui/menu_data.cpp:1931
 msgid "Joystick"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1673 ../../src/gui/menu_data.cpp:2812
+#: ../../src/gui/menu_data.cpp:1938 ../../src/gui/menu_data.cpp:2971
 msgid "None"
 msgstr "Κανένα"
 
-#: ../../src/gui/menu_data.cpp:1733
+#: ../../src/gui/menu_data.cpp:1993
 msgid "Axis Hor"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1741
+#: ../../src/gui/menu_data.cpp:2001
 msgid "Ver"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1754
+#: ../../src/gui/menu_data.cpp:2014
 msgid "Button"
 msgstr "Κουμπί"
 
-#: ../../src/gui/menu_data.cpp:1772
+#: ../../src/gui/menu_data.cpp:2031
 msgid "Show images"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1796
+#: ../../src/gui/menu_data.cpp:2053
 msgid "Item image size"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1805
+#: ../../src/gui/menu_data.cpp:2062
 msgid "Auto-Hide Mouse"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2147
+#: ../../src/gui/menu_data.cpp:2357
 msgid "Up"
 msgstr "Πάνω"
 
-#: ../../src/gui/menu_data.cpp:2148
+#: ../../src/gui/menu_data.cpp:2358
 msgid "Down"
 msgstr "Κάτω"
 
-#: ../../src/gui/menu_data.cpp:2149
+#: ../../src/gui/menu_data.cpp:2359
 msgid "Left"
 msgstr "Δεξιά"
 
-#: ../../src/gui/menu_data.cpp:2150
+#: ../../src/gui/menu_data.cpp:2360
 msgid "Right"
 msgstr "Αριστερά"
 
-#: ../../src/gui/menu_data.cpp:2151 ../../src/gui/menu_data.cpp:2168
+#: ../../src/gui/menu_data.cpp:2361 ../../src/gui/menu_data.cpp:2377
 msgid "Jump"
 msgstr "Άλμα"
 
-#: ../../src/gui/menu_data.cpp:2152 ../../src/gui/menu_data.cpp:2169
+#: ../../src/gui/menu_data.cpp:2362 ../../src/gui/menu_data.cpp:2378
 msgid "Shoot"
 msgstr "Βολή"
 
-#: ../../src/gui/menu_data.cpp:2153 ../../src/gui/menu_data.cpp:2171
-#: ../../src/objects/bonusbox.cpp:475
+#: ../../src/gui/menu_data.cpp:2363 ../../src/gui/menu_data.cpp:2380
+#: ../../src/objects/bonusbox.cpp:502
 msgid "Item"
 msgstr "Αντικείμενο"
 
-#: ../../src/gui/menu_data.cpp:2154 ../../src/gui/menu_data.cpp:2170
+#: ../../src/gui/menu_data.cpp:2364 ../../src/gui/menu_data.cpp:2379
 msgid "Action"
 msgstr "Δράση"
 
-#: ../../src/gui/menu_data.cpp:2155
+#: ../../src/gui/menu_data.cpp:2365
 msgid "Screenshot"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2156
+#: ../../src/gui/menu_data.cpp:2366
 msgid "Editor fast copy up"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2157
+#: ../../src/gui/menu_data.cpp:2367
 msgid "Editor fast copy down"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2158
+#: ../../src/gui/menu_data.cpp:2368
 msgid "Editor fast copy left"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2159
+#: ../../src/gui/menu_data.cpp:2369
 msgid "Editor fast copy right"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2160
+#: ../../src/gui/menu_data.cpp:2370
 msgid "Editor pixel move up"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2161
+#: ../../src/gui/menu_data.cpp:2371
 #, fuzzy
 msgid "Editor pixel move down"
 msgstr "Ενεργοποίηση επεξεργαστή"
 
-#: ../../src/gui/menu_data.cpp:2162
+#: ../../src/gui/menu_data.cpp:2372
 msgid "Editor pixel move left"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2163
+#: ../../src/gui/menu_data.cpp:2373
 msgid "Editor pixel move right"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2172
+#: ../../src/gui/menu_data.cpp:2381
 msgid "Exit"
 msgstr "Έξοδος"
 
-#: ../../src/gui/menu_data.cpp:2236
+#: ../../src/gui/menu_data.cpp:2435
 msgid "Press a key"
 msgstr "Πίεστε ένα πλήκτρο"
 
-#: ../../src/gui/menu_data.cpp:2240
+#: ../../src/gui/menu_data.cpp:2438
 msgid "Press a button"
 msgstr "Πιέστε ένα κουμπί"
 
-#: ../../src/gui/menu_data.cpp:2243
+#: ../../src/gui/menu_data.cpp:2441
 msgid " for "
 msgstr " για "
 
-#: ../../src/gui/menu_data.cpp:2243
+#: ../../src/gui/menu_data.cpp:2441
 msgid ". Press ESC to cancel."
 msgstr ". Πιέστε ESC για ακύρωση."
 
-#: ../../src/gui/menu_data.cpp:2568
+#: ../../src/gui/menu_data.cpp:2743
 msgid "Reinitialization"
 msgstr "Επανεκκίνηση"
 
-#: ../../src/gui/menu_data.cpp:2614
+#: ../../src/gui/menu_data.cpp:2788
 msgid "Reloading"
 msgstr "Επαναφόρτιση"
 
-#: ../../src/gui/menu_data.cpp:2644
+#: ../../src/gui/menu_data.cpp:2815
 msgid ""
 "Music addon not detected.\n"
 "You can download it from the Website."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2792
+#: ../../src/gui/menu_data.cpp:2952
 msgid "Enabled : "
 msgstr "Ενεργοποιημένο : "
 
-#: ../../src/gui/menu_data.cpp:3186
+#: ../../src/gui/menu_data.cpp:3353
 msgid ""
 "3000 Points needed for saving in a level.\n"
 "Saving on the Overworld is free."
@@ -1062,840 +995,1038 @@ msgstr ""
 "Χρειάζεστε 3000 Βαθμούς για αποθήκευση εντός επιπέδου.\n"
 "Η αποθήκευση στον Υπερκόσμο είναι ελεύθερη."
 
-#: ../../src/gui/menu_data.cpp:3205
+#: ../../src/gui/menu_data.cpp:3372 ../../src/gui/menu_data.cpp:3376
+#: ../../src/gui/menu_data.cpp:3381
 msgid "No Description"
 msgstr "Δεν υπάρχει επεξήγηση"
 
-#: ../../src/gui/menu_data.cpp:3209
+#: ../../src/gui/menu_data.cpp:3385
 msgid "Enter Description"
 msgstr "Συμπληρώστε την επεξήγηση"
 
-#: ../../src/input/mouse.cpp:1268
+#: ../../src/gui/menu_data.cpp:3401 ../../src/gui/menu_data.cpp:3406
+#: ../../src/gui/menu_data.cpp:3411
+#, fuzzy
+msgid "Savegame loading failed"
+msgstr "Αποτυχημένη Φόρτωση Κόσμου : "
+
+#: ../../src/input/mouse.cpp:1150
 msgid "Snap to object mode enabled"
 msgstr ""
 
-#: ../../src/input/mouse.cpp:1272
+#: ../../src/input/mouse.cpp:1153
 msgid "Snap to object mode disabled"
 msgstr ""
 
-#: ../../src/input/mouse.cpp:1730 ../../src/input/mouse.cpp:1756
+#: ../../src/input/mouse.cpp:1565 ../../src/input/mouse.cpp:1584
 msgid "Halfmassive - "
 msgstr "Μισο-μαζικό - "
 
-#: ../../src/input/mouse.cpp:1734
+#: ../../src/input/mouse.cpp:1568
 msgid "Massive - "
 msgstr "Μαζικό - "
 
-#: ../../src/input/mouse.cpp:1745
+#: ../../src/input/mouse.cpp:1576
 msgid "Front Passive - "
 msgstr ""
 
-#: ../../src/input/mouse.cpp:1749
+#: ../../src/input/mouse.cpp:1579
 msgid "Passive - "
 msgstr "Παθητικό - "
 
-#: ../../src/input/mouse.cpp:1760
+#: ../../src/input/mouse.cpp:1587
 msgid "Climbable - "
 msgstr ""
 
-#: ../../src/input/mouse.cpp:1806
+#: ../../src/input/mouse.cpp:1612
 msgid "  Editor Z : "
 msgstr ""
 
-#: ../../src/level/level.cpp:209
+#: ../../src/level/level.cpp:210
 msgid "Unsupported Level format : "
 msgstr ""
 
-#: ../../src/level/level.cpp:375
+#: ../../src/level/level.cpp:376
 msgid "Couldn't save level "
 msgstr ""
 
-#: ../../src/level/level.cpp:382 ../../src/level/level_editor.cpp:322
+#: ../../src/level/level.cpp:392 ../../src/level/level_editor.cpp:144
 msgid "Level "
 msgstr "Επίπεδο"
 
-#: ../../src/level/level.cpp:382 ../../src/overworld/overworld.cpp:255
-#: ../../src/video/video.cpp:1732
+#: ../../src/level/level.cpp:392 ../../src/overworld/overworld.cpp:247
+#: ../../src/video/video.cpp:1458
 msgid " saved"
 msgstr " αποθηκευμένο"
 
-#: ../../src/level/level_editor.cpp:118
-msgid "Level Editor disabled"
+#: ../../src/level/level.cpp:790
+msgid "Omega Mode disabled"
 msgstr ""
 
-#: ../../src/level/level_editor.cpp:311
+#: ../../src/level/level.cpp:793
+msgid "Omega Mode enabled"
+msgstr ""
+
+#: ../../src/level/level_editor.cpp:135
 msgid "Create a new Level"
 msgstr "Δημιουργία καινούργιου Επιπέδου"
 
-#: ../../src/level/level_editor.cpp:322
-#: ../../src/overworld/world_editor.cpp:198
+#: ../../src/level/level_editor.cpp:135 ../../src/level/level_editor.cpp:162
+#: ../../src/level/level_editor.cpp:166 ../../src/objects/level_entry.cpp:387
+#, fuzzy
+msgctxt "level"
+msgid "Name"
+msgstr "Όνομα"
+
+#: ../../src/level/level_editor.cpp:144 ../../src/overworld/world_editor.cpp:89
 msgid " already exists"
 msgstr " υπάρχει ήδη"
 
-#: ../../src/level/level_editor.cpp:334
-#: ../../src/overworld/world_editor.cpp:193
+#: ../../src/level/level_editor.cpp:156 ../../src/overworld/world_editor.cpp:85
 msgid "Created "
 msgstr "Δημιουργήθηκε "
 
-#: ../../src/level/level_editor.cpp:345
+#: ../../src/level/level_editor.cpp:166
 msgid "Load a Level"
 msgstr "Φόρτωση επιπέδου"
 
-#: ../../src/level/level_editor.cpp:366
-#: ../../src/overworld/world_editor.cpp:229
+#: ../../src/level/level_editor.cpp:185
+#: ../../src/overworld/world_editor.cpp:117
 msgid "Loaded "
 msgstr "Φορτώθηκε "
 
-#: ../../src/level/level_editor.cpp:387 ../../src/level/level_settings.cpp:253
-#: ../../src/overworld/world_editor.cpp:243
+#: ../../src/level/level_editor.cpp:204 ../../src/level/level_settings.cpp:257
+#: ../../src/overworld/world_editor.cpp:130
 msgid "Save "
 msgstr "Αποθηκεύση "
 
-#: ../../src/level/level_editor.cpp:397
+#: ../../src/level/level_editor.cpp:213
 msgid "Save Level as"
 msgstr "Αποθήκευση Επιπέδου ως"
 
-#: ../../src/level/level_editor.cpp:397
+#: ../../src/level/level_editor.cpp:213
 msgid "New name"
 msgstr "Νέο όνομα"
 
-#: ../../src/level/level_editor.cpp:414
+#: ../../src/level/level_editor.cpp:228
 msgid "Level was not yet saved"
 msgstr ""
 
-#: ../../src/level/level_editor.cpp:419
+#: ../../src/level/level_editor.cpp:233
 msgid "Delete and Unload "
 msgstr "Διαγραφή και Αποφόρτιση"
 
-#: ../../src/level/level_editor.cpp:443
+#: ../../src/level/level_editor.cpp:255
 msgid "Reload Level ?"
 msgstr ""
 
-#: ../../src/level/level_player.cpp:4601
+#: ../../src/level/level_manager.cpp:491
+msgid "Invalid target level."
+msgstr ""
+
+#: ../../src/level/level_player.cpp:3970
 msgid "Initial direction"
 msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:230
-msgid "Box Goldpiece Yellow"
+#: ../../src/objects/bonusbox.cpp:79 ../../src/objects/bonusbox.cpp:152
+#, fuzzy
+msgid "Bonusbox Empty"
+msgstr "Άδειο Κουτί"
+
+#: ../../src/objects/bonusbox.cpp:161
+#, fuzzy
+msgid "Bonusbox Berry"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:165
+#, fuzzy
+msgid "Bonusbox Fire berry"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:169
+#, fuzzy
+msgid "Bonusbox Ice berry"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:173
+#, fuzzy
+msgid "Bonusbox Ghost berry"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:177
+#, fuzzy
+msgid "Bonusbox 1-Up berry"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:181
+#, fuzzy
+msgid "Bonusbox Lemon"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:193
+msgid "Bonusbox Poisonous berry"
 msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:235
-msgid "Box Goldpiece Red"
-msgstr ""
+#: ../../src/objects/bonusbox.cpp:241
+#, fuzzy
+msgid "Bonusbox Jewel"
+msgstr "Bonus κουτί : "
 
-#: ../../src/objects/bonusbox.cpp:463
+#: ../../src/objects/bonusbox.cpp:245
+#, fuzzy
+msgid "Bonusbox Red Jewel"
+msgstr "Bonus κουτί : "
+
+#: ../../src/objects/bonusbox.cpp:454
 msgid "Animation"
 msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:463
+#: ../../src/objects/bonusbox.cpp:454
 msgid ""
 "Use the Power animation if the box has a good or needed item for this level"
 msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:475
-msgid "The item that gets spawned"
-msgstr ""
-
-#: ../../src/objects/bonusbox.cpp:477 ../../src/objects/bonusbox.cpp:526
-#: ../../src/overworld/overworld.cpp:51
+#: ../../src/objects/bonusbox.cpp:459 ../../src/objects/bonusbox.cpp:498
+#: ../../src/overworld/overworld.cpp:55
 msgid "Empty"
 msgstr "Άδειο"
 
-#: ../../src/objects/bonusbox.cpp:478 ../../src/objects/bonusbox.cpp:522
-#: ../../src/objects/bonusbox.cpp:640 ../../src/video/animation.cpp:1520
-#: ../../src/video/animation.cpp:1598 ../../src/video/animation.cpp:1614
-#: ../../src/video/animation.cpp:1694 ../../src/video/animation.cpp:1710
-#: ../../src/video/animation.cpp:1726 ../../src/video/animation.cpp:1742
-#: ../../src/video/animation.cpp:1758
+#: ../../src/objects/bonusbox.cpp:460 ../../src/objects/bonusbox.cpp:495
+#: ../../src/objects/bonusbox.cpp:602 ../../src/video/animation.cpp:1395
+#: ../../src/video/animation.cpp:1473 ../../src/video/animation.cpp:1489
+#: ../../src/video/animation.cpp:1569 ../../src/video/animation.cpp:1585
+#: ../../src/video/animation.cpp:1601 ../../src/video/animation.cpp:1617
+#: ../../src/video/animation.cpp:1633
 msgid "Random"
 msgstr "Τυχαίο"
 
-#: ../../src/objects/bonusbox.cpp:479 ../../src/objects/bonusbox.cpp:490
-#: ../../src/objects/bonusbox.cpp:608
-msgid "Mushroom"
-msgstr "Μανιτάρι"
+#: ../../src/objects/bonusbox.cpp:461 ../../src/objects/bonusbox.cpp:471
+#: ../../src/objects/bonusbox.cpp:578 ../../src/objects/powerup.cpp:224
+msgid "Berry"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:480 ../../src/objects/bonusbox.cpp:494
-#: ../../src/objects/bonusbox.cpp:612 ../../src/objects/powerup.cpp:564
-msgid "Fireplant"
-msgstr "Φυτό-φωτιά"
+#: ../../src/objects/bonusbox.cpp:462 ../../src/objects/bonusbox.cpp:474
+#: ../../src/objects/bonusbox.cpp:581
+msgid "Fire berry"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:481 ../../src/objects/bonusbox.cpp:498
-#: ../../src/objects/bonusbox.cpp:616 ../../src/objects/powerup.cpp:319
-msgid "Mushroom Blue"
-msgstr "Μπλε Μανιτάρι"
+#: ../../src/objects/bonusbox.cpp:463 ../../src/objects/bonusbox.cpp:477
+#: ../../src/objects/bonusbox.cpp:584 ../../src/objects/powerup.cpp:236
+msgid "Ice berry"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:482 ../../src/objects/bonusbox.cpp:502
-#: ../../src/objects/bonusbox.cpp:620 ../../src/objects/powerup.cpp:324
-msgid "Mushroom Ghost"
-msgstr "Μανιτάρι Φάντασμα"
+#: ../../src/objects/bonusbox.cpp:464 ../../src/objects/bonusbox.cpp:480
+#: ../../src/objects/bonusbox.cpp:587 ../../src/objects/powerup.cpp:240
+#, fuzzy
+msgid "Ghost berry"
+msgstr "Φάντασμα"
 
-#: ../../src/objects/bonusbox.cpp:483 ../../src/objects/bonusbox.cpp:506
-#: ../../src/objects/bonusbox.cpp:624 ../../src/objects/powerup.cpp:309
-msgid "Mushroom 1-UP"
-msgstr "Μανιτάρι Ζωή"
+#: ../../src/objects/bonusbox.cpp:465 ../../src/objects/bonusbox.cpp:483
+#: ../../src/objects/bonusbox.cpp:590
+msgid "1-UP berry"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:484 ../../src/objects/bonusbox.cpp:510
-#: ../../src/objects/bonusbox.cpp:628 ../../src/objects/star.cpp:63
-msgid "Star"
-msgstr "Αστέρι"
+#: ../../src/objects/bonusbox.cpp:466 ../../src/objects/bonusbox.cpp:486
+#: ../../src/objects/bonusbox.cpp:593 ../../src/objects/star.cpp:64
+msgid "Lemon"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:485 ../../src/objects/bonusbox.cpp:514
-#: ../../src/objects/bonusbox.cpp:632 ../../src/objects/goldpiece.cpp:208
-msgid "Goldpiece"
-msgstr "Νόμισμα"
+#: ../../src/objects/bonusbox.cpp:467 ../../src/objects/bonusbox.cpp:489
+#: ../../src/objects/bonusbox.cpp:596 ../../src/objects/goldpiece.cpp:125
+msgid "Jewel"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:486 ../../src/objects/bonusbox.cpp:518
-#: ../../src/objects/bonusbox.cpp:636 ../../src/objects/powerup.cpp:314
-msgid "Mushroom Poison"
-msgstr "Δηλητηριώδες Μανιτάρι"
+#: ../../src/objects/bonusbox.cpp:468 ../../src/objects/bonusbox.cpp:492
+#: ../../src/objects/bonusbox.cpp:599 ../../src/objects/powerup.cpp:232
+msgid "Poisonous berry"
+msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:533
+#: ../../src/objects/bonusbox.cpp:502
+msgid "The item that gets spawned"
+msgstr ""
+
+#: ../../src/objects/bonusbox.cpp:518
 msgid "Force item"
 msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:533
+#: ../../src/objects/bonusbox.cpp:518
 msgid "Force best available item when activated"
 msgstr ""
 
-#: ../../src/objects/bonusbox.cpp:551
-msgid "Gold color"
+#: ../../src/objects/bonusbox.cpp:528
+#, fuzzy
+msgid "Jewel color"
 msgstr "Χρυσό χρώμα"
 
-#: ../../src/objects/bonusbox.cpp:551
-msgid "Gold color if the item is a goldpiece"
+#: ../../src/objects/bonusbox.cpp:528
+#, fuzzy
+msgid "Jewel color if the item is a jewel"
 msgstr "Χρυσό χρώμα εαν το αντικείμενο είναι νόμισμα"
 
-#: ../../src/objects/box.cpp:804
+#: ../../src/objects/box.cpp:53
+msgid "Box"
+msgstr ""
+
+#: ../../src/objects/box.cpp:682
 msgid "Useable Count"
 msgstr ""
 
-#: ../../src/objects/box.cpp:812
+#: ../../src/objects/box.cpp:692 ../../src/objects/box.cpp:697
+#: ../../src/objects/box.cpp:733
+msgid "Massive"
+msgstr "Μαζικός"
+
+#: ../../src/objects/box.cpp:693 ../../src/objects/box.cpp:700
+#: ../../src/objects/box.cpp:736
+msgid "Ghost"
+msgstr "Φάντασμα"
+
+#: ../../src/objects/box.cpp:694 ../../src/objects/box.cpp:703
+#: ../../src/objects/box.cpp:739
+msgid "Semi Massive"
+msgstr ""
+
+#: ../../src/objects/box.cpp:710
 msgid "Invisible"
 msgstr "Αόρατος"
 
-#: ../../src/objects/box.cpp:812
+#: ../../src/objects/box.cpp:710
 msgid ""
 "Massive is invisible until activated.\n"
 "Ghost is only visible and activateable if in ghost mode.\n"
 "Semi Massive is like Massive but only touchable in the activation direction."
 msgstr ""
 
-#: ../../src/objects/box.cpp:815 ../../src/objects/box.cpp:821
-#: ../../src/objects/box.cpp:860
-msgid "Massive"
-msgstr "Μαζικός"
-
-#: ../../src/objects/box.cpp:816 ../../src/objects/box.cpp:825
-#: ../../src/objects/box.cpp:864
-msgid "Ghost"
-msgstr "Φάντασμα"
-
-#: ../../src/objects/box.cpp:817 ../../src/objects/box.cpp:829
-#: ../../src/objects/box.cpp:868
-msgid "Semi Massive"
-msgstr ""
-
-#: ../../src/objects/box.cpp:939
-msgid "Invisible "
+#: ../../src/objects/box.cpp:755
+#, fuzzy
+msgid "(Invisible)"
 msgstr "Αόρατος"
 
-#: ../../src/objects/box.cpp:943
-msgid "Ghost "
+#: ../../src/objects/box.cpp:758
+#, fuzzy
+msgid "(Ghost block)"
 msgstr "Φάντασμα"
 
-#: ../../src/objects/box.cpp:947
-msgid "Invisible Semi Massive "
+#: ../../src/objects/box.cpp:761
+msgid "(Invisible Semi Massive)"
 msgstr ""
 
-#: ../../src/objects/crate.cpp:57
+#: ../../src/objects/crate.cpp:58
 msgid "Crate"
 msgstr ""
 
-#: ../../src/objects/enemystopper.cpp:59
+#: ../../src/objects/enemystopper.cpp:61
 msgid "Enemystopper"
 msgstr ""
 
-#: ../../src/objects/goldpiece.cpp:158
-msgid "Red Falling Goldpiece"
+#: ../../src/objects/goldpiece.cpp:106
+msgid "Red Falling Jewel"
 msgstr ""
 
-#: ../../src/objects/goldpiece.cpp:174
-msgid "Falling Goldpiece"
+#: ../../src/objects/goldpiece.cpp:112
+msgid "Falling Jewel"
 msgstr ""
 
-#: ../../src/objects/goldpiece.cpp:192
-msgid "Red Goldpiece"
-msgstr "Κόκκινο νόμισμα"
+#: ../../src/objects/goldpiece.cpp:119
+msgid "Red Jewel"
+msgstr ""
 
 #: ../../src/objects/lava.cpp:55
 msgid "Lava"
 msgstr ""
 
-#: ../../src/objects/level_entry.cpp:138 ../../src/objects/level_exit.cpp:202
+#: ../../src/objects/level_entry.cpp:134 ../../src/objects/level_exit.cpp:202
 msgid " Beam"
 msgstr ""
 
-#: ../../src/objects/level_entry.cpp:142 ../../src/objects/level_exit.cpp:206
+#: ../../src/objects/level_entry.cpp:137 ../../src/objects/level_exit.cpp:205
 msgid " Warp"
 msgstr ""
 
-#: ../../src/objects/level_entry.cpp:425
+#: ../../src/objects/level_entry.cpp:382
 msgid "The direction to come out"
 msgstr ""
 
-#: ../../src/objects/level_entry.cpp:438
+#: ../../src/objects/level_entry.cpp:387
 msgid "Name for identification"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:504
+#: ../../src/objects/level_exit.cpp:472
 msgid "Direction to move in"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:517
+#: ../../src/objects/level_exit.cpp:497
 msgid "Motion"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:517
+#: ../../src/objects/level_exit.cpp:497
 msgid "Camera Motion"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:545
+#: ../../src/objects/level_exit.cpp:501
 msgid "Destination Level"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:545
+#: ../../src/objects/level_exit.cpp:501
 msgid ""
 "Name of the level that should be entered. If empty uses the current level."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:552
+#: ../../src/objects/level_exit.cpp:508
 msgid "Destination Entry"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:552
+#: ../../src/objects/level_exit.cpp:508
 msgid ""
 "Name of the Entry in the destination level. If empty the entry point is the "
 "player start position."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:559
+#: ../../src/objects/level_exit.cpp:515
 #, fuzzy
 msgid "Return Level"
 msgstr "Δημιουργία καινούργιου Επιπέδου"
 
-#: ../../src/objects/level_exit.cpp:559
+#: ../../src/objects/level_exit.cpp:515
 msgid "Name of the level that should be pushed onto return stack."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:566
+#: ../../src/objects/level_exit.cpp:522
 msgid "Return Entry"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:566
+#: ../../src/objects/level_exit.cpp:522
 msgid "Name of the Entry in the return level."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:573
+#: ../../src/objects/level_exit.cpp:529
 msgid "Name of the Path to use for the camera movement."
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1074 ../../src/objects/path.cpp:790
+#: ../../src/objects/moving_platform.cpp:941 ../../src/objects/path.cpp:744
 msgid "Move Type"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1074
+#: ../../src/objects/moving_platform.cpp:941
 msgid "Movement type."
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1121
+#: ../../src/objects/moving_platform.cpp:964
 msgid ""
 "Movable distance into its direction if type is line or radius if circle."
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1137
+#: ../../src/objects/moving_platform.cpp:980
 msgid "Touch time"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1137
+#: ../../src/objects/moving_platform.cpp:980
 msgid "Time when touched until shaking starts"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1145
+#: ../../src/objects/moving_platform.cpp:988
 msgid "Shake time"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1145
+#: ../../src/objects/moving_platform.cpp:988
 msgid "Time it's shaking until falling"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1153
+#: ../../src/objects/moving_platform.cpp:996
 msgid "Touch move time"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1153
+#: ../../src/objects/moving_platform.cpp:996
 msgid "If set does not move until this time has elapsed after touched"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1161
+#: ../../src/objects/moving_platform.cpp:1004
 msgid "Hor image count"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1161
+#: ../../src/objects/moving_platform.cpp:1004
 msgid "Horizontal middle image count"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1171
+#: ../../src/objects/moving_platform.cpp:1014
 msgid "Image top left"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1179
+#: ../../src/objects/moving_platform.cpp:1021
 msgid "Image top middle"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1187
+#: ../../src/objects/moving_platform.cpp:1028
 msgid "Image top right"
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1403
+#: ../../src/objects/moving_platform.cpp:1232
 msgid "Falling "
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1407
+#: ../../src/objects/moving_platform.cpp:1235
 msgid "Delayed "
 msgstr "Καθυστερημένο"
 
-#: ../../src/objects/moving_platform.cpp:1411
+#: ../../src/objects/moving_platform.cpp:1238
 msgid "Moving "
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:1414
+#: ../../src/objects/moving_platform.cpp:1241
 msgid "Platform - "
 msgstr "Πλατφόρμα - "
 
-#: ../../src/objects/path.cpp:515
+#: ../../src/objects/path.cpp:482
 msgid "Path"
 msgstr ""
 
-#: ../../src/objects/path.cpp:769
+#: ../../src/objects/path.cpp:711
 msgid "Identifier"
 msgstr ""
 
-#: ../../src/objects/path.cpp:769
+#: ../../src/objects/path.cpp:711
 msgid ""
 "Identifier name of the Path. This is needed for objects that can link to "
 "this."
 msgstr ""
 
-#: ../../src/objects/path.cpp:776
+#: ../../src/objects/path.cpp:728
 msgid "Show Line"
 msgstr ""
 
-#: ../../src/objects/path.cpp:776
+#: ../../src/objects/path.cpp:728
 msgid "Wether or not to show the path's moving line ingame."
 msgstr ""
 
-#: ../../src/objects/path.cpp:790
+#: ../../src/objects/path.cpp:744
 msgid ""
 "Movement type. Mirror moves forth and back and rewind starts from the "
 "beginning again."
 msgstr ""
 
-#: ../../src/objects/path.cpp:809
+#: ../../src/objects/path.cpp:756
 msgid "Segment"
 msgstr ""
 
-#: ../../src/objects/path.cpp:809
+#: ../../src/objects/path.cpp:756
 msgid "Select the Segment to edit."
 msgstr ""
 
-#: ../../src/objects/path.cpp:822
+#: ../../src/objects/path.cpp:760
 msgid "Add a Segment after the selected one."
 msgstr ""
 
-#: ../../src/objects/path.cpp:824
+#: ../../src/objects/path.cpp:762
 msgid "Add"
 msgstr ""
 
-#: ../../src/objects/path.cpp:829
+#: ../../src/objects/path.cpp:767
 msgid "Delete the selected Segment."
 msgstr ""
 
-#: ../../src/objects/path.cpp:831
-msgid "Delete"
-msgstr ""
-
-#: ../../src/objects/path.cpp:836
+#: ../../src/objects/path.cpp:774
 msgid "Pos X1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:836
+#: ../../src/objects/path.cpp:774
 msgid "Line position X1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:844
+#: ../../src/objects/path.cpp:782
 msgid "Y1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:844
+#: ../../src/objects/path.cpp:782
 msgid "Line position Y1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:852
+#: ../../src/objects/path.cpp:790
 msgid "Pos X2"
 msgstr ""
 
-#: ../../src/objects/path.cpp:852
+#: ../../src/objects/path.cpp:790
 msgid "Line position X2"
 msgstr ""
 
-#: ../../src/objects/path.cpp:860
+#: ../../src/objects/path.cpp:798
 msgid "Y2"
 msgstr ""
 
-#: ../../src/objects/path.cpp:860
+#: ../../src/objects/path.cpp:798
 msgid "Line position Y2"
 msgstr ""
 
-#: ../../src/objects/powerup.cpp:304
-msgid "Mushroom Red"
-msgstr "Κόκκινο Μανιτάρι"
-
-#: ../../src/objects/powerup.cpp:697
-msgid "Moon (3-UP)"
+#: ../../src/objects/powerup.cpp:228
+msgid "Life berry"
 msgstr ""
 
-#: ../../src/objects/text_box.cpp:267
+#: ../../src/objects/powerup.cpp:449
+msgid "Fireberry"
+msgstr ""
+
+#: ../../src/objects/powerup.cpp:553
+msgid "Cookie (3-UP)"
+msgstr ""
+
+#: ../../src/objects/spinbox.cpp:49
+msgid "Spinbox"
+msgstr ""
+
+#: ../../src/objects/text_box.cpp:64
+#, fuzzy
+msgid "Text Box"
+msgstr "Πλαίσιο κειμένου"
+
+#: ../../src/objects/text_box.cpp:235
 msgid "Text"
 msgstr "Κείμενο"
 
-#: ../../src/objects/text_box.cpp:267
+#: ../../src/objects/text_box.cpp:235
 msgid "Text to display when activated"
 msgstr "Κείμενο προς εμφάνιση όταν ενεργοποιηθεί"
 
-#: ../../src/overworld/overworld.cpp:47
+#: ../../src/overworld/overworld.cpp:51
 msgid "Unnamed"
 msgstr "Ανώνυμο"
 
-#: ../../src/overworld/overworld.cpp:68
+#: ../../src/overworld/overworld.cpp:72
 msgid "Couldn't save world description "
 msgstr "Δε μπορούσε να αποθηκευτεί η επεξήγηση του κόσμου "
 
-#: ../../src/overworld/overworld.cpp:250
+#: ../../src/overworld/overworld.cpp:242
 msgid "Couldn't save world "
 msgstr "Δε μπορούσε να αποθηκευτεί ο κόσμος "
 
-#: ../../src/overworld/overworld.cpp:255
-#: ../../src/overworld/world_editor.cpp:198
+#: ../../src/overworld/overworld.cpp:247
+#: ../../src/overworld/world_editor.cpp:89
 msgid "World "
 msgstr "Κόσμος "
 
-#: ../../src/overworld/world_editor.cpp:89
-msgid "World Editor disabled"
-msgstr "Απενεργοποιήθηκε ο Επεξεργαστής Κόσμου"
-
-#: ../../src/overworld/world_editor.cpp:176
+#: ../../src/overworld/world_editor.cpp:70
 msgid "Create a new World"
 msgstr "Δημιουργία καινούργιου Κόσμου"
 
-#: ../../src/overworld/world_editor.cpp:211
+#: ../../src/overworld/world_editor.cpp:70
+#: ../../src/overworld/world_editor.cpp:97
+#: ../../src/overworld/world_editor.cpp:101
+#, fuzzy
+msgctxt "world"
+msgid "Name"
+msgstr "Όνομα"
+
+#: ../../src/overworld/world_editor.cpp:101
 msgid "Load an Overworld"
 msgstr "Φόρτωση ενός Υπερκόσμου"
 
-#: ../../src/overworld/world_editor.cpp:254
+#: ../../src/overworld/world_editor.cpp:140
 msgid "Reload World ?"
 msgstr "Επαναφόρτωση Υπερκόσμου ?"
 
-#: ../../src/overworld/world_layer.cpp:47
+#: ../../src/overworld/world_layer.cpp:49
 msgid "Line Start Point"
 msgstr ""
 
-#: ../../src/overworld/world_layer.cpp:52
+#: ../../src/overworld/world_layer.cpp:53
 msgid "Line End Point"
 msgstr ""
 
-#: ../../src/overworld/world_layer.cpp:261
+#: ../../src/overworld/world_layer.cpp:254
 msgid "Waypoint origin"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:93
+#: ../../src/overworld/world_waypoint.cpp:104
 msgid "Waypoint"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:386
-msgid "Type"
-msgstr "Τύπος"
+#: ../../src/overworld/world_waypoint.cpp:372
+#: ../../src/overworld/world_waypoint.cpp:376
+#: ../../src/overworld/world_waypoint.cpp:441
+msgid "Level"
+msgstr "Επίπεδο"
 
-#: ../../src/overworld/world_waypoint.cpp:386
-msgid "Destination type"
-msgstr ""
-
-#: ../../src/overworld/world_waypoint.cpp:389
-#: ../../src/overworld/world_waypoint.cpp:397
+#: ../../src/overworld/world_waypoint.cpp:373
+#: ../../src/overworld/world_waypoint.cpp:379
 msgid "World"
 msgstr "Κόσμος"
 
-#: ../../src/overworld/world_waypoint.cpp:405
+#: ../../src/overworld/world_waypoint.cpp:383
+msgid "Type"
+msgstr "Τύπος"
+
+#: ../../src/overworld/world_waypoint.cpp:383
+msgid "Destination type"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:387
 msgid "Destination"
 msgstr "Προορισμός"
 
-#: ../../src/overworld/world_waypoint.cpp:405
+#: ../../src/overworld/world_waypoint.cpp:387
 msgid "Destination level or world"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:412
+#: ../../src/overworld/world_waypoint.cpp:402
 msgid "Backward Direction"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:424
+#: ../../src/overworld/world_waypoint.cpp:414
 msgid "Forward Direction"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:436
+#: ../../src/overworld/world_waypoint.cpp:430
 msgid "Default Access"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:436
+#: ../../src/overworld/world_waypoint.cpp:430
 msgid "Enable if the Waypoint should be always accessible."
 msgstr ""
 
-#: ../../src/user/savegame.cpp:553
+#: ../../src/user/savegame/savegame.cpp:266
 msgid "Savegame "
 msgstr "Αποθηκευμένο παιχνίδι "
 
-#: ../../src/user/savegame.cpp:553
+#: ../../src/user/savegame/savegame.cpp:266
 msgid " loaded"
 msgstr " φορτωμένο"
 
-#: ../../src/user/savegame.cpp:734
+#: ../../src/user/savegame/savegame.cpp:440
 #, fuzzy
 msgid "Couldn't save savegame "
 msgstr "Δε μπορούσε να αποθηκευτεί ο κόσμος "
 
-#: ../../src/user/savegame.cpp:739
+#: ../../src/user/savegame/savegame.cpp:444
 msgid "Saved to Slot "
 msgstr ""
 
-#: ../../src/user/savegame.cpp:806
+#. TRANS: %u is replaced by the number of the save slot, starting with 1.
+#: ../../src/user/savegame/savegame.cpp:511
+#, c-format
+msgid "%u. Free Save"
+msgstr ""
+
+#: ../../src/user/savegame/savegame.cpp:533
 msgid " -  Level "
 msgstr ""
 
-#: ../../src/user/savegame.cpp:814
+#: ../../src/user/savegame/savegame.cpp:540
 msgid " -  Unknown"
 msgstr ""
 
-#: ../../src/user/savegame.cpp:818
+#: ../../src/user/savegame/savegame.cpp:544
 msgid " - Date "
 msgstr ""
 
-#: ../../src/user/savegame_loader.cpp:53
+#: ../../src/user/savegame/savegame_loader.cpp:72
 #, fuzzy
 msgid "No description"
 msgstr "Δεν υπάρχει επεξήγηση"
 
-#: ../../src/video/animation.cpp:1512
+#: ../../src/video/animation.cpp:1387
 msgid "Position z"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1512
+#: ../../src/video/animation.cpp:1387
 msgid "Initial depth position. Use values from 0.00011 to 0.12."
 msgstr ""
 
-#: ../../src/video/animation.cpp:1520 ../../src/video/animation.cpp:1598
-#: ../../src/video/animation.cpp:1614 ../../src/video/animation.cpp:1694
-#: ../../src/video/animation.cpp:1710 ../../src/video/animation.cpp:1726
-#: ../../src/video/animation.cpp:1742 ../../src/video/animation.cpp:1758
+#: ../../src/video/animation.cpp:1395 ../../src/video/animation.cpp:1473
+#: ../../src/video/animation.cpp:1489 ../../src/video/animation.cpp:1569
+#: ../../src/video/animation.cpp:1585 ../../src/video/animation.cpp:1601
+#: ../../src/video/animation.cpp:1617 ../../src/video/animation.cpp:1633
 msgid "Additional random value"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1535
+#: ../../src/video/animation.cpp:1410
 msgid "Based on camera pos."
 msgstr ""
 
-#: ../../src/video/animation.cpp:1535
+#: ../../src/video/animation.cpp:1410
 msgid "The emitter position is based on the camera position"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1542
+#: ../../src/video/animation.cpp:1417
 msgid "Particles Based on Emitter pos."
 msgstr ""
 
-#: ../../src/video/animation.cpp:1542
+#: ../../src/video/animation.cpp:1417
 msgid "The particle position is based on the emitter position"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1550
+#: ../../src/video/animation.cpp:1425
 msgid "Emitter width"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1550
+#: ../../src/video/animation.cpp:1425
 msgid "Emitter width in which the particles spawn"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1558 ../../src/video/animation.cpp:1790
+#: ../../src/video/animation.cpp:1433 ../../src/video/animation.cpp:1665
 msgid "Height"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1558
+#: ../../src/video/animation.cpp:1433
 msgid "Emitter height in which the particles spawn"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1566
+#: ../../src/video/animation.cpp:1441
 msgid "Emitter TTL"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1566
+#: ../../src/video/animation.cpp:1441
 msgid "Emitter time to live. Set -1 for infinite."
 msgstr ""
 
-#: ../../src/video/animation.cpp:1574
+#: ../../src/video/animation.cpp:1449
 msgid "Emitter interval"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1574
+#: ../../src/video/animation.cpp:1449
 msgid "Time between spawning particles. Amount is the quota."
 msgstr ""
 
-#: ../../src/video/animation.cpp:1582
+#: ../../src/video/animation.cpp:1457
 msgid "Quota"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1582
+#: ../../src/video/animation.cpp:1457
 msgid "The amount of particles to spawn for an interval"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1590
+#: ../../src/video/animation.cpp:1465
 msgid "TTL"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1590
+#: ../../src/video/animation.cpp:1465
 msgid "Particle time to live(TTL)"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1606
+#: ../../src/video/animation.cpp:1481
 msgid "Velocity"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1606
+#: ../../src/video/animation.cpp:1481
 msgid "Initial particle velocity or speed"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1639
+#: ../../src/video/animation.cpp:1514
 msgid "Rotation z"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1639
+#: ../../src/video/animation.cpp:1514
 #, fuzzy
 msgid "Initial rotation z"
 msgstr "Επανεκκίνηση"
 
-#: ../../src/video/animation.cpp:1647
+#: ../../src/video/animation.cpp:1522
 msgid "Add direction"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1647
+#: ../../src/video/animation.cpp:1522
 msgid "Start direction is added to the z rotation"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1686
+#: ../../src/video/animation.cpp:1561
 msgid "Const. rotation z"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1686
+#: ../../src/video/animation.cpp:1561
 msgid "Initial constant rotation z"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1702
+#: ../../src/video/animation.cpp:1577
 msgid "Initial direction/angle"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1718
+#: ../../src/video/animation.cpp:1593
 msgid "Scale"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1718
+#: ../../src/video/animation.cpp:1593
 msgid "Initial size scale"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1734
+#: ../../src/video/animation.cpp:1609
 msgid "Hor gravity"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1734
+#: ../../src/video/animation.cpp:1609
 msgid "Initial horizontal gravity"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1750
+#: ../../src/video/animation.cpp:1625
 msgid "Ver gravity"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1750
+#: ../../src/video/animation.cpp:1625
 msgid "Initial vertical gravity"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1766
+#: ../../src/video/animation.cpp:1641
 msgid "Clip rect x"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1766
+#: ../../src/video/animation.cpp:1641
 msgid "Clipping rectangle position x"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1774
+#: ../../src/video/animation.cpp:1649
 msgid "Width"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1774
+#: ../../src/video/animation.cpp:1649
 msgid "Clipping rectangle width"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1782
+#: ../../src/video/animation.cpp:1657
 msgid "Clip rect y"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1782
+#: ../../src/video/animation.cpp:1657
 msgid "Clipping rectangle position y"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1790
+#: ../../src/video/animation.cpp:1665
 msgid "Clipping rectangle height"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1798
+#: ../../src/video/animation.cpp:1677
 msgid "Clip mode"
 msgstr ""
 
-#: ../../src/video/animation.cpp:1798
+#: ../../src/video/animation.cpp:1677
 msgid "Clipping mode if particle is out the rectangle"
 msgstr ""
 
-#: ../../src/video/img_manager.cpp:123
+#: ../../src/video/img_manager.cpp:122
 msgid "Saving Textures"
 msgstr ""
 
-#: ../../src/video/img_manager.cpp:174
+#: ../../src/video/img_manager.cpp:168
 msgid "Restoring Textures"
 msgstr ""
 
-#: ../../src/video/video.cpp:686
+#. TRANS: Be careful with the length of this line, if
+#. TRANS: it is much longer than the English version,
+#. TRANS: it will be cut off.
+#: ../../src/video/loading_screen.cpp:65
+msgid "This program is distributed under the terms of the GPLv3"
+msgstr ""
+
+#: ../../src/video/video.cpp:433
 msgid "Caching Images failed : Could not remove old images"
 msgstr ""
 
-#: ../../src/video/video.cpp:720
+#: ../../src/video/video.cpp:456
 msgid "Caching Images"
 msgstr ""
+
+#~ msgid "Player"
+#~ msgstr "Παίκτης"
+
+#~ msgid "FPS : best "
+#~ msgstr "FPS : το καλύτερο"
+
+#~ msgid ", worst "
+#~ msgstr ", το χειρότερο"
+
+#~ msgid ", current "
+#~ msgstr ", τρέχων"
+
+#~ msgid "average "
+#~ msgstr "μέσος"
+
+#~ msgid "Camera : X "
+#~ msgstr "Κάμερα : X"
+
+#~ msgid "Name : "
+#~ msgstr "Όνομα : "
+
+#~ msgid "Objects : "
+#~ msgstr "Αντικείμενα : "
+
+#~ msgid "Passive : "
+#~ msgstr "Παθητικό : "
+
+#~ msgid "Massive : "
+#~ msgstr "Μαζικό : "
+
+#~ msgid "Enemy : "
+#~ msgstr "Εχθρός : "
+
+#~ msgid "Active : "
+#~ msgstr "Ενεργό : "
+
+#~ msgid "Halfmassive : "
+#~ msgstr "Μεσο-μαζικό : "
+
+#~ msgid "Moving Platform : "
+#~ msgstr "Κινιτή πλατφόρμα : "
+
+#~ msgid "Goldbox : "
+#~ msgstr "Χρυσο κουτί : "
+
+#~ msgid "Other : "
+#~ msgstr "Άλλο : "
+
+#~ msgid "Velocity X "
+#~ msgstr "Ταχύτητα X "
+
+#~ msgid "Moving State "
+#~ msgstr "Κατάσταση κίνησης "
+
+#~ msgid "Ground "
+#~ msgstr "Έδαφος "
+
+#~ msgid "Game Mode : "
+#~ msgstr "Λειτουργία παιχνιδιού : "
+
+#~ msgid "World : "
+#~ msgstr "Κόσμος : "
+
+#~ msgid "Menu : "
+#~ msgstr "Μενού : "
+
+#~ msgid "Mushroom"
+#~ msgstr "Μανιτάρι"
+
+#~ msgid "Fireplant"
+#~ msgstr "Φυτό-φωτιά"
+
+#~ msgid "Mushroom Blue"
+#~ msgstr "Μπλε Μανιτάρι"
+
+#~ msgid "Mushroom Ghost"
+#~ msgstr "Μανιτάρι Φάντασμα"
+
+#~ msgid "Mushroom 1-UP"
+#~ msgstr "Μανιτάρι Ζωή"
+
+#~ msgid "Star"
+#~ msgstr "Αστέρι"
+
+#~ msgid "Goldpiece"
+#~ msgstr "Νόμισμα"
+
+#~ msgid "Mushroom Poison"
+#~ msgstr "Δηλητηριώδες Μανιτάρι"
+
+#~ msgid "Invisible "
+#~ msgstr "Αόρατος"
+
+#~ msgid "Red Goldpiece"
+#~ msgstr "Κόκκινο νόμισμα"
+
+#~ msgid "Mushroom Red"
+#~ msgstr "Κόκκινο Μανιτάρι"
+
+#~ msgid "World Editor disabled"
+#~ msgstr "Απενεργοποιήθηκε ο Επεξεργαστής Κόσμου"
 
 #~ msgid "Turtle Boss"
 #~ msgstr "Αρχηγός Χελώνα"
 
-#~ msgid "Box Empty"
-#~ msgstr "Άδειο Κουτί"
-
 #~ msgid "Box Random"
 #~ msgstr "Τυχαίο Κουτί"
-
-#~ msgid "Textbox"
-#~ msgstr "Πλαίσιο κειμένου"
 
 #~ msgid "Box Mushroom"
 #~ msgstr "Κουτί Μανιταριού"
@@ -1923,9 +2054,6 @@ msgstr ""
 
 #~ msgid "Box Unknown Item Type"
 #~ msgstr "Κουτί Αντικειμένου Αγνώστου Τύπου"
-
-#~ msgid "World Loading failed : "
-#~ msgstr "Αποτυχημένη Φόρτωση Κόσμου : "
 
 #~ msgid "Clear World ?"
 #~ msgstr "Εκκαθάριση Κόσμου ?"
