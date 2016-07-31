@@ -69,7 +69,7 @@ module Std
       else
         opts[:x] ||= 0
         opts[:y] ||= 0
-        @sprite = Sprite.new("ground/underground/pow/#{@color}.png")
+        @sprite = Sprite.new("ground/underground/switch/#{@color}.png")
         @sprite.massive_type = :massive
         @sprite.start_at(opts[:x], opts[:y])
         @sprite.show
@@ -78,7 +78,7 @@ module Std
       @sprite.on_touch do |other|
         if !@activated && other.player? && other.velocity_y > 0
           Audio.play_sound("switch.ogg")
-          @sprite.image = "ground/underground/pow/#{@color}_active.png"
+          @sprite.image = "ground/underground/switch/#{@color}_active.png"
           @activated = true
           @callback.call
         end
