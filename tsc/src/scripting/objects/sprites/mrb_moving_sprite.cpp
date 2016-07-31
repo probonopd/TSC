@@ -687,6 +687,27 @@ static mrb_value Down_Grade(mrb_state* p_state, mrb_value self)
     return mrb_nil_value();
 }
 
+/**
+ * Method: MovingSprite#reset_on_ground
+ *
+ *   reset_on_ground()
+ *
+ * Re-check there's a ground object below this object. If there is
+ * none, the object will start falling if it is subject to gravity.
+ * Otherwise, nothing happens.
+ *
+ * You'll need this method if you made the ground below an object
+ * disappear, e.g. if you removed a block below Alex' feet. If you
+ * don't call this method, then the lost ground will first be noticed
+ * when the object moves the next time.
+ */
+static mrb_value Reset_On_Ground(mrb_state* p_state, mrb_value self)
+{
+    cMovingSprite* p_sprite = Get_Data_Ptr<cMovingSprite>(p_state, self);
+    p_sprite->Reset_On_Ground();
+    return mrb_nil_value();
+}
+
 void TSC::Scripting::Init_Moving_Sprite(mrb_state* p_state)
 {
     struct RClass* p_rcMoving_Sprite = mrb_define_class(p_state, "MovingSprite", mrb_class_get(p_state, "Sprite"));
@@ -709,4 +730,5 @@ void TSC::Scripting::Init_Moving_Sprite(mrb_state* p_state)
     mrb_define_method(p_state, p_rcMoving_Sprite, "velocity=", Set_Velocity, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcMoving_Sprite, "turn_around", Turn_Around, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcMoving_Sprite, "downgrade", Down_Grade, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcMoving_Sprite, "reset_on_ground", Reset_On_Ground, MRB_ARGS_NONE());
 }
