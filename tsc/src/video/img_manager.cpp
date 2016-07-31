@@ -80,27 +80,29 @@ void cImage_Manager::Add(cGL_Surface* obj)
 
 cGL_Surface* cImage_Manager::Get_Pointer(const fs::path& path)
 {
-    std::string strpath = path_to_utf8(path);
+    std::unordered_map<std::string, size_t>::iterator iter =
+        m_index_table.find(path_to_utf8(path));
 
-    if (m_index_table.count(strpath) == 0) {
+    if (iter == m_index_table.end()) {
         // not found
         return NULL;
     }
     else {
-        return objects[m_index_table[strpath]];
+        return objects[iter->second];
     }
 }
 
 cGL_Surface* cImage_Manager::Copy(const fs::path& path)
 {
-    std::string strpath = path_to_utf8(path);
+    std::unordered_map<std::string, size_t>::iterator iter =
+        m_index_table.find(path_to_utf8(path));
 
-    if (m_index_table.count(strpath) == 0) {
+    if (iter == m_index_table.end()) {
         // not found
         return NULL;
     }
     else {
-        return objects[m_index_table[strpath]]->Copy();
+        return objects[iter->second]->Copy();
     }
 }
 
