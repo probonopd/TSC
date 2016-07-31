@@ -81,6 +81,7 @@ module Std
           @sprite.image = "ground/underground/switch/#{@color}_active.png"
           @activated = true
           @callback.call
+          other.reset_on_ground
         end
       end
     end
