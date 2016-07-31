@@ -44,11 +44,7 @@ const std::string cPreferences::m_menu_level_default = "menu_brown_1";
 const float cPreferences::m_camera_hor_speed_default = 0.3f;
 const float cPreferences::m_camera_ver_speed_default = 0.2f;
 // Video
-#ifdef _DEBUG
 const bool cPreferences::m_video_fullscreen_default = 0;
-#else
-const bool cPreferences::m_video_fullscreen_default = 1;
-#endif
 const uint16_t cPreferences::m_video_screen_w_default = 1024;
 const uint16_t cPreferences::m_video_screen_h_default = 768;
 const uint8_t cPreferences::m_video_screen_bpp_default = 32;
