@@ -427,8 +427,6 @@ bool cEditor::Key_Down(const sf::Event& evt)
                                       "Ctrl + W - Load an Overworld\n"
                                       "Ctrl + S - Save the current Level/World\n"
                                       "Ctrl + Shift + S - Save the current Level/World under a new name\n"
-                                      "Ctrl + D - Toggle debug mode\n"
-                                      "Ctrl + P - Toggle performance mode\n"
                                       " \n"
                                       "----- [colour='FFFFCF5F']Objects[colour='FFFFFFFF'] -----\n"
                                       " \n"
