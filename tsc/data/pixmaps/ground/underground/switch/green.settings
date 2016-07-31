@@ -1,6 +1,6 @@
-width 64
-height 64
-col_rect 7 5 52 59
+width 38
+height 38
+col_rect 0 4 38 34
 editor_tags level;underground;stuff
 type massive
 author JohnTheTreeman_and_Bugsbane
