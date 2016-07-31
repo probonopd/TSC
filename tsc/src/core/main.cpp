@@ -121,7 +121,9 @@ int main(int argc, char** argv)
 #else
                 std::cout << "." << std::endl;
 #endif
+#ifdef TSC_VERSION_GIT
                 std::cout << "It was compiled from commit " << TSC_VERSION_GIT << "." << std::endl;
+#endif
                 return EXIT_SUCCESS;
             }
             // debug
