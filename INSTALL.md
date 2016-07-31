@@ -41,8 +41,14 @@ install to.
 * The libxml++ library.
 * The Freetype library.
 * CEGUI >= 0.8.5
-  * Lower versions of CEGUI do not work due to CEGUI bug #1063, which
-    was resolved first with CEGUI 0.8.5.
+  * Lower versions of CEGUI do not work due to CEGUI bug #1063
+    (incompatibility with a new version of glm), which was resolved
+    first with CEGUI 0.8.5.
+  * Before starting to compile the most recent CEGUI, you should try
+    with your distibutions's CEGUI if it is >= 0.8.0. Chances are that
+    you are not subject to the glm bug and it might just work fine for
+    you. If the game appears to have no menus, then you *are* subject
+    to the glm bug and you *need* a newer CEGUI.
 * Boost >= 1.50.0 (to be exact: boost_system, boost_filesystem, boost_thread)
 * SFML >= 2.3.0
 * Optionally for generating the docs:
