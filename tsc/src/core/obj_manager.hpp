@@ -86,7 +86,7 @@ namespace TSC {
         /* Return the object pointer
          * if not found returns NULL
         */
-        virtual T* Get_Pointer(size_t identifier) const
+        virtual T* Get_Pointer(size_t identifier)
         {
             if (identifier >= objects.size()) {
                 // out of array

@@ -61,7 +61,7 @@ cSound_Manager::~cSound_Manager(void)
     cSound_Manager::Delete_All();
 }
 
-cSound* cSound_Manager::Get_Pointer(const fs::path& path) const
+cSound* cSound_Manager::Get_Pointer(const fs::path& path)
 {
     for (SoundList::const_iterator itr = objects.begin(); itr != objects.end(); ++itr) {
         cSound* obj = (*itr);

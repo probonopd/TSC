@@ -56,19 +56,19 @@ namespace TSC {
         virtual ~cSound_Manager(void);
 
         // Return the Sound from Path
-        virtual cSound* Get_Pointer(const boost::filesystem::path& path) const;
+        virtual cSound* Get_Pointer(const boost::filesystem::path& path);
 
         /* Add a Sound
          * Should always have the path set
          */
         void Add(cSound* item);
 
-        cSound* operator [](unsigned int identifier) const
+        cSound* operator [](unsigned int identifier)
         {
             return cObject_Manager<cSound>::Get_Pointer(identifier);
         }
 
-        cSound* operator [](const std::string& path) const
+        cSound* operator [](const std::string& path)
         {
             return Get_Pointer(path);
         }

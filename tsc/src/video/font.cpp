@@ -14,11 +14,11 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "../core/global_basic.hpp"
 #include "../video/font.hpp"
 #include "../video/gl_surface.hpp"
 #include "../core/property_helper.hpp"
 #include "../core/filesystem/resource_manager.hpp"
-#include "../core/global_basic.hpp"
 #include "../core/game_core.hpp"
 #include "renderer.hpp"
 

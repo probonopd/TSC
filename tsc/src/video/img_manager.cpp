@@ -19,6 +19,7 @@
 #include "../video/loading_screen.hpp"
 #include "../core/i18n.hpp"
 #include "../core/global_basic.hpp"
+#include "../core/property_helper.hpp"
 
 using namespace std;
 
@@ -72,39 +73,35 @@ void cImage_Manager::Add(cGL_Surface* obj)
     // it is now managed
     obj->m_managed = 1;
 
-    // Add
+    // Add and remember index where it was stored
     cObject_Manager<cGL_Surface>::Add(obj);
+    m_index_table[path_to_utf8(obj->m_path)] = objects.size() - 1;
 }
 
-cGL_Surface* cImage_Manager::Get_Pointer(const fs::path& path) const
+cGL_Surface* cImage_Manager::Get_Pointer(const fs::path& path)
 {
-    for (GL_Surface_List::const_iterator itr = objects.begin(); itr != objects.end(); ++itr) {
-        cGL_Surface* obj = (*itr);
+    std::string strpath = path_to_utf8(path);
 
-        // return first match
-        if (obj->m_path.compare(path) == 0) {
-            return obj;
-        }
+    if (m_index_table.count(strpath) == 0) {
+        // not found
+        return NULL;
     }
-
-    // not found
-    return NULL;
+    else {
+        return objects[m_index_table[strpath]];
+    }
 }
 
 cGL_Surface* cImage_Manager::Copy(const fs::path& path)
 {
-    for (GL_Surface_List::iterator itr = objects.begin(); itr != objects.end(); ++itr) {
-        // get object
-        cGL_Surface* obj = (*itr);
+    std::string strpath = path_to_utf8(path);
 
-        // first match
-        if (obj->m_path.compare(path) == 0) {
-            return obj->Copy();
-        }
+    if (m_index_table.count(strpath) == 0) {
+        // not found
+        return NULL;
     }
-
-    // not found
-    return NULL;
+    else {
+        return objects[m_index_table[strpath]]->Copy();
+    }
 }
 
 // Must be called on the loading screen, i.e. after Loading_Screen_Init() and
@@ -208,6 +205,33 @@ void cImage_Manager::Delete_Image_Textures(void)
     }
 }
 
+bool cImage_Manager::Delete(size_t array_num, bool delete_data)
+{
+    if (array_num < objects.size()) {
+        std::string filepath = path_to_utf8(objects[array_num]->m_path);
+        objects.erase(objects.begin() + array_num);
+        m_index_table.erase(filepath);
+    }
+
+    if (delete_data) {
+        delete objects[array_num];
+    }
+
+    return 1;
+}
+
+bool cImage_Manager::Delete(cGL_Surface* obj, bool delete_data)
+{
+    std::string filepath = path_to_utf8(obj->m_path);
+    if (cObject_Manager::Delete(obj, delete_data)) {
+        m_index_table.erase(filepath);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void cImage_Manager::Delete_Hardware_Textures(void)
 {
     // delete all hardware surfaces
@@ -226,6 +250,7 @@ void cImage_Manager::Delete_All(void)
     // stops cGL_Surface destructor from checking if GL texture id still in use
     Delete_Image_Textures();
     cObject_Manager<cGL_Surface>::Delete_All();
+    m_index_table.clear();
 }
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

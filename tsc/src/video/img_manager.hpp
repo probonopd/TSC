@@ -70,7 +70,7 @@ namespace TSC {
         virtual void Add(cGL_Surface* obj);
 
         // Return the surface by path
-        cGL_Surface* Get_Pointer(const boost::filesystem::path& path) const;
+        cGL_Surface* Get_Pointer(const boost::filesystem::path& path);
 
         // Return the copied image
         cGL_Surface* Copy(const boost::filesystem::path& path);
@@ -106,12 +106,17 @@ namespace TSC {
         // Delete all Surfaces
         virtual void Delete_All(void);
 
+        virtual bool Delete(size_t array_num, bool delete_data = 1);
+        virtual bool Delete(cGL_Surface* obj, bool delete_data = 1);
+
         // highest opengl texture id found
         GLuint m_high_texture_id;
 
     private:
         // saved textures for reloading
         Saved_Texture_List m_saved_textures;
+
+        std::unordered_map<std::string, size_t> m_index_table;
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

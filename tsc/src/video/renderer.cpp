@@ -14,6 +14,7 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "../core/global_basic.hpp"
 #include "../video/renderer.hpp"
 #include "../core/game_core.hpp"
 #include "../core/global_basic.hpp"
