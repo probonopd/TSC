@@ -8,28 +8,6 @@ TSC supports the Linux and Windows platforms officially.
 On Windows, testing is done on Windows 7.
 **Windows XP is unsupported**.
 
-Current development version works on Gentoo and Ubuntu 16.10
-based distros. Older Ubuntu versions have tool old CEGUI,
-we are [trying to get required patches included to them][4]. 
-[Windows crosscompile is currently is broken][9]. [We are working
-towards new release with critical bugs fixed][8].
-
-TSC works on all processors supported by Ubuntu 16.10,
-like x86, x64, PowerPC and ARM, if processor is powerful
-enough. Most resourse demanding is calling Update() and
-Draw() on all sprites. [You'll need a fairly decent CPU
-if your levels are not really small][6].
-
-Previously before SFML and CEGUI upgrades when tested
-on ODroid-U3 2GB RAM Ubuntu 14.04, and Mac PowerBook G4
-0.7GB RAM Lubuntu 14.04 PowerPC, the game
-was too slow to be playable. Recently at 2016-07-31 Quintus
-optimized one function and game got 2x speedup, so it's not
-tested yet is TSC now playable on those or Raspberry Pi 3.
-
-[We don't have any macOS or Android developers currently.
-Android also would need onscreen gamepad controls][7].
-
 TSC can be installed either from Git, meaning that you clone the
 repository, or from a release tarball, where for the purpose of this
 document a beta release is considered a release. Finally, you have the
@@ -80,67 +58,28 @@ install to.
   * The `doxygen` program.
   * Ruby’s `rdoc` program.
 
-### Installing Lubuntu 16.10 for minimal compiling required ###
-
-1) [Download Lubuntu 16.10 iso][3]
-
-2) For installation, if you don't have enough space on your
-current harddrive, you need:
-
-* Installation USB stick where you write iso image with unetbootin
-* if you don't have enough space on your current harddrive,
-you need also external USB harddisk or USB stick size of 16 GB.
-
-3) Write iso to installation USB stick and boot from it
-
-4) When installing, choose custom partition options for destination
-USB harddrive / USB strick for example following way.
-
-I added info how much total is in use when I have everything including
-TSC installed.
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-/dev/sdb1 ext2 /boot 500MB (in use: 72MB)
-/dev/sdb2 extended partition containining these:
-- /dev/sdb5 ext4 / 14GB (in use: 10GB)
-- /dev/sdb6 linux-swap 500MB
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-But on USB strick adding swap could cause more writing and damage to 
-USB stick, so not adding swap is better.
-
-5) Install GRUB to /dev/sdb so when external USB harddrive or USB stick
-is on computer while booting, computer boots from USB harddrive or USB stick.
-Otherwise computer boots from computer internal harddrive.
-
-6) After Lubuntu installation reboot to Lubuntu.
-
 ### Linux dependencies ###
 
 * The DevIL library.
 
-7) The following commandline installs all dependencies required to build
-TSC on Lubuntu Linux 16.10:
+Installing has been tested on Lubuntu 16.10.
+
+1) Install dependencies:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
   freeglut3-dev gettext libpng-dev libpcre3-dev libxml++2.6-dev \
   libfreetype6-dev libdevil-dev libboost1.58-all-dev libsfml-dev \
-  libcegui-mk2-dev cmake build-essential git git-core gitk
+  libcegui-mk2-dev cmake build-essential git git-core
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-gitk, graphical git history viewer, is just for convenience,
-not really requirement.
-
-8) Install rubygems for documentation etc generation:
+2) Install rubygems for documentation generation etc:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo gem install bundler nanoc adsf kramdown coderay
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Compiling TSC ###
-
-9) Clone TSC and build it:
+3) Clone TSC and build it:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 git clone https://github.com/Secretchronicles/TSC.git
@@ -150,30 +89,21 @@ cd tsc && mkdir build && cd build
 rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Running TSC ###
-
-10) On commandline:
+4) Run TSC:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cd ~/tsc
 ./bin/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Keeping your own levels safe ###
+5) Keep your own levels at local directory, so cleanup below does not delete them:
 
-11) Keep your own levels at local directory:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ls ~/.local/share/tsc
 ls ~/.local/share/tsc/levels
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Because TSC installs game included levels under ~/tsc,
-when reinstalling and cleaning up your local
-directory is not deleted.
 
-
-### Update, cleanup and run again ###
-
-11) Updating:
+6) Update, cleanup and run again:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cd ~/TSC/tsc/build
@@ -184,10 +114,6 @@ rm -rf ~/.cache/tsc ~/.config/tsc
 cd ~/tsc
 ./bin/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Cleanup of cache and config may become unnecessary
-in future [if automatic cache cleanup, config check
-and migration is added][5].
 
 ### Windows dependencies ###
 
@@ -465,10 +391,3 @@ Then continue with “Crosscompiling from a released tarball” above.
 
 [1]: http://cmake.org
 [2]: http://mxe.cc
-[3]: http://cdimage.ubuntu.com/lubuntu/daily-live/current/
-[4]: https://bugs.launchpad.net/ubuntu/+source/cegui-mk2/+bug/1608114
-[5]: https://github.com/Secretchronicles/TSC/issues/552
-[6]: https://github.com/Secretchronicles/TSC/issues/534#issuecomment-232462441
-[7]: https://github.com/Secretchronicles/TSC/issues/534#issuecomment-232433759
-[8]: https://github.com/Secretchronicles/TSC/milestone/3
-[9]: https://github.com/Secretchronicles/TSC/issues/531
