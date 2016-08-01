@@ -143,6 +143,36 @@ cd ~/tsc
 ./bin/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+### Keeping your own levels safe ###
+
+11) Keep your own levels at local directory:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ls ~/.local/share/tsc
+ls ~/.local/share/tsc/levels
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Because TSC installs game included levels under ~/tsc,
+when reinstalling and cleaning up your local
+directory is not deleted.
+
+
+### Update, cleanup and run again ###
+
+11) Updating:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd ~/TSC/tsc/build
+rm -rf *
+git pull
+rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
+rm -rf ~/.cache/tsc ~/.config/tsc
+cd ~/tsc
+./bin/tsc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Cleanup of cache and config may become unnecessary
+in future if automatic cache cleanup, config check
+and migration is added.
+
 ### Windows dependencies ###
 
 * The FreeImage library.
