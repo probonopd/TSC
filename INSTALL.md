@@ -27,6 +27,9 @@ was too slow to be playable. Recently at 2016-07-31 Quintus
 optimized one function and game got 2x speedup, so it's not
 tested yet is TSC now playable on those or Raspberry Pi 3.
 
+We don't have any macOS or Android developers currently.
+Android also would need onscreen gamepad controls.
+
 TSC can be installed either from Git, meaning that you clone the
 repository, or from a release tarball, where for the purpose of this
 document a beta release is considered a release. Finally, you have the
