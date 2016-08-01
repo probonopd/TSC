@@ -4,9 +4,15 @@ Installation instructions for TSC
 TSC uses [CMake][1] as the build system, so the first thing you have to
 ensure is that you have CMake installed.
 
-TSC currently supports the Linux and Windows platforms officially. To
-be more exact, it is tested against Arch Linux and Windows 7. The
-current Ubuntu LTS should also work. **Windows XP is unsupported**.
+TSC supports the Linux and Windows platforms officially.
+On Windows, testing is done on Windows 7.
+**Windows XP is unsupported**.
+
+Current development version works on Gentoo and Ubuntu 16.10
+based distros. Older Ubuntu versions have tool old CEGUI,
+we are trying to get required patches included to them. 
+Windows crosscompile is currently is broken. We are working
+towards new release with critical bugs fixed.
 
 TSC can be installed either from Git, meaning that you clone the
 repository, or from a release tarball, where for the purpose of this
@@ -58,18 +64,83 @@ install to.
   * The `doxygen` program.
   * Ruby’s `rdoc` program.
 
+### Installing Lubuntu 16.10 for minimal compiling required ###
+
+1) [Download Lubuntu 16.10 iso][3]
+
+2) For installation, if you don't have enough space on your
+current harddrive, you need:
+
+* Installation USB stick where you write iso image with unetbootin
+* if you don't have enough space on your current harddrive,
+you need also external USB harddisk or USB stick size of 16 GB.
+
+3) Write iso to installation USB stick and boot from it
+
+4) When installing, choose custom partition options for destination
+USB harddrive / USB strick for example following way.
+
+I added info how much total is in use when I have everything including
+TSC installed.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/dev/sdb1 ext2 /boot 500MB (in use: 72MB)
+/dev/sdb2 extended partition containining these:
+- /dev/sdb5 ext4 / 14GB (in use: 10GB)
+- /dev/sdb6 linux-swap 500MB
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+But on USB strick adding swap could cause more writing and damage to 
+USB stick, so not adding swap is better.
+
+5) Install GRUB to /dev/sdb so when external USB harddrive or USB stick
+is on computer while booting, computer boots from USB harddrive or USB stick.
+Otherwise computer boots from computer internal harddrive.
+
+6) After Lubuntu installation reboot to Lubuntu.
+
 ### Linux dependencies ###
 
 * The DevIL library.
 
-The following commandline installs all dependencies required to built
-TSC on Ubuntu Linux 14.04:
+7) The following commandline installs all dependencies required to build
+TSC on Lubuntu Linux 16.10:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# apt-get install ruby-full rake gperf pkg-config bison libglew-dev \
-  freeglut3-dev gettext libpng12-dev libpcre3-dev libxml++2.6-dev \
-  libfreetype6-dev libdevil-dev libboost1.55-all-dev libsfml-dev \
-  libcegui-mk2-dev
+sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
+  freeglut3-dev gettext libpng-dev libpcre3-dev libxml++2.6-dev \
+  libfreetype6-dev libdevil-dev libboost1.58-all-dev libsfml-dev \
+  libcegui-mk2-dev cmake build-essential git git-core gitk
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+gitk, graphical git history viewer, is just for convenience,
+not really requirement.
+
+8) Install rubygems for documentation etc generation:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sudo gem install bundler nanoc adsf kramdown coderay
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Compiling TSC ###
+
+9) Clone TSC and build it:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+git clone https://github.com/Secretchronicles/TSC.git
+cd TSC
+git submodule init && git submodule update
+cd tsc && mkdir build && cd build
+rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Running TSC ###
+
+10) On commandline:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+cd ~/tsc
+./bin/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Windows dependencies ###
@@ -348,3 +419,4 @@ Then continue with “Crosscompiling from a released tarball” above.
 
 [1]: http://cmake.org
 [2]: http://mxe.cc
+[3]: http://cdimage.ubuntu.com/lubuntu/daily-live/current/
