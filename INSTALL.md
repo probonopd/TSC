@@ -10,15 +10,15 @@ On Windows, testing is done on Windows 7.
 
 Current development version works on Gentoo and Ubuntu 16.10
 based distros. Older Ubuntu versions have tool old CEGUI,
-we are trying to get required patches included to them. 
-Windows crosscompile is currently is broken. We are working
-towards new release with critical bugs fixed.
+we are [trying to get required patches included to them][4]. 
+[Windows crosscompile is currently is broken][9]. [We are working
+towards new release with critical bugs fixed][8].
 
 TSC works on all processors supported by Ubuntu 16.10,
 like x86, x64, PowerPC and ARM, if processor is powerful
 enough. Most resourse demanding is calling Update() and
-Draw() on all sprites. You'll need a fairly decent CPU
-if your levels are not really small.
+Draw() on all sprites. [You'll need a fairly decent CPU
+if your levels are not really small][6].
 
 Previously before SFML and CEGUI upgrades when tested
 on ODroid-U3 2GB RAM Ubuntu 14.04, and Mac PowerBook G4
@@ -27,8 +27,8 @@ was too slow to be playable. Recently at 2016-07-31 Quintus
 optimized one function and game got 2x speedup, so it's not
 tested yet is TSC now playable on those or Raspberry Pi 3.
 
-We don't have any macOS or Android developers currently.
-Android also would need onscreen gamepad controls.
+[We don't have any macOS or Android developers currently.
+Android also would need onscreen gamepad controls][7].
 
 TSC can be installed either from Git, meaning that you clone the
 repository, or from a release tarball, where for the purpose of this
@@ -186,8 +186,8 @@ cd ~/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Cleanup of cache and config may become unnecessary
-in future if automatic cache cleanup, config check
-and migration is added.
+in future [if automatic cache cleanup, config check
+and migration is added][5].
 
 ### Windows dependencies ###
 
@@ -466,3 +466,9 @@ Then continue with “Crosscompiling from a released tarball” above.
 [1]: http://cmake.org
 [2]: http://mxe.cc
 [3]: http://cdimage.ubuntu.com/lubuntu/daily-live/current/
+[4]: https://bugs.launchpad.net/ubuntu/+source/cegui-mk2/+bug/1608114
+[5]: https://github.com/Secretchronicles/TSC/issues/552
+[6]: https://github.com/Secretchronicles/TSC/issues/534#issuecomment-232462441
+[7]: https://github.com/Secretchronicles/TSC/issues/534#issuecomment-232433759
+[8]: https://github.com/Secretchronicles/TSC/milestone/3
+[9]: https://github.com/Secretchronicles/TSC/issues/531
