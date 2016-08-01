@@ -14,6 +14,19 @@ we are trying to get required patches included to them.
 Windows crosscompile is currently is broken. We are working
 towards new release with critical bugs fixed.
 
+TSC works on all processors supported by Ubuntu 16.10,
+like x86, x64, PowerPC and ARM, if processor is powerful
+enough. Most resourse demanding is calling Update() and
+Draw() on all sprites. You'll need a fairly decent CPU
+if your levels are not really small.
+
+Previously before SFML and CEGUI upgrades when tested
+on ODroid-U3 2GB RAM Ubuntu 14.04, and Mac PowerBook G4
+0.7GB RAM Lubuntu 14.04 PowerPC, the game
+was too slow to be playable. Recently at 2016-07-31 Quintus
+optimized one function and game got 2x speedup, so it's not
+tested yet is TSC now playable on those or Raspberry Pi 3.
+
 TSC can be installed either from Git, meaning that you clone the
 repository, or from a release tarball, where for the purpose of this
 document a beta release is considered a release. Finally, you have the
