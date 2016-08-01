@@ -1495,7 +1495,6 @@ void cMenu_Options::Init_GUI(void)
     CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
     CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
-
     // back button
     CEGUI::PushButton* button_back = static_cast<CEGUI::PushButton*>(p_root->getChild("options/window_options/button_back"));
     button_back->setText(UTF8_("Back"));
@@ -2739,8 +2738,13 @@ bool cMenu_Options::Video_Button_Reset_Clicked(const CEGUI::EventArgs& event)
 
 bool cMenu_Options::Video_Button_Apply_Clicked(const CEGUI::EventArgs& event)
 {
+    CEGUI::Window* p_options_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("options");
+
     // draw reinitialization text
     Draw_Static_Text(_("Reinitialization"), &green, NULL, 0);
+
+    // Hide options menu
+    p_options_root->hide();
 
     CEGUI::System::getSingleton().renderAllGUIContexts();
     pRenderer->Render();
@@ -2748,6 +2752,9 @@ bool cMenu_Options::Video_Button_Apply_Clicked(const CEGUI::EventArgs& event)
 
     // apply new settings
     pPreferences->Apply_Video(m_vid_w, m_vid_h, m_vid_bpp, m_vid_fullscreen, m_vid_vsync, m_vid_geometry_detail, m_vid_texture_detail);
+
+    // Show options menu again
+    p_options_root->show();
 
     // clear
     Game_Action = GA_ENTER_MENU;
@@ -2761,6 +2768,11 @@ bool cMenu_Options::Video_Button_Apply_Clicked(const CEGUI::EventArgs& event)
 
 bool cMenu_Options::Video_Button_Recreate_Cache_Clicked(const CEGUI::EventArgs& event)
 {
+    CEGUI::Window* p_options_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("options");
+
+    // Hide options menu
+    p_options_root->hide();
+
     Loading_Screen_Init();
 
     // save textures for reloading from file
@@ -2773,6 +2785,9 @@ bool cMenu_Options::Video_Button_Recreate_Cache_Clicked(const CEGUI::EventArgs& 
     pImage_Manager->Restore_Textures(1);
 
     Loading_Screen_Exit();
+
+    // Show options menu again
+    p_options_root->show();
 
     return 1;
 }
