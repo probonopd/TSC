@@ -1,21 +1,61 @@
 3000-01-01  Nobody  <nobody@secretchronicles.de>
 
 	* Version unreleased.
+	* Feature: Added sound "furry_death'"by Nearbu
+	* Feature: Added music "medieval_1" ("Beautiful World") by Naerbu
+	* Feature: Added music "snow_2" ("Snowy Mountain") by Naerbu
+	* Feature: Added music "castle_1" ("Morning in a castle") by Naerbu
+	* Feature: Added music "blossem" by Arik Burns
+	* Feature: Added music "lost" by Arik Burns
+	* Feature: Added music "battle" by Ryan Gonzalez (#449 by Chris Jacobsen)
+	* Feature: Added music "theme_1" ("Blinded by Desire") by Ryan Gonzalez
+	* Feature: Added level graphic "Rainbows" by Marvin Gülker
+	* Feature: Added world graphic "volcano" by David F. Fernández
+	* Feature: Added world graphic "swamp" by David F. Fernández
+	* Feature: Added world graphics "Dunes" by David F. Fernández
+	* Feature: Added world graphics "Mountains" by David F. Fernández
+	* Feature: Added world graphics "Blue hills" by David F. Fernández
+	* Feature: Added world graphics "Clouds" by David F. Fernández
+	* Feature: Replace world way graphics (graphics by David F. Fernández)
+	* Feature: Added Doom Larry enemy and Larry graphics improvements
+		(#79 by Marvin Gülker, PR #460 by Chris Jacobsen, graphics
+		by Bugsbane)
+	* Feature: "^" block replaced by original TSC art (#248 by Marvin
+		Gülker, graphics by Bugsbane)
+	* Feature: Make Alex M-less (#264 by Marvin Gülker, graphics by Bugsbane)
+	* Feature: Replace vines with ladders as original TSC art (#333 by
+		Chris Jacobsen, graphics by Bugsbane)
+	* Feature: Original TSC art for switches (#337 by Chris Jacobsen,
+		graphics by Bugsbane and JohnTheTreeman)
 	* Feature: Added a working `PKGBUILD' file for ArchLinux.
-	* Feature: Add new world hill graphics `Dune_2', `Dune_3',
-	`Dune_big_1', `Dune_big_2', `Green_hill_1', `Green_hill_2',
-	`Green_hill_big_1', `Green_hill_big_2' (forum contribution by
-	David F. Fernández)
-	* Feature: Added Doom Larry enemy and Larry graphics improvements (PR #460 by Chris Jacobsen, graphics by Bugsbane)
+	* Feature: New obejct editing panel in editor
+	* Feature: Massive speed optimisation when loading levels and
+		in-game (#550 by Marvin Gülker)
+	* Fix: Tiles in Editor are not Mirrored Properly (#149 by Justin Rissler)
+	* Fix: Invibility save problem (#180 by Chris Jacobsen)
+	* Fix: Crash on wn_05_top (#389, patch by Georger Araújo)
 	* Fix: Fix some issues found by coverity (PR #455 by Tobias Markus)
 	* Fix: Added scoring for Larries (PR #460 by Chris Jacobsen)
+	* Fix: CEGUI log file was not created (#506 by Marvin Gülker)
+	* Fix: Boost 1.60.0 breaks compilation (#510 by Marvin Gülker)
+	* Fix: Crash on cache regeneration (#552 by Marvin Gülker)
+	* Dependencies: Removed SDL 1 and instead depend on SFML (Ticket
+		#105 by Chris Jacobsen)
+	* Dependencies: Upgraded CEGUI from 0.7.9 to 0.8.7
+	* Dependencies: New dependency on the `tinyclipboard' library
+	* Misc: C++11 compilation support
+	* Misc: Renamed "1-UP berry" to "Life berry" (#365 by Chris Jacobsen)
 	* Misc: Added Travis CI config (PR #453 by Lauri Ojansivu)
+	* Misc: "God Mode" renamed to "Omega Mode" (#481 by Marvin Gülker)
+	* Misc: New world graphics category "Mountain"
+	* Misc: New compilation option ENABLE_EDITOR.
+	* Misc: New compilation option USE_SYSTEM_TINYCLIPBOARD.
 
 2015-08-17  Marvin Gülker  <quintus@quintilianus.eu>
 
 	* Version 2.0.0 released.
 	* Changes: Too many to count. We promise to keep a better change
-	log next time.
+		log next time.
 
 Copyright © 2015 The TSC Contributors
 This file is part of TSC.
