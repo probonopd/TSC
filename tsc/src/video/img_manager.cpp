@@ -115,7 +115,7 @@ void cImage_Manager::Grab_Textures(bool from_file /* = 0 */, bool draw_gui /* = 
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("loadingroot/progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Saving Textures"));
@@ -161,7 +161,7 @@ void cImage_Manager::Restore_Textures(bool draw_gui /* = 0 */)
 
     if (draw_gui) {
         // get progress bar
-        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("progress_bar"));
+        progress_bar = static_cast<CEGUI::ProgressBar*>(CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->getChild("loadingroot/progress_bar"));
         progress_bar->setProgress(0);
         // set loading screen text
         Loading_Screen_Draw_Text(_("Restoring Textures"));
