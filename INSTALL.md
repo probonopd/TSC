@@ -1,6 +1,8 @@
 Installation instructions for TSC
 =================================
 
+Time-stamp: <2016-08-03 09:55:01 quintus>
+
 TSC uses [CMake][1] as the build system, so the first thing you have to
 ensure is that you have CMake installed.
 
@@ -16,6 +18,10 @@ from a release tarball. Each of these possibilities will be covered
 after we have had a look on the dependencies. Note that if you want
 to crosscompile, you should probably read this entire file and not
 just the section on crosscompilation to get a better understanding.
+
+Installation instructions tailored specifically towards compiling TSC
+from Git on Lubuntu 16.10 can be found in the separate file
+tsc/docs/pages/compile_on_lubuntu_16_10.md.
 
 Dependencies
 ------------
@@ -62,9 +68,12 @@ install to.
 
 * The DevIL library.
 
-Installing has been tested on Lubuntu 16.10.
+#### Example for Ubuntu ####
 
-1) Install dependencies:
+(specific instructions for Lubuntu 16.10 can be found in
+tsc/docs/pages/compile_on_lubuntu_16_10.md).
+
+Install core dependencies:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
@@ -73,46 +82,11 @@ sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
   libcegui-mk2-dev cmake build-essential git git-core
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2) Install rubygems for documentation generation etc:
+Install rubygems for documentation generation etc (optional; you need
+this only if you want the docs):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sudo gem install bundler nanoc adsf kramdown coderay
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-3) Clone TSC and build it:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-git clone https://github.com/Secretchronicles/TSC.git
-cd TSC
-git submodule init && git submodule update
-cd tsc && mkdir build && cd build
-rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-4) Run TSC:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cd ~/tsc
-./bin/tsc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-5) Keep your own levels at local directory, so cleanup below does not delete them:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ls ~/.local/share/tsc
-ls ~/.local/share/tsc/levels
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-6) Update, cleanup and run again:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cd ~/TSC/tsc/build
-rm -rf *
-git pull
-rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
-rm -rf ~/.cache/tsc ~/.config/tsc
-cd ~/tsc
-./bin/tsc
+sudo gem install kramdown coderay
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Windows dependencies ###
@@ -252,6 +226,43 @@ $ git submodule update
 
 From there on, you can continue with the normal instructions as per
 the above section.
+
+Upgrade notices
+---------------
+
+Before upgrading TSC to a newer released version or new development
+version from Git, you may want to make a backup of your locally
+created levels and worlds. You can do this by copying the directory
+`~/.locals/share/tsc` to a safe place.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ cp -r ~/.local/share/tsc ~/backup-tsc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To upgrade your Git copy of TSC:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ git pull
+$ git submodule update
+$ cmake ..
+$ make
+$ make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you switch branches (maybe because you want to test a specific new
+feature not merged into `devel` yet), it is recommended to clean the
+build directory as well.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ cd ..
+$ git checkout feature-branch
+$ rm -rf build
+$ mkdir build
+$ cd build
+$ cmake [OPTIONS] ..
+$ make
+$ make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Crosscompiling from Linux to Windows
 ------------------------------------
