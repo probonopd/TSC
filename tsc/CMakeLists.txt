@@ -128,8 +128,6 @@ endif()
 pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 pkg_check_modules(PCRE REQUIRED libpcre)
 
-message("SFML libs: ${SFML_LIBRARIES}")
-
 # Libraries we can build ourselves under certain cirumstances if missing
 include("ProvideTinyclipboard")
 if (ENABLE_MRUBY)
@@ -187,19 +185,15 @@ file(GLOB_RECURSE tsc_sources
   "src/*.cpp"
   "src/*.hpp")
 
-message(STATUS "RC FLAGS A: ${CMAKE_RC_COMPILE_OBJECT}")
-
 # Windows icon resource
 # See http://stackoverflow.com/a/708382
 if (WIN32)
   enable_language(RC)
-  # Overwrite the RC compiler rule. CMake adds adds CXX definitions to it?! Bug?!
+  # Overwrite the RC compiler rule. CMake adds CXX definitions to it?! Bug?!
   set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -o <OBJECT> <SOURCE>")
 
   list(APPEND tsc_sources icon.rc)
 endif()
-
-message(STATUS "RC FLAGS B: ${CMAKE_RC_COMPILE_OBJECT}")
 
 ########################################
 # Gettext internationalization
