@@ -236,6 +236,12 @@ fs::path cResource_Manager::Get_Gui_Layout_Directory()
     return m_paths.game_data_dir / utf8_to_path(GUI_LAYOUT_DIR);
 }
 
+fs::path cResource_Manager::Get_Gui_XmlSchema_Directory()
+{
+    return m_paths.game_data_dir / utf8_to_path(GUI_XMLSCHEMA_DIR);
+}
+
+
 fs::path cResource_Manager::Get_Game_Music_Directory()
 {
     return m_paths.game_data_dir / utf8_to_path(GAME_MUSIC_DIR);

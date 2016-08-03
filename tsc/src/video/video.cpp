@@ -102,6 +102,7 @@ void cVideo::Init_CEGUI(void)
     p_rp->setResourceGroupDirectory("fonts", path_to_utf8(pResource_Manager->Get_Gui_Font_Directory()));
     p_rp->setResourceGroupDirectory("looknfeels", path_to_utf8(pResource_Manager->Get_Gui_LookNFeel_Directory()));
     p_rp->setResourceGroupDirectory("layouts", path_to_utf8(pResource_Manager->Get_Gui_Layout_Directory()));
+    p_rp->setResourceGroupDirectory("xmlschemas", path_to_utf8(pResource_Manager->Get_Gui_XmlSchema_Directory()));
     // These resource groups are used for displaying the editor images.
     p_rp->setResourceGroupDirectory("ingame-images", path_to_utf8(pResource_Manager->Get_Game_Pixmaps_Directory()));
     p_rp->setResourceGroupDirectory("cache-images", path_to_utf8(pResource_Manager->Get_User_Pixmaps_Directory()));
@@ -112,6 +113,12 @@ void cVideo::Init_CEGUI(void)
     CEGUI::Font::setDefaultResourceGroup("fonts");
     CEGUI::WidgetLookManager::setDefaultResourceGroup("looknfeels");
     CEGUI::WindowManager::setDefaultResourceGroup("layouts");
+
+    // For those XML parsers CEGUI wants to to XML validation with
+    CEGUI::XMLParser* p_parser = CEGUI::System::getSingleton().getXMLParser();
+    if (p_parser->isPropertyPresent("SchemaDefaultResourceGroup")) {
+        p_parser->setProperty("SchemaDefaultResourceGroup", "xmlschemas");
+    }
 
     // Load our CEGUI theme
     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
