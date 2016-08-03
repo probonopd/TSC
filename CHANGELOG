@@ -41,7 +41,8 @@
 	* Fix: Crash on cache regeneration (#552 by Marvin Gülker)
 	* Dependencies: Removed SDL 1 and instead depend on SFML (Ticket
 		#105 by Chris Jacobsen)
-	* Dependencies: Upgraded CEGUI from 0.7.9 to 0.8.7
+	* Dependencies: Upgraded CEGUI from 0.7.9 to 0.8.7 (ticket #10 by
+		Marvin Gülker)
 	* Dependencies: New dependency on the `tinyclipboard' library
 	* Misc: C++11 compilation support
 	* Misc: Renamed "1-UP berry" to "Life berry" (#365 by Chris Jacobsen)
