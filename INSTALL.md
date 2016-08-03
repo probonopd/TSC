@@ -373,77 +373,74 @@ toolchain for that. We recommend you to use [MXE][2] for that, which
 includes all dependencies necessary for building TSC.
 
 MXE is an ever-evolving distribution, so it’s better to use a version
-that is known to work. For this, we maintain [a slightly changed fork
+that is known to work. For this, we maintain [a fork
 of MXE](https://github.com/Secretchronicles/mxe) that contains a
-branch named `tsc-building`. This branch is known to work for a
-successful crosscompilation, and contains only very little adjustments
-to upstream MXE.
+branch named `tsc-crosscompile`. This branch is known to work for a
+successful crosscompilation.
 
-The following commands download our MXE and checks out the
-`tsc-building` branch.
+The following commands download our MXE and check out the
+`tsc-crosscompile` branch.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ mkdir ~/tsc-cross
 $ cd ~/tsc-cross
 $ git clone git://github.com/Secretchronicles/mxe.git
 $ cd mxe
-$ git checkout tsc-building
+$ git checkout tsc-crosscompile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After that you can build MXE with all dependencies required for
-buildint TSC:
+building TSC:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ make boost libxml++ glew cegui libpng freeimage sdl sdl_image sdl_mixer sdl_ttf nsis
+$ make boost libxml++ glew cegui libpng freeimage sfml nsis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This will take a long time.
-
-There’s a little annoyence with CMake not finding `pkg-config` and
-`makensis` in MXE’s default directory setup. We have added a small
-new task to MXE’s makefile to correct that, which you now need to run:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ make fixcmakelinks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This will take a long time (about an hour on my machine).
 
 
 
 
 ### 1. Crosscompiling from a released tarball ###
 
-Crosscompiling from Linux to Windows works similar as native
-compilation, except you have to tell CMake where your crosscompilation
-toolchain resides. First, extract the tarball and prepare a build
-directory as usual:
+Crosscompiling from Linux to Windows works similar to native
+compilation, except you have invoke CMake a little differently. Start
+as usual, but use another directory for the crosscompilation build
+than the native one:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ tar -xvJf TSC-*.tar.xz
 $ cd TSC-*/tsc
 $ mkdir crossbuild
 $ cd crossbuild
-$ cp ../cmake/toolchains/linux2mingw32.cmake .
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The last step copied the toolchain file `tsc/cmake/toolchains/linux2mingw32.cmake`
-to your crossbuild directory.  Edit that file to point to your MXE installation,
-which should be `~/tsc-building/mxe` if you followed the above steps. For this,
-ensure the `CMAKE_FIND_ROOT_PATH` line is correct:
+Now add your crosscompilation toolchain to the PATH environment
+variable so CMake can find it.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-set(CMAKE_FIND_ROOT_PATH "$ENV{HOME}/tsc-building/mxe")
+$ export PATH=$HOME/tsc-cross/mxe/usr/bin:$PATH
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Then build TSC. Be sure to include the new parameter
-`-DCMAKE_TOOLCHAIN_FILE` as shown below to make CMake aware you want a
-crosscompilation with the toolchain file you just edited. Again, you
-may or may not include `-DCMAKE_BUILD_TYPE=Debug` depending on whether
-you want debugging symbols or not.
+It now is time to invoke CMake. If you use MXE for crosscompilation as
+it is recommended, you have a special CMake wrapper
+`i686-w64-mingw32.static-cmake` available which you can use now:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ export PATH=$HOME/tsc-building/mxe/usr/bin:$PATH
-$ cmake -DCMAKE_TOOLCHAIN_FILE=./linux2mingw32.cmake \
+$ i686-w64-mingw32.static-cmake \
+  -DCMAKE_BUILD_TYPE=Debug # If you want a debug build
   -DCMAKE_INSTALL_PREFIX=$PWD/testinstall ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you do *not* use MXE, you need to invoke it as usual (i.e. bare
+"cmake"), but you have to specify a "toolchain file" manually by
+passing `-DCMAKE_TOOLCHAIN_FILE` to CMake. Refer to the CMake
+documentation or your crosscompilation toolchain's documentation in
+that case.
+
+Either way, you can now continue with the actual build:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ make
 $ make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -473,9 +470,9 @@ your PATH variable (the `export PATH=...` line). Then, execute the
 build commands like this:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/linux2mingw32.cmake ..
+$ i686-w64-mingw32.static-cmake ..
 $ make
-$ cpack -G NSIS
+$ i686-w64-mingw32.static-cpack -G NSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This will create a `TSC-x.y.z-win32.exe` file. This file is the
