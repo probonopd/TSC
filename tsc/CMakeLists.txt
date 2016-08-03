@@ -78,38 +78,49 @@ endif()
 ########################################
 # Dependencies
 
-# External libraries we depend on directly and programs
-# we use in the build process.
+# Programs used in the build process
 find_package(PkgConfig REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(SFML COMPONENTS audio graphics window system REQUIRED)
-find_package(CEGUI COMPONENTS OpenGL REQUIRED)
-find_package(Gettext)
-find_package(PNG REQUIRED)
 find_package(Ruby REQUIRED)
+find_package(Gettext)
 
+# External libraries we depend on directly and programs we use in the
+# build process. On Windows, we link statically, hence we need to care
+# for ALL dependencies including dependencies of dependencies
+# (cf. http://stackoverflow.com/a/409470) The correct solution is to
+# detect all our deps-of-deps via separate CMake modules, but that
+# would mean writing lots of CMake modules for libraries that do not
+# yet have one shipped with CMake. On the longer way, this will be
+# required, but for the moment we cheat and instead rely on MXE's
+# carefully maintained pkg-config files for this task. This approach
+# *breaks* building on any system which does not use pkg-config (most
+# notably Win32 native build with MSVC, but also native MinGW where it
+# does not ship pkg-config files, which it doesn't do for quite a lot
+# of libraries). IOW, no native Win32 builds with this approach
+# currently. Once that is done, this if() statement can probably be
+# simplified a lot by merging the two branches behind common
+# find_package() calls.
+#
+# Boost needs special treatment.
 if (WIN32)
   # Boost thread library has a different name on Windows to indicate
   # the different implemention. Just complicates the build system...
   set(Boost_USE_STATIC_LIBS ON)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread_win32 system REQUIRED)
-  find_package(EXPAT REQUIRED) # MXE does not provide CEGUI's libxml-based XML parser currently
 
-  # On Windows, we link statically, hence we need to care for ALL dependencies
-  # including dependencies of dependencies (cf. http://stackoverflow.com/a/409470)
-  # So what follows are the dependencies of dependencies.
-  find_package(Freetype REQUIRED)
-  find_package(GLEW REQUIRED)
-  find_package(OpenAL REQUIRED)
-  pkg_check_modules(SNDFILE REQUIRED sndfile)
-  pkg_check_modules(VORBISENC REQUIRED vorbisenc)
-  pkg_check_modules(VORBISFILE REQUIRED vorbisfile)
-  pkg_check_modules(VORBIS REQUIRED vorbis)
-  pkg_check_modules(OGG REQUIRED ogg)
+  # Use MXE's pkg-config to resolve all deps for us
+  pkg_check_modules(SFML REQUIRED sfml)
+  pkg_check_modules(CEGUI REQUIRED CEGUI-0 CEGUI-0-OPENGL)
+  pkg_check_modules(OPENGL REQUIRED gl)
+  pkg_check_modules(PNG REQUIRED libpng)
 else()
+  find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+  find_package(CEGUI COMPONENTS OpenGL REQUIRED)
+  find_package(OpenGL REQUIRED)
+  find_package(PNG REQUIRED)
+  find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
+
   # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
   # linking error).
-  find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
   find_package(X11 REQUIRED)
 endif()
 
@@ -117,13 +128,28 @@ endif()
 pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 pkg_check_modules(PCRE REQUIRED libpcre)
 
+message("SFML libs: ${SFML_LIBRARIES}")
+
 # Libraries we can build ourselves under certain cirumstances if missing
 include("ProvideTinyclipboard")
 if (ENABLE_MRUBY)
   include("ProvideMRuby")
 endif()
 
-###############################################
+########################################
+# Definitions
+
+if (WIN32)
+  add_definitions(
+    ${SFML_CFLAGS}
+    ${CEGUI_CFLAGS}
+    ${OPENGL_CFLAGS}
+    ${PNG_CFLAGS}
+    ${LibXmlPP_CFLAGS}
+    ${PCRE_CFLAGS})
+endif()
+
+########################################
 # Configuration header
 
 configure_file(${TSC_SOURCE_DIR}/config.hpp.in
@@ -161,13 +187,19 @@ file(GLOB_RECURSE tsc_sources
   "src/*.cpp"
   "src/*.hpp")
 
+message(STATUS "RC FLAGS A: ${CMAKE_RC_COMPILE_OBJECT}")
+
 # Windows icon resource
 # See http://stackoverflow.com/a/708382
 if (WIN32)
   enable_language(RC)
+  # Overwrite the RC compiler rule. CMake adds adds CXX definitions to it?! Bug?!
+  set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -o <OBJECT> <SOURCE>")
+
   list(APPEND tsc_sources icon.rc)
 endif()
 
+message(STATUS "RC FLAGS B: ${CMAKE_RC_COMPILE_OBJECT}")
 
 ########################################
 # Gettext internationalization
@@ -188,19 +220,14 @@ target_link_libraries(tsc
   ${Boost_LIBRARIES}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
+  ${PNG_LIBRARIES} # compatibility
   ${MRuby_LIBRARIES}
   ${Tinyclipboard_LIBRARIES})
 
 if (WIN32)
   target_link_libraries(tsc
     ${LibXmlPP_STATIC_LIBRARIES}
-    ${EXPAT_LIBRARIES}
     ${PCRE_STATIC_LIBRARIES}
-    # Dependencies of dependencies (see further above)
-    ${FREETYPE_LIBRARIES}
-    ${GLEW_LIBRARIES}
-    ${OPENAL_LIBRARY}
-    ${SNDFILE_LIBRARIES}
     )
 else()
   target_link_libraries(tsc

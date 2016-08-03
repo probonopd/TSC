@@ -19,7 +19,8 @@ ExternalProject_Add(
 set(MRuby_INCLUDE_DIR ${TSC_SOURCE_DIR}/../mruby/mruby/include)
 
 if(CMAKE_CROSSCOMPILING)
-  set(MRuby_LIBRARIES "${TSC_BINARY_DIR}/mruby/build/${HOST_TRIPLET}/lib/libmruby.a" "${TSC_BINARY_DIR}/mruby/build/${HOST_TRIPLET}/lib/libmruby_core.a")
+  # Appearently no libmruby_core.a library when crosscompiling?
+  set(MRuby_LIBRARIES "${TSC_BINARY_DIR}/mruby/build/${HOST_TRIPLET}/lib/libmruby.a")
 else()
   set(MRuby_LIBRARIES "${TSC_BINARY_DIR}/mruby/build/host/lib/libmruby.a" "${TSC_BINARY_DIR}/mruby/build/host/lib/libmruby_core.a")
 endif()
