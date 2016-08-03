@@ -1,7 +1,7 @@
 Installation instructions for TSC
 =================================
 
-Time-stamp: <2016-08-03 09:55:01 quintus>
+Time-stamp: <2016-08-03 10:13:02 quintus>
 
 TSC uses [CMake][1] as the build system, so the first thing you have to
 ensure is that you have CMake installed.
@@ -23,14 +23,45 @@ Installation instructions tailored specifically towards compiling TSC
 from Git on Lubuntu 16.10 can be found in the separate file
 tsc/docs/pages/compile_on_lubuntu_16_10.md.
 
-Dependencies
-------------
+Contents
+--------
+
+I. Dependencies
+    1. Common dependencies
+    2. Linux dependencies
+    3. Windows dependencies
+II. Configuration options
+III. Installing from a released tarball
+IV. Installing from Git
+V. Upgrade notices
+VI. Crosscompiling from Linux to Windows
+    1. Crosscompiling from a released tarball
+    2. Crosscompiling from Git
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I. Dependencies
+----------------
 
 In any case, you will have to install a number of dependencies before
 you can try installing TSC itself. The following sections list the
 dependencies for each supported system.
 
-### Common dependencies ###
+
+
+
+### 1. Common dependencies ###
 
 The following dependencies are required regardless of the system you
 install to.
@@ -64,7 +95,10 @@ install to.
   * The `doxygen` program.
   * Ruby’s `rdoc` program.
 
-### Linux dependencies ###
+
+
+
+### 2. Linux dependencies ###
 
 * The DevIL library.
 
@@ -89,14 +123,29 @@ this only if you want the docs):
 sudo gem install kramdown coderay
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Windows dependencies ###
+
+
+
+### 3. Windows dependencies ###
 
 * The FreeImage library.
 * For generating a setup installer:
   * The NSIS tools.
 
-Configuration options
----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+II. Configuration options
+-------------------------
 
 This section describes possible configuration you may apply before
 building. If you just want to build the game, you can skip it. If you
@@ -173,8 +222,20 @@ make DESTDIR=/some/dir install
 This will shift the file system root for installation to `/some/dir`
 so that all pathes you gave to `cmake` will be below that path.
 
-Installing from a released tarball
-----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+III. Installing from a released tarball
+----------------------------------------
 
 Extract the tarball, create a directory for the build and switch into
 it:
@@ -209,8 +270,20 @@ TSC.
 $ /opt/tsc/bin/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Installing from Git
--------------------
+
+
+
+
+
+
+
+
+
+
+
+
+IV. Installing from Git
+-----------------------
 
 Installing from Git basically works the same way as the normal release
 install, but with a few preparations needed. You have to clone the
@@ -227,8 +300,20 @@ $ git submodule update
 From there on, you can continue with the normal instructions as per
 the above section.
 
-Upgrade notices
----------------
+
+
+
+
+
+
+
+
+
+
+
+
+V. Upgrade notices
+------------------
 
 Before upgrading TSC to a newer released version or new development
 version from Git, you may want to make a backup of your locally
@@ -264,8 +349,20 @@ $ make
 $ make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Crosscompiling from Linux to Windows
-------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+VI. Crosscompiling from Linux to Windows
+-----------------------------------------
 
 TSC can be crosscompiled from Linux to Windows, such that you don’t
 have to even touch a Windows system in order to generate the
@@ -310,7 +407,10 @@ new task to MXE’s makefile to correct that, which you now need to run:
 $ make fixcmakelinks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Crosscompiling from a released tarball ###
+
+
+
+### 1. Crosscompiling from a released tarball ###
 
 Crosscompiling from Linux to Windows works similar as native
 compilation, except you have to tell CMake where your crosscompilation
@@ -386,7 +486,10 @@ the setup installer. Uninstall any previous version of TSC before
 installing with another setup installer; the standalone approach does
 not suffer from this problem.
 
-### Crosscompiling from Git ###
+
+
+
+### 2. Crosscompiling from Git ###
 
 Clone the Git repository and execute the preparation steps. They are
 the same as for a normal non-cross build.
