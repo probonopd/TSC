@@ -61,7 +61,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # -Wall for better code quality, and -Wno-deprecated-delcarations to prevent
 # useless warnings from not-yet-c++11-ready dependencies (glibmm!).
 # The _DEBUG macro is used in TSC's own codebase for debugging code.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations -Wl,--as-needed")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1 -fno-inline")
 endif()
@@ -72,23 +72,43 @@ endif()
 if (CMAKE_CROSSCOMPILING)
   get_filename_component(HOST_TRIPLET ${CMAKE_C_COMPILER} NAME)
   string(REGEX REPLACE "(.*)-.*$" "\\1" HOST_TRIPLET "${HOST_TRIPLET}")
+  message(STATUS "Detected cross-compilation targetting: ${HOST_TRIPLET}")
 endif()
 
 ########################################
 # Dependencies
 
-# External libraries we depend on
+# External libraries we depend on directly and programs
+# we use in the build process.
 find_package(PkgConfig REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+find_package(CEGUI COMPONENTS OpenGL REQUIRED)
 find_package(Gettext)
 find_package(PNG REQUIRED)
 find_package(Ruby REQUIRED)
 
 if (WIN32)
+  # Boost thread library has a different name on Windows to indicate
+  # the different implemention. Just complicates the build system...
   set(Boost_USE_STATIC_LIBS ON)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread_win32 system REQUIRED)
+  find_package(EXPAT REQUIRED) # MXE does not provide CEGUI's libxml-based XML parser currently
+
+  # On Windows, we link statically, hence we need to care for ALL dependencies
+  # including dependencies of dependencies (cf. http://stackoverflow.com/a/409470)
+  # So what follows are the dependencies of dependencies.
+  find_package(Freetype REQUIRED)
+  find_package(GLEW REQUIRED)
+  find_package(OpenAL REQUIRED)
+  pkg_check_modules(SNDFILE REQUIRED sndfile)
+  pkg_check_modules(VORBISENC REQUIRED vorbisenc)
+  pkg_check_modules(VORBISFILE REQUIRED vorbisfile)
+  pkg_check_modules(VORBIS REQUIRED vorbis)
+  pkg_check_modules(OGG REQUIRED ogg)
 else()
+  # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
+  # linking error).
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
   find_package(X11 REQUIRED)
 endif()
@@ -99,7 +119,6 @@ pkg_check_modules(PCRE REQUIRED libpcre)
 
 # Libraries we can build ourselves under certain cirumstances if missing
 include("ProvideTinyclipboard")
-include("ProvideCEGUI")
 if (ENABLE_MRUBY)
   include("ProvideMRuby")
 endif()
@@ -175,9 +194,14 @@ target_link_libraries(tsc
 if (WIN32)
   target_link_libraries(tsc
     ${LibXmlPP_STATIC_LIBRARIES}
-    ${PCRE_STATIC_LIBRARIES})
-
-  add_dependencies(tsc CEGUI)
+    ${EXPAT_LIBRARIES}
+    ${PCRE_STATIC_LIBRARIES}
+    # Dependencies of dependencies (see further above)
+    ${FREETYPE_LIBRARIES}
+    ${GLEW_LIBRARIES}
+    ${OPENAL_LIBRARY}
+    ${SNDFILE_LIBRARIES}
+    )
 else()
   target_link_libraries(tsc
     ${LibXmlPP_LIBRARIES}
