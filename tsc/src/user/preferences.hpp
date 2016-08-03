@@ -117,7 +117,7 @@ namespace TSC {
         sf::Joystick::Axis m_joy_axis_hor;
         sf::Joystick::Axis m_joy_axis_ver;
         // axis threshold
-        int16_t m_joy_axis_threshold;
+        float m_joy_axis_threshold;
         // button definitions
         uint8_t m_joy_button_jump;
         uint8_t m_joy_button_shoot;
@@ -197,7 +197,7 @@ namespace TSC {
         static const bool m_joy_analog_jump_default;
         static const sf::Joystick::Axis m_joy_axis_hor_default;
         static const sf::Joystick::Axis m_joy_axis_ver_default;
-        static const int16_t m_joy_axis_threshold_default;
+        static const float m_joy_axis_threshold_default;
         static const uint8_t m_joy_button_jump_default;
         static const uint8_t m_joy_button_shoot_default;
         static const uint8_t m_joy_button_item_default;
@@ -217,5 +217,6 @@ namespace TSC {
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
 } // namespace TSC
+
 
 #endif

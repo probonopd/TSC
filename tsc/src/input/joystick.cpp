@@ -29,6 +29,8 @@ using namespace std;
 
 namespace TSC {
 
+const float cJoystick::m_joystick_neutral_bound = 20.0f;
+
 /* *** *** *** *** *** *** cJoystick *** *** *** *** *** *** *** *** *** *** *** */
 
 cJoystick::cJoystick(void)
@@ -158,7 +160,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
     // Vertical Axis
     if (evt.joystickMove.axis == pPreferences->m_joy_axis_ver) {
         // Up
-        if (evt.joystickMove.position < 0) {
+        if (evt.joystickMove.position < -m_joystick_neutral_bound) {
             if (m_debug) {
                 cout << "Joystick " << m_current_joystick << " : Up Button pressed" << endl;
             }
@@ -178,7 +180,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
             }
         }
         // Down
-        else if (evt.joystickMove.position > 0) {
+        else if (evt.joystickMove.position > m_joystick_neutral_bound) {
             if (m_debug) {
                 cout << "Joystick " << m_current_joystick << " : Down Button pressed" << endl;
             }
@@ -217,7 +219,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
     // Horizontal Axis
     else if (evt.joystickMove.axis == pPreferences->m_joy_axis_hor) {
         // Left
-        if (evt.joystickMove.position < 0) {
+        if (evt.joystickMove.position < -m_joystick_neutral_bound) {
             if (m_debug) {
                 cout << "Joystick " << m_current_joystick << " : Left Button pressed" << endl;
             }
@@ -237,7 +239,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
             }
         }
         // Right
-        else if (evt.joystickMove.position > 0) {
+        else if (evt.joystickMove.position > m_joystick_neutral_bound) {
             if (m_debug) {
                 cout << "Joystick " << m_current_joystick << " : Right Button pressed" << endl;
             }

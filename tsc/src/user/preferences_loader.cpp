@@ -296,7 +296,7 @@ void cPreferencesLoader::handle_property(const std::string& name, const std::str
     }
     else if (name == "joy_axis_threshold") {
         val = string_to_int(value);
-        if (val >= 0 && val <= 32767)
+        if (val >= 0 && val <= 100)
             mp_preferences->m_joy_axis_threshold = val;
     }
     else if (name == "joy_button_jump") {

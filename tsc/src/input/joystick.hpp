@@ -77,6 +77,10 @@ namespace TSC {
 
         // if true print debug output
         bool m_debug;
+
+        /* If the absolute value of the joystick position is below this number,
+         * it will be considered neutral. */
+        static const float m_joystick_neutral_bound;
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
