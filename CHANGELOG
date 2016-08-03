@@ -35,7 +35,6 @@
 	* Fix: Tiles in Editor are not Mirrored Properly (#149 by Justin Rissler)
 	* Fix: Invibility save problem (#180 by Chris Jacobsen)
 	* Fix: Crash on wn_05_top (#389, patch by Georger Araújo)
-	* Fix: Fix some issues found by coverity (PR #455 by Tobias Markus)
 	* Fix: Added scoring for Larries (PR #460 by Chris Jacobsen)
 	* Fix: CEGUI log file was not created (#506 by Marvin Gülker)
 	* Fix: Boost 1.60.0 breaks compilation (#510 by Marvin Gülker)
