@@ -431,7 +431,7 @@ void cVideo::Init_Image_Cache(bool recreate /* = 0 */)
                 cerr << ex.what() << endl;
 
                 Loading_Screen_Draw_Text(_("Caching Images failed : Could not remove old images"));
-                sleep(2);
+                //sleep(2);
             }
         }
 
@@ -628,18 +628,23 @@ vector<cSize_Int> cVideo::Get_Supported_Resolutions(int flags /* = 0 */) const
 
 void cVideo::Make_GL_Context_Current(void)
 {
-    // scoped context lock here
-#ifdef _WIN32
-    if (wglGetCurrentContext() != wm_info.hglrc) {
-        wglMakeCurrent(GetDC(wm_info.window), wm_info.hglrc);
-    }
-#elif __unix__
-    if (glx_context != NULL) {
-        // OLD glXMakeCurrent(wm_info.info.x11.gfxdisplay, wm_info.info.x11.window, glx_context);
-    }
-#elif __APPLE__
-    // party time
-#endif
+// Not ported to SFML yet, because unused function
+// Part of the unfinished separate rendering thread implementation in TSC
+// (TSC_RENDER_THREAD_TEST macro).
+    throw(std::runtime_error("Make_GL_Context_Current() not implemented"));
+
+// scoped context lock here
+//#ifdef _WIN32
+//    if (wglGetCurrentContext() != wm_info.hglrc) {
+//        wglMakeCurrent(GetDC(wm_info.window), wm_info.hglrc);
+//    }
+//#elif __unix__
+//    if (glx_context != NULL) {
+//        glXMakeCurrent(wm_info.info.x11.gfxdisplay, wm_info.info.x11.window, glx_context);
+//    }
+//#elif __APPLE__
+//    // party time
+//#endif
 }
 
 void cVideo::Make_GL_Context_Inactive(void)
