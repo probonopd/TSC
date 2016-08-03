@@ -4,6 +4,9 @@ message("-- Scripting engine enabled: building mruby statically")
 # for on the toplevel anyway.
 find_package(BISON REQUIRED)
 
+# The CROSSCOMPILE_TARGET environment variable is used by our custom
+# mruby_tsc_build_config.rb build script for mruby. It is not part
+# of mruby's official build documentation.
 ExternalProject_Add(
   mruby
   DOWNLOAD_COMMAND ${CMAKE_COMMAND} -E copy_directory "${TSC_SOURCE_DIR}/../mruby/mruby" "${TSC_BINARY_DIR}/mruby"
