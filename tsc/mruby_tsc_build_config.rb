@@ -32,6 +32,7 @@ end
 
 MRuby::Build.new do |conf|
   toolchain :gcc
+  enable_debug
   config.call(conf, root)
 end
 
@@ -40,6 +41,7 @@ if ENV["CROSSCOMPILE_TARGET"] and !ENV["CROSSCOMPILE_TARGET"].empty?
 
   MRuby::CrossBuild.new(prefix) do |conf|
     toolchain :gcc
+    enable_debug
 
     conf.cc do |cc|
       cc.command = ENV["CC"] || "#{prefix}-gcc"
