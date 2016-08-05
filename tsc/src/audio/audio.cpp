@@ -657,7 +657,7 @@ void cAudio::Set_Sound_Volume(uint8_t volume)
 void cAudio::Set_Music_Volume(uint8_t volume)
 {
     // not active
-    if (!m_initialised) {
+    if (!m_initialised || !m_music_enabled) {
         return;
     }
 
