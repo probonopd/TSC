@@ -387,6 +387,7 @@ bool cAudio::Play_Music(fs::path filename, bool loops /* = false */, bool force 
         if (!m_music_old) {
             m_music_old = m_music;
             m_music = new sf::Music;
+            m_music->setVolume(m_music_old->getVolume());
         }
 
         // load the wanted next playing music
