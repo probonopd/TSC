@@ -455,8 +455,9 @@ int cSprite_Manager::Generate_UID()
 
     // Pool is not empty, return the first available UID.
     std::set<int>::const_iterator iter = m_uid_pool.begin();
+    int id = *iter;
     m_uid_pool.erase(iter);
-    return *iter;
+    return id;
 }
 
 // We need `long', because we must check an `int' overflow (see below)
