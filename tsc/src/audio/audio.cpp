@@ -667,6 +667,9 @@ void cAudio::Set_Music_Volume(uint8_t volume)
     }
 
     m_music->setVolume(volume);
+    if (m_music_old && m_music_old->getStatus() == sf::Sound::Playing) {
+        m_music_old->setVolume(volume);
+    }
 }
 
 void cAudio::Update(void)
