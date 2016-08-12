@@ -32,6 +32,8 @@ namespace TSC {
         int Init(void);
         // Closes the current Joystick
         void Close(void);
+        // Examines joystick state to produce keyboard events
+        void Update(void);
 
         // Opens the specified Joystick
         bool Stick_Open(unsigned int index);

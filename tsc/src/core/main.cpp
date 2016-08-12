@@ -590,6 +590,7 @@ void Update_Game(void)
         Handle_Input_Global(input_event);
     }
 
+    pJoystick->Update();
     pMouseCursor->Update();
 
     // ## audio
