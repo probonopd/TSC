@@ -190,8 +190,6 @@ file(GLOB_RECURSE tsc_sources
 # See http://stackoverflow.com/a/708382
 if (WIN32)
   enable_language(RC)
-  # Overwrite the RC compiler rule. CMake adds CXX definitions to it?! Bug?!
-  set(CMAKE_RC_COMPILE_OBJECT "<CMAKE_RC_COMPILER> -O coff -o <OBJECT> <SOURCE>")
 
   list(APPEND tsc_sources icon.rc)
 endif()
