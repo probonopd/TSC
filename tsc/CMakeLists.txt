@@ -113,21 +113,20 @@ if (WIN32)
   pkg_check_modules(OPENGL REQUIRED gl)
   pkg_check_modules(PNG REQUIRED libpng)
   pkg_check_modules(PCRE REQUIRED libpcre)
+  pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 else()
   find_package(SFML COMPONENTS audio graphics window system REQUIRED)
   find_package(CEGUI COMPONENTS OpenGL REQUIRED)
   find_package(OpenGL REQUIRED)
   find_package(PNG REQUIRED)
   find_package(PCRE REQUIRED)
+  find_package(LibXmlPP REQUIRED)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
 
   # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
   # linking error).
   find_package(X11 REQUIRED)
 endif()
-
-# Use pkg-config for those which have no Find module available
-pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 
 # Libraries we can build ourselves under certain cirumstances if missing
 include("ProvideTinyclipboard")
