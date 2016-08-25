@@ -19,11 +19,22 @@
 
 #include "../core/global_basic.hpp"
 
+const int NUM_AXIS_TYPES = 2;
+
 namespace TSC {
 
     /* *** *** *** *** *** *** cJoystick *** *** *** *** *** *** *** *** *** *** *** */
 
     class cJoystick {
+    private:
+        sf::Joystick::Axis horizontalAxes [NUM_AXIS_TYPES];
+        sf::Joystick::Axis verticalAxes [NUM_AXIS_TYPES];
+
+        bool m_is_axis_left[NUM_AXIS_TYPES];
+        bool m_is_axis_right[NUM_AXIS_TYPES];
+        bool m_is_axis_down[NUM_AXIS_TYPES];
+        bool m_is_axis_up[NUM_AXIS_TYPES];
+
     public:
         cJoystick(void);
         ~cJoystick(void);

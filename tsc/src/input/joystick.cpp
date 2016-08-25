@@ -99,6 +99,12 @@ int cJoystick::Init(void)
     // setup
     Stick_Open(default_joy);
 
+    verticalAxes[0] = pPreferences->m_joy_axis_ver;
+    verticalAxes[1] = static_cast<sf::Joystick::Axis>(7);
+
+    horizontalAxes[0] = pPreferences->m_joy_axis_hor;
+    horizontalAxes[1] = static_cast<sf::Joystick::Axis>(6);
+
     if (m_debug) {
         cout << "Joypad System Initialized" << endl;
     }
@@ -176,10 +182,17 @@ void cJoystick::Stick_Close(void)
 
 void cJoystick::Reset_keys(void)
 {
-    m_left = 0;
-    m_right = 0;
-    m_up = 0;
-    m_down = 0;
+    for (int i = 0; i < NUM_AXIS_TYPES; i++) {
+        m_is_axis_left[i] = false;
+        m_is_axis_right[i] = false;
+        m_is_axis_down[i] = false;
+        m_is_axis_up[i] = false;
+    }
+
+    m_left = false;
+    m_right = false;
+    m_up = false;
+    m_down = false;
 }
 
 void cJoystick::Handle_Motion(const sf::Event& evt)
@@ -189,26 +202,28 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
     if (evt.joystickMove.joystickId != m_current_joystick)
         return;
 
+    for (int i = 0; i < NUM_AXIS_TYPES; i++) {
     // Vertical Axis
-    if (evt.joystickMove.axis == pPreferences->m_joy_axis_ver) {
+    if (evt.joystickMove.axis == verticalAxes[i]) {
+
         // Up
         if (evt.joystickMove.position < -m_joystick_neutral_bound) {
             if (m_debug) {
-                cout << "Joystick " << m_current_joystick << " : Up Button pressed" << endl;
+                //cout << "Joystick " << m_current_joystick << " : Up Button pressed" << endl;
             }
 
-            if (!m_up) {
+            if (!m_is_axis_up[i]) {
                 newevt.type = sf::Event::KeyPressed;
                 newevt.key.code = pPreferences->m_key_up;
-                pKeyboard->Key_Down(newevt);
-                m_up = 1;
+                //pKeyboard->Key_Down(newevt);
+                m_is_axis_up[i] = true;
             }
 
-            if (m_down) {
+            if (m_is_axis_down[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_down;
-                pKeyboard->Key_Up(newevt);
-                m_down = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_down[i] = 0;
             }
         }
         // Down
@@ -217,57 +232,66 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
                 cout << "Joystick " << m_current_joystick << " : Down Button pressed" << endl;
             }
 
-            if (!m_down) {
+            if (!m_is_axis_down[i]) {
                 newevt.type = sf::Event::KeyPressed;
                 newevt.key.code = pPreferences->m_key_down;
-                pKeyboard->Key_Down(newevt);
-                m_down = 1;
+                //pKeyboard->Key_Down(newevt);
+                m_is_axis_down[i] = true;
             }
 
-            if (m_up) {
+            if (m_is_axis_up[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_up;
-                pKeyboard->Key_Up(newevt);
-                m_up = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_up[i] = false;
             }
         }
         // No Down/Left
         else {
-            if (m_down) {
+            //cout << "No up or down - clearing out vertical values" << endl;
+            if (m_is_axis_down[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_down;
-                pKeyboard->Key_Up(newevt);
-                m_down = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_down[i] = false;
             }
 
-            if (m_up) {
+            if (m_is_axis_up[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_up;
-                pKeyboard->Key_Up(newevt);
-                m_up = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_up[i] = false;
             }
         }
     }
     // Horizontal Axis
-    else if (evt.joystickMove.axis == pPreferences->m_joy_axis_hor) {
+    else if (evt.joystickMove.axis == horizontalAxes[i]) {
+
+        //if (evt.joystickMove.axis == 6)
+        //    cout << "Horizontal movement of: " << evt.joystickMove.position << endl;
+
         // Left
         if (evt.joystickMove.position < -m_joystick_neutral_bound) {
             if (m_debug) {
                 cout << "Joystick " << m_current_joystick << " : Left Button pressed" << endl;
             }
 
-            if (!m_left) {
+            if (!m_is_axis_left[i]) {
                 newevt.type = sf::Event::KeyPressed;
                 newevt.key.code = pPreferences->m_key_left;
-                pKeyboard->Key_Down(newevt);
-                m_left = 1;
+
+                //if (evt.joystickMove.axis == 6)
+                //    cout << "Generating a keydown for horizontal movement" << endl;
+
+                //pKeyboard->Key_Down(newevt);
+                m_is_axis_left[i] = true;
             }
 
-            if (m_right) {
+            if (m_is_axis_right[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_right;
-                pKeyboard->Key_Up(newevt);
-                m_right = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_right[i] = false;
             }
         }
         // Right
@@ -276,41 +300,154 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
                 cout << "Joystick " << m_current_joystick << " : Right Button pressed" << endl;
             }
 
-            if (!m_right) {
+            if (!m_is_axis_right[i]) {
                 newevt.type = sf::Event::KeyPressed;
                 newevt.key.code = pPreferences->m_key_right;
-                pKeyboard->Key_Down(newevt);
-                m_right = 1;
+
+                //if (evt.joystickMove.axis == 6)
+                //    cout << "Generating a keydown for horizontal movement" << endl;
+
+                //pKeyboard->Key_Down(newevt);
+                m_is_axis_right[i] = true;
             }
 
-            if (m_left) {
+            if (m_is_axis_left[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_left;
-                pKeyboard->Key_Up(newevt);
-                m_left = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_left[i] = 0;
             }
         }
         // No Left/Right
         else {
-            if (m_left) {
+            //cout << "No left or right - clearing out horizontal values" << endl;
+            if (m_is_axis_left[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_left;
-                pKeyboard->Key_Up(newevt);
-                m_left = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_left[i] = 0;
             }
 
-            if (m_right) {
+            if (m_is_axis_right[i]) {
                 newevt.type = sf::Event::KeyReleased;
                 newevt.key.code = pPreferences->m_key_right;
-                pKeyboard->Key_Up(newevt);
-                m_right = 0;
+                //pKeyboard->Key_Up(newevt);
+                m_is_axis_right[i] = 0;
             }
         }
     }
+    else
+    {
+        //if (evt.joystickMove.axis == 6 || evt.joystickMove.axis == 7)
+        //{
+        //if (evt.joystickMove.position < -m_joystick_neutral_bound || evt.joystickMove.position < -m_joystick_neutral_bound)
+        //{
+            //cout << "New axis, axis value of: " << evt.joystickMove.axis << endl;
+            //cout << "New axis, position value of: " << evt.joystickMove.position << endl;
+        //}
+        //}
+
+    }
+    } //for
+
+
+
+    bool wasRight = m_right;
+    bool wasLeft = m_left;
+    bool wasUp = m_up;
+    bool wasDown = m_down;
+
+    m_right = m_left = m_up = m_down = false;
+
+    //Go backwards so as to give the axis number listed first the highest priority
+    for (int i = NUM_AXIS_TYPES - 1; i >= 0; i--)
+    {
+        if (m_is_axis_right[i])
+        {
+            m_right = true;
+            m_left = false;
+        }
+        else if (m_is_axis_left[i])
+        {
+            m_right = false;
+            m_left = true;
+        }
+
+        if (m_is_axis_up[i])
+        {
+            m_up = true;
+            m_down = false;
+        }
+        else if (m_is_axis_down[i])
+        {
+            m_up = false;
+            m_down = true;
+        }
+    }
+
+    if (m_right != wasRight)
+    {
+        newevt.type = sf::Event::KeyPressed;
+        newevt.key.code = pPreferences->m_key_right;
+        if (m_right)
+        {
+            pKeyboard->Key_Down(newevt);
+        }
+        else
+        {
+            pKeyboard->Key_Up(newevt);
+        }
+    }
+
+    if (m_left != wasLeft)
+    {
+        newevt.type = sf::Event::KeyPressed;
+        newevt.key.code = pPreferences->m_key_left;
+        if (m_left)
+        {
+            pKeyboard->Key_Down(newevt);
+        }
+        else
+        {
+            pKeyboard->Key_Up(newevt);
+        }
+    }
+
+    if (m_up != wasUp)
+    {
+        newevt.type = sf::Event::KeyPressed;
+        newevt.key.code = pPreferences->m_key_up;
+        if (m_up)
+        {
+            pKeyboard->Key_Down(newevt);
+        }
+        else
+        {
+            pKeyboard->Key_Up(newevt);
+        }
+    }
+
+    if (m_down != wasDown)
+    {
+        newevt.type = sf::Event::KeyPressed;
+        newevt.key.code = pPreferences->m_key_down;
+        if (m_down)
+        {
+            pKeyboard->Key_Down(newevt);
+        }
+        else
+        {
+            cout << "key up for down" << endl;
+            pKeyboard->Key_Up(newevt);
+        }
+    }
+
 }
 
 bool cJoystick::Handle_Button_Down_Event(const sf::Event& evt)
 {
+    cout << "Button down: " << evt.joystickButton.button << endl;
+
     // not enabled or opened
     if (!pPreferences->m_joy_enabled || evt.joystickButton.joystickId != m_current_joystick) {
         return 0;
