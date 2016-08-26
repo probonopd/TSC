@@ -119,38 +119,6 @@ void cJoystick::Close(void)
     Stick_Close();
 }
 
-void cJoystick::Update(void)
-{
-    /*
-     * It is necessary to examine the joystick state and simulate keyboard
-     * input continually in order to allow other portions of the TSC code
-     * that only look for keyboard input to function correctly.  Making
-     * joystick input be interpreted as keyboard input is not the best
-     * architectural design, but we may have to live with it.
-     */
-    sf::Event newevt;
-    if (m_up) {
-        newevt.type = sf::Event::KeyPressed;
-        newevt.key.code = pPreferences->m_key_up;
-        pKeyboard->Key_Down(newevt);
-    }
-    if (m_down) {
-        newevt.type = sf::Event::KeyPressed;
-        newevt.key.code = pPreferences->m_key_down;
-        pKeyboard->Key_Down(newevt);
-    }
-    if (m_left) {
-        newevt.type = sf::Event::KeyPressed;
-        newevt.key.code = pPreferences->m_key_left;
-        pKeyboard->Key_Down(newevt);
-    }
-    if (m_right) {
-        newevt.type = sf::Event::KeyPressed;
-        newevt.key.code = pPreferences->m_key_right;
-        pKeyboard->Key_Down(newevt);
-    }
-}
-
 bool cJoystick::Stick_Open(unsigned int index)
 {
     m_num_buttons = sf::Joystick::getButtonCount(index);
