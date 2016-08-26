@@ -28,8 +28,8 @@ namespace TSC {
     class cJoystick {
     private:
         //To do: move this into the preferences
-        sf::Joystick::Axis horizontalAxes [NUM_AXIS_TYPES]; //Horizontal axes
-        sf::Joystick::Axis verticalAxes [NUM_AXIS_TYPES]; //Vertical axes
+        sf::Joystick::Axis m_horizontal_axes [NUM_AXIS_TYPES]; //Horizontal axes
+        sf::Joystick::Axis m_vertical_axes [NUM_AXIS_TYPES]; //Vertical axes
 
         /* These booleans represent the currently recorded state for each direction
          * for each axis. */

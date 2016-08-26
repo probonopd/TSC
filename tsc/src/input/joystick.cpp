@@ -101,11 +101,11 @@ int cJoystick::Init(void)
 
     //Axis initialization
     //To do: integrate with preferences and menu
-    verticalAxes[0] = pPreferences->m_joy_axis_ver;
-    verticalAxes[1] = static_cast<sf::Joystick::Axis>(7);
+    m_vertical_axes[0] = pPreferences->m_joy_axis_ver;
+    m_vertical_axes[1] = static_cast<sf::Joystick::Axis>(7);
 
-    horizontalAxes[0] = pPreferences->m_joy_axis_hor;
-    horizontalAxes[1] = static_cast<sf::Joystick::Axis>(6);
+    m_horizontal_axes[0] = pPreferences->m_joy_axis_hor;
+    m_horizontal_axes[1] = static_cast<sf::Joystick::Axis>(6);
 
     if (m_debug) {
         cout << "Joypad System Initialized" << endl;
@@ -205,7 +205,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
     // Look through the axes and update their internal recorded states appropriately
     for (int i = 0; i < NUM_AXIS_TYPES; i++) {
         // Vertical Axis
-        if (evt.joystickMove.axis == verticalAxes[i]) {
+        if (evt.joystickMove.axis == m_vertical_axes[i]) {
 
             // Up
             if (evt.joystickMove.position < -m_joystick_neutral_bound) {
@@ -247,7 +247,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
             }
         }
         // Horizontal Axis
-        else if (evt.joystickMove.axis == horizontalAxes[i]) {
+        else if (evt.joystickMove.axis == m_horizontal_axes[i]) {
 
             // Left
             if (evt.joystickMove.position < -m_joystick_neutral_bound) {
@@ -529,38 +529,22 @@ vector<std::string> cJoystick::Get_Names(void) const
 
 bool cJoystick::Left(void) const
 {
-    if (pPreferences->m_joy_enabled && sf::Joystick::getAxisPosition(m_current_joystick, pPreferences->m_joy_axis_hor) < 0) {
-        return 1;
-    }
-
-    return 0;
+    return pPreferences->m_joy_enabled && m_left;
 }
 
 bool cJoystick::Right(void) const
 {
-    if (pPreferences->m_joy_enabled && sf::Joystick::getAxisPosition(m_current_joystick, pPreferences->m_joy_axis_hor) > 0) {
-        return 1;
-    }
-
-    return 0;
+    return pPreferences->m_joy_enabled && m_right;
 }
 
 bool cJoystick::Up(void) const
 {
-    if (pPreferences->m_joy_enabled && sf::Joystick::getAxisPosition(m_current_joystick, pPreferences->m_joy_axis_ver) < 0) {
-        return 1;
-    }
-
-    return 0;
+    return pPreferences->m_joy_enabled && m_up;
 }
 
 bool cJoystick::Down(void) const
 {
-    if (pPreferences->m_joy_enabled && sf::Joystick::getAxisPosition(m_current_joystick, pPreferences->m_joy_axis_ver) > 0) {
-        return 1;
-    }
-
-    return 0;
+    return pPreferences->m_joy_enabled && m_down;
 }
 
 bool cJoystick::Button(unsigned int num)
