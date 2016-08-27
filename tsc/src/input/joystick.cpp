@@ -99,14 +99,6 @@ int cJoystick::Init(void)
     // setup
     Stick_Open(default_joy);
 
-    //Axis initialization
-    //To do: integrate with preferences and menu
-    m_vertical_axes[0] = pPreferences->m_joy_axis_ver;
-    m_vertical_axes[1] = static_cast<sf::Joystick::Axis>(7);
-
-    m_horizontal_axes[0] = pPreferences->m_joy_axis_hor;
-    m_horizontal_axes[1] = static_cast<sf::Joystick::Axis>(6);
-
     if (m_debug) {
         cout << "Joypad System Initialized" << endl;
     }
@@ -152,7 +144,7 @@ void cJoystick::Stick_Close(void)
 
 void cJoystick::Reset_keys(void)
 {
-    for (int i = 0; i < NUM_AXIS_TYPES; i++) {
+    for (int i = 0; i < cPreferences::NUM_JOYSTICK_AXIS_TYPES; i++) {
         m_is_axis_left[i] = false;
         m_is_axis_right[i] = false;
         m_is_axis_down[i] = false;
@@ -171,9 +163,9 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
         return;
 
     // Look through the axes and update their internal recorded states appropriately
-    for (int i = 0; i < NUM_AXIS_TYPES; i++) {
+    for (int i = 0; i < cPreferences::NUM_JOYSTICK_AXIS_TYPES; i++) {
         // Vertical Axis
-        if (evt.joystickMove.axis == m_vertical_axes[i]) {
+        if (evt.joystickMove.axis == pPreferences->m_joy_axis_ver[i]) {
 
             // Up
             if (evt.joystickMove.position < -m_joystick_neutral_bound) {
@@ -215,7 +207,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
             }
         }
         // Horizontal Axis
-        else if (evt.joystickMove.axis == m_horizontal_axes[i]) {
+        else if (evt.joystickMove.axis == pPreferences->m_joy_axis_hor[i]) {
 
             // Left
             if (evt.joystickMove.position < -m_joystick_neutral_bound) {
@@ -268,7 +260,7 @@ void cJoystick::Handle_Motion(const sf::Event& evt)
 
     /* Go backwards so as to give the axis number listed first the highest priority
      * Currently that means giving the joystick priority over the directional pad. */
-    for (int i = NUM_AXIS_TYPES - 1; i >= 0; i--) {
+    for (int i = cPreferences::NUM_JOYSTICK_AXIS_TYPES - 1; i >= 0; i--) {
         if (m_is_axis_right[i]) {
             m_right = true;
             m_left = false;

@@ -18,8 +18,7 @@
 #define TSC_JOYSTICK_HPP
 
 #include "../core/global_basic.hpp"
-
-const int NUM_AXIS_TYPES = 2;  //Number of axes - TO DO: Move into preferences class
+#include "../user/preferences.hpp"
 
 namespace TSC {
 
@@ -27,16 +26,12 @@ namespace TSC {
 
     class cJoystick {
     private:
-        //To do: move this into the preferences
-        sf::Joystick::Axis m_horizontal_axes [NUM_AXIS_TYPES]; //Horizontal axes
-        sf::Joystick::Axis m_vertical_axes [NUM_AXIS_TYPES]; //Vertical axes
-
         /* These booleans represent the currently recorded state for each direction
          * for each axis. */
-        bool m_is_axis_left[NUM_AXIS_TYPES];
-        bool m_is_axis_right[NUM_AXIS_TYPES];
-        bool m_is_axis_down[NUM_AXIS_TYPES];
-        bool m_is_axis_up[NUM_AXIS_TYPES];
+        bool m_is_axis_left[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+        bool m_is_axis_right[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+        bool m_is_axis_down[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+        bool m_is_axis_up[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
 
     public:
         cJoystick(void);

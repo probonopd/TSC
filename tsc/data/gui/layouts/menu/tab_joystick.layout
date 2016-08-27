@@ -68,7 +68,7 @@
     </Window>
     <Window type="TaharezLook/StaticText" name="joystick_text_axis_hor">
       <Property name="Text" value="_Axis Hor"/>
-      <Property name="TooltipText" value="Joystick horizontal axis."/>
+      <Property name="TooltipText" value="Joystick first horizontal axis."/>
       <Property name="FrameEnabled" value="False"/>
       <Property name="MaxSize" value="{{1,0},{1,0}}"/>
       <Property name="Area" value="{{0.42,0},{0.55,0},{0.57,0},{0.63,0}}"/>
@@ -76,10 +76,42 @@
     </Window>
     <Window type="TaharezLook/StaticText" name="joystick_text_axis_ver">
       <Property name="Text" value="_Ver"/>
-      <Property name="TooltipText" value="Joystick vertical axis."/>
+      <Property name="TooltipText" value="Joystick first vertical axis."/>
       <Property name="FrameEnabled" value="False"/>
       <Property name="MaxSize" value="{{1,0},{1,0}}"/>
       <Property name="Area" value="{{0.71,0},{0.55,0},{0.79,0},{0.63,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/Spinner" name="joystick_spinner_axis_hor2">
+      <Property name="StepSize" value="1"/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="32767"/>
+      <Property name="MinimumValue" value="-32768"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.58,0.0},{0.65,0},{0.68,0.0},{0.73,0}}"/>
+    </Window>
+    <Window type="TaharezLook/Spinner" name="joystick_spinner_axis_ver2">
+      <Property name="StepSize" value="1"/>
+      <Property name="CurrentValue" value="0"/>
+      <Property name="MaximumValue" value="32767"/>
+      <Property name="MinimumValue" value="-32768"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.81,0},{0.65,0},{0.91,0},{0.73,0}}"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="joystick_text_axis_hor2">
+      <Property name="Text" value="_Axis Hor2"/>
+      <Property name="TooltipText" value="Joystick second horizontal axis."/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.42,0},{0.65,0},{0.57,0},{0.73,0}}"/>
+      <Property name="BackgroundEnabled" value="False"/>
+    </Window>
+    <Window type="TaharezLook/StaticText" name="joystick_text_axis_ver2">
+      <Property name="Text" value="_Ver2"/>
+      <Property name="TooltipText" value="Joystick second vertical axis."/>
+      <Property name="FrameEnabled" value="False"/>
+      <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.71,0},{0.65,0},{0.79,0},{0.73,0}}"/>
       <Property name="BackgroundEnabled" value="False"/>
     </Window>
     <Window type="TaharezLook/Button" name="joystick_button_reset">
