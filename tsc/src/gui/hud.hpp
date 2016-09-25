@@ -54,8 +54,8 @@ namespace TSC {
         void Reset_Lives(void);
         int Get_Lives(void);
 
-        void Set_Time(uint32_t milliseconds);
-        void Reset_Time(void);
+        void Set_Elapsed_Time(uint32_t milliseconds);
+        void Reset_Elapsed_Time(void);
         uint32_t Get_Elapsed_Time();
 
         void Set_Item(SpriteType item_type, bool sound = true);

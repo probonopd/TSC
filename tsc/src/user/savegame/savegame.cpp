@@ -157,7 +157,7 @@ int cSavegame::Load_Game(unsigned int save_slot)
                 }
 
                 // time
-                gp_hud->Set_Time(savegame->m_level_time);
+                gp_hud->Set_Elapsed_Time(savegame->m_level_time);
 
                 // position
                 pLevel_Player->Set_Pos(save_level->m_level_pos_x, save_level->m_level_pos_y);

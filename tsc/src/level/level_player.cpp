@@ -241,7 +241,7 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
     }
 
     Set_Type(ALEX_DEAD, 0, 0);
-    gp_hud->Reset_Time();
+    gp_hud->Reset_Elapsed_Time();
     gp_hud->Reset_Points();
     Ball_Clear();
     gp_hud->Add_Lives(-1);
@@ -1848,7 +1848,7 @@ void cLevel_Player::Reset_Save(void)
     m_goldpieces = 0;
     m_points = 0;
 
-    gp_hud->Reset_Time();
+    gp_hud->Reset_Elapsed_Time();
     gp_hud->Reset_Item();
 }
 

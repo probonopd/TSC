@@ -328,7 +328,7 @@ void cLevel_Manager::Draw(void)
 
 void cLevel_Manager::Finish_Level(bool win_music /* = 0 */)
 {
-    gp_hud->Reset_Time();
+    gp_hud->Reset_Elapsed_Time();
 
     // clear player return stack when finishing a level
     pLevel_Player->Clear_Return();

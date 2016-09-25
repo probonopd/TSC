@@ -2,6 +2,7 @@
 #include "../video/color.hpp"
 #include "../objects/sprite.hpp"
 #include "../objects/movingsprite.hpp"
+#include "../core/i18n.hpp"
 #include "hud.hpp"
 
 // extern variables
@@ -47,7 +48,7 @@ void cHud::Hide()
 
 void cHud::Update()
 {
-    static char timestr[16];
+    static char timestr[32];
     static int seconds;
 
     // Do nothing if not shown anyway
@@ -62,8 +63,8 @@ void cHud::Update()
     m_last_time     = time_now;
     seconds         = m_elapsed_time / 1000;
 
-    memset(timestr, '\0', 16);
-    sprintf(timestr, "%02d:%02d", seconds / 60, seconds % 60);
+    memset(timestr, '\0', 32);
+    sprintf(timestr, _("Time: %02d:%02d"), seconds / 60, seconds % 60);
     mp_time_label->setText(timestr);
 }
 
@@ -135,12 +136,12 @@ int cHud::Get_Lives()
     return m_lives;
 }
 
-void cHud::Set_Time(uint32_t milliseconds)
+void cHud::Set_Elapsed_Time(uint32_t milliseconds)
 {
     m_elapsed_time = milliseconds;
 }
 
-void cHud::Reset_Time()
+void cHud::Reset_Elapsed_Time()
 {
     m_elapsed_time = 0;
     m_last_time = std::chrono::system_clock::now();

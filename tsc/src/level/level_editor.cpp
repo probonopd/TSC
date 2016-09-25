@@ -260,7 +260,7 @@ void cEditor_Level::Function_Reload(void)
     // Simulate level ending followed by loading the level from scratch
     // (cf. cLevel_Manager::Finish_Level)
     Game_Action = GA_ENTER_LEVEL;
-    gp_hud->Reset_Time();
+    gp_hud->Reset_Elapsed_Time();
     pLevel_Player->Clear_Return();
 
     // Remove old level
