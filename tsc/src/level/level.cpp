@@ -538,6 +538,9 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
 
     // reset speed factor
     pFramerate->Reset();
+
+    // Show HUD
+    gp_hud->Show();
 }
 
 void cLevel::Leave(const GameMode next_mode /* = MODE_NOTHING */)
@@ -573,6 +576,8 @@ void cLevel::Leave(const GameMode next_mode /* = MODE_NOTHING */)
     pLevel_Editor->Disable();
     editor_enabled = false;
 #endif
+
+    gp_hud->Hide();
 }
 
 void cLevel::Update(void)

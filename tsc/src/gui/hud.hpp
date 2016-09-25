@@ -56,7 +56,7 @@ namespace TSC {
 
         void Set_Time(uint32_t milliseconds);
         void Reset_Time(void);
-        uint32_t Get_Time();
+        uint32_t Get_Elapsed_Time();
 
         void Set_Item(SpriteType item_type, bool sound = true);
         void Request_Item(void);
@@ -74,8 +74,11 @@ namespace TSC {
         int m_lives;
         cMovingSprite* mp_rescue_item;
         std::string m_waypoint_name;
+        uint32_t m_elapsed_time;
+        std::chrono::system_clock::time_point m_last_time;
 
         CEGUI::FrameWindow* mp_hud_root;
+        CEGUI::Window* mp_time_label;
     };
 
     /* *** *** *** *** *** *** *** cHudSprite *** *** *** *** *** *** *** *** *** *** */

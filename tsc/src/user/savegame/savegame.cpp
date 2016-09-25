@@ -316,7 +316,7 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
     // if in a level
     if (pActive_Level->Is_Loaded()) {
         // General info relating to all loaded levels
-        savegame->m_level_time = gp_hud->Get_Time();
+        savegame->m_level_time = gp_hud->Get_Elapsed_Time();
 
         // Create save data for all loaded levels. Note that if a user entered
         // a sublevel, multiple levels can be loaded.

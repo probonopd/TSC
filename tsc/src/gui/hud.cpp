@@ -12,9 +12,11 @@ using namespace TSC;
 cHud::cHud()
     : m_points(0), m_jewels(0), m_lives(3),
       mp_rescue_item(NULL), m_waypoint_name(""),
-      mp_hud_root(NULL)
+      m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
+      mp_hud_root(NULL), mp_time_label(NULL)
 {
-    mp_hud_root = static_cast<CEGUI::FrameWindow*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/FrameWindow", "hud"));
+    mp_hud_root = static_cast<CEGUI::FrameWindow*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile("hud.layout"));
+    mp_time_label = mp_hud_root->getChild("time");
 
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
@@ -45,9 +47,24 @@ void cHud::Hide()
 
 void cHud::Update()
 {
+    static char timestr[16];
+    static int seconds;
+
     // Do nothing if not shown anyway
     if (!mp_hud_root->isVisible())
         return;
+
+    // Increase playtime
+    std::chrono::system_clock::time_point time_now = std::chrono::system_clock::now();
+    std::chrono::milliseconds time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - m_last_time);
+
+    m_elapsed_time += time_elapsed.count();
+    m_last_time     = time_now;
+    seconds         = m_elapsed_time / 1000;
+
+    memset(timestr, '\0', 16);
+    sprintf(timestr, "%02d:%02d", seconds / 60, seconds % 60);
+    mp_time_label->setText(timestr);
 }
 
 void cHud::Set_Points(long points)
@@ -120,15 +137,18 @@ int cHud::Get_Lives()
 
 void cHud::Set_Time(uint32_t milliseconds)
 {
+    m_elapsed_time = milliseconds;
 }
 
 void cHud::Reset_Time()
 {
+    m_elapsed_time = 0;
+    m_last_time = std::chrono::system_clock::now();
 }
 
-uint32_t cHud::Get_Time()
+uint32_t cHud::Get_Elapsed_Time()
 {
-    return 1000;
+    return m_elapsed_time;
 }
 
 void cHud::Set_Item(SpriteType item_type, bool sound /* = true */)
