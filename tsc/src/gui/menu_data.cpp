@@ -121,9 +121,6 @@ void cMenu_Base::Update(void)
         // animation
         pMenuCore->m_animation_manager->Update();
     }
-
-    // hud
-    pHud_Manager->Update();
 }
 
 void cMenu_Base::Draw(void)
@@ -165,8 +162,6 @@ void cMenu_Base::Draw(void)
 
 void cMenu_Base::Draw_End(void)
 {
-    // hud
-    pHud_Manager->Draw();
 }
 
 void cMenu_Base::Set_Exit_To_Game_Mode(GameMode gamemode)
@@ -869,7 +864,7 @@ void cMenu_Start::Load_Campaign(std::string name)
 
     // if not available
     if (!new_campaign) {
-        pHud_Debug->Set_Text(_("Couldn't load campaign ") + name, static_cast<float>(speedfactor_fps));
+        // OLD pHud_Debug->Set_Text(_("Couldn't load campaign ") + name, static_cast<float>(speedfactor_fps));
     }
     else {
         // enter level
@@ -904,7 +899,7 @@ void cMenu_Start::Load_World(std::string name)
 
     // if not available
     if (!new_world) {
-        pHud_Debug->Set_Text(_("Couldn't load overworld ") + name, static_cast<float>(speedfactor_fps));
+        // OLD pHud_Debug->Set_Text(_("Couldn't load overworld ") + name, static_cast<float>(speedfactor_fps));
     }
     else {
         // enter world
@@ -930,7 +925,7 @@ bool cMenu_Start::Load_Level(std::string level_name)
     boost::filesystem::path level_path = pLevel_Manager->Get_Path(level_name);
     if (level_path.empty()) {
         pAudio->Play_Sound("error.ogg");
-        pHud_Debug->Set_Text(_("Couldn't load level ") + level_name, static_cast<float>(speedfactor_fps));
+        // OLD pHud_Debug->Set_Text(_("Couldn't load level ") + level_name, static_cast<float>(speedfactor_fps));
         return 0;
     }
 
@@ -3343,7 +3338,7 @@ void cMenu_Savegames::Update_Save(void)
     // no costs in debug builds
 #ifndef _DEBUG
     if (pActive_Level->Is_Loaded()) {
-        pHud_Points->Set_Points(pLevel_Player->m_points - 3000);
+        gp_hud->Set_Points(pLevel_Player->m_points - 3000);
     }
 #endif
     // save

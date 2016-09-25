@@ -88,7 +88,7 @@ static mrb_value Kill_With_Points(mrb_state* p_state,  mrb_value self)
 {
     cEnemy* p_enemy = Get_Data_Ptr<cEnemy>(p_state, self);
 
-    pHud_Points->Add_Points(p_enemy->m_kill_points,
+    gp_hud->Add_Points(p_enemy->m_kill_points,
                             p_enemy->m_pos_x,
                             p_enemy->m_pos_y - 5.0f);
     pAudio->Play_Sound(p_enemy->m_kill_sound);

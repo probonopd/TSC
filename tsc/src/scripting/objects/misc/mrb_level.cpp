@@ -334,7 +334,7 @@ static mrb_value Display_Info_Message(mrb_state* p_state, mrb_value self)
     char* message = NULL;
     mrb_get_args(p_state, "z", &message);
 
-    pHud_Infomessage->Set_Text(message);
+    // OLD pHud_Infomessage->Set_Text(message);
     return mrb_nil_value();
 }
 

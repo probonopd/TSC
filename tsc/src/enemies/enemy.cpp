@@ -302,7 +302,7 @@ void cEnemy::Handle_Ball_Hit(const cBall& ball, const cObjectCollision* p_collis
 
     if (ball.m_ball_type == FIREBALL_DEFAULT) {
         // get points
-        pHud_Points->Add_Points(m_kill_points, ball.m_pos_x, ball.m_pos_y, "", static_cast<uint8_t>(255), 1);
+        gp_hud->Add_Points(m_kill_points, ball.m_pos_x, ball.m_pos_y, "", static_cast<uint8_t>(255), 1);
 
         // Generate goldpiece
         Ball_Generate_Goldpiece(p_collision);

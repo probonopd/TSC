@@ -579,7 +579,7 @@ bool cTurtleBoss::Hit_Enemy(cEnemy* enemy) const
 
     // hit enemy
     pAudio->Play_Sound(enemy->m_kill_sound);
-    pHud_Points->Add_Points(enemy->m_kill_points, m_pos_x + m_image->m_w / 3, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
+    gp_hud->Add_Points(enemy->m_kill_points, m_pos_x + m_image->m_w / 3, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
     enemy->DownGrade(1);
     pLevel_Player->Add_Kill_Multiplier();
 
@@ -765,7 +765,7 @@ void cTurtleBoss::Handle_Collision_Player(cObjectCollision* collision)
 
     if (collision->m_direction == DIR_TOP && pLevel_Player->m_state != STA_FLY) {
         if (m_turtle_state == TURTLEBOSS_WALK) {
-            pHud_Points->Add_Points(250, pLevel_Player->m_pos_x, pLevel_Player->m_pos_y);
+            gp_hud->Add_Points(250, pLevel_Player->m_pos_x, pLevel_Player->m_pos_y);
 
             if (m_hits + 1 == m_max_hits) {
                 pAudio->Play_Sound("enemy/boss/turtle/big_hit.ogg");
@@ -775,11 +775,11 @@ void cTurtleBoss::Handle_Collision_Player(cObjectCollision* collision)
             }
         }
         else if (m_turtle_state == TURTLEBOSS_SHELL_STAND) {
-            pHud_Points->Add_Points(100, pLevel_Player->m_pos_x, pLevel_Player->m_pos_y);
+            gp_hud->Add_Points(100, pLevel_Player->m_pos_x, pLevel_Player->m_pos_y);
             pAudio->Play_Sound("enemy/turtle/shell/hit.ogg");
         }
         else if (m_turtle_state == TURTLEBOSS_SHELL_RUN) {
-            pHud_Points->Add_Points(50, pLevel_Player->m_pos_x, pLevel_Player->m_pos_y);
+            gp_hud->Add_Points(50, pLevel_Player->m_pos_x, pLevel_Player->m_pos_y);
             pAudio->Play_Sound("enemy/turtle/shell/hit.ogg");
         }
 
@@ -962,7 +962,7 @@ void cTurtleBoss::Handle_Collision_Massive(cObjectCollision* collision)
 
                     // if useable
                     if (box->m_useable_count != 0) {
-                        pHud_Points->Add_Points(50, m_pos_x + m_image->m_w / 3, m_pos_y - 5.0f);
+                        gp_hud->Add_Points(50, m_pos_x + m_image->m_w / 3, m_pos_y - 5.0f);
                         Send_Collision(collision);
                         DownGrade(1);
                     }

@@ -302,8 +302,7 @@ void Init_Game(void)
     pVideo->Init_Image_Cache(0);
 
     // Init Stage 3 - game classes
-    // note : set any sprite manager as it is set again on game mode switch
-    pHud_Manager = new cHud_Manager(pActive_Level->m_sprite_manager);
+    gp_hud = new cHud();
     pLevel_Player->Init();
 
 #ifdef ENABLE_EDITOR
@@ -324,7 +323,6 @@ void Init_Game(void)
     // set default overworld active
     pOverworld_Player->Set_Overworld(pOverworld_Manager->Get("World 1"));
     pOverworld_Manager->Set_Active("World 1");
-    pHud_Manager->Load();
     pMenuCore = new cMenuCore();
     pSavegame = new cSavegame();
 
@@ -355,9 +353,9 @@ void Exit_Game(void)
         pLevel_Player = NULL;
     }
 
-    if (pHud_Manager) {
-        delete pHud_Manager;
-        pHud_Manager = NULL;
+    if (gp_hud) {
+        delete gp_hud;
+        gp_hud = NULL;
     }
 
     if (pSound_Manager) {
@@ -598,6 +596,9 @@ void Update_Game(void)
 
     // performance measuring
     pFramerate->m_perf_last_ticks = TSC_GetTicks();
+
+    // ## hud
+    gp_hud->Update();
 
     // ## update
     if (Game_Mode == MODE_LEVEL) {

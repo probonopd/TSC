@@ -282,7 +282,7 @@ void cPip::Handle_Collision_Player(cObjectCollision* p_collision)
             return;
         }
 
-        pHud_Points->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), true);
+        gp_hud->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), true);
         pAudio->Play_Sound(m_kill_sound);
 
         // big walking

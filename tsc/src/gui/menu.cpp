@@ -432,14 +432,11 @@ void cMenuCore::Enter(const GameMode old_mode /* = MODE_NOTHING */)
 
     editor_enabled = 0;
 
-    pHud_Manager->Set_Sprite_Manager(m_handler->m_level->m_sprite_manager);
     pMouseCursor->Set_Sprite_Manager(m_handler->m_level->m_sprite_manager);
     // show mouse
     pMouseCursor->Set_Active(1);
     // camera
     m_handler->m_camera->Reset_Pos();
-    // position HUD
-    pHud_Manager->Update_Text();
     // update animation ( for the valid draw state )
     m_animation_manager->Update();
     // if not entering from another menu

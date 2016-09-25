@@ -283,7 +283,7 @@ void cKrush::Handle_Collision_Player(cObjectCollision* collision)
     }
 
     if (collision->m_direction == DIR_TOP && pLevel_Player->m_state != STA_FLY) {
-        pHud_Points->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
+        gp_hud->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
         pAudio->Play_Sound(m_kill_sound);
 
         // big walking
@@ -346,7 +346,7 @@ void cKrush::Handle_Collision_Massive(cObjectCollision* collision)
 void cKrush::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
 {
     pAudio->Play_Sound(m_kill_sound);
-    pHud_Points->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1 );
+    gp_hud->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1 );
     pLevel_Player->Add_Kill_Multiplier();
     DownGrade(true);
 }

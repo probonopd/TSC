@@ -14,9 +14,8 @@
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "video.hpp"
+#include "../core/global_basic.hpp"
 #include "loading_screen.hpp"
-#include "../gui/hud.hpp"
 #include "../user/preferences.hpp"
 #include "../core/framerate.hpp"
 #include "../video/font.hpp"
@@ -32,7 +31,8 @@
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/filesystem/relative.hpp"
-#include "../core/global_basic.hpp"
+#include "../gui/hud.hpp"
+#include "video.hpp"
 
 using namespace std;
 
@@ -1467,7 +1467,7 @@ void cVideo::Save_Screenshot(void)
             delete[] data;
 
             // show info
-            pHud_Debug->Set_Text("Screenshot " + int_to_string(i) + _(" saved"), speedfactor_fps * 2.5f);
+            // OLD pHud_Debug->Set_Text("Screenshot " + int_to_string(i) + _(" saved"), speedfactor_fps * 2.5f);
 
             // finished
             return;

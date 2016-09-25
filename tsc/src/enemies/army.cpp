@@ -469,7 +469,7 @@ bool cArmy::Hit_Enemy(cEnemy* enemy)
 
     // hit enemy
     pAudio->Play_Sound(enemy->m_kill_sound);
-    pHud_Points->Add_Points(enemy->m_kill_points, m_pos_x + m_image->m_w / 3, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
+    gp_hud->Add_Points(enemy->m_kill_points, m_pos_x + m_image->m_w / 3, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
     enemy->DownGrade(1);
     pLevel_Player->Add_Kill_Multiplier();
 
@@ -640,15 +640,15 @@ void cArmy::Handle_Collision_Player(cObjectCollision* collision)
 
     if (collision->m_direction == DIR_TOP && pLevel_Player->m_state != STA_FLY) {
         if (m_army_state == ARMY_WALK) {
-            pHud_Points->Add_Points(25, m_pos_x, m_pos_y - 5.0f);
+            gp_hud->Add_Points(25, m_pos_x, m_pos_y - 5.0f);
             pAudio->Play_Sound("enemy/army/hit.ogg");
         }
         else if (m_army_state == ARMY_SHELL_STAND) {
-            pHud_Points->Add_Points(10, m_pos_x, m_pos_y - 5.0f);
+            gp_hud->Add_Points(10, m_pos_x, m_pos_y - 5.0f);
             pAudio->Play_Sound("enemy/army/shell/hit.ogg");
         }
         else if (m_army_state == ARMY_SHELL_RUN) {
-            pHud_Points->Add_Points(5, m_pos_x, m_pos_y - 5.0f);
+            gp_hud->Add_Points(5, m_pos_x, m_pos_y - 5.0f);
             pAudio->Play_Sound("enemy/army/shell/hit.ogg");
         }
 
@@ -897,7 +897,7 @@ void cArmy::Handle_Collision_Massive(cObjectCollision* collision)
 void cArmy::Handle_Collision_Box(ObjectDirection cdirection, GL_rect* r2)
 {
     pAudio->Play_Sound(m_kill_sound);
-    pHud_Points->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
+    gp_hud->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
     pLevel_Player->Add_Kill_Multiplier();
     DownGrade(true);
 }

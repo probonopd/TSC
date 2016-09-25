@@ -137,7 +137,7 @@ void cEditor::Enable(cSprite_Manager* p_edited_sprite_manager)
     Draw_Static_Text(_("Loading"), &orange, NULL, 0);
 
     pAudio->Play_Sound("editor/enter.ogg");
-    pHud_Debug->Set_Text(_("Editor enabled"));
+    // OLD pHud_Debug->Set_Text(_("Editor enabled"));
     pMouseCursor->Set_Active(true);
 
     pActive_Animation_Manager->Delete_All(); // Stop all animations

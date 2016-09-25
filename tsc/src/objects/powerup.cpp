@@ -259,19 +259,19 @@ void cMushroom::Activate(void)
     pLevel_Player->Get_Item(m_type);
 
     if (m_type == TYPE_MUSHROOM_DEFAULT) {
-        pHud_Points->Add_Points(500, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
+        gp_hud->Add_Points(500, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
     }
     else if (m_type == TYPE_MUSHROOM_LIVE_1) {
-        pHud_Points->Add_Points(1000, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
+        gp_hud->Add_Points(1000, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
     }
     else if (m_type == TYPE_MUSHROOM_POISON) {
         // nothing
     }
     else if (m_type == TYPE_MUSHROOM_BLUE) {
-        pHud_Points->Add_Points(700, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
+        gp_hud->Add_Points(700, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
     }
     else if (m_type == TYPE_MUSHROOM_GHOST) {
-        pHud_Points->Add_Points(800, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
+        gp_hud->Add_Points(800, m_pos_x + (m_rect.m_w * 0.5f), m_pos_y + 3);
     }
 
     // if spawned destroy
@@ -468,7 +468,7 @@ void cFirePlant::Activate(void)
 
     pLevel_Player->Get_Item(TYPE_FIREPLANT);
 
-    pHud_Points->Add_Points(700, m_pos_x + (m_image ? m_image->m_w / 2 : 0), m_pos_y);
+    gp_hud->Add_Points(700, m_pos_x + (m_image ? m_image->m_w / 2 : 0), m_pos_y);
 
     // if spawned destroy
     if (m_spawned) {
@@ -571,7 +571,7 @@ void cMoon::Activate(void)
 
     pLevel_Player->Get_Item(TYPE_MOON);
 
-    pHud_Points->Add_Points(4000, m_pos_x + (m_image ? m_image->m_w / 2 : 0), m_pos_y);
+    gp_hud->Add_Points(4000, m_pos_x + (m_image ? m_image->m_w / 2 : 0), m_pos_y);
 
     // Particle burst on collection
     cParticle_Emitter* anim = new cParticle_Emitter(m_sprite_manager);

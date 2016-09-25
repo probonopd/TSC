@@ -30,6 +30,7 @@
 #include "../core/filesystem/package_manager.hpp"
 #include "../input/mouse.hpp"
 #include "../core/global_basic.hpp"
+#include "../gui/hud.hpp"
 
 using namespace std;
 
@@ -251,11 +252,8 @@ void cLevel_Manager::Update(void)
     pFramerate->m_perf_timer[PERF_UPDATE_LEVEL_EDITOR]->Update();
 #endif
 
-    // hud
-    pHud_Manager->Update();
-
     // update performance timer
-    pFramerate->m_perf_timer[PERF_UPDATE_HUD]->Update();
+    // OLD pFramerate->m_perf_timer[PERF_UPDATE_HUD]->Update();
 
     // player
     pLevel_Player->Update();
@@ -316,11 +314,8 @@ void cLevel_Manager::Draw(void)
     // update performance timer
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_LAYER2]->Update();
 
-    // hud
-    pHud_Manager->Draw();
-
     // update performance timer
-    pFramerate->m_perf_timer[PERF_DRAW_LEVEL_HUD]->Update();
+    // OLD pFramerate->m_perf_timer[PERF_DRAW_LEVEL_HUD]->Update();
 
 #ifdef ENABLE_EDITOR
     // level editor
@@ -333,7 +328,7 @@ void cLevel_Manager::Draw(void)
 
 void cLevel_Manager::Finish_Level(bool win_music /* = 0 */)
 {
-    pHud_Time->Reset();
+    gp_hud->Reset_Time();
 
     // clear player return stack when finishing a level
     pLevel_Player->Clear_Return();
@@ -488,7 +483,7 @@ void cLevel_Manager::Goto_Sub_Level(std::string str_level, const std::string& st
             level = pLevel_Manager->Load(str_level, true);
         }
         catch(InvalidLevelError& err) {
-            pHud_Debug->Set_Text(_("Invalid target level."));
+            // OLD pHud_Debug->Set_Text(_("Invalid target level."));
             pLevel_Player->DownGrade(true);
             return;
         }
