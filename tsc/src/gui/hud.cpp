@@ -33,6 +33,13 @@ cHud::cHud()
         .getDefaultGUIContext()
         .getRootWindow()
         ->addChild(mp_hud_root);
+
+    // Set initial values. Using methods rather than bare assignment
+    // so translations can kick in for the HUD elements.
+    Set_Points(0);
+    Set_Jewels(0);
+    Set_Elapsed_Time(0);
+    Set_Lives(3);
 }
 
 cHud::~cHud()
