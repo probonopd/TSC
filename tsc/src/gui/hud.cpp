@@ -23,7 +23,7 @@ cHud::cHud()
         CEGUI::WindowManager::getSingleton()
         .loadLayoutFromFile("hud.layout"));
 
-    //mp_points_label = mp_hud_root->getChild("points");
+    mp_points_label = mp_hud_root->getChild("points");
     mp_time_label   = mp_hud_root->getChild("time");
     mp_jewels_label = mp_hud_root->getChild("jewels");
 
@@ -72,13 +72,18 @@ void cHud::Update()
     seconds         = m_elapsed_time / 1000;
 
     memset(timestr, '\0', 32);
-    sprintf(timestr, _("Time: %02d:%02d"), seconds / 60, seconds % 60);
+    sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
     mp_time_label->setText(timestr);
 }
 
 void cHud::Set_Points(long points)
 {
     m_points = points;
+
+    char str[32];
+    memset(str, '\0', 32);
+    sprintf(str, _("Points %08ld"), m_points);
+    mp_points_label->setText(str);
 }
 
 void cHud::Add_Points(long points, float /* x = 0.0f */, float y /* = 0.0f */, std::string strtext /* = "" */, const Color& color /* = 255 */, bool allow_multiplier /* = false */)
@@ -88,7 +93,7 @@ void cHud::Add_Points(long points, float /* x = 0.0f */, float y /* = 0.0f */, s
 
 void cHud::Reset_Points()
 {
-    m_points = 0;
+    Set_Points(0);
 }
 
 long cHud::Get_Points()
@@ -118,7 +123,7 @@ void cHud::Add_Jewels(int jewels)
 
 void cHud::Reset_Jewels()
 {
-    m_jewels = 0;
+    Set_Jewels(0);
 }
 
 int cHud::Get_Jewels()
@@ -141,7 +146,7 @@ void cHud::Add_Lives(int lives)
 
 void cHud::Reset_Lives()
 {
-    m_lives = 3;
+    Set_Lives(3);
 }
 
 int cHud::Get_Lives()
