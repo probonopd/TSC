@@ -14,10 +14,18 @@ cHud::cHud()
     : m_points(0), m_jewels(0), m_lives(3),
       mp_rescue_item(NULL), m_waypoint_name(""),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
-      mp_hud_root(NULL), mp_time_label(NULL)
+      mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
+      mp_jewels_label(NULL)
 {
-    mp_hud_root = static_cast<CEGUI::FrameWindow*>(CEGUI::WindowManager::getSingleton().loadLayoutFromFile("hud.layout"));
-    mp_time_label = mp_hud_root->getChild("time");
+    load_hud_images_into_cegui();
+
+    mp_hud_root = static_cast<CEGUI::FrameWindow*>(
+        CEGUI::WindowManager::getSingleton()
+        .loadLayoutFromFile("hud.layout"));
+
+    //mp_points_label = mp_hud_root->getChild("points");
+    mp_time_label   = mp_hud_root->getChild("time");
+    mp_jewels_label = mp_hud_root->getChild("jewels");
 
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
@@ -75,7 +83,7 @@ void cHud::Set_Points(long points)
 
 void cHud::Add_Points(long points, float /* x = 0.0f */, float y /* = 0.0f */, std::string strtext /* = "" */, const Color& color /* = 255 */, bool allow_multiplier /* = false */)
 {
-    m_points += points;
+    Set_Points(m_points + points);
 }
 
 void cHud::Reset_Points()
@@ -91,16 +99,21 @@ long cHud::Get_Points()
 void cHud::Set_Jewels(int jewels)
 {
     m_jewels = jewels;
-}
-
-void cHud::Add_Jewels(int jewels)
-{
-    m_jewels += jewels;
 
     while (m_jewels > 100) {
         m_jewels -= 100;
         // TODO: Fire event
     }
+
+    char str[8];
+    memset(str, '\0', 8);
+    sprintf(str, "%02d", m_jewels);
+    mp_jewels_label->setText(str);
+}
+
+void cHud::Add_Jewels(int jewels)
+{
+    Set_Jewels(m_jewels + jewels);
 }
 
 void cHud::Reset_Jewels()
@@ -177,6 +190,15 @@ void cHud::Set_Waypoint_Name(std::string name)
 std::string& cHud::Get_Waypoint_Name()
 {
     return m_waypoint_name;
+}
+
+void cHud::load_hud_images_into_cegui()
+{
+    CEGUI::ImageManager& imgmanager = CEGUI::ImageManager::getSingleton();
+
+    imgmanager.addFromImageFile("hud_jewel",   "game/hud_jewel.png",   "ingame-images");
+    imgmanager.addFromImageFile("hud_alex",    "game/hud_alex.png",    "ingame-images");
+    imgmanager.addFromImageFile("hud_itembox", "game/hud_itembox.png", "ingame-images");
 }
 
 cHudSprite::cHudSprite(cSprite_Manager* sprite_manager)

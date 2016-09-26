@@ -78,7 +78,11 @@ namespace TSC {
         std::chrono::system_clock::time_point m_last_time;
 
         CEGUI::FrameWindow* mp_hud_root;
+        CEGUI::Window* mp_points_label;
         CEGUI::Window* mp_time_label;
+        CEGUI::Window* mp_jewels_label;
+
+        void load_hud_images_into_cegui();
     };
 
     /* *** *** *** *** *** *** *** cHudSprite *** *** *** *** *** *** *** *** *** *** */
