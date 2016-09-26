@@ -81,6 +81,7 @@ namespace TSC {
         CEGUI::Window* mp_points_label;
         CEGUI::Window* mp_time_label;
         CEGUI::Window* mp_jewels_label;
+        CEGUI::Window* mp_lives_label;
 
         void load_hud_images_into_cegui();
     };

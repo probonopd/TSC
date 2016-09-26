@@ -15,7 +15,7 @@ cHud::cHud()
       mp_rescue_item(NULL), m_waypoint_name(""),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
       mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
-      mp_jewels_label(NULL)
+      mp_jewels_label(NULL), mp_lives_label(NULL)
 {
     load_hud_images_into_cegui();
 
@@ -26,6 +26,7 @@ cHud::cHud()
     mp_points_label = mp_hud_root->getChild("points");
     mp_time_label   = mp_hud_root->getChild("time");
     mp_jewels_label = mp_hud_root->getChild("jewels");
+    mp_lives_label = mp_hud_root->getChild("lives");
 
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
@@ -134,14 +135,19 @@ int cHud::Get_Jewels()
 void cHud::Set_Lives(int lives)
 {
     m_lives = lives;
+
+    if (m_lives > 99)
+        m_lives = 99;
+
+    char str[8];
+    memset(str, '\0', 8);
+    sprintf(str, "%02d x", m_lives);
+    mp_lives_label->setText(str);
 }
 
 void cHud::Add_Lives(int lives)
 {
-    m_lives += lives;
-
-    if (m_lives > 99)
-        m_lives = 99;
+    Set_Lives(m_lives + lives);
 }
 
 void cHud::Reset_Lives()

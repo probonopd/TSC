@@ -42,5 +42,20 @@
       <Property name="Font" value="DejaVuSans-Bold"/>
     </Window>
 
+    <Window type="TaharezLook/Label" name="lives">
+      <Property name="Area" value="{{0.91,0},{0.1,0},{1,0},{1,0}}"/>
+      <Property name="Text" value="3 x"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/StaticImage" name="alex_image">
+      <Property name="Area" value="{{0.95,0},{0.1,0},{1,0},{0.5,0}}"/>
+      <Property name="Image" value="hud_alex"/>
+      <Property name="BackgroundEnabled" value="False"/>
+      <Property name="FrameEnabled" value="False"/>
+    </Window>
+
   </Window>
 </GUILayout>
