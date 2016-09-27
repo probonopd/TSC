@@ -3,6 +3,11 @@
 #include "../objects/sprite.hpp"
 #include "../objects/movingsprite.hpp"
 #include "../core/i18n.hpp"
+#include "../audio/audio.hpp"
+#include "../video/gl_surface.hpp"
+#include "../level/level.hpp"
+#include "../level/level_player.hpp"
+#include "../scripting/events/gold_100_event.hpp"
 #include "hud.hpp"
 
 // extern variables
@@ -113,15 +118,26 @@ void cHud::Set_Jewels(int jewels)
 {
     m_jewels = jewels;
 
-    while (m_jewels > 100) {
+    while (m_jewels >= 100) {
         m_jewels -= 100;
-        // TODO: Fire event
+        pAudio->Play_Sound("item/live_up_2.ogg", RID_1UP_MUSHROOM);
+        Add_Lives(1);
+
+        // Display "1UP"
+        Add_Points(0, pLevel_Player->m_pos_x + pLevel_Player->m_image->m_w/3, pLevel_Player->m_pos_y + 5, "1UP", lightred);
+
+        // Fire the Gold100 event
+        Scripting::cGold_100_Event evt;
+        evt.Fire(pActive_Level->m_mruby, pLevel_Player);
     }
 
     char str[8];
     memset(str, '\0', 8);
     sprintf(str, "%02d", m_jewels);
     mp_jewels_label->setText(str);
+
+    // Change text colour with more and more jewels collected
+    // OLD Color color = Color(static_cast<uint8_t>(255), 255, 255 - (gold * 2));
 }
 
 void cHud::Add_Jewels(int jewels)
