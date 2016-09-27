@@ -146,9 +146,9 @@ void cHud::Set_Lives(int lives)
     if (m_lives > 99)
         m_lives = 99;
 
-    char str[8];
-    memset(str, '\0', 8);
-    sprintf(str, "%02d x", m_lives);
+    char str[32];
+    memset(str, '\0', 32);
+    sprintf(str, "[colour='FF00FF00']%02d x", m_lives);
     mp_lives_label->setText(str);
 }
 
