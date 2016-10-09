@@ -8,18 +8,23 @@
 #include "../video/gl_surface.hpp"
 #include "../level/level.hpp"
 #include "../level/level_player.hpp"
+#include "../objects/powerup.hpp"
 #include "../scripting/events/gold_100_event.hpp"
 #include "../core/property_helper.hpp"
 #include "../core/filesystem/resource_manager.hpp"
+#include "../core/sprite_manager.hpp"
 #include "hud.hpp"
 
 // 35 is the number of pixels set in berry's .settings file.
 #define BERRY_WIDTH  35 * global_upscalex
 #define BERRY_HEIGHT 35 * global_upscaley
 
-// 40px is just slightly bigger.
+// 48px is just slightly bigger.
 #define ITEMBOX_WIDTH 48 * global_upscalex
 #define ITEMBOX_HEIGHT 48 * global_upscaley
+
+// Place it in front of most stuff
+#define POWERUP_Z_POS 0.1299f
 
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
@@ -61,6 +66,8 @@ cHud::cHud()
                            CEGUI::UDim(0.5, -(0.5*BERRY_HEIGHT)),
                            CEGUI::UDim(0, BERRY_WIDTH),
                            CEGUI::UDim(0, BERRY_HEIGHT));
+
+    mp_item_image->hide();
 
 
     // Set initial values. Using methods rather than bare assignment
@@ -246,10 +253,13 @@ void cHud::Set_Item(SpriteType item_type, bool sound /* = true */)
         mp_item_image->setProperty("Image", m_fire_berry_img);
         break;
     default:
+        std::cerr << "Warning: Unsupported item type stored in HUD item box, changing to normal berry" << std::endl;
+        m_rescue_item_type = TYPE_MUSHROOM_DEFAULT;
         mp_item_image->setProperty("Image", m_normal_berry_img);
-        std::cerr << "Warning: Unsupported item type stored in HUD item box" << std::endl;
         break;
     }
+
+    mp_item_image->show();
 }
 
 void cHud::Request_Item(void)
@@ -257,12 +267,49 @@ void cHud::Request_Item(void)
     if (Game_Mode != MODE_LEVEL)
         throw(std::runtime_error("cHud::Reqeust_Item() may only be called in level mode!"));
 
-    //m_item = new cMovingSprite(pActive_Lvel->m_sprite_manager);
-    //m_item->Set_Ignore_Camera(1);
-    //m_item->m_camera_range = 0;
-    //m_item->Set_Massive_Type(MASS_MASSIVE);
-    //m_item->m_pos_z = 0.1299f;
+    cPowerUp*  p_powerup  = NULL;
+    cMushroom* p_mushroom = NULL;
 
+    switch(m_rescue_item_type) {
+    case TYPE_UNDEFINED: // No item stored
+        return;
+    case TYPE_MUSHROOM_DEFAULT:
+        p_mushroom = new cMushroom(pActive_Level->m_sprite_manager);
+        p_mushroom->Set_Type(TYPE_MUSHROOM_DEFAULT);
+        p_powerup = p_mushroom;
+        break;
+    case TYPE_MUSHROOM_BLUE:
+        p_mushroom = new cMushroom(pActive_Level->m_sprite_manager);
+        p_mushroom->Set_Type(TYPE_MUSHROOM_BLUE);
+        p_powerup = p_mushroom;
+        break;
+    case TYPE_FIREPLANT:
+        p_powerup = new cFirePlant(pActive_Level->m_sprite_manager);
+        break;
+    default:
+        std::cerr << "Warning: Unknown item type found in HUD item box, releasing a normal berry instead" << std::endl;
+        p_mushroom = new cMushroom(pActive_Level->m_sprite_manager);
+        p_mushroom->Set_Type(TYPE_MUSHROOM_DEFAULT);
+        p_powerup = p_mushroom;
+        break;
+    }
+
+    pAudio->Play_Sound("itembox_get.ogg");
+
+    p_powerup->Set_Ignore_Camera(1);
+    p_powerup->m_camera_range = 0;
+    p_powerup->Set_Massive_Type(MASS_MASSIVE);
+    p_powerup->m_pos_z = POWERUP_Z_POS;
+    p_powerup->Set_Pos(pLevel_Manager->m_camera->Get_Rect().m_x,
+                       pLevel_Manager->m_camera->Get_Rect().m_y);
+    p_powerup->Set_Spawned(true);
+    p_powerup->Set_Active(true);
+    pActive_Level->m_sprite_manager->Add(p_powerup);
+
+    // TODO: Does not appear?
+
+    m_rescue_item_type = TYPE_UNDEFINED;
+    mp_item_image->hide();
 }
 
 void cHud::Reset_Item(void)
