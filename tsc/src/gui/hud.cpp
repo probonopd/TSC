@@ -1,4 +1,5 @@
 #include "../core/global_basic.hpp"
+#include "../core/game_core.hpp"
 #include "../video/color.hpp"
 #include "../objects/sprite.hpp"
 #include "../objects/movingsprite.hpp"
@@ -8,19 +9,31 @@
 #include "../level/level.hpp"
 #include "../level/level_player.hpp"
 #include "../scripting/events/gold_100_event.hpp"
+#include "../core/property_helper.hpp"
+#include "../core/filesystem/resource_manager.hpp"
 #include "hud.hpp"
+
+// 35 is the number of pixels set in berry's .settings file.
+#define BERRY_WIDTH  35 * global_upscalex
+#define BERRY_HEIGHT 35 * global_upscaley
+
+// 40px is just slightly bigger.
+#define ITEMBOX_WIDTH 48 * global_upscalex
+#define ITEMBOX_HEIGHT 48 * global_upscaley
 
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
 
 using namespace TSC;
+namespace fs = boost::filesystem;
 
 cHud::cHud()
     : m_points(0), m_jewels(0), m_lives(3),
-      mp_rescue_item(NULL), m_waypoint_name(""),
+      mp_display_item(NULL), m_rescue_item_type(TYPE_UNDEFINED),
+      m_waypoint_name(""),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
       mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
-      mp_jewels_label(NULL), mp_lives_label(NULL)
+      mp_jewels_label(NULL), mp_lives_label(NULL), mp_item_image(NULL)
 {
     load_hud_images_into_cegui();
 
@@ -31,13 +44,24 @@ cHud::cHud()
     mp_points_label = mp_hud_root->getChild("points");
     mp_time_label   = mp_hud_root->getChild("time");
     mp_jewels_label = mp_hud_root->getChild("jewels");
-    mp_lives_label = mp_hud_root->getChild("lives");
+    mp_lives_label  = mp_hud_root->getChild("lives");
+    mp_item_image   = mp_hud_root->getChild("itembox_image/item_image");
 
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
         .getDefaultGUIContext()
         .getRootWindow()
         ->addChild(mp_hud_root);
+
+    // Size & position the item box and its contents
+    mp_hud_root->getChild("itembox_image")->setSize(CEGUI::USize(CEGUI::UDim(0, ITEMBOX_WIDTH),
+                                                                 CEGUI::UDim(0, ITEMBOX_HEIGHT)));
+
+    mp_item_image->setArea(CEGUI::UDim(0.5, -(0.5*BERRY_WIDTH)),
+                           CEGUI::UDim(0.5, -(0.5*BERRY_HEIGHT)),
+                           CEGUI::UDim(0, BERRY_WIDTH),
+                           CEGUI::UDim(0, BERRY_HEIGHT));
+
 
     // Set initial values. Using methods rather than bare assignment
     // so translations can kick in for the HUD elements.
@@ -201,10 +225,44 @@ uint32_t cHud::Get_Elapsed_Time()
 
 void cHud::Set_Item(SpriteType item_type, bool sound /* = true */)
 {
+    if (Game_Mode != MODE_LEVEL)
+        throw(std::runtime_error("cHud::Set_Item() may only be called in level mode!"));
+
+    // play sound
+    if (sound) {
+        pAudio->Play_Sound("itembox_set.ogg");
+    }
+
+    m_rescue_item_type = item_type;
+
+    switch(m_rescue_item_type) {
+    case TYPE_MUSHROOM_DEFAULT:
+        mp_item_image->setProperty("Image", m_normal_berry_img);
+        break;
+    case TYPE_MUSHROOM_BLUE:
+        mp_item_image->setProperty("Image", m_ice_berry_img);
+        break;
+    case TYPE_FIREPLANT:
+        mp_item_image->setProperty("Image", m_fire_berry_img);
+        break;
+    default:
+        mp_item_image->setProperty("Image", m_normal_berry_img);
+        std::cerr << "Warning: Unsupported item type stored in HUD item box" << std::endl;
+        break;
+    }
 }
 
 void cHud::Request_Item(void)
 {
+    if (Game_Mode != MODE_LEVEL)
+        throw(std::runtime_error("cHud::Reqeust_Item() may only be called in level mode!"));
+
+    //m_item = new cMovingSprite(pActive_Lvel->m_sprite_manager);
+    //m_item->Set_Ignore_Camera(1);
+    //m_item->m_camera_range = 0;
+    //m_item->Set_Massive_Type(MASS_MASSIVE);
+    //m_item->m_pos_z = 0.1299f;
+
 }
 
 void cHud::Reset_Item(void)
@@ -233,6 +291,16 @@ void cHud::load_hud_images_into_cegui()
     imgmanager.addFromImageFile("hud_jewel",   "game/hud_jewel.png",   "ingame-images");
     imgmanager.addFromImageFile("hud_alex",    "game/hud_alex.png",    "ingame-images");
     imgmanager.addFromImageFile("hud_itembox", "game/hud_itembox.png", "ingame-images");
+
+    m_normal_berry_img = path_to_utf8(pResource_Manager->Get_User_Pixmap("game/items/mushroom_red.png"));
+    m_fire_berry_img   = path_to_utf8(pResource_Manager->Get_User_Pixmap("game/items/fireberry_1.png"));
+    m_ice_berry_img    = path_to_utf8(pResource_Manager->Get_User_Pixmap("game/items/mushroom_blue.png"));
+
+    // Convert the pathes to the names they are stored under in CEGUI
+    // (see cEditor::load_cegui_image(), which is executed on game startup).
+    string_replace_all(m_normal_berry_img, "/", "+");
+    string_replace_all(m_fire_berry_img,   "/", "+");
+    string_replace_all(m_ice_berry_img,    "/", "+");
 }
 
 cHudSprite::cHudSprite(cSprite_Manager* sprite_manager)

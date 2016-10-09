@@ -111,6 +111,7 @@ namespace TSC {
 
         // Get files from the various directories in the user’s data directory
         boost::filesystem::path Get_User_Level(std::string level);
+        boost::filesystem::path Get_User_Pixmap(std::string pixmap);
 
     private:
         // Main directory information

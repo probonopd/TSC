@@ -24,7 +24,7 @@ namespace TSC {
      * top of the screen (time passed, jewels collected, etc.). It is
      * implemented as a number of stacked CEGUI windows and can act
      * either in world or level mode depending on the value of the
-     * GameMode global variable, which makes it show slightly different
+     * Game_Mode global variable, which makes it show slightly different
      * things.
      *
      * The HUD instance is global (`gp_hud` variable) and is not destroyed
@@ -72,7 +72,8 @@ namespace TSC {
         long m_points;
         int m_jewels;
         int m_lives;
-        cMovingSprite* mp_rescue_item;
+        cMovingSprite* mp_display_item; // Only for display
+        SpriteType m_rescue_item_type; // This is what is stored across level switches
         std::string m_waypoint_name;
         uint32_t m_elapsed_time;
         std::chrono::system_clock::time_point m_last_time;
@@ -82,6 +83,13 @@ namespace TSC {
         CEGUI::Window* mp_time_label;
         CEGUI::Window* mp_jewels_label;
         CEGUI::Window* mp_lives_label;
+        CEGUI::Window* mp_item_image;
+
+        // Names the berries are available under in CEGUI
+        // as images.
+        std::string m_normal_berry_img;
+        std::string m_fire_berry_img;
+        std::string m_ice_berry_img;
 
         void load_hud_images_into_cegui();
     };

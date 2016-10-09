@@ -32,6 +32,13 @@
       <Property name="Image" value="hud_itembox"/>
       <Property name="BackgroundEnabled" value="False"/>
       <Property name="FrameEnabled" value="False"/>
+
+      <Window type="TaharezLook/StaticImage" name="item_image">
+        <Property name="Area" value="{{0,0},{0.0,0},{0.55,0},{0.8,0}}"/>
+        <Property name="Image" value="hud_itembox_item"/>
+        <Property name="BackgroundEnabled" value="False"/>
+        <Property name="FrameEnabled" value="False"/>
+      </Window>
     </Window>
 
     <Window type="TaharezLook/Label" name="time">
