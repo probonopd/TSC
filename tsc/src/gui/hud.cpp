@@ -1,4 +1,5 @@
 #include "../core/global_basic.hpp"
+#include "../core/global_game.hpp"
 #include "../core/game_core.hpp"
 #include "../video/color.hpp"
 #include "../objects/sprite.hpp"
@@ -9,6 +10,7 @@
 #include "../level/level.hpp"
 #include "../level/level_player.hpp"
 #include "../objects/powerup.hpp"
+#include "../objects/rescue_item.hpp"
 #include "../scripting/events/gold_100_event.hpp"
 #include "../core/property_helper.hpp"
 #include "../core/filesystem/resource_manager.hpp"
@@ -22,9 +24,6 @@
 // 48px is just slightly bigger.
 #define ITEMBOX_WIDTH 48 * global_upscalex
 #define ITEMBOX_HEIGHT 48 * global_upscaley
-
-// Place it in front of most stuff
-#define POWERUP_Z_POS 0.1299f
 
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
@@ -267,47 +266,22 @@ void cHud::Request_Item(void)
     if (Game_Mode != MODE_LEVEL)
         throw(std::runtime_error("cHud::Reqeust_Item() may only be called in level mode!"));
 
-    cPowerUp*  p_powerup  = NULL;
-    cMushroom* p_mushroom = NULL;
-
-    switch(m_rescue_item_type) {
-    case TYPE_UNDEFINED: // No item stored
+    // Currently no rescue item
+    if (m_rescue_item_type == TYPE_UNDEFINED)
         return;
-    case TYPE_MUSHROOM_DEFAULT:
-        p_mushroom = new cMushroom(pActive_Level->m_sprite_manager);
-        p_mushroom->Set_Type(TYPE_MUSHROOM_DEFAULT);
-        p_powerup = p_mushroom;
-        break;
-    case TYPE_MUSHROOM_BLUE:
-        p_mushroom = new cMushroom(pActive_Level->m_sprite_manager);
-        p_mushroom->Set_Type(TYPE_MUSHROOM_BLUE);
-        p_powerup = p_mushroom;
-        break;
-    case TYPE_FIREPLANT:
-        p_powerup = new cFirePlant(pActive_Level->m_sprite_manager);
-        break;
-    default:
-        std::cerr << "Warning: Unknown item type found in HUD item box, releasing a normal berry instead" << std::endl;
-        p_mushroom = new cMushroom(pActive_Level->m_sprite_manager);
-        p_mushroom->Set_Type(TYPE_MUSHROOM_DEFAULT);
-        p_powerup = p_mushroom;
-        break;
-    }
+
+    GL_rect cam_rect = pLevel_Manager->m_camera->Get_Rect();
+
+    // Spawn rescue item
+    cRescueItem* p_item = new cRescueItem(pActive_Level->m_sprite_manager);
+    p_item->Set_Item_Type(m_rescue_item_type);
+    p_item->Set_Pos(cam_rect.m_x + (cam_rect.m_w / 2.0f) - (BERRY_WIDTH / 2.0f),
+                    cam_rect.m_y);
+    pActive_Level->m_sprite_manager->Add(p_item);
 
     pAudio->Play_Sound("itembox_get.ogg");
 
-    p_powerup->Set_Ignore_Camera(1);
-    p_powerup->m_camera_range = 0;
-    p_powerup->Set_Massive_Type(MASS_MASSIVE);
-    p_powerup->m_pos_z = POWERUP_Z_POS;
-    p_powerup->Set_Pos(pLevel_Manager->m_camera->Get_Rect().m_x,
-                       pLevel_Manager->m_camera->Get_Rect().m_y);
-    p_powerup->Set_Spawned(true);
-    p_powerup->Set_Active(true);
-    pActive_Level->m_sprite_manager->Add(p_powerup);
-
-    // TODO: Does not appear?
-
+    // Clear rescue item
     m_rescue_item_type = TYPE_UNDEFINED;
     mp_item_image->hide();
 }
