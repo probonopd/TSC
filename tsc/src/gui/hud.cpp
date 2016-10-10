@@ -51,6 +51,9 @@ cHud::cHud()
     mp_lives_label  = mp_hud_root->getChild("lives");
     mp_item_image   = mp_hud_root->getChild("itembox_image/item_image");
 
+    // Set height of HUD to the height of the highest element, which is the itembox.
+    mp_hud_root->setHeight(CEGUI::UDim(0, ITEMBOX_HEIGHT));
+
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
         .getDefaultGUIContext()
