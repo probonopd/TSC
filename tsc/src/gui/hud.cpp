@@ -25,6 +25,10 @@
 #define ITEMBOX_WIDTH 48 * global_upscalex
 #define ITEMBOX_HEIGHT 48 * global_upscaley
 
+// Sizing found by trial&error.
+#define JEWEL_WIDTH 16 * global_upscalex
+#define JEWEL_HEIGHT 16 * global_upscaley
+
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
 
@@ -59,6 +63,10 @@ cHud::cHud()
         .getDefaultGUIContext()
         .getRootWindow()
         ->addChild(mp_hud_root);
+
+    // Size of the jewel image
+    mp_hud_root->getChild("jewel_image")->setSize(CEGUI::USize(CEGUI::UDim(0, JEWEL_WIDTH),
+                                                               CEGUI::UDim(0, JEWEL_HEIGHT)));
 
     // Size & position the item box and its contents
     mp_hud_root->getChild("itembox_image")->setSize(CEGUI::USize(CEGUI::UDim(0, ITEMBOX_WIDTH),
