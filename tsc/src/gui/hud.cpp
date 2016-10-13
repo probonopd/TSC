@@ -13,6 +13,7 @@
 #include "../objects/rescue_item.hpp"
 #include "../scripting/events/gold_100_event.hpp"
 #include "../core/property_helper.hpp"
+#include "../core/framerate.hpp"
 #include "../core/filesystem/resource_manager.hpp"
 #include "../core/sprite_manager.hpp"
 #include "hud.hpp"
@@ -41,7 +42,8 @@ cHud::cHud()
       m_waypoint_name(""),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
       mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
-      mp_jewels_label(NULL), mp_lives_label(NULL), mp_item_image(NULL)
+      mp_jewels_label(NULL), mp_lives_label(NULL), mp_fps_label(NULL),
+      mp_item_image(NULL)
 {
     load_hud_images_into_cegui();
 
@@ -53,6 +55,7 @@ cHud::cHud()
     mp_time_label   = mp_hud_root->getChild("time");
     mp_jewels_label = mp_hud_root->getChild("jewels");
     mp_lives_label  = mp_hud_root->getChild("lives");
+    mp_fps_label    = mp_hud_root->getChild("debug_fps");
     mp_item_image   = mp_hud_root->getChild("itembox_image/item_image");
 
     // Set height of HUD to the height of the highest element, which is the itembox.
@@ -63,6 +66,9 @@ cHud::cHud()
         .getDefaultGUIContext()
         .getRootWindow()
         ->addChild(mp_hud_root);
+
+    // Hide FPS label by default
+    mp_fps_label->hide();
 
     // Size of the jewel image
     mp_hud_root->getChild("jewel_image")->setSize(CEGUI::USize(CEGUI::UDim(0, JEWEL_WIDTH),
@@ -103,14 +109,25 @@ void cHud::Show()
     mp_hud_root->show();
 }
 
+void cHud::Show_Debug_Widgets()
+{
+    mp_fps_label->show();
+}
+
 void cHud::Hide()
 {
     mp_hud_root->hide();
 }
 
+void cHud::Hide_Debug_Widgets()
+{
+    mp_fps_label->hide();
+}
+
 void cHud::Update()
 {
     static char timestr[32];
+    static char fps[128];
     static int seconds;
 
     // Do nothing if not shown anyway
@@ -125,9 +142,19 @@ void cHud::Update()
     m_last_time     = time_now;
     seconds         = m_elapsed_time / 1000;
 
-    memset(timestr, '\0', 32);
     sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
     mp_time_label->setText(timestr);
+
+    // Update FPS counter
+    if (game_debug) {
+        sprintf(fps,
+                // TRANS: Do not translate the part in brackets
+                _("[colour='FFFFFF00']FPS: Best: %.02f Worst: %.02f Current: %0.2f"),
+                pFramerate->m_fps_best,
+                pFramerate->m_fps_worst,
+                pFramerate->m_fps);
+        mp_fps_label->setText(fps);
+    }
 }
 
 void cHud::Set_Points(long points)

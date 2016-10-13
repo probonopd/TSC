@@ -5,11 +5,19 @@
     <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}"/>
 
     <Window type="TaharezLook/Label" name="points">
-      <Property name="Area" value="{{0.01,0},{0.1,0},{0.3,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.1,0},{0.3,0},{0.4,0}}"/>
       <Property name="Text" value="Points 00000000"/>
       <Property name="HorzFormatting" value="Left"/>
       <Property name="VertFormatting" value="Top"/>
       <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="debug_fps">
+      <Property name="Area" value="{{0.01,0},{0.5,0},{0.3,0},{1,0}}"/>
+      <Property name="Text" value="[colour='FFFFFF00']FPS: 0"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Small"/>
     </Window>
 
     <Window type="TaharezLook/StaticImage" name="jewel_image">

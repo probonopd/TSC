@@ -3,6 +3,7 @@
   <Imageset filename="TaharezLook.imageset"/>
   <Font filename="DejaVuSans-Regular.font"/>
   <Font filename="DejaVuSans-Regular.large.font"/>
+  <Font filename="DejaVuSans-Regular.small.font"/>
   <Font filename="DejaVuSans-Bold.font"/>
   <Font filename="DejaVuSansMono.font"/>
   <LookNFeel filename="TaharezLook.looknfeel"/>
