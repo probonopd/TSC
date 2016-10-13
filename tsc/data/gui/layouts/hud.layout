@@ -2,7 +2,8 @@
 
 <GUILayout version="4">
   <Window type="DefaultWindow" name="hud">
-    <Property name="Area" value="{{0,0},{0,0},{1,0},{0.1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{0.3,0}}"/>
+    <Property name="MousePassThroughEnabled" value="True"/>
 
     <Window type="TaharezLook/Label" name="points">
       <Property name="Area" value="{{0.01,0},{0.1,0},{0.3,0},{0.4,0}}"/>
@@ -70,6 +71,13 @@
       <Property name="Image" value="hud_alex"/>
       <Property name="BackgroundEnabled" value="False"/>
       <Property name="FrameEnabled" value="False"/>
+    </Window>
+
+    <Window type="TaharezLook/StaticText" name="message">
+      <Property name="Area" value="{{0.1,0},{0.3,0},{0.9,0},{0.5,0}}"/>
+      <Property name="Text" value="Testtext"/>
+      <Property name="Font" value="DejaVuSans"/>
+      <Property name="HorzFormatting" value="Centre"/>
     </Window>
 
   </Window>

@@ -28,6 +28,7 @@
 #include "../user/preferences.hpp"
 #include "../level/level_settings.hpp"
 #include "../level/level_editor.hpp"
+#include "../core/i18n.hpp"
 #include "../overworld/world_editor.hpp"
 
 namespace TSC {
@@ -226,13 +227,13 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
     // debug mode
     else if (evt.key.code == sf::Keyboard::D && evt.key.control) {
         if (game_debug) {
-            // OLD pHud_Debug->Set_Text("Debug mode disabled");
+            gp_hud->Set_Text(_("Debug mode disabled"));
             gp_hud->Hide_Debug_Widgets();
         }
         else {
             pFramerate->m_fps_worst = 100000;
             pFramerate->m_fps_best = 0;
-            // OLD pHud_Debug->Set_Text("Debug mode enabled");
+            gp_hud->Set_Text(_("Debug mode enabled"));
             gp_hud->Show_Debug_Widgets();
         }
 

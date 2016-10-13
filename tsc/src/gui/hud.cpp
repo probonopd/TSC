@@ -30,6 +30,9 @@
 #define JEWEL_WIDTH 16 * global_upscalex
 #define JEWEL_HEIGHT 16 * global_upscaley
 
+// Number of seconds to display HUD messages, times the speedfactor
+#define TEXT_DISPLAY_TIME 2.0f * speedfactor_fps
+
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
 
@@ -41,9 +44,9 @@ cHud::cHud()
       mp_display_item(NULL), m_rescue_item_type(TYPE_UNDEFINED),
       m_waypoint_name(""),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
-      mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
+      m_text_counter(0.0f), mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
       mp_jewels_label(NULL), mp_lives_label(NULL), mp_fps_label(NULL),
-      mp_item_image(NULL)
+      mp_message_text(NULL), mp_item_image(NULL)
 {
     load_hud_images_into_cegui();
 
@@ -56,10 +59,8 @@ cHud::cHud()
     mp_jewels_label = mp_hud_root->getChild("jewels");
     mp_lives_label  = mp_hud_root->getChild("lives");
     mp_fps_label    = mp_hud_root->getChild("debug_fps");
+    mp_message_text = mp_hud_root->getChild("message");
     mp_item_image   = mp_hud_root->getChild("itembox_image/item_image");
-
-    // Set height of HUD to the height of the highest element, which is the itembox.
-    mp_hud_root->setHeight(CEGUI::UDim(0, ITEMBOX_HEIGHT));
 
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
@@ -67,8 +68,9 @@ cHud::cHud()
         .getRootWindow()
         ->addChild(mp_hud_root);
 
-    // Hide FPS label by default
+    // Hide by default
     mp_fps_label->hide();
+    mp_message_text->hide();
 
     // Size of the jewel image
     mp_hud_root->getChild("jewel_image")->setSize(CEGUI::USize(CEGUI::UDim(0, JEWEL_WIDTH),
@@ -144,6 +146,15 @@ void cHud::Update()
 
     sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
     mp_time_label->setText(timestr);
+
+    // Update text counter if a message is displayed
+    if (mp_message_text->isVisible()) {
+        m_text_counter -= pFramerate->m_speed_factor;
+        if (m_text_counter <= 0) {
+            mp_message_text->hide();
+            m_text_counter = 0;
+        }
+    }
 
     // Update FPS counter
     if (game_debug) {
@@ -341,6 +352,13 @@ void cHud::Set_Waypoint_Name(std::string name)
 std::string& cHud::Get_Waypoint_Name()
 {
     return m_waypoint_name;
+}
+
+void cHud::Set_Text(std::string message)
+{
+    mp_message_text->setText(message);
+    mp_message_text->show();
+    m_text_counter = TEXT_DISPLAY_TIME;
 }
 
 void cHud::load_hud_images_into_cegui()

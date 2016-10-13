@@ -65,6 +65,8 @@ namespace TSC {
         void Reset_Item(void);
         SpriteType Get_Item();
 
+        void Set_Text(std::string message);
+
         void Set_Waypoint_Name(std::string name);
         std::string& Get_Waypoint_Name();
 
@@ -79,6 +81,7 @@ namespace TSC {
         std::string m_waypoint_name;
         uint32_t m_elapsed_time;
         std::chrono::system_clock::time_point m_last_time;
+        float m_text_counter;
 
         CEGUI::FrameWindow* mp_hud_root;
         CEGUI::Window* mp_points_label;
@@ -86,6 +89,7 @@ namespace TSC {
         CEGUI::Window* mp_jewels_label;
         CEGUI::Window* mp_lives_label;
         CEGUI::Window* mp_fps_label;
+        CEGUI::Window* mp_message_text;
         CEGUI::Window* mp_item_image;
 
         // Names the berries are available under in CEGUI
