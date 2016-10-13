@@ -6,7 +6,7 @@
     <Property name="MousePassThroughEnabled" value="True"/>
 
     <Window type="TaharezLook/Label" name="points">
-      <Property name="Area" value="{{0.01,0},{0.1,0},{0.3,0},{0.4,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.05,0},{0.3,0},{0.4,0}}"/>
       <Property name="Text" value="Points 00000000"/>
       <Property name="HorzFormatting" value="Left"/>
       <Property name="VertFormatting" value="Top"/>
@@ -14,7 +14,7 @@
     </Window>
 
     <Window type="TaharezLook/Label" name="debug_fps">
-      <Property name="Area" value="{{0.01,0},{0.5,0},{0.3,0},{1,0}}"/>
+      <Property name="Area" value="{{0.01,0},{0.15,0},{0.3,0},{1,0}}"/>
       <Property name="Text" value="[colour='FFFFFF00']FPS: 0"/>
       <Property name="HorzFormatting" value="Left"/>
       <Property name="VertFormatting" value="Top"/>
@@ -22,14 +22,14 @@
     </Window>
 
     <Window type="TaharezLook/StaticImage" name="jewel_image">
-      <Property name="Area" value="{{0.3,0},{0.1,0},{0.32,0},{0.3,0}}"/>
+      <Property name="Area" value="{{0.3,0},{0.05,0},{0.32,0},{0.3,0}}"/>
       <Property name="Image" value="hud_jewel"/>
       <Property name="BackgroundEnabled" value="False"/>
       <Property name="FrameEnabled" value="False"/>
     </Window>
 
     <Window type="TaharezLook/Label" name="jewels">
-      <Property name="Area" value="{{0.33,0},{0.1,0},{0.4,0},{1,0}}"/>
+      <Property name="Area" value="{{0.33,0},{0.05,0},{0.4,0},{1,0}}"/>
       <Property name="Text" value="00"/>
       <Property name="HorzFormatting" value="Left"/>
       <Property name="VertFormatting" value="Top"/>
@@ -51,7 +51,7 @@
     </Window>
 
     <Window type="TaharezLook/Label" name="time">
-      <Property name="Area" value="{{0.7,0},{0.1,0},{0.9,0},{1,0}}"/>
+      <Property name="Area" value="{{0.7,0},{0.05,0},{0.9,0},{1,0}}"/>
       <Property name="Text" value="Time 00:00"/>
       <Property name="HorzFormatting" value="Left"/>
       <Property name="VertFormatting" value="Top"/>
@@ -59,7 +59,7 @@
     </Window>
 
     <Window type="TaharezLook/Label" name="lives">
-      <Property name="Area" value="{{0.91,0},{0.1,0},{1,0},{1,0}}"/>
+      <Property name="Area" value="{{0.91,0},{0.05,0},{1,0},{1,0}}"/>
       <Property name="Text" value="[colour='FF00FF00']3 x"/>
       <Property name="HorzFormatting" value="Left"/>
       <Property name="VertFormatting" value="Top"/>
@@ -67,7 +67,7 @@
     </Window>
 
     <Window type="TaharezLook/StaticImage" name="alex_image">
-      <Property name="Area" value="{{0.95,0},{0.1,0},{1,0},{0.5,0}}"/>
+      <Property name="Area" value="{{0.95,0},{0.05,0},{1,0},{0.5,0}}"/>
       <Property name="Image" value="hud_alex"/>
       <Property name="BackgroundEnabled" value="False"/>
       <Property name="FrameEnabled" value="False"/>
