@@ -207,7 +207,7 @@ cLevel* cLevel::Load_From_File(fs::path filename)
         loader.parse_file(filename);
     }
     else { // old, unsupported level format
-        // OLD pHud_Debug->Set_Text(_("Unsupported Level format : ") + (const std::string)path_to_utf8(filename));
+        gp_hud->Set_Text(_("Unsupported Level format : ") + (const std::string)path_to_utf8(filename));
         return NULL;
     }
 
@@ -373,7 +373,7 @@ void cLevel::Save(void)
     catch (xmlpp::exception& e) {
         cerr << "Error: Couldn't save level file: " << e.what() << endl;
         cerr << "Is the file read-only?" << endl;
-        // OLD pHud_Debug->Set_Text(_("Couldn't save level ") + path_to_utf8(m_level_filename), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save level ") + path_to_utf8(m_level_filename));
 
         // Abort
         return;
@@ -389,7 +389,7 @@ void cLevel::Save(void)
     }
 
     // Display nice completion message
-    // OLD pHud_Debug->Set_Text(_("Level ") + path_to_utf8(Trim_Filename(m_level_filename, false, false)) + _(" saved"));
+    gp_hud->Set_Text(_("Level ") + path_to_utf8(Trim_Filename(m_level_filename, false, false)) + _(" saved"));
 }
 
 void cLevel::Delete(void)
@@ -788,10 +788,10 @@ bool cLevel::Key_Down(const sf::Event& evt)
     // God Mode
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !editor_enabled) {
         if (pLevel_Player->m_god_mode) {
-            // OLD pHud_Debug->Set_Text(_("Omega Mode disabled"));
+            gp_hud->Set_Text(_("Omega Mode disabled"));
         }
         else {
-            // OLD pHud_Debug->Set_Text(_("Omega Mode enabled"));
+            gp_hud->Set_Text(_("Omega Mode enabled"));
         }
 
         pLevel_Player->m_god_mode = !pLevel_Player->m_god_mode;

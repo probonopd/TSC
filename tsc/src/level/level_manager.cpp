@@ -483,7 +483,7 @@ void cLevel_Manager::Goto_Sub_Level(std::string str_level, const std::string& st
             level = pLevel_Manager->Load(str_level, true);
         }
         catch(InvalidLevelError& err) {
-            // OLD pHud_Debug->Set_Text(_("Invalid target level."));
+            gp_hud->Set_Text(_("Invalid target level."));
             pLevel_Player->DownGrade(true);
             return;
         }

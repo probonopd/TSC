@@ -166,16 +166,16 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
         // disable
         if (Is_Float_Equal(fixed_speedfactor, 0.0f)) {
             pFramerate->Set_Fixed_Speedfacor(0.0f);
-            // OLD pHud_Debug->Set_Text("Fixed speed factor disabled");
+            gp_hud->Set_Text("Fixed speed factor disabled");
         }
         // below minimum
         else if (fixed_speedfactor <= 0.04f) {
-            // OLD pHud_Debug->Set_Text("Fixed speed factor must be greater than 0.04");
+            gp_hud->Set_Text("Fixed speed factor must be greater than 0.04");
         }
         // enable
         else {
             pFramerate->Set_Fixed_Speedfacor(fixed_speedfactor);
-            // OLD pHud_Debug->Set_Text("Fixed speed factor enabled");
+            gp_hud->Set_Text("Fixed speed factor enabled");
         }
     }
     // take a screenshot
@@ -207,10 +207,10 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
         pAudio->Toggle_Sounds();
 
         if (!pAudio->m_sound_enabled) {
-            // OLD pHud_Debug->Set_Text("Sound disabled");
+            gp_hud->Set_Text("Sound disabled");
         }
         else {
-            // OLD pHud_Debug->Set_Text("Sound enabled");
+            gp_hud->Set_Text("Sound enabled");
         }
     }
     // music toggle
@@ -218,10 +218,10 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
         pAudio->Toggle_Music();
 
         if (!pAudio->m_music_enabled) {
-            // OLD pHud_Debug->Set_Text("Music disabled");
+            gp_hud->Set_Text("Music disabled");
         }
         else {
-            // OLD pHud_Debug->Set_Text("Music enabled");
+            gp_hud->Set_Text("Music enabled");
         }
     }
     // debug mode
@@ -242,12 +242,12 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
     // performance mode
     else if (evt.key.code == sf::Keyboard::P && evt.key.control) {
         if (game_debug_performance) {
-            // OLD pHud_Debug->Set_Text("Performance debug mode disabled");
+            gp_hud->Set_Text("Performance debug mode disabled");
         }
         else {
             pFramerate->m_fps_worst = 100000;
             pFramerate->m_fps_best = 0;
-            // OLD pHud_Debug->Set_Text("Performance debug mode enabled");
+            gp_hud->Set_Text("Performance debug mode enabled");
         }
 
         game_debug_performance = !game_debug_performance;

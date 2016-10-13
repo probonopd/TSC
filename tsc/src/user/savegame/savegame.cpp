@@ -264,7 +264,7 @@ int cSavegame::Load_Game(unsigned int save_slot)
     gp_hud->Set_Jewels(savegame->m_goldpieces);
     gp_hud->Set_Lives(savegame->m_lives);
     gp_hud->Set_Item(static_cast<SpriteType>(savegame->m_itembox_item), 0);
-    // OLD pHud_Debug->Set_Text(_("Savegame ") + int_to_string(save_slot) + _(" loaded"));
+    gp_hud->Set_Text(_("Savegame ") + int_to_string(save_slot) + _(" loaded"));
 
     // #### Return stack ####
 
@@ -437,7 +437,7 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
     catch (xmlpp::exception& e) {
         cerr << "Failed to save savegame '" << filename << "': " << e.what() << endl
              << "Is the file read-only?" << endl;
-        // OLD pHud_Debug->Set_Text(_("Couldn't save savegame ") + path_to_utf8(filename), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save savegame ") + path_to_utf8(filename));
     }
 
     // OLD if (pHud_Debug) {

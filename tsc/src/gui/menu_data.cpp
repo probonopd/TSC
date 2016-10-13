@@ -864,7 +864,7 @@ void cMenu_Start::Load_Campaign(std::string name)
 
     // if not available
     if (!new_campaign) {
-        // OLD pHud_Debug->Set_Text(_("Couldn't load campaign ") + name, static_cast<float>(speedfactor_fps));
+        gp_hud->Set_Text(_("Couldn't load campaign ") + name);
     }
     else {
         // enter level
@@ -899,7 +899,7 @@ void cMenu_Start::Load_World(std::string name)
 
     // if not available
     if (!new_world) {
-        // OLD pHud_Debug->Set_Text(_("Couldn't load overworld ") + name, static_cast<float>(speedfactor_fps));
+        gp_hud->Set_Text(_("Couldn't load overworld ") + name);
     }
     else {
         // enter world
@@ -925,7 +925,7 @@ bool cMenu_Start::Load_Level(std::string level_name)
     boost::filesystem::path level_path = pLevel_Manager->Get_Path(level_name);
     if (level_path.empty()) {
         pAudio->Play_Sound("error.ogg");
-        // OLD pHud_Debug->Set_Text(_("Couldn't load level ") + level_name, static_cast<float>(speedfactor_fps));
+        gp_hud->Set_Text(_("Couldn't load level ") + level_name);
         return 0;
     }
 

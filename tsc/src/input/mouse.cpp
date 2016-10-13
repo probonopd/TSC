@@ -1147,10 +1147,10 @@ void cMouseCursor::Toggle_Snap_Mode(void)
     m_snap_to_object_mode = !m_snap_to_object_mode;
 
     if (m_snap_to_object_mode) {
-        // OLD pHud_Debug->Set_Text(_("Snap to object mode enabled"));
+        gp_hud->Set_Text(_("Snap to object mode enabled"));
     }
     else {
-        // OLD pHud_Debug->Set_Text(_("Snap to object mode disabled"));
+        gp_hud->Set_Text(_("Snap to object mode disabled"));
     }
 }
 
@@ -1618,7 +1618,7 @@ void cMouseCursor::Editor_Update(void)
     }
 
     // OLD if (pHud_Debug->m_counter <= 0.0f) {
-        // OLD pHud_Debug->Set_Text(display_name, 1);
+        gp_hud->Set_Text(display_name);
     // OLD }
 
     delete col;

@@ -1467,7 +1467,7 @@ void cVideo::Save_Screenshot(void)
             delete[] data;
 
             // show info
-            // OLD pHud_Debug->Set_Text("Screenshot " + int_to_string(i) + _(" saved"), speedfactor_fps * 2.5f);
+            gp_hud->Set_Text("Screenshot " + int_to_string(i) + _(" saved"));
 
             // finished
             return;

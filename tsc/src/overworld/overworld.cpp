@@ -69,7 +69,7 @@ void cOverworld_description::Save(void)
     }
     catch (xmlpp::exception& e) {
         cerr << "Failed to save world description file '" << path_to_utf8(filename) << "': " << e.what() << endl;
-        // OLD pHud_Debug->Set_Text(_("Couldn't save world description ") + path_to_utf8(filename), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save world description ") + path_to_utf8(filename));
         return;
     }
 }
@@ -239,12 +239,12 @@ void cOverworld::Save(void)
     catch (xmlpp::exception& e) {
         cerr << "Error: Could not save overworld '" << path_to_utf8(save_dir) << "': " << e.what() << endl
              << "Is the directory read-only?" << endl;
-        // OLD pHud_Debug->Set_Text(_("Couldn't save world ") + path_to_utf8(save_dir), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save world ") + path_to_utf8(save_dir));
         return;
     }
 
     // show info
-    // OLD pHud_Debug->Set_Text(_("World ") + m_description->m_name + _(" saved"));
+    gp_hud->Set_Text(_("World ") + m_description->m_name + _(" saved"));
 }
 
 void cOverworld::Save_To_Directory(fs::path path)
