@@ -156,36 +156,38 @@ void cHud::Update()
     if (!mp_hud_root->isVisible())
         return;
 
-    // Increase playtime
-    std::chrono::system_clock::time_point time_now = std::chrono::system_clock::now();
-    std::chrono::milliseconds time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - m_last_time);
+    if (Game_Mode == MODE_LEVEL) {
+        // Increase playtime
+        std::chrono::system_clock::time_point time_now = std::chrono::system_clock::now();
+        std::chrono::milliseconds time_elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(time_now - m_last_time);
 
-    m_elapsed_time += time_elapsed.count();
-    m_last_time     = time_now;
-    seconds         = m_elapsed_time / 1000;
+        m_elapsed_time += time_elapsed.count();
+        m_last_time     = time_now;
+        seconds         = m_elapsed_time / 1000;
 
-    sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
-    mp_time_label->setText(timestr);
+        sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
+        mp_time_label->setText(timestr);
 
-    // Update all minipoints
-    std::vector<cMiniPoints*>::iterator iter;
-    for(iter=m_active_mini_points.begin(); iter != m_active_mini_points.end();) {
-        if ((*iter)->Update()) {
-            // If they're done displaying, delete them and remove them from the vector.
-            delete (*iter);
-            iter = m_active_mini_points.erase(iter);
+        // Update all minipoints
+        std::vector<cMiniPoints*>::iterator iter;
+        for(iter=m_active_mini_points.begin(); iter != m_active_mini_points.end();) {
+            if ((*iter)->Update()) {
+                // If they're done displaying, delete them and remove them from the vector.
+                delete (*iter);
+                iter = m_active_mini_points.erase(iter);
+            }
+            else {
+                iter++;
+            }
         }
-        else {
-            iter++;
-        }
-    }
 
-    // Update text counter if a message is displayed
-    if (mp_message_text->isVisible()) {
-        m_text_counter -= pFramerate->m_speed_factor;
-        if (m_text_counter <= 0) {
-            mp_message_text->hide();
-            m_text_counter = 0;
+        // Update text counter if a message is displayed
+        if (mp_message_text->isVisible()) {
+            m_text_counter -= pFramerate->m_speed_factor;
+            if (m_text_counter <= 0) {
+                mp_message_text->hide();
+                m_text_counter = 0;
+            }
         }
     }
 
