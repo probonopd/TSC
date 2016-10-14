@@ -19,6 +19,21 @@
 
 namespace TSC {
 
+    class cMiniPoints
+    {
+    public:
+        cMiniPoints(std::string pointstext, float x, float y, Color color);
+        ~cMiniPoints();
+
+        bool Update();
+
+    private:
+        CEGUI::Window* mp_label;
+        float m_counter;
+        float m_x;
+        float m_y;
+    };
+
     /**
      * The HUD (Head-Up Display) is the collection of UI elements at the
      * top of the screen (time passed, jewels collected, etc.). It is
@@ -97,6 +112,8 @@ namespace TSC {
         std::string m_normal_berry_img;
         std::string m_fire_berry_img;
         std::string m_ice_berry_img;
+
+        std::vector<cMiniPoints*> m_active_mini_points;
 
         void load_hud_images_into_cegui();
     };

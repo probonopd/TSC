@@ -37,6 +37,10 @@
 // Number of seconds to display HUD messages, times the speedfactor
 #define TEXT_DISPLAY_TIME 2.0f * speedfactor_fps
 
+// Number of seconds to display the mini points (the points shown
+// e.g. next to a killed enemy), times the speedfactor.
+#define MINIPOINTS_DISPLAY_TIME 2.0f * speedfactor_fps
+
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
 
@@ -107,6 +111,13 @@ cHud::cHud()
 
 cHud::~cHud()
 {
+    // Delete all instances of unfinished minipoints
+    std::vector<cMiniPoints*>::iterator iter;
+    for(iter=m_active_mini_points.begin(); iter != m_active_mini_points.end(); iter++) {
+        delete (*iter);
+    }
+    m_active_mini_points.clear();
+
     CEGUI::System::getSingleton()
         .getDefaultGUIContext()
         .getRootWindow()
@@ -156,6 +167,19 @@ void cHud::Update()
     sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
     mp_time_label->setText(timestr);
 
+    // Update all minipoints
+    std::vector<cMiniPoints*>::iterator iter;
+    for(iter=m_active_mini_points.begin(); iter != m_active_mini_points.end();) {
+        if ((*iter)->Update()) {
+            // If they're done displaying, delete them and remove them from the vector.
+            delete (*iter);
+            iter = m_active_mini_points.erase(iter);
+        }
+        else {
+            iter++;
+        }
+    }
+
     // Update text counter if a message is displayed
     if (mp_message_text->isVisible()) {
         m_text_counter -= pFramerate->m_speed_factor;
@@ -187,9 +211,24 @@ void cHud::Set_Points(long points)
     mp_points_label->setText(str);
 }
 
-void cHud::Add_Points(long points, float /* x = 0.0f */, float y /* = 0.0f */, std::string strtext /* = "" */, const Color& color /* = 255 */, bool allow_multiplier /* = false */)
+void cHud::Add_Points(long points, float x /* = 0.0f */, float y /* = 0.0f */, std::string strtext /* = "" */, const Color& color /* = 255 */, bool allow_multiplier /* = false */)
 {
+    if (allow_multiplier) {
+        points = static_cast<unsigned int>(pLevel_Player->m_kill_multiplier * static_cast<float>(points));
+    }
+
     Set_Points(m_points + points);
+
+    if (Is_Float_Equal(x, 0.0f) || Is_Float_Equal(y, 0.0f) || m_active_mini_points.size() > 50) {
+        return;
+    }
+
+    // if empty set the points as text
+    if (strtext.empty()) {
+        strtext = int_to_string(points);
+    }
+
+    m_active_mini_points.push_back(new cMiniPoints(strtext, x, y, color));
 }
 
 void cHud::Reset_Points()
@@ -415,4 +454,59 @@ cHudSprite* cHudSprite::Copy(void) const
     hud_sprite->Set_Shadow_Pos(m_shadow_pos);
     hud_sprite->Set_Shadow_Color(m_shadow_color);
     return hud_sprite;
+}
+
+cMiniPoints::cMiniPoints(std::string pointstext, float x, float y, Color color)
+    : mp_label(NULL), m_counter(MINIPOINTS_DISPLAY_TIME),
+      m_x(x), m_y(y)
+{
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+
+    // TODO: Apply color
+
+    mp_label = wmgr.createWindow("TaharezLook/Label");
+    mp_label->setText(pointstext);
+    p_root->addChild(mp_label);
+}
+
+cMiniPoints::~cMiniPoints()
+{
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+
+    p_root->removeChild(mp_label);
+    wmgr.destroyWindow(mp_label);
+    mp_label = NULL;
+}
+
+/**
+ * Decreases the internal show counter, updates the position of the text as
+ * required to adjust to camera movements, and returns true if the text is
+ * not displayed anymore and can thus be deleted. Otherwise returns false,
+ * which means you need to keep the object around.
+ *
+ * Call this once per frame.
+ */
+bool cMiniPoints::Update()
+{
+    if (m_counter <= 0)
+        return true;
+    else {
+        // Have it move upwards a little with each frame
+        m_y -= 0.4f;
+
+        // Now resolve the position (CEGUI expects coordinates always
+        // relative to the current screen, it does not now the level
+        // coordinates that are stored in m_x, m_y).
+        float x = m_x - pLevel_Manager->m_camera->m_x;
+        float y = m_y - pLevel_Manager->m_camera->m_y;
+
+        mp_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, x), CEGUI::UDim(0, y)));
+        mp_label->setAlpha(static_cast<float>(m_counter) / static_cast<float>(MINIPOINTS_DISPLAY_TIME));
+
+        // Decrease display counter
+        m_counter -= pFramerate->m_speed_factor;
+        return false;
+    }
 }
