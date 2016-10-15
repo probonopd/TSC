@@ -32,6 +32,14 @@ end
 
 MRuby::Build.new do |conf|
   toolchain :gcc
+  enable_debug
+
+  # Define MRB_UTF8_STRING to make mruby's String class able
+  # to handle non-ascii characters properly.
+  conf.cc do |cc|
+    cc.flags += ["-DMRB_UTF8_STRING"]
+  end
+
   config.call(conf, root)
 end
 
@@ -40,9 +48,11 @@ if ENV["CROSSCOMPILE_TARGET"] and !ENV["CROSSCOMPILE_TARGET"].empty?
 
   MRuby::CrossBuild.new(prefix) do |conf|
     toolchain :gcc
+    enable_debug
 
     conf.cc do |cc|
       cc.command = ENV["CC"] || "#{prefix}-gcc"
+      cc.flags += ["-DMRB_UTF8_STRING"]
     end
 
     conf.linker do |linker|

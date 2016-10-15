@@ -1,6 +1,7 @@
 3000-01-01  Nobody  <nobody@secretchronicles.de>
 
 	* Version unreleased.
+	* Feature: Added script std/giant_jewel_box
 	* Feature: Added sound "furry_death'"by Nearbu
 	* Feature: Added music "medieval_1" ("Beautiful World") by Naerbu
 	* Feature: Added music "snow_2" ("Snowy Mountain") by Naerbu
@@ -34,14 +35,15 @@
 	* Fix: Tiles in Editor are not Mirrored Properly (#149 by Justin Rissler)
 	* Fix: Invibility save problem (#180 by Chris Jacobsen)
 	* Fix: Crash on wn_05_top (#389, patch by Georger Araújo)
-	* Fix: Fix some issues found by coverity (PR #455 by Tobias Markus)
 	* Fix: Added scoring for Larries (PR #460 by Chris Jacobsen)
 	* Fix: CEGUI log file was not created (#506 by Marvin Gülker)
 	* Fix: Boost 1.60.0 breaks compilation (#510 by Marvin Gülker)
 	* Fix: Crash on cache regeneration (#552 by Marvin Gülker)
 	* Dependencies: Removed SDL 1 and instead depend on SFML (Ticket
 		#105 by Chris Jacobsen)
-	* Dependencies: Upgraded CEGUI from 0.7.9 to 0.8.7
+	* Dependencies: Upgraded CEGUI from 0.7.9 to 0.8.7 (ticket #10 by
+		Marvin Gülker)
+	* Dependencies: Upgraded mruby from 1.0.0 to 1.2.0
 	* Dependencies: New dependency on the `tinyclipboard' library
 	* Misc: C++11 compilation support
 	* Misc: Renamed "1-UP berry" to "Life berry" (#365 by Chris Jacobsen)

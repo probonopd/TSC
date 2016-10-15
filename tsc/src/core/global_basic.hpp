@@ -81,8 +81,11 @@
 #include <boost/chrono.hpp>
 #include <boost/system/error_code.hpp>
 
-// libxml++ (with its prerequisite glibmm)
-#include <glibmm.h>
+// glibmm (we use a single helper function from it, filename_from_utf8(),
+// to support Unicode pathes -- maybe we can go without it?)
+#include <glibmm/convert.h>
+
+// libxml++
 #include <libxml++/libxml++.h>
 
 // CEGUI

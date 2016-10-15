@@ -1,6 +1,8 @@
 Installation instructions for TSC
 =================================
 
+Time-stamp: <2016-08-03 10:13:02 quintus>
+
 TSC uses [CMake][1] as the build system, so the first thing you have to
 ensure is that you have CMake installed.
 
@@ -17,14 +19,49 @@ after we have had a look on the dependencies. Note that if you want
 to crosscompile, you should probably read this entire file and not
 just the section on crosscompilation to get a better understanding.
 
-Dependencies
-------------
+Installation instructions tailored specifically towards compiling TSC
+from Git on Lubuntu 16.10 can be found in the separate file
+tsc/docs/pages/compile_on_lubuntu_16_10.md.
+
+Contents
+--------
+
+I. Dependencies
+    1. Common dependencies
+    2. Linux dependencies
+    3. Windows dependencies
+II. Configuration options
+III. Installing from a released tarball
+IV. Installing from Git
+V. Upgrade notices
+VI. Crosscompiling from Linux to Windows
+    1. Crosscompiling from a released tarball
+    2. Crosscompiling from Git
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+I. Dependencies
+----------------
 
 In any case, you will have to install a number of dependencies before
 you can try installing TSC itself. The following sections list the
 dependencies for each supported system.
 
-### Common dependencies ###
+
+
+
+### 1. Common dependencies ###
 
 The following dependencies are required regardless of the system you
 install to.
@@ -40,15 +77,9 @@ install to.
 * The libPCRE regular expression library.
 * The libxml++ library.
 * The Freetype library.
-* CEGUI >= 0.8.5
-  * Lower versions of CEGUI do not work due to CEGUI bug #1063
-    (incompatibility with a new version of glm), which was resolved
-    first with CEGUI 0.8.5.
-  * Before starting to compile the most recent CEGUI, you should try
-    with your distibutions's CEGUI if it is >= 0.8.0. Chances are that
-    you are not subject to the glm bug and it might just work fine for
-    you. If the game appears to have no menus, then you *are* subject
-    to the glm bug and you *need* a newer CEGUI.
+* CEGUI >= 0.8.0
+  * If you have glm 0.9.6 or newer, you need CEGUI >= 0.8.5
+    due to CEGUI bug #1063 (https://bitbucket.org/cegui/cegui/issues/1063).
 * Boost >= 1.50.0 (to be exact: boost_system, boost_filesystem, boost_thread)
 * SFML >= 2.3.0
 * Optionally for generating the docs:
@@ -58,13 +89,19 @@ install to.
   * The `doxygen` program.
   * Ruby’s `rdoc` program.
 
-### Linux dependencies ###
+
+
+
+### 2. Linux dependencies ###
 
 * The DevIL library.
 
-Installing has been tested on Lubuntu 16.10.
+#### Example for Ubuntu ####
 
-1) Install dependencies:
+(specific instructions for Lubuntu 16.10 can be found in
+tsc/docs/pages/compile_on_lubuntu_16_10.md).
+
+Install core dependencies:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
@@ -73,56 +110,36 @@ sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
   libcegui-mk2-dev cmake build-essential git git-core
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2) Install rubygems for documentation generation etc:
+Install rubygems for documentation generation etc (optional; you need
+this only if you want the docs):
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-sudo gem install bundler nanoc adsf kramdown coderay
+sudo gem install kramdown coderay
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-3) Clone TSC and build it:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-git clone https://github.com/Secretchronicles/TSC.git
-cd TSC
-git submodule init && git submodule update
-cd tsc && mkdir build && cd build
-rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-4) Run TSC:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cd ~/tsc
-./bin/tsc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-5) Keep your own levels at local directory, so cleanup below does not delete them:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-ls ~/.local/share/tsc
-ls ~/.local/share/tsc/levels
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-6) Update, cleanup and run again:
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cd ~/TSC/tsc/build
-rm -rf *
-git pull
-rm -rf ~/tsc && cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc .. && make && make install
-rm -rf ~/.cache/tsc ~/.config/tsc
-cd ~/tsc
-./bin/tsc
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-### Windows dependencies ###
+### 3. Windows dependencies ###
 
 * The FreeImage library.
 * For generating a setup installer:
   * The NSIS tools.
 
-Configuration options
----------------------
+
+
+
+
+
+
+
+
+
+
+
+
+II. Configuration options
+-------------------------
 
 This section describes possible configuration you may apply before
 building. If you just want to build the game, you can skip it. If you
@@ -199,8 +216,20 @@ make DESTDIR=/some/dir install
 This will shift the file system root for installation to `/some/dir`
 so that all pathes you gave to `cmake` will be below that path.
 
-Installing from a released tarball
-----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+III. Installing from a released tarball
+----------------------------------------
 
 Extract the tarball, create a directory for the build and switch into
 it:
@@ -235,8 +264,20 @@ TSC.
 $ /opt/tsc/bin/tsc
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Installing from Git
--------------------
+
+
+
+
+
+
+
+
+
+
+
+
+IV. Installing from Git
+-----------------------
 
 Installing from Git basically works the same way as the normal release
 install, but with a few preparations needed. You have to clone the
@@ -253,8 +294,69 @@ $ git submodule update
 From there on, you can continue with the normal instructions as per
 the above section.
 
-Crosscompiling from Linux to Windows
-------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+V. Upgrade notices
+------------------
+
+Before upgrading TSC to a newer released version or new development
+version from Git, you may want to make a backup of your locally
+created levels and worlds. You can do this by copying the directory
+`~/.locals/share/tsc` to a safe place.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ cp -r ~/.local/share/tsc ~/backup-tsc
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To upgrade your Git copy of TSC:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ git pull
+$ git submodule update
+$ cmake ..
+$ make
+$ make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you switch branches (maybe because you want to test a specific new
+feature not merged into `devel` yet), it is recommended to clean the
+build directory as well.
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+$ cd ..
+$ git checkout feature-branch
+$ rm -rf build
+$ mkdir build
+$ cd build
+$ cmake [OPTIONS] ..
+$ make
+$ make install
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+
+
+
+
+
+
+
+VI. Crosscompiling from Linux to Windows
+-----------------------------------------
 
 TSC can be crosscompiled from Linux to Windows, such that you don’t
 have to even touch a Windows system in order to generate the
@@ -265,74 +367,74 @@ toolchain for that. We recommend you to use [MXE][2] for that, which
 includes all dependencies necessary for building TSC.
 
 MXE is an ever-evolving distribution, so it’s better to use a version
-that is known to work. For this, we maintain [a slightly changed fork
+that is known to work. For this, we maintain [a fork
 of MXE](https://github.com/Secretchronicles/mxe) that contains a
-branch named `tsc-building`. This branch is known to work for a
-successful crosscompilation, and contains only very little adjustments
-to upstream MXE.
+branch named `tsc-crosscompile`. This branch is known to work for a
+successful crosscompilation.
 
-The following commands download our MXE and checks out the
-`tsc-building` branch.
+The following commands download our MXE and check out the
+`tsc-crosscompile` branch.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ mkdir ~/tsc-cross
 $ cd ~/tsc-cross
 $ git clone git://github.com/Secretchronicles/mxe.git
 $ cd mxe
-$ git checkout tsc-building
+$ git checkout tsc-crosscompile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After that you can build MXE with all dependencies required for
-buildint TSC:
+building TSC:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ make boost libxml++ glew cegui libpng freeimage sdl sdl_image sdl_mixer sdl_ttf nsis
+$ make boost libxml++ glew cegui libpng freeimage sfml nsis
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This will take a long time.
+This will take a long time (about an hour on my machine).
 
-There’s a little annoyence with CMake not finding `pkg-config` and
-`makensis` in MXE’s default directory setup. We have added a small
-new task to MXE’s makefile to correct that, which you now need to run:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ make fixcmakelinks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Crosscompiling from a released tarball ###
 
-Crosscompiling from Linux to Windows works similar as native
-compilation, except you have to tell CMake where your crosscompilation
-toolchain resides. First, extract the tarball and prepare a build
-directory as usual:
+### 1. Crosscompiling from a released tarball ###
+
+Crosscompiling from Linux to Windows works similar to native
+compilation, except you have invoke CMake a little differently. Start
+as usual, but use another directory for the crosscompilation build
+than the native one:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ tar -xvJf TSC-*.tar.xz
 $ cd TSC-*/tsc
 $ mkdir crossbuild
 $ cd crossbuild
-$ cp ../cmake/toolchains/linux2mingw32.cmake .
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The last step copied the toolchain file `tsc/cmake/toolchains/linux2mingw32.cmake`
-to your crossbuild directory.  Edit that file to point to your MXE installation,
-which should be `~/tsc-building/mxe` if you followed the above steps. For this,
-ensure the `CMAKE_FIND_ROOT_PATH` line is correct:
+Now add your crosscompilation toolchain to the PATH environment
+variable so CMake can find it.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-set(CMAKE_FIND_ROOT_PATH "$ENV{HOME}/tsc-building/mxe")
+$ export PATH=$HOME/tsc-cross/mxe/usr/bin:$PATH
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Then build TSC. Be sure to include the new parameter
-`-DCMAKE_TOOLCHAIN_FILE` as shown below to make CMake aware you want a
-crosscompilation with the toolchain file you just edited. Again, you
-may or may not include `-DCMAKE_BUILD_TYPE=Debug` depending on whether
-you want debugging symbols or not.
+It now is time to invoke CMake. If you use MXE for crosscompilation as
+it is recommended, you have a special CMake wrapper
+`i686-w64-mingw32.static-cmake` available which you can use now:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ export PATH=$HOME/tsc-building/mxe/usr/bin:$PATH
-$ cmake -DCMAKE_TOOLCHAIN_FILE=./linux2mingw32.cmake \
+$ i686-w64-mingw32.static-cmake \
+  -DCMAKE_BUILD_TYPE=Debug # If you want a debug build
   -DCMAKE_INSTALL_PREFIX=$PWD/testinstall ..
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you do *not* use MXE, you need to invoke it as usual (i.e. bare
+"cmake"), but you have to specify a "toolchain file" manually by
+passing `-DCMAKE_TOOLCHAIN_FILE` to CMake. Refer to the CMake
+documentation or your crosscompilation toolchain's documentation in
+that case.
+
+Either way, you can now continue with the actual build:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ make
 $ make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -362,9 +464,9 @@ your PATH variable (the `export PATH=...` line). Then, execute the
 build commands like this:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/linux2mingw32.cmake ..
+$ i686-w64-mingw32.static-cmake ..
 $ make
-$ cpack -G NSIS
+$ i686-w64-mingw32.static-cpack -G NSIS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This will create a `TSC-x.y.z-win32.exe` file. This file is the
@@ -375,7 +477,10 @@ the setup installer. Uninstall any previous version of TSC before
 installing with another setup installer; the standalone approach does
 not suffer from this problem.
 
-### Crosscompiling from Git ###
+
+
+
+### 2. Crosscompiling from Git ###
 
 Clone the Git repository and execute the preparation steps. They are
 the same as for a normal non-cross build.

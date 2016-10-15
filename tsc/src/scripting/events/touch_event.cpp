@@ -41,7 +41,7 @@ void cTouch_Event::Run_MRuby_Callback(cMRuby_Interpreter* p_mruby, mrb_value cal
     // Look the UID of the colliding sprite up in the UIDS table
     // and grab the MRuby object representing it.
     mrb_value rcollided = mrb_funcall(p_state,
-                                      mrb_obj_value(mrb_class_get(p_mruby->Get_MRuby_State(), "UIDS")),
+                                      mrb_obj_value(mrb_module_get(p_mruby->Get_MRuby_State(), "UIDS")),
                                       "[]",
                                       1,
                                       mrb_fixnum_value(mp_collided->m_uid));

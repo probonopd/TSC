@@ -170,6 +170,7 @@ namespace TSC {
 #define GUI_FONT_DIR "gui/fonts"
 #define GUI_LAYOUT_DIR "gui/layouts"
 #define GUI_LOOKNFEEL_DIR "gui/looknfeels"
+#define GUI_XMLSCHEMA_DIR "gui/xmlschemas"
 // User
 #define USER_SAVEGAME_DIR "savegames"
 #define USER_SCREENSHOT_DIR "screenshots"

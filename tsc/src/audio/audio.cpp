@@ -116,9 +116,6 @@ cAudio::cAudio(void)
     m_sound_volume = cPreferences::m_sound_volume_default;
     m_music_volume = cPreferences::m_music_volume_default;
 
-    m_music = new sf::Music;
-    m_music_old = NULL;
-
     m_max_sounds = 100; // XXX: what???
 }
 
@@ -156,9 +153,6 @@ bool cAudio::Init(void)
     // music initialization
     if (music && !m_music_enabled) {
         m_music_enabled = 1;
-        if (!m_music) {
-            m_music = new sf::Music;
-        }
 
         // set music volume
         Set_Music_Volume(m_music_volume);
@@ -210,10 +204,6 @@ void cAudio::Close(void)
 
         if (m_music_enabled) {
             Halt_Music();
-
-            delete m_music;
-            delete m_music_old;
-            m_music = m_music_old = NULL;
 
             m_music_enabled = 0;
         }
@@ -347,55 +337,38 @@ bool cAudio::Play_Music(fs::path filename, bool loops /* = false */, bool force 
         // stop current music
         Halt_Music();
 
-        // free old music
-        if (m_music_old) {
-            delete m_music_old;
-            m_music_old = NULL;
-        }
-
         // load the given music
-        if (!m_music->openFromFile(path_to_utf8(filename).c_str())) {
+        if (!m_music.openFromFile(path_to_utf8(filename).c_str())) {
             debug_print("Couldn't load music file : %s\n", path_to_utf8(filename).c_str());
 
             // failed to play
             return false;
         }
 
-        m_music->setLoop(loops);
+        m_music.setLoop(loops);
         // no fade in
         if (!fadein_ms) {
-            m_music->play();
+            m_music.play();
         }
         // fade in
         else {
-            float current = m_music->getVolume();
-            float count = fadein_ms / m_music->getVolume();
-            m_music->setVolume(count);
-            m_music->play();
-            while (m_music->getVolume() < current) {
+            float current = m_music.getVolume();
+            float count = fadein_ms / m_music.getVolume();
+            m_music.setVolume(count);
+            m_music.play();
+            while (m_music.getVolume() < current) {
                 // sleep for several milliseconds
                 boost::this_thread::sleep_for(boost::chrono::milliseconds(int(fadein_ms / count)));
                 // raise the volume
-                m_music->setVolume(int(m_music->getVolume()+count));
+                m_music.setVolume(int(m_music.getVolume()+count));
             }
-            m_music->setVolume(current);
+            m_music.setVolume(current);
         }
     }
     // music is playing and is not forced
     else {
-        // if no old music move current to old music
-        if (!m_music_old) {
-            m_music_old = m_music;
-            m_music = new sf::Music;
-        }
-
-        // load the wanted next playing music
-        if (!m_music->openFromFile(path_to_utf8(filename).c_str())) {
-            debug_print("Couldn't load music file : %s\n", path_to_utf8(filename).c_str());
-
-            // failed to play
-            return false;
-        }
+        // put it in the queue of music to play next
+        m_next_music.emplace(filename, loops, fadein_ms);
     }
 
     return true;
@@ -487,7 +460,7 @@ void cAudio::Pause_Music(void)
     }
 
     // if music is playing
-    m_music->pause();
+    m_music.pause();
 }
 
 void cAudio::Resume_Music(void)
@@ -497,7 +470,7 @@ void cAudio::Resume_Music(void)
     }
 
     if (Is_Music_Paused()) {
-        m_music->play();
+        m_music.play();
     }
 }
 
@@ -570,11 +543,11 @@ void cAudio::Fadeout_Music(unsigned int ms /* = 500 */)
         return;
     }
 
-    float orig = m_music->getVolume();
-    Fadeout_Source(*m_music, ms);
+    float orig = m_music.getVolume();
+    Fadeout_Source(m_music, ms);
     Halt_Music();
     // reset volume after the sound stops
-    m_music->setVolume(orig);
+    m_music.setVolume(orig);
 }
 
 void cAudio::Set_Music_Position(float position)
@@ -583,8 +556,7 @@ void cAudio::Set_Music_Position(float position)
         return;
     }
 
-    /* Mix_SetMusicPosition(position); */
-    m_music->setPlayingOffset(sf::seconds(position));
+    m_music.setPlayingOffset(sf::seconds(position));
 }
 
 bool cAudio::Is_Music_Paused(void) const
@@ -593,7 +565,7 @@ bool cAudio::Is_Music_Paused(void) const
         return 0;
     }
 
-    return m_music->getStatus() == sf::SoundSource::Paused;
+    return m_music.getStatus() == sf::SoundSource::Paused;
 }
 
 bool cAudio::Is_Music_Playing(void) const
@@ -602,8 +574,7 @@ bool cAudio::Is_Music_Playing(void) const
         return 0;
     }
 
-    return m_music->getStatus() == sf::SoundSource::Playing ||
-           (m_music_old && m_music_old->getStatus() == sf::SoundSource::Playing);
+    return m_music.getStatus() == sf::SoundSource::Playing;
 }
 
 void cAudio::Halt_Music(void)
@@ -612,10 +583,7 @@ void cAudio::Halt_Music(void)
         return;
     }
 
-    m_music->stop();
-    if (m_music_old) {
-        m_music_old->stop();
-    }
+    m_music.stop();
 }
 
 void cAudio::Stop_Sounds(void) const
@@ -657,7 +625,7 @@ void cAudio::Set_Sound_Volume(uint8_t volume)
 void cAudio::Set_Music_Volume(uint8_t volume)
 {
     // not active
-    if (!m_initialised) {
+    if (!m_initialised || !m_music_enabled) {
         return;
     }
 
@@ -666,7 +634,7 @@ void cAudio::Set_Music_Volume(uint8_t volume)
         volume = MAX_VOLUME;
     }
 
-    m_music->setVolume(volume);
+    m_music.setVolume(volume);
 }
 
 void cAudio::Update(void)
@@ -675,17 +643,12 @@ void cAudio::Update(void)
         return;
     }
 
-    // if music is enabled
-    if (m_music_enabled) {
-        // if no music is playing
-        if (!Is_Music_Playing()) {
-            m_music->play();
-            if (m_music_old) {
-                m_music_old->stop();
-                delete m_music_old;
-                m_music_old = NULL;
-            }
-        }
+    // if music is enabled but nothing is playing
+    if (m_music_enabled && !Is_Music_Playing()) {
+        // play the next song in the queue
+        NextMusicInfo next = m_next_music.front();
+        m_next_music.pop();
+        Play_Music(next.filename, next.loops, true, next.fadein_ms);
     }
 }
 

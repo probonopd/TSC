@@ -637,7 +637,7 @@ static mrb_value Is_Active(mrb_state* p_state, mrb_value self)
 void TSC::Scripting::Init_Sprite(mrb_state* p_state)
 {
     struct RClass* p_rcSprite = mrb_define_class(p_state, "Sprite", p_state->object_class);
-    mrb_include_module(p_state, p_rcSprite, mrb_class_get(p_state, "Eventable"));
+    mrb_include_module(p_state, p_rcSprite, mrb_module_get(p_state, "Eventable"));
     MRB_SET_INSTANCE_TT(p_rcSprite, MRB_TT_DATA);
 
     mrb_define_const(p_state, p_rcSprite, "PASSIVE_Z_START", mrb_float_value(p_state, cSprite::m_pos_z_passive_start));

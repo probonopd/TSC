@@ -61,7 +61,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 # -Wall for better code quality, and -Wno-deprecated-delcarations to prevent
 # useless warnings from not-yet-c++11-ready dependencies (glibmm!).
 # The _DEBUG macro is used in TSC's own codebase for debugging code.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-deprecated-declarations -Wl,--as-needed")
 if(${CMAKE_BUILD_TYPE} MATCHES Debug)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_DEBUG=1 -fno-inline")
 endif()
@@ -72,39 +72,82 @@ endif()
 if (CMAKE_CROSSCOMPILING)
   get_filename_component(HOST_TRIPLET ${CMAKE_C_COMPILER} NAME)
   string(REGEX REPLACE "(.*)-.*$" "\\1" HOST_TRIPLET "${HOST_TRIPLET}")
+  message(STATUS "Detected cross-compilation targetting: ${HOST_TRIPLET}")
 endif()
 
 ########################################
 # Dependencies
 
-# External libraries we depend on
+# Programs used in the build process
 find_package(PkgConfig REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(SFML COMPONENTS audio graphics window system REQUIRED)
-find_package(Gettext)
-find_package(PNG REQUIRED)
 find_package(Ruby REQUIRED)
+find_package(Gettext)
 
+# External libraries we depend on directly and programs we use in the
+# build process. On Windows, we link statically, hence we need to care
+# for ALL dependencies including dependencies of dependencies
+# (cf. http://stackoverflow.com/a/409470) The correct solution is to
+# detect all our deps-of-deps via separate CMake modules, but that
+# would mean writing lots of CMake modules for libraries that do not
+# yet have one shipped with CMake. On the longer way, this will be
+# required, but for the moment we cheat and instead rely on MXE's
+# carefully maintained pkg-config files for this task. This approach
+# *breaks* building on any system which does not use pkg-config (most
+# notably Win32 native build with MSVC, but also native MinGW where it
+# does not ship pkg-config files, which it doesn't do for quite a lot
+# of libraries). IOW, no native Win32 builds with this approach
+# currently. Once that is done, this if() statement can probably be
+# simplified a lot by merging the two branches behind common
+# find_package() calls.
+#
+# Boost needs special treatment.
 if (WIN32)
+  # Boost thread library has a different name on Windows to indicate
+  # the different implemention. Just complicates the build system...
   set(Boost_USE_STATIC_LIBS ON)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread_win32 system REQUIRED)
+
+  # Use MXE's pkg-config to resolve all deps for us
+  pkg_check_modules(SFML REQUIRED sfml)
+  pkg_check_modules(CEGUI REQUIRED CEGUI-0 CEGUI-0-OPENGL)
+  pkg_check_modules(OPENGL REQUIRED gl)
+  pkg_check_modules(PNG REQUIRED libpng)
+  pkg_check_modules(PCRE REQUIRED libpcre)
+  pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
 else()
+  find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+  find_package(CEGUI COMPONENTS OpenGL REQUIRED)
+  find_package(OpenGL REQUIRED)
+  find_package(PNG REQUIRED)
+  find_package(PCRE REQUIRED)
+  find_package(LibXmlPP REQUIRED)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
+
+  # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
+  # linking error).
   find_package(X11 REQUIRED)
 endif()
 
-# Use pkg-config for those which have no Find module available
-pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
-pkg_check_modules(PCRE REQUIRED libpcre)
-
 # Libraries we can build ourselves under certain cirumstances if missing
 include("ProvideTinyclipboard")
-include("ProvideCEGUI")
 if (ENABLE_MRUBY)
   include("ProvideMRuby")
 endif()
 
-###############################################
+########################################
+# Definitions
+
+if (WIN32)
+  add_definitions(
+    ${SFML_CFLAGS}
+    ${CEGUI_CFLAGS}
+    ${OPENGL_CFLAGS}
+    ${PNG_CFLAGS}
+    ${LibXmlPP_CFLAGS}
+    ${PCRE_CFLAGS})
+endif()
+
+########################################
 # Configuration header
 
 configure_file(${TSC_SOURCE_DIR}/config.hpp.in
@@ -146,9 +189,9 @@ file(GLOB_RECURSE tsc_sources
 # See http://stackoverflow.com/a/708382
 if (WIN32)
   enable_language(RC)
+
   list(APPEND tsc_sources icon.rc)
 endif()
-
 
 ########################################
 # Gettext internationalization
@@ -169,15 +212,15 @@ target_link_libraries(tsc
   ${Boost_LIBRARIES}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
+  ${PNG_LIBRARIES} # compatibility
   ${MRuby_LIBRARIES}
   ${Tinyclipboard_LIBRARIES})
 
 if (WIN32)
   target_link_libraries(tsc
     ${LibXmlPP_STATIC_LIBRARIES}
-    ${PCRE_STATIC_LIBRARIES})
-
-  add_dependencies(tsc CEGUI)
+    ${PCRE_STATIC_LIBRARIES}
+    )
 else()
   target_link_libraries(tsc
     ${LibXmlPP_LIBRARIES}

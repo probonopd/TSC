@@ -220,7 +220,7 @@ int main(int argc, char** argv)
         }
 
         Exit_Game();
- 
+
         // reset should start fresh, so reset package, level, and world
         g_cmdline_package = "";
         argc = 0;

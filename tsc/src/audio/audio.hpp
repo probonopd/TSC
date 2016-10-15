@@ -23,6 +23,7 @@
 #include "../audio/sound_manager.hpp"
 #include "../scripting/scriptable_object.hpp"
 #include "../scripting/objects/misc/mrb_audio.hpp"
+#include <queue>
 
 namespace TSC {
 
@@ -87,6 +88,16 @@ namespace TSC {
 
     class cAudio: public Scripting::cScriptable_Object {
     public:
+        // Information to use in the queue of songs to play next.
+        struct NextMusicInfo {
+            NextMusicInfo(boost::filesystem::path filename, bool loops,
+                          unsigned int fadein_ms):
+                filename{filename}, loops{loops}, fadein_ms{fadein_ms} {}
+            boost::filesystem::path filename;
+            bool loops;
+            unsigned int fadein_ms;
+        };
+
         cAudio(void);
         ~cAudio(void);
 
@@ -186,9 +197,9 @@ namespace TSC {
         // current playing music filename
         boost::filesystem::path m_music_filename;
         // current playing music pointer
-        sf::Music* m_music;
-        // if new music should play after the current this is the old data
-        sf::Music* m_music_old;
+        sf::Music m_music;
+        // next music to play
+        std::queue<NextMusicInfo> m_next_music;
 
         // The current sounds pointer array
         AudioSoundList m_active_sounds;
