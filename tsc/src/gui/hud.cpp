@@ -345,11 +345,8 @@ uint32_t cHud::Get_Elapsed_Time()
 
 void cHud::Set_Item(SpriteType item_type, bool sound /* = true */)
 {
-    if (Game_Mode != MODE_LEVEL)
-        throw(std::runtime_error("cHud::Set_Item() may only be called in level mode!"));
-
-    // play sound
-    if (sound) {
+    // play sound (savegame load is not in MODE_LEVEL)
+    if (Game_Mode == MODE_LEVEL && sound) {
         pAudio->Play_Sound("itembox_set.ogg");
     }
 
