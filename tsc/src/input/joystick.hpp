@@ -18,12 +18,21 @@
 #define TSC_JOYSTICK_HPP
 
 #include "../core/global_basic.hpp"
+#include "../user/preferences.hpp"
 
 namespace TSC {
 
     /* *** *** *** *** *** *** cJoystick *** *** *** *** *** *** *** *** *** *** *** */
 
     class cJoystick {
+    private:
+        /* These booleans represent the currently recorded state for each direction
+         * for each axis. */
+        bool m_is_axis_left[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+        bool m_is_axis_right[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+        bool m_is_axis_down[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+        bool m_is_axis_up[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
+
     public:
         cJoystick(void);
         ~cJoystick(void);
@@ -77,6 +86,10 @@ namespace TSC {
 
         // if true print debug output
         bool m_debug;
+
+        /* If the absolute value of the joystick position is below this number,
+         * it will be considered neutral. */
+        static const float m_joystick_neutral_bound;
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

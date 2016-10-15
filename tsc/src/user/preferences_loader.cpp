@@ -287,16 +287,26 @@ void cPreferencesLoader::handle_property(const std::string& name, const std::str
     else if (name == "joy_axis_hor") {
         val = string_to_int(value);
         if (val >= 0 && val <= 256)
-            mp_preferences->m_joy_axis_hor = static_cast<sf::Joystick::Axis>(val);
+            mp_preferences->m_joy_axis_hor[0] = static_cast<sf::Joystick::Axis>(val);
     }
     else if (name == "joy_axis_ver") {
         val = string_to_int(value);
         if (val >= 0 && val <= 256)
-            mp_preferences->m_joy_axis_ver = static_cast<sf::Joystick::Axis>(val);
+            mp_preferences->m_joy_axis_ver[0] = static_cast<sf::Joystick::Axis>(val);
+    }
+    else if (name == "joy_axis_hor2") {
+        val = string_to_int(value);
+        if (val >= 0 && val <= 256)
+            mp_preferences->m_joy_axis_hor[1] = static_cast<sf::Joystick::Axis>(val);
+    }
+    else if (name == "joy_axis_ver2") {
+        val = string_to_int(value);
+        if (val >= 0 && val <= 256)
+            mp_preferences->m_joy_axis_ver[1] = static_cast<sf::Joystick::Axis>(val);
     }
     else if (name == "joy_axis_threshold") {
         val = string_to_int(value);
-        if (val >= 0 && val <= 32767)
+        if (val >= 0 && val <= 100)
             mp_preferences->m_joy_axis_threshold = val;
     }
     else if (name == "joy_button_jump") {

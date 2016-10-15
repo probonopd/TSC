@@ -85,9 +85,9 @@ const float cPreferences::m_scroll_speed_default = 1.0f;
 // Joystick
 const bool cPreferences::m_joy_enabled_default = 1;
 const bool cPreferences::m_joy_analog_jump_default = 0;
-const sf::Joystick::Axis cPreferences::m_joy_axis_hor_default = sf::Joystick::Axis::X;
-const sf::Joystick::Axis cPreferences::m_joy_axis_ver_default = sf::Joystick::Axis::Y;
-const int16_t cPreferences::m_joy_axis_threshold_default = 10000;
+const sf::Joystick::Axis cPreferences::m_joy_axis_hor_default[2] = {sf::Joystick::Axis::X, sf::Joystick::Axis::PovX};
+const sf::Joystick::Axis cPreferences::m_joy_axis_ver_default[2] = {sf::Joystick::Axis::Y, sf::Joystick::Axis::PovY};
+const float cPreferences::m_joy_axis_threshold_default = 0.1f;
 const uint8_t cPreferences::m_joy_button_jump_default = 0;
 const uint8_t cPreferences::m_joy_button_shoot_default = 1;
 const uint8_t cPreferences::m_joy_button_item_default = 3;
@@ -189,9 +189,11 @@ void cPreferences::Save(void)
     Add_Property(p_root, "joy_enabled", m_joy_enabled);
     Add_Property(p_root, "joy_name", m_joy_name);
     Add_Property(p_root, "joy_analog_jump", m_joy_analog_jump);
-    Add_Property(p_root, "joy_axis_hor", m_joy_axis_hor);
-    Add_Property(p_root, "joy_axis_ver", m_joy_axis_ver);
-    Add_Property(p_root, "joy_axis_threshold", m_joy_axis_threshold);
+    Add_Property(p_root, "joy_axis_hor", m_joy_axis_hor[0]);
+    Add_Property(p_root, "joy_axis_ver", m_joy_axis_ver[0]);
+    Add_Property(p_root, "joy_axis_hor2", m_joy_axis_hor[1]);
+    Add_Property(p_root, "joy_axis_ver2", m_joy_axis_ver[1]);
+    Add_Property(p_root, "joy_axis_threshold", (float)m_joy_axis_threshold);
     Add_Property(p_root, "joy_button_jump", static_cast<int>(m_joy_button_jump));
     Add_Property(p_root, "joy_button_item", static_cast<int>(m_joy_button_item));
     Add_Property(p_root, "joy_button_shoot", static_cast<int>(m_joy_button_shoot));
@@ -287,8 +289,11 @@ void cPreferences::Reset_Joystick(void)
     m_joy_name.clear();
     m_joy_analog_jump = m_joy_analog_jump_default;
     // axes
-    m_joy_axis_hor = m_joy_axis_hor_default;
-    m_joy_axis_ver = m_joy_axis_ver_default;
+    for (int i = 0; i < cPreferences::NUM_JOYSTICK_AXIS_TYPES; i++)
+    {
+        m_joy_axis_hor[i] = m_joy_axis_hor_default[i];
+        m_joy_axis_ver[i] = m_joy_axis_ver_default[i];
+    }
     // axis threshold
     m_joy_axis_threshold = m_joy_axis_threshold_default;
     // buttons

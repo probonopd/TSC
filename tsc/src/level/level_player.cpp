@@ -9,7 +9,6 @@
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 3 of the License, or
    (at your option) any later version.
-
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
@@ -3564,22 +3563,22 @@ Col_Valid_Type cLevel_Player::Validate_Collision(cSprite* obj)
             // warp levelexit key check
             if (levelexit->m_exit_type == LEVEL_EXIT_WARP) {
                 // joystick events are sent as keyboard keys
-                if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up)) {
+                if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->Up()) {
                     if (levelexit->m_start_direction == DIR_UP) {
                         Action_Interact(INP_UP);
                     }
                 }
-                else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down)) {
+                else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->Down()) {
                     if (levelexit->m_start_direction == DIR_DOWN) {
                         Action_Interact(INP_DOWN);
                     }
                 }
-                else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right)) {
+                else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Right()) {
                     if (levelexit->m_start_direction == DIR_RIGHT) {
                         Action_Interact(INP_RIGHT);
                     }
                 }
-                else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left)) {
+                else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->Left()) {
                     if (levelexit->m_start_direction == DIR_LEFT) {
                         Action_Interact(INP_LEFT);
                     }
