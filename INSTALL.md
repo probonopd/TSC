@@ -75,7 +75,9 @@ install to.
 * GNU Gettext.
 * The LibPNG library.
 * The libPCRE regular expression library.
-* The libxml++ library.
+* The libxml++ library < 3.0.0. Versions >= 3.0.0 will not be
+  supported until the libxml++ developers provide a porting guide
+  from version 2.8 to version 3.0.
 * The Freetype library.
 * CEGUI >= 0.8.0
   * If you have glm 0.9.6 or newer, you need CEGUI >= 0.8.5
