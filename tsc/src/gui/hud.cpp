@@ -402,6 +402,8 @@ void cHud::Request_Item(void)
 
 void cHud::Reset_Item(void)
 {
+    m_rescue_item_type = TYPE_UNDEFINED;
+    mp_item_image->hide();
 }
 
 SpriteType cHud::Get_Item(void)

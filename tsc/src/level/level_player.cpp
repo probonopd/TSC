@@ -1886,7 +1886,7 @@ void cLevel_Player::Reset(bool full /* = 1 */)
         m_invincible_mod = 0.0f;
         m_invincible_star = 0.0f;
         Set_Color_Combine(0.0f, 0.0f, 0.0f, 0);
-        // OLD pHud_Itembox->Push_back();
+        gp_hud->Reset_Item();
     }
 }
 

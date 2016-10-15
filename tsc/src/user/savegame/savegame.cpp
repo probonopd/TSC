@@ -440,9 +440,7 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
         gp_hud->Set_Text(_("Couldn't save savegame ") + path_to_utf8(filename));
     }
 
-    // OLD if (pHud_Debug) {
-    // OLD     pHud_Debug->Set_Text(_("Saved to Slot ") + int_to_string(save_slot));
-    // OLD }
+    gp_hud->Set_Text(_("Saved to Slot ") + int_to_string(save_slot));
 
     delete savegame;
 
