@@ -80,10 +80,10 @@ namespace TSC {
         void Reset_Item(void);
         SpriteType Get_Item();
 
+        /// Displays a short message to the user.
         void Set_Text(std::string message);
 
-        void Set_Waypoint_Name(std::string name);
-        std::string& Get_Waypoint_Name();
+        void Set_Waypoint_Name(std::string name, Color color);
 
         void Update();
 
@@ -93,7 +93,6 @@ namespace TSC {
         int m_lives;
         cMovingSprite* mp_display_item; // Only for display
         SpriteType m_rescue_item_type; // This is what is stored across level switches
-        std::string m_waypoint_name;
         uint32_t m_elapsed_time;
         std::chrono::system_clock::time_point m_last_time;
         float m_text_counter;
@@ -104,6 +103,7 @@ namespace TSC {
         CEGUI::Window* mp_jewels_label;
         CEGUI::Window* mp_lives_label;
         CEGUI::Window* mp_fps_label;
+        CEGUI::Window* mp_waypoint_label;
         CEGUI::Window* mp_message_text;
         CEGUI::Window* mp_item_image;
 

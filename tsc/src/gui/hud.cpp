@@ -50,11 +50,10 @@ namespace fs = boost::filesystem;
 cHud::cHud()
     : m_points(0), m_jewels(0), m_lives(3),
       mp_display_item(NULL), m_rescue_item_type(TYPE_UNDEFINED),
-      m_waypoint_name(""),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
       m_text_counter(0.0f), mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
       mp_jewels_label(NULL), mp_lives_label(NULL), mp_fps_label(NULL),
-      mp_message_text(NULL), mp_item_image(NULL)
+      mp_waypoint_label(NULL), mp_message_text(NULL), mp_item_image(NULL)
 {
     load_hud_images_into_cegui();
 
@@ -62,13 +61,14 @@ cHud::cHud()
         CEGUI::WindowManager::getSingleton()
         .loadLayoutFromFile("hud.layout"));
 
-    mp_points_label = mp_hud_root->getChild("points");
-    mp_time_label   = mp_hud_root->getChild("time");
-    mp_jewels_label = mp_hud_root->getChild("jewels");
-    mp_lives_label  = mp_hud_root->getChild("lives");
-    mp_fps_label    = mp_hud_root->getChild("debug_fps");
-    mp_message_text = mp_hud_root->getChild("message");
-    mp_item_image   = mp_hud_root->getChild("itembox_image/item_image");
+    mp_points_label   = mp_hud_root->getChild("points");
+    mp_time_label     = mp_hud_root->getChild("time");
+    mp_jewels_label   = mp_hud_root->getChild("jewels");
+    mp_lives_label    = mp_hud_root->getChild("lives");
+    mp_fps_label      = mp_hud_root->getChild("debug_fps");
+    mp_waypoint_label = mp_hud_root->getChild("world_waypoint");
+    mp_message_text   = mp_hud_root->getChild("message");
+    mp_item_image     = mp_hud_root->getChild("itembox_image/item_image");
 
     mp_hud_root->hide();
     CEGUI::System::getSingleton()
@@ -129,6 +129,18 @@ cHud::~cHud()
 void cHud::Show()
 {
     mp_hud_root->show();
+
+    // Show/Hide the mode-specific widgets.
+    if (Game_Mode == MODE_LEVEL) {
+        mp_time_label->show();
+        mp_hud_root->getChild("itembox_image")->show();
+        mp_waypoint_label->hide();
+    }
+    else if (Game_Mode == MODE_OVERWORLD) {
+        mp_time_label->hide();
+        mp_hud_root->getChild("itembox_image")->hide();
+        mp_waypoint_label->show();
+    }
 }
 
 void cHud::Show_Debug_Widgets()
@@ -394,14 +406,10 @@ SpriteType cHud::Get_Item(void)
     return TYPE_FIREPLANT;
 }
 
-void cHud::Set_Waypoint_Name(std::string name)
+void cHud::Set_Waypoint_Name(std::string name, Color color)
 {
-    m_waypoint_name = name;
-}
-
-std::string& cHud::Get_Waypoint_Name()
-{
-    return m_waypoint_name;
+    // TODO: Apply color
+    mp_waypoint_label->setText(name);
 }
 
 void cHud::Set_Text(std::string message)

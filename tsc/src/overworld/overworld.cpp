@@ -370,6 +370,9 @@ void cOverworld::Enter(const GameMode old_mode /* = MODE_NOTHING */)
 
     // reset speedfactor
     pFramerate->Reset();
+
+    // Show HUD
+    gp_hud->Show();
 }
 
 void cOverworld::Leave(const GameMode next_mode /* = MODE_NOTHING */)
@@ -406,6 +409,8 @@ void cOverworld::Leave(const GameMode next_mode /* = MODE_NOTHING */)
         // clear input
         Clear_Input_Events();
     }
+
+    gp_hud->Hide();
 }
 
 void cOverworld::Draw(void)
@@ -784,7 +789,7 @@ void cOverworld::Update_Waypoint_text(void)
         color = green;
     }
 
-    // OLD pFont->Prepare_SFML_Text(m_hud_level_name, waypoint->Get_Destination(), 480, 2, cFont_Manager::FONTSIZE_NORMAL, color, true);
+    gp_hud->Set_Waypoint_Name(waypoint->Get_Destination(), color);
 }
 
 bool cOverworld::Goto_Next_Level(void)
