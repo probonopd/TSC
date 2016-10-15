@@ -84,6 +84,7 @@ namespace TSC {
         void Set_Text(std::string message);
 
         void Set_Waypoint_Name(std::string name, Color color);
+        void Set_World_Name(std::string name);
 
         void Update();
 
@@ -104,6 +105,7 @@ namespace TSC {
         CEGUI::Window* mp_lives_label;
         CEGUI::Window* mp_fps_label;
         CEGUI::Window* mp_waypoint_label;
+        CEGUI::Window* mp_world_label;
         CEGUI::Window* mp_message_text;
         CEGUI::Window* mp_item_image;
 

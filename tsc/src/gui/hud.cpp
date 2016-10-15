@@ -53,7 +53,7 @@ cHud::cHud()
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
       m_text_counter(0.0f), mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
       mp_jewels_label(NULL), mp_lives_label(NULL), mp_fps_label(NULL),
-      mp_waypoint_label(NULL), mp_message_text(NULL), mp_item_image(NULL)
+      mp_waypoint_label(NULL), mp_world_label(NULL), mp_message_text(NULL), mp_item_image(NULL)
 {
     load_hud_images_into_cegui();
 
@@ -67,6 +67,7 @@ cHud::cHud()
     mp_lives_label    = mp_hud_root->getChild("lives");
     mp_fps_label      = mp_hud_root->getChild("debug_fps");
     mp_waypoint_label = mp_hud_root->getChild("world_waypoint");
+    mp_world_label    = mp_hud_root->getChild("world_name");
     mp_message_text   = mp_hud_root->getChild("message");
     mp_item_image     = mp_hud_root->getChild("itembox_image/item_image");
 
@@ -135,11 +136,13 @@ void cHud::Show()
         mp_time_label->show();
         mp_hud_root->getChild("itembox_image")->show();
         mp_waypoint_label->hide();
+        mp_world_label->hide();
     }
     else if (Game_Mode == MODE_OVERWORLD) {
         mp_time_label->hide();
         mp_hud_root->getChild("itembox_image")->hide();
         mp_waypoint_label->show();
+        mp_world_label->show();
     }
 }
 
@@ -410,6 +413,11 @@ void cHud::Set_Waypoint_Name(std::string name, Color color)
 {
     // TODO: Apply color
     mp_waypoint_label->setText(name);
+}
+
+void cHud::Set_World_Name(std::string name)
+{
+    mp_world_label->setText(std::string("[colour='FFFFFF00']") + name);
 }
 
 void cHud::Set_Text(std::string message)

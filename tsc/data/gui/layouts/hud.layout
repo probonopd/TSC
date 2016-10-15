@@ -65,6 +65,14 @@
       <Property name="Font" value="DejaVuSans-Bold"/>
     </Window>
 
+    <Window type="TaharezLook/Label" name="world_name">
+      <Property name="Area" value="{{0.7,0},{0.05,0},{0.9,0},{1,0}}"/>
+      <Property name="Text" value="No world"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
     <Window type="TaharezLook/Label" name="lives">
       <Property name="Area" value="{{0.91,0},{0.05,0},{1,0},{1,0}}"/>
       <Property name="Text" value="[colour='FF00FF00']3 x"/>

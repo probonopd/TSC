@@ -141,7 +141,7 @@ cOverworld* cOverworld::Load_From_Directory(fs::path directory, int user_dir /* 
     p_overworld->m_layer = layerloader.Get_Layer();
 
     // Set the text that is displayed at the top when this world is shown
-    // OLD pFont->Prepare_SFML_Text(p_overworld->m_hud_world_name, p_overworld->m_description->m_name, 10, static_cast<float>(game_res_h) - 30, cFont_Manager::FONTSIZE_NORMAL, yellow);
+    gp_hud->Set_World_Name(p_overworld->m_description->m_name);
 
     return p_overworld;
 }
