@@ -408,7 +408,7 @@ void cHud::Reset_Item(void)
 
 SpriteType cHud::Get_Item(void)
 {
-    return TYPE_FIREPLANT;
+    return m_rescue_item_type;
 }
 
 void cHud::Set_Waypoint_Name(std::string name, Color color)
