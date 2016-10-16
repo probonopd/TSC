@@ -241,6 +241,9 @@ void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_p
         // restore textures
         pImage_Manager->Restore_Textures(1);
 
+        // Tell the HUD about the size change so it can adapt
+        gp_hud->Screen_Size_Changed();
+
         Loading_Screen_Exit();
     }
     // finishing first initialization

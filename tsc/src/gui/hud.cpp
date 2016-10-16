@@ -80,27 +80,9 @@ cHud::cHud()
     // Hide by default
     mp_fps_label->hide();
     mp_message_text->hide();
-
-    // Size of the jewel image
-    mp_hud_root->getChild("jewel_image")->setSize(CEGUI::USize(CEGUI::UDim(0, JEWEL_WIDTH),
-                                                               CEGUI::UDim(0, JEWEL_HEIGHT)));
-
-    // Size of Alex head image
-    mp_hud_root->getChild("alex_image")->setSize(CEGUI::USize(CEGUI::UDim(0, ALEX_HEAD_WIDTH),
-                                                              CEGUI::UDim(0, ALEX_HEAD_HEIGHT)));
-
-
-    // Size & position the item box and its contents
-    mp_hud_root->getChild("itembox_image")->setSize(CEGUI::USize(CEGUI::UDim(0, ITEMBOX_WIDTH),
-                                                                 CEGUI::UDim(0, ITEMBOX_HEIGHT)));
-
-    mp_item_image->setArea(CEGUI::UDim(0.5, -(0.5*BERRY_WIDTH)),
-                           CEGUI::UDim(0.5, -(0.5*BERRY_HEIGHT)),
-                           CEGUI::UDim(0, BERRY_WIDTH),
-                           CEGUI::UDim(0, BERRY_HEIGHT));
-
     mp_item_image->hide();
 
+    Screen_Size_Changed();
 
     // Set initial values. Using methods rather than bare assignment
     // so translations can kick in for the HUD elements.
@@ -443,6 +425,32 @@ void cHud::load_hud_images_into_cegui()
     string_replace_all(m_normal_berry_img, "/", "+");
     string_replace_all(m_fire_berry_img,   "/", "+");
     string_replace_all(m_ice_berry_img,    "/", "+");
+}
+
+/**
+ * Call this whenever the screen's resolution changes. It adjusts the
+ * sizing of the HUD images according to global_upscalex and global_upscaley,
+ * which need to be set previously to calling this function.
+ */
+void cHud::Screen_Size_Changed()
+{
+    // Size of the jewel image
+    mp_hud_root->getChild("jewel_image")->setSize(CEGUI::USize(CEGUI::UDim(0, JEWEL_WIDTH),
+                                                               CEGUI::UDim(0, JEWEL_HEIGHT)));
+
+    // Size of Alex head image
+    mp_hud_root->getChild("alex_image")->setSize(CEGUI::USize(CEGUI::UDim(0, ALEX_HEAD_WIDTH),
+                                                              CEGUI::UDim(0, ALEX_HEAD_HEIGHT)));
+
+
+    // Size & position the item box and its contents
+    mp_hud_root->getChild("itembox_image")->setSize(CEGUI::USize(CEGUI::UDim(0, ITEMBOX_WIDTH),
+                                                                 CEGUI::UDim(0, ITEMBOX_HEIGHT)));
+
+    mp_item_image->setArea(CEGUI::UDim(0.5, -(0.5*BERRY_WIDTH)),
+                           CEGUI::UDim(0.5, -(0.5*BERRY_HEIGHT)),
+                           CEGUI::UDim(0, BERRY_WIDTH),
+                           CEGUI::UDim(0, BERRY_HEIGHT));
 }
 
 cHudSprite::cHudSprite(cSprite_Manager* sprite_manager)

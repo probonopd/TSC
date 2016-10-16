@@ -87,6 +87,7 @@ namespace TSC {
         void Set_World_Name(std::string name);
 
         void Update();
+        void Screen_Size_Changed();
 
     private:
         long m_points;
