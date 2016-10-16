@@ -299,7 +299,7 @@ void cStaticEnemy::Handle_Collision_Enemy(cObjectCollision* collision)
 
     // kill enemy
     pAudio->Play_Sound(enemy->m_kill_sound);
-    pHud_Points->Add_Points(enemy->m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
+    gp_hud->Add_Points(enemy->m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
     enemy->DownGrade(1);
 }
 

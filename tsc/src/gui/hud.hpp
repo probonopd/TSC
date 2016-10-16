@@ -17,14 +17,114 @@
 #ifndef TSC_HUD_HPP
 #define TSC_HUD_HPP
 
-#include "../objects/movingsprite.hpp"
-#include "../core/obj_manager.hpp"
-
 namespace TSC {
+
+    class cMiniPoints
+    {
+    public:
+        cMiniPoints(std::string pointstext, float x, float y, Color color);
+        ~cMiniPoints();
+
+        bool Update();
+
+    private:
+        CEGUI::Window* mp_label;
+        float m_counter;
+        float m_x;
+        float m_y;
+    };
+
+    /**
+     * The HUD (Head-Up Display) is the collection of UI elements at the
+     * top of the screen (time passed, jewels collected, etc.). It is
+     * implemented as a number of stacked CEGUI windows and can act
+     * either in world or level mode depending on the value of the
+     * Game_Mode global variable, which makes it show slightly different
+     * things.
+     *
+     * The HUD instance is global (`gp_hud` variable) and is not destroyed
+     * when a level ends. It is always the same instance.
+     */
+    class cHud
+    {
+    public:
+        cHud();
+        ~cHud();
+
+        void Show();
+        void Show_Debug_Widgets();
+        void Hide();
+        void Hide_Debug_Widgets();
+
+        void Set_Points(long points);
+        void Add_Points(long points, float x = 0.0f, float y = 0.0f, std::string strtext = "", const Color& color = static_cast<uint8_t>(255), bool allow_multiplier = false);
+        void Reset_Points(void);
+        long Get_Points(void);
+
+        void Set_Jewels(int jewels);
+        void Add_Jewels(int jewels);
+        void Reset_Jewels(void);
+        int Get_Jewels(void);
+
+        void Set_Lives(int lives);
+        void Add_Lives(int lives);
+        void Reset_Lives(void);
+        int Get_Lives(void);
+
+        void Set_Elapsed_Time(uint32_t milliseconds);
+        void Reset_Elapsed_Time(void);
+        uint32_t Get_Elapsed_Time();
+
+        void Set_Item(SpriteType item_type, bool sound = true);
+        void Request_Item(void);
+        void Reset_Item(void);
+        SpriteType Get_Item();
+
+        /// Displays a short message to the user.
+        void Set_Text(std::string message);
+
+        void Set_Waypoint_Name(std::string name, Color color);
+        void Set_World_Name(std::string name);
+
+        void Update();
+        void Screen_Size_Changed();
+
+    private:
+        long m_points;
+        int m_jewels;
+        int m_lives;
+        cMovingSprite* mp_display_item; // Only for display
+        SpriteType m_rescue_item_type; // This is what is stored across level switches
+        uint32_t m_elapsed_time;
+        std::chrono::system_clock::time_point m_last_time;
+        float m_text_counter;
+
+        CEGUI::FrameWindow* mp_hud_root;
+        CEGUI::Window* mp_points_label;
+        CEGUI::Window* mp_time_label;
+        CEGUI::Window* mp_jewels_label;
+        CEGUI::Window* mp_lives_label;
+        CEGUI::Window* mp_fps_label;
+        CEGUI::Window* mp_waypoint_label;
+        CEGUI::Window* mp_world_label;
+        CEGUI::Window* mp_message_text;
+        CEGUI::Window* mp_item_image;
+
+        // Names the berries are available under in CEGUI
+        // as images.
+        std::string m_normal_berry_img;
+        std::string m_fire_berry_img;
+        std::string m_ice_berry_img;
+
+        std::vector<cMiniPoints*> m_active_mini_points;
+
+        void load_hud_images_into_cegui();
+    };
 
     /* *** *** *** *** *** *** *** cHudSprite *** *** *** *** *** *** *** *** *** *** */
 
     /// Base class for image-showing HUD elements.
+    /// This class is only kept for backwards-compatibility.
     class cHudSprite : public cSprite {
     public:
         cHudSprite(cSprite_Manager* sprite_manager);
@@ -34,283 +134,9 @@ namespace TSC {
         virtual cHudSprite* Copy(void) const;
     };
 
-    /* *** *** *** *** *** cMenuBackground *** *** *** *** *** *** *** *** *** *** *** *** */
+    typedef vector<cHudSprite*> HudSpriteList;
 
-    class cMenuBackground : public cHudSprite {
-    public:
-        cMenuBackground(cSprite_Manager* sprite_manager);
-        virtual ~cMenuBackground(void);
-
-        virtual void Draw(cSurface_Request* request = NULL);
-
-        cGL_Surface* m_alex_head;
-        cGL_Surface* m_goldpiece;
-
-        GL_point m_rect_alex_head;
-        GL_point m_rect_goldpiece;
-    };
-
-    /* *** *** *** *** *** *** *** cHud_Manager *** *** *** *** *** *** *** *** *** *** */
-
-    class cHud_Manager {
-    public:
-        cHud_Manager(cSprite_Manager* sprite_manager);
-        virtual ~cHud_Manager(void);
-
-        // Load the complete HUD
-        void Load(void);
-        // Unload the complete HUD
-        void Unload(void);
-
-        // Update and reload text
-        void Update_Text(void);
-        // Update the objects
-        void Update(void);
-        // Draw the objects
-        void Draw(void);
-
-        // Set the parent sprite manager
-        void Set_Sprite_Manager(cSprite_Manager* sprite_manager);
-
-        // the parent sprite manager
-        cSprite_Manager* m_sprite_manager;
-
-        typedef vector<cHudSprite*> HudSpriteList;
-
-        // true if loaded
-        bool m_loaded;
-    private:
-        cMenuBackground* mp_menu_background;
-    };
-
-    /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
-
-// The HUD Manager
-    extern cHud_Manager* pHud_Manager;
-
-    /* *** *** *** *** *** cStatusText *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    /// Base class for text-showing HUD elements.
-    class cStatusText {
-    public:
-        cStatusText();
-        virtual ~cStatusText(void);
-
-        virtual void Draw();
-        virtual void Update();
-        inline void Set_Pos(float x, float y) { m_x = x; m_y = y; }
-
-    protected:
-        void Prepare_Text_For_SFML(const std::string&, int fontsize, Color color);
-
-        sf::Text m_text;
-        float m_x;
-        float m_y;
-    };
-
-    /* *** *** *** *** *** cMiniPointsText *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cMiniPointsText {
-    public:
-        cMiniPointsText();
-        virtual ~cMiniPointsText();
-
-        virtual void Draw();
-
-        inline void Set_Vel_Y(float vely) { m_vely = vely; }
-        inline void Enable() { m_disabled = false; }
-        inline void Disable() { m_disabled = true; }
-        inline bool Is_Disabled(){ return m_disabled; }
-
-        inline sf::Text& Get_Text(){ return m_text; }
-        inline float Get_Vel_Y(){ return m_vely; }
-
-    private:
-        float m_vely;
-        sf::Text m_text;
-        bool m_disabled;
-    };
-
-    /* *** *** *** *** *** cPlayerPoints *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cPlayerPoints : public cStatusText {
-    public:
-        cPlayerPoints();
-        virtual ~cPlayerPoints(void);
-
-        void Set_Points(long points);
-        void Add_Points(unsigned int points, float x = 0.0f, float y = 0.0f, std::string strtext = "", const Color& color = static_cast<uint8_t>(255), bool allow_multiplier = 0);
-
-        // removes all point texts
-        void Clear(void);
-
-        virtual void Draw();
-
-        std::vector<cMiniPointsText*> m_points_objects;
-    };
-
-    /* *** *** *** *** *** cGoldDisplay *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cGoldDisplay : public cStatusText {
-    public:
-        cGoldDisplay();
-        virtual ~cGoldDisplay(void);
-
-        void Set_Gold(int gold);
-        void Add_Gold(int gold);
-
-        virtual void Draw();
-    };
-
-    /* *** *** *** *** *** cLiveDisplay *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cLiveDisplay : public cStatusText {
-    public:
-        cLiveDisplay();
-        virtual ~cLiveDisplay(void);
-
-        void Set_Lives(int lives);
-        void Add_Lives(int lives);
-
-        virtual void Draw();
-    };
-
-    /* *** *** *** *** *** cTimeDisplay *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cTimeDisplay : public cStatusText {
-    public:
-        cTimeDisplay();
-        virtual ~cTimeDisplay(void);
-
-        // update
-        virtual void Update(void);
-        // draw
-        virtual void Draw();
-
-        // Set time
-        void Set_Time(uint32_t milliseconds);
-
-        // reset
-        void Reset(void);
-
-        char m_clocktext[50];
-        uint32_t m_last_update_seconds;
-        uint32_t m_milliseconds;
-    };
-
-    /* *** *** *** *** *** cFpsDisplay *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cFpsDisplay: public cStatusText {
-    public:
-        cFpsDisplay();
-        virtual ~cFpsDisplay();
-
-        virtual void Update(void);
-        virtual void Draw(void);
-
-    private:
-        char m_fps_text[5000];
-    };
-
-    /* *** *** *** *** *** cInfoMessage *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cInfoMessage : public cStatusText {
-    public:
-        cInfoMessage();
-        virtual ~cInfoMessage(void);
-
-        // Update
-        virtual void Update(void);
-        // draw
-        virtual void Draw();
-
-        // Set text and display it fading out slowly.
-        void Set_Text(const std::string& text);
-        std::string Get_Text();
-
-    private:
-        std::string m_infotext;
-        float m_alpha;
-        float m_display_time;
-        cMovingSprite* m_background;
-    };
-
-    /* *** *** *** *** *** cItemBox *** *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cItemBox : public cHudSprite {
-    public:
-        cItemBox(cSprite_Manager* sprite_manager);
-        virtual ~cItemBox(void);
-
-        // Set the parent sprite manager
-        virtual void Set_Sprite_Manager(cSprite_Manager* sprite_manager);
-
-        // update
-        virtual void Update(void);
-        // draw
-        virtual void Draw(cSurface_Request* request = NULL);
-
-        /* Set the item
-        * sound : if set the box sound is played
-        */
-        void Set_Item(SpriteType item_type, bool sound = 1);
-        // Activates the itembox
-        void Request_Item(void);
-        // push the item back to the itembox
-        void Push_back(void);
-
-        void Reset(void);
-
-        /* The current Item
-         * uses the Item defines
-         */
-        SpriteType m_item_id;
-
-        // alpha effect
-        float m_item_counter;
-        // alpha effect mod
-        bool m_item_counter_mod;
-
-        // itembox color
-        Color m_box_color;
-
-        // stored item
-        cMovingSprite* m_item;
-    };
-
-    class cDebugDisplay: public cHudSprite {
-    public:
-        cDebugDisplay(cSprite_Manager* sprite_manager);
-        virtual ~cDebugDisplay(void);
-
-        virtual void Update(void);
-        virtual void Draw(cSurface_Request* request = NULL);
-
-        void Set_Text(const std::string& ntext, float display_time = speedfactor_fps * 2.0f);
-
-        std::string m_text;
-        std::string m_text_old;
-
-        // CEGUI debug text
-        CEGUI::Window* m_text_debug_text;
-
-        // text counter
-        float m_counter;
-    };
-
-    /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
-
-// The HUD
-    extern cPlayerPoints* pHud_Points;
-    extern cDebugDisplay* pHud_Debug;
-    extern cGoldDisplay* pHud_Goldpieces;
-    extern cLiveDisplay* pHud_Lives;
-    extern cTimeDisplay* pHud_Time;
-    extern cInfoMessage* pHud_Infomessage;
-    extern cItemBox* pHud_Itembox;
-    extern cFpsDisplay* pHud_Fps;
-
-    /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
+    extern cHud* gp_hud;
 
 } // namespace TSC
 

@@ -22,6 +22,7 @@
 #include "../core/editor/editor_items_loader.hpp"
 #include "../core/xml_attributes.hpp"
 #include "../core/errors.hpp"
+#include "../gui/hud.hpp"
 #include "level_settings.hpp"
 #include "level_editor.hpp"
 
@@ -141,7 +142,7 @@ bool cEditor_Level::Function_New(void)
 
     // if it already exists
     if (!pLevel_Manager->Get_Path(level_name, true).empty()) {
-        pHud_Debug->Set_Text(_("Level ") + level_name + _(" already exists"));
+        gp_hud->Set_Text(_("Level ") + level_name + _(" already exists"));
         return 0;
     }
 
@@ -153,7 +154,7 @@ bool cEditor_Level::Function_New(void)
     Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_RANDOM));
     Game_Action_Data_End.add("screen_fadein_speed", "3");
 
-    pHud_Debug->Set_Text(_("Created ") + level_name);
+    gp_hud->Set_Text(_("Created ") + level_name);
     return 1;
 }
 
@@ -182,7 +183,7 @@ void cEditor_Level::Function_Load(void)
             Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
             Game_Action_Data_End.add("screen_fadein_speed", "3");
 
-            pHud_Debug->Set_Text(_("Loaded ") + path_to_utf8(Trim_Filename(level_path, 0, 0)));
+            gp_hud->Set_Text(_("Loaded ") + path_to_utf8(Trim_Filename(level_path, 0, 0)));
 
             break;
         }
@@ -225,7 +226,7 @@ void cEditor_Level::Function_Delete(void)
 {
     std::string levelname = pActive_Level->Get_Level_Name();
     if (pLevel_Manager->Get_Path(levelname, true).empty()) {
-        pHud_Debug->Set_Text(_("Level was not yet saved"));
+        gp_hud->Set_Text(_("Level was not yet saved"));
         return;
     }
 
@@ -259,7 +260,7 @@ void cEditor_Level::Function_Reload(void)
     // Simulate level ending followed by loading the level from scratch
     // (cf. cLevel_Manager::Finish_Level)
     Game_Action = GA_ENTER_LEVEL;
-    pHud_Time->Reset();
+    gp_hud->Reset_Elapsed_Time();
     pLevel_Player->Clear_Return();
 
     // Remove old level

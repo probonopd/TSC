@@ -20,8 +20,8 @@
 #include "../core/global_basic.hpp"
 #include "../video/animation.hpp"
 #include "../video/video.hpp"
-#include "../gui/hud.hpp"
 #include "../core/camera.hpp"
+#include "hud.hpp"
 
 namespace TSC {
 

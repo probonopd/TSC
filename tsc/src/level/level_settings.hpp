@@ -18,7 +18,6 @@
 #define TSC_LEVEL_SETTINGS_HPP
 
 #include "../core/global_basic.hpp"
-#include "../gui/hud.hpp"
 
 namespace TSC {
 

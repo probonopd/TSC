@@ -257,7 +257,7 @@ static mrb_value Set_Points(mrb_state* p_state,  mrb_value self)
     mrb_int points;
     mrb_get_args(p_state, "i", &points);
 
-    pHud_Points->Set_Points(points);
+    gp_hud->Set_Points(points);
     return mrb_fixnum_value(points);
 }
 
@@ -283,7 +283,7 @@ static mrb_value Add_Points(mrb_state* p_state,  mrb_value self)
     /* X and Y positions, multipliers, etc. are intended to be used
      * with enemies, not direct point increasing, so I don’t provide
      * MRuby bindings for those parameters here. */
-    pHud_Points->Add_Points(points);
+    gp_hud->Add_Points(points);
     return mrb_fixnum_value(pLevel_Player->m_points);
 }
 
@@ -346,12 +346,12 @@ static mrb_value Get_Jewels(mrb_state* p_state,  mrb_value self)
  * : The new number of jewels. This value obeys the same
  *   100-rule as the parameter to [add_jewels()](#addjewels).
  */
-static mrb_value Set_Jewels(mrb_state* p_state,  mrb_value self)
+static mrb_value Set_Gold(mrb_state* p_state,  mrb_value self)
 {
     mrb_int jewels;
     mrb_get_args(p_state, "i", &jewels);
 
-    pHud_Goldpieces->Set_Gold(jewels);
+    gp_hud->Set_Jewels(jewels);
     return mrb_fixnum_value(jewels);
 }
 
@@ -380,7 +380,7 @@ static mrb_value Add_Jewels(mrb_state* p_state,  mrb_value self)
     mrb_int jewels;
     mrb_get_args(p_state, "i", &jewels);
 
-    pHud_Goldpieces->Add_Gold(jewels);
+    gp_hud->Add_Jewels(jewels);
     return mrb_fixnum_value(pLevel_Player->m_goldpieces);
 }
 
@@ -416,7 +416,7 @@ static mrb_value Set_Lives(mrb_state* p_state,  mrb_value self)
     mrb_int lives;
     mrb_get_args(p_state, "i", &lives);
 
-    pHud_Lives->Set_Lives(lives);
+    gp_hud->Set_Lives(lives);
 
     return mrb_fixnum_value(lives);
 }
@@ -444,7 +444,7 @@ static mrb_value Add_Lives(mrb_state* p_state, mrb_value self)
     mrb_int lives;
     mrb_get_args(p_state, "i", &lives);
 
-    pHud_Lives->Add_Lives(lives);
+    gp_hud->Add_Lives(lives);
     return mrb_fixnum_value(pLevel_Player->m_lives);
 }
 
@@ -503,7 +503,7 @@ void TSC::Scripting::Init_Level_Player(mrb_state* p_state)
     mrb_define_method(p_state, p_rcLevel_Player, "kill", Kill, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel_Player, "kill!", Forced_Kill, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel_Player, "jewels", Get_Jewels, MRB_ARGS_NONE());
-    mrb_define_method(p_state, p_rcLevel_Player, "jewels=", Set_Jewels, MRB_ARGS_REQ(1));
+    mrb_define_method(p_state, p_rcLevel_Player, "jewels=", Set_Gold, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcLevel_Player, "add_jewels", Add_Jewels, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcLevel_Player, "lives", Get_Lives, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel_Player, "lives=", Set_Lives, MRB_ARGS_REQ(1));

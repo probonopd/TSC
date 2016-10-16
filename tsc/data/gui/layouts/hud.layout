@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="hud">
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{0.3,0}}"/>
+    <Property name="MousePassThroughEnabled" value="True"/>
+
+    <Window type="TaharezLook/Label" name="points">
+      <Property name="Area" value="{{0.01,0},{0.05,0},{0.3,0},{0.4,0}}"/>
+      <Property name="Text" value="Points 00000000"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="debug_fps">
+      <Property name="Area" value="{{0.01,0},{0.15,0},{0.3,0},{1,0}}"/>
+      <Property name="Text" value="[colour='FFFFFF00']FPS: 0"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Small"/>
+    </Window>
+
+    <Window type="TaharezLook/StaticImage" name="jewel_image">
+      <Property name="Area" value="{{0.3,0},{0.05,0},{0.32,0},{0.3,0}}"/>
+      <Property name="Image" value="hud_jewel"/>
+      <Property name="BackgroundEnabled" value="False"/>
+      <Property name="FrameEnabled" value="False"/>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="jewels">
+      <Property name="Area" value="{{0.33,0},{0.05,0},{0.4,0},{1,0}}"/>
+      <Property name="Text" value="00"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/StaticImage" name="itembox_image">
+      <Property name="Area" value="{{0.45,0},{0.01,0},{0.55,0},{0.8,0}}"/>
+      <Property name="Image" value="hud_itembox"/>
+      <Property name="BackgroundEnabled" value="False"/>
+      <Property name="FrameEnabled" value="False"/>
+
+      <Window type="TaharezLook/StaticImage" name="item_image">
+        <Property name="Area" value="{{0,0},{0.0,0},{0.55,0},{0.8,0}}"/>
+        <Property name="Image" value="hud_itembox_item"/>
+        <Property name="BackgroundEnabled" value="False"/>
+        <Property name="FrameEnabled" value="False"/>
+      </Window>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="world_waypoint">
+      <Property name="Area" value="{{0,0},{0.05,0},{1,0},{1,0}}"/>
+      <Property name="Text" value="lvl_1"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="time">
+      <Property name="Area" value="{{0.7,0},{0.05,0},{0.9,0},{1,0}}"/>
+      <Property name="Text" value="Time 00:00"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="world_name">
+      <Property name="Area" value="{{0.7,0},{0.05,0},{0.9,0},{1,0}}"/>
+      <Property name="Text" value="No world"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/Label" name="lives">
+      <Property name="Area" value="{{0.91,0},{0.05,0},{1,0},{1,0}}"/>
+      <Property name="Text" value="[colour='FF00FF00']3 x"/>
+      <Property name="HorzFormatting" value="Left"/>
+      <Property name="VertFormatting" value="Top"/>
+      <Property name="Font" value="DejaVuSans-Bold"/>
+    </Window>
+
+    <Window type="TaharezLook/StaticImage" name="alex_image">
+      <Property name="Area" value="{{0.95,0},{0.05,0},{1,0},{0.5,0}}"/>
+      <Property name="Image" value="hud_alex"/>
+      <Property name="BackgroundEnabled" value="False"/>
+      <Property name="FrameEnabled" value="False"/>
+    </Window>
+
+    <Window type="TaharezLook/StaticText" name="message">
+      <Property name="Area" value="{{0.1,0},{0.3,0},{0.9,0},{0.5,0}}"/>
+      <Property name="Text" value="Testtext"/>
+      <Property name="Font" value="DejaVuSans"/>
+      <Property name="HorzFormatting" value="Centre"/>
+    </Window>
+
+  </Window>
+</GUILayout>

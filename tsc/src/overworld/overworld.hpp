@@ -22,7 +22,6 @@
 #include "../overworld/world_layer.hpp"
 #include "../overworld/world_player.hpp"
 #include "../overworld/world_sprite_manager.hpp"
-#include "../gui/hud.hpp"
 #include "../audio/random_sound.hpp"
 
 namespace TSC {
@@ -106,8 +105,6 @@ namespace TSC {
         void Draw(void);
         // Draw Layer 1 ( Backgrounds, World objects and Animations )
         void Draw_Layer_1(void);
-        // Draws the HUD
-        void Draw_HUD(void);
 
         // Update
         void Update(void);
@@ -207,11 +204,6 @@ namespace TSC {
 
         // goto next level on overworld enter
         bool m_next_level;
-
-        // HUD world name
-        sf::Text m_hud_world_name;
-        // HUD current level name
-        sf::Text m_hud_level_name;
 
     private:
         // Common stuff for constructors

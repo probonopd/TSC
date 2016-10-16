@@ -207,7 +207,7 @@ cLevel* cLevel::Load_From_File(fs::path filename)
         loader.parse_file(filename);
     }
     else { // old, unsupported level format
-        pHud_Debug->Set_Text(_("Unsupported Level format : ") + (const std::string)path_to_utf8(filename));
+        gp_hud->Set_Text(_("Unsupported Level format : ") + (const std::string)path_to_utf8(filename));
         return NULL;
     }
 
@@ -373,7 +373,7 @@ void cLevel::Save(void)
     catch (xmlpp::exception& e) {
         cerr << "Error: Couldn't save level file: " << e.what() << endl;
         cerr << "Is the file read-only?" << endl;
-        pHud_Debug->Set_Text(_("Couldn't save level ") + path_to_utf8(m_level_filename), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save level ") + path_to_utf8(m_level_filename));
 
         // Abort
         return;
@@ -389,7 +389,7 @@ void cLevel::Save(void)
     }
 
     // Display nice completion message
-    pHud_Debug->Set_Text(_("Level ") + path_to_utf8(Trim_Filename(m_level_filename, false, false)) + _(" saved"));
+    gp_hud->Set_Text(_("Level ") + path_to_utf8(Trim_Filename(m_level_filename, false, false)) + _(" saved"));
 }
 
 void cLevel::Delete(void)
@@ -474,7 +474,6 @@ std::string cLevel::Get_Level_Name()
 
 void cLevel::Set_Sprite_Manager(void)
 {
-    pHud_Manager->Set_Sprite_Manager(m_sprite_manager);
     pMouseCursor->Set_Sprite_Manager(m_sprite_manager);
 #ifdef ENABLE_EDITOR
     pLevel_Editor->Set_Level(this);
@@ -537,11 +536,11 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
         cerr << "Warning : Music file not found: " << path_to_utf8(pActive_Level->m_musicfile) << endl;
     }
 
-    // Update Hud Text and position
-    pHud_Manager->Update_Text();
-
     // reset speed factor
     pFramerate->Reset();
+
+    // Show HUD
+    gp_hud->Show();
 }
 
 void cLevel::Leave(const GameMode next_mode /* = MODE_NOTHING */)
@@ -577,6 +576,8 @@ void cLevel::Leave(const GameMode next_mode /* = MODE_NOTHING */)
     pLevel_Editor->Disable();
     editor_enabled = false;
 #endif
+
+    gp_hud->Hide();
 }
 
 void cLevel::Update(void)
@@ -787,10 +788,10 @@ bool cLevel::Key_Down(const sf::Event& evt)
     // God Mode
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::D) && !editor_enabled) {
         if (pLevel_Player->m_god_mode) {
-            pHud_Debug->Set_Text(_("Omega Mode disabled"));
+            gp_hud->Set_Text(_("Omega Mode disabled"));
         }
         else {
-            pHud_Debug->Set_Text(_("Omega Mode enabled"));
+            gp_hud->Set_Text(_("Omega Mode enabled"));
         }
 
         pLevel_Player->m_god_mode = !pLevel_Player->m_god_mode;

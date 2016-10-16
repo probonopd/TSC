@@ -239,7 +239,7 @@ void Handle_Generic_Game_Events(const CEGUI::XMLAttributes& action_data)
         // loading failed
         else {
             cerr << "Error : Level not found " << str_level << endl;
-            pHud_Debug->Set_Text(_("Loading Level failed : ") + str_level);
+            gp_hud->Set_Text(_("Loading Level failed : ") + str_level);
 
             pLevel_Manager->Finish_Level();
         }

@@ -45,6 +45,7 @@
 #include "../level/level_settings.hpp"
 #include "../core/editor/editor.hpp"
 #include "../level/level_editor.hpp"
+#include "../gui/hud.hpp"
 
 namespace TSC {
 
@@ -229,7 +230,7 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
         m_invincible = speedfactor_fps * 2.5f;
         m_invincible_mod = 0.0f;
 
-        pHud_Itembox->Request_Item();
+        gp_hud->Request_Item();
 
         // Issue the Downgrade event
         Scripting::cDowngrade_Event evt(1, 2); // downgrades = 1, max. downgrades = 2
@@ -239,10 +240,10 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
     }
 
     Set_Type(ALEX_DEAD, 0, 0);
-    pHud_Time->Reset();
-    pHud_Points->Clear();
+    gp_hud->Reset_Elapsed_Time();
+    gp_hud->Reset_Points();
     Ball_Clear();
-    pHud_Lives->Add_Lives(-1);
+    gp_hud->Add_Lives(-1);
     pAudio->Fadeout_Music(1700);
 
     // lost a live
@@ -1846,9 +1847,8 @@ void cLevel_Player::Reset_Save(void)
     m_goldpieces = 0;
     m_points = 0;
 
-    pHud_Time->Reset();
-    pHud_Manager->Update_Text();
-    pHud_Itembox->Reset();
+    gp_hud->Reset_Elapsed_Time();
+    gp_hud->Reset_Item();
 }
 
 void cLevel_Player::Reset(bool full /* = 1 */)
@@ -1885,7 +1885,7 @@ void cLevel_Player::Reset(bool full /* = 1 */)
         m_invincible_mod = 0.0f;
         m_invincible_star = 0.0f;
         Set_Color_Combine(0.0f, 0.0f, 0.0f, 0);
-        pHud_Itembox->Push_back();
+        gp_hud->Reset_Item();
     }
 }
 
@@ -2711,19 +2711,19 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             // move item to itembox
             else if (current_alex_type == ALEX_BIG) {
                 // item to itembox
-                pHud_Itembox->Set_Item(TYPE_MUSHROOM_DEFAULT);
+                gp_hud->Set_Item(TYPE_MUSHROOM_DEFAULT);
             }
             // change to big
             else if (current_alex_type == ALEX_FIRE) {
                 // set type
                 Set_Type(ALEX_BIG, 0, 1, use_temp_power);
                 // old item to itembox
-                pHud_Itembox->Set_Item(TYPE_FIREPLANT);
+                gp_hud->Set_Item(TYPE_FIREPLANT);
             }
         }
         // move item to itembox
         else {
-            pHud_Itembox->Set_Item(TYPE_MUSHROOM_DEFAULT);
+            gp_hud->Set_Item(TYPE_MUSHROOM_DEFAULT);
         }
     }
     // Fireplant
@@ -2733,7 +2733,7 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             // move item to itembox
             if (current_alex_type == ALEX_FIRE) {
                 // move item to itembox
-                pHud_Itembox->Set_Item(TYPE_FIREPLANT);
+                gp_hud->Set_Item(TYPE_FIREPLANT);
             }
             // change to fire
             else {
@@ -2742,7 +2742,7 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             }
         }
         // fire explosion
-        else if (current_alex_type == ALEX_FIRE && pHud_Itembox->m_item_id == TYPE_FIREPLANT) {
+        else if (current_alex_type == ALEX_FIRE && gp_hud->Get_Item() == TYPE_FIREPLANT) {
             unsigned int ball_amount = 10;
 
             // if star add another ball
@@ -2751,11 +2751,11 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             }
 
             Ball_Add(FIREBALL_EXPLOSION, 180, ball_amount);
-            pHud_Points->Add_Points(1000, m_pos_x + (m_col_rect.m_w / 2), m_pos_y + 2);
+            gp_hud->Add_Points(1000, m_pos_x + (m_col_rect.m_w / 2), m_pos_y + 2);
         }
         // move item to itembox
         else {
-            pHud_Itembox->Set_Item(TYPE_FIREPLANT);
+            gp_hud->Set_Item(TYPE_FIREPLANT);
         }
     }
     // Blue Mushroom
@@ -2765,7 +2765,7 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             // move item to itembox
             if (current_alex_type == ALEX_ICE) {
                 // move item to itembox
-                pHud_Itembox->Set_Item(TYPE_MUSHROOM_BLUE);
+                gp_hud->Set_Item(TYPE_MUSHROOM_BLUE);
             }
             // change to ice
             else {
@@ -2774,7 +2774,7 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             }
         }
         // ice explosion
-        else if (current_alex_type == ALEX_ICE && pHud_Itembox->m_item_id == TYPE_MUSHROOM_BLUE) {
+        else if (current_alex_type == ALEX_ICE && gp_hud->Get_Item() == TYPE_MUSHROOM_BLUE) {
             unsigned int ball_amount = 10;
 
             // if star add another ball
@@ -2783,11 +2783,11 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
             }
 
             Ball_Add(ICEBALL_EXPLOSION, 180, ball_amount);
-            pHud_Points->Add_Points(1000, m_pos_x + (m_col_rect.m_w / 2), m_pos_y + 2);
+            gp_hud->Add_Points(1000, m_pos_x + (m_col_rect.m_w / 2), m_pos_y + 2);
         }
         // move item to itembox
         else {
-            pHud_Itembox->Set_Item(TYPE_MUSHROOM_BLUE);
+            gp_hud->Set_Item(TYPE_MUSHROOM_BLUE);
         }
     }
     // Ghost Mushroom
@@ -2807,13 +2807,13 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
         }
         // move item to itembox
         else {
-            pHud_Itembox->Set_Item(TYPE_MUSHROOM_GHOST);
+            gp_hud->Set_Item(TYPE_MUSHROOM_GHOST);
         }
     }
     // Mushroom 1-UP
     else if (item_type == TYPE_MUSHROOM_LIVE_1) {
         pAudio->Play_Sound("item/live_up.ogg", RID_1UP_MUSHROOM);
-        pHud_Lives->Add_Lives(1);
+        gp_hud->Add_Lives(1);
     }
     // Mushroom Poison
     else if (item_type == TYPE_MUSHROOM_POISON) {
@@ -2822,14 +2822,14 @@ void cLevel_Player::Get_Item(SpriteType item_type, bool force /* = 0 */, cMoving
     // Moon
     else if (item_type == TYPE_MOON) {
         pAudio->Play_Sound("item/moon.ogg", RID_MOON);
-        pHud_Lives->Add_Lives(3);
+        gp_hud->Add_Lives(3);
     }
     // Star
     else if (item_type == TYPE_STAR) {
         // todo : check if music is already playing
         pAudio->Play_Music("game/star.ogg", false, 1, 500);
         pAudio->Play_Music(pActive_Level->m_musicfile, true, 0);
-        pHud_Points->Add_Points(1000, m_pos_x + (m_col_rect.m_w / 2), m_pos_y + 2);
+        gp_hud->Add_Points(1000, m_pos_x + (m_col_rect.m_w / 2), m_pos_y + 2);
         m_invincible = speedfactor_fps * 16.0f;
         m_invincible_star = speedfactor_fps * 15.0f;
     }
@@ -3113,7 +3113,7 @@ void cLevel_Player::Action_Interact(input_identifier key_type)
     }
     // Request Item
     else if (key_type == INP_ITEM) {
-        pHud_Itembox->Request_Item();
+        gp_hud->Request_Item();
     }
     // Exit
     else if (key_type == INP_EXIT) {
@@ -3368,7 +3368,7 @@ void cLevel_Player::Add_Kill_Multiplier(void)
         // only every fifth kill
         if (static_cast<int>(m_kill_multiplier * 10) % 5 == 0) {
             // add 1 live
-            pHud_Goldpieces->Add_Gold(100);
+            gp_hud->Add_Jewels(100);
         }
     }
 
@@ -3643,7 +3643,7 @@ void cLevel_Player::Handle_Collision_Enemy(cObjectCollision* collision)
         // hit
         if (hit_enemy) {
             pAudio->Play_Sound("item/star_kill.ogg");
-            pHud_Points->Add_Points(static_cast<unsigned int>(enemy->m_kill_points * 1.2f), enemy->m_pos_x, enemy->m_pos_y - 5.0f, "", yellow, 1);
+            gp_hud->Add_Points(static_cast<unsigned int>(enemy->m_kill_points * 1.2f), enemy->m_pos_x, enemy->m_pos_y - 5.0f, "", yellow, 1);
             // force complete downgrade
             enemy->DownGrade(1);
             Add_Kill_Multiplier();
@@ -3694,7 +3694,7 @@ void cLevel_Player::Handle_Collision_Enemy(cObjectCollision* collision)
         pAudio->Play_Sound("item/ice_kill.wav");
 
         // get points
-        pHud_Points->Add_Points(enemy->m_kill_points, enemy->m_pos_x, enemy->m_pos_y - 10.0f, "", static_cast<uint8_t>(255), 1);
+        gp_hud->Add_Points(enemy->m_kill_points, enemy->m_pos_x, enemy->m_pos_y - 10.0f, "", static_cast<uint8_t>(255), 1);
 
         // kill enemy
         enemy->DownGrade(1);

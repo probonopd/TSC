@@ -148,13 +148,13 @@ void cGoldpiece::Activate(void)
     unsigned int points = 0;
 
     if (m_color_type == COL_RED) {
-        pHud_Goldpieces->Add_Gold(5);
+        gp_hud->Add_Jewels(5);
         points = 100;
 
         anim->Set_Scale(1.2f, 1);
     }
     else {
-        pHud_Goldpieces->Add_Gold(1);
+        gp_hud->Add_Jewels(1);
         points = 5;
     }
 
@@ -173,7 +173,7 @@ void cGoldpiece::Activate(void)
         }
     }
 
-    pHud_Points->Add_Points(points, m_pos_x + m_col_rect.m_w / 2, m_pos_y + 2);
+    gp_hud->Add_Points(points, m_pos_x + m_col_rect.m_w / 2, m_pos_y + 2);
 
     Scripting::cActivate_Event evt;
     evt.Fire(pActive_Level->m_mruby, this);

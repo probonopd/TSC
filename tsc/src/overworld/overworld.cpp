@@ -69,7 +69,7 @@ void cOverworld_description::Save(void)
     }
     catch (xmlpp::exception& e) {
         cerr << "Failed to save world description file '" << path_to_utf8(filename) << "': " << e.what() << endl;
-        pHud_Debug->Set_Text(_("Couldn't save world description ") + path_to_utf8(filename), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save world description ") + path_to_utf8(filename));
         return;
     }
 }
@@ -141,7 +141,7 @@ cOverworld* cOverworld::Load_From_Directory(fs::path directory, int user_dir /* 
     p_overworld->m_layer = layerloader.Get_Layer();
 
     // Set the text that is displayed at the top when this world is shown
-    pFont->Prepare_SFML_Text(p_overworld->m_hud_world_name, p_overworld->m_description->m_name, 10, static_cast<float>(game_res_h) - 30, cFont_Manager::FONTSIZE_NORMAL, yellow);
+    gp_hud->Set_World_Name(p_overworld->m_description->m_name);
 
     return p_overworld;
 }
@@ -239,12 +239,12 @@ void cOverworld::Save(void)
     catch (xmlpp::exception& e) {
         cerr << "Error: Could not save overworld '" << path_to_utf8(save_dir) << "': " << e.what() << endl
              << "Is the directory read-only?" << endl;
-        pHud_Debug->Set_Text(_("Couldn't save world ") + path_to_utf8(save_dir), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save world ") + path_to_utf8(save_dir));
         return;
     }
 
     // show info
-    pHud_Debug->Set_Text(_("World ") + m_description->m_name + _(" saved"));
+    gp_hud->Set_Text(_("World ") + m_description->m_name + _(" saved"));
 }
 
 void cOverworld::Save_To_Directory(fs::path path)
@@ -318,7 +318,6 @@ void cOverworld::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     // set animation manager
     pActive_Animation_Manager = m_animation_manager;
 
-    pHud_Manager->Set_Sprite_Manager(m_sprite_manager);
     pMouseCursor->Set_Sprite_Manager(m_sprite_manager);
 
     // if player start waypoint not set
@@ -369,11 +368,11 @@ void cOverworld::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     }
 #endif
 
-    // Update Hud Text and position
-    pHud_Manager->Update_Text();
-
     // reset speedfactor
     pFramerate->Reset();
+
+    // Show HUD
+    gp_hud->Show();
 }
 
 void cOverworld::Leave(const GameMode next_mode /* = MODE_NOTHING */)
@@ -410,6 +409,8 @@ void cOverworld::Leave(const GameMode next_mode /* = MODE_NOTHING */)
         // clear input
         Clear_Input_Events();
     }
+
+    gp_hud->Hide();
 }
 
 void cOverworld::Draw(void)
@@ -420,8 +421,6 @@ void cOverworld::Draw(void)
 
     // Player
     pOverworld_Player->Draw();
-    // Hud
-    Draw_HUD();
 
 #ifdef ENABLE_EDITOR
     // Editor
@@ -440,26 +439,6 @@ void cOverworld::Draw_Layer_1(void)
     m_sprite_manager->Draw_Items();
     // animations
     m_animation_manager->Draw();
-}
-
-void cOverworld::Draw_HUD(void)
-{
-    // if not editor mode
-    if (!editor_world_enabled) {
-        // Background
-        Color color = Color(static_cast<uint8_t>(230), 170, 0, 128);
-        pVideo->Draw_Rect(0, 0, static_cast<float>(game_res_w), 30, 0.12f, &color);
-        // Line
-        color = Color(static_cast<uint8_t>(200), 150, 0, 128);
-        pVideo->Draw_Rect(0, 30, static_cast<float>(game_res_w), 5, 0.121f, &color);
-
-        // Overworld name and level
-        pFont->Queue_Text(m_hud_world_name);
-        pFont->Queue_Text(m_hud_level_name);
-    }
-
-    // hud
-    pHud_Manager->Draw();
 }
 
 void cOverworld::Update(void)
@@ -486,8 +465,6 @@ void cOverworld::Update(void)
         }
     }
 
-    // hud
-    pHud_Manager->Update();
 
 #ifdef ENABLE_EDITOR
     // Editor
@@ -812,7 +789,7 @@ void cOverworld::Update_Waypoint_text(void)
         color = green;
     }
 
-    pFont->Prepare_SFML_Text(m_hud_level_name, waypoint->Get_Destination(), 480, 2, cFont_Manager::FONTSIZE_NORMAL, color, true);
+    gp_hud->Set_Waypoint_Name(waypoint->Get_Destination(), color);
 }
 
 bool cOverworld::Goto_Next_Level(void)

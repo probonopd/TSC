@@ -33,6 +33,7 @@
 #include "../../core/global_basic.hpp"
 #include "../../audio/audio.hpp"
 #include "../../enemies/army.hpp"
+#include "../../gui/hud.hpp"
 
 using namespace std;
 
@@ -156,7 +157,7 @@ int cSavegame::Load_Game(unsigned int save_slot)
                 }
 
                 // time
-                pHud_Time->Set_Time(savegame->m_level_time);
+                gp_hud->Set_Elapsed_Time(savegame->m_level_time);
 
                 // position
                 pLevel_Player->Set_Pos(save_level->m_level_pos_x, save_level->m_level_pos_y);
@@ -259,12 +260,11 @@ int cSavegame::Load_Game(unsigned int save_slot)
         pAudio->Play_Music(pActive_Overworld->m_musicfile, true, 1, 1000);
     }
 
-    pHud_Points->Set_Points(savegame->m_points);
-    pHud_Goldpieces->Set_Gold(savegame->m_goldpieces);
-    pHud_Lives->Set_Lives(savegame->m_lives);
-    pHud_Itembox->Set_Item(static_cast<SpriteType>(savegame->m_itembox_item), 0);
-    pHud_Debug->Set_Text(_("Savegame ") + int_to_string(save_slot) + _(" loaded"));
-    pHud_Manager->Update();
+    gp_hud->Set_Points(savegame->m_points);
+    gp_hud->Set_Jewels(savegame->m_goldpieces);
+    gp_hud->Set_Lives(savegame->m_lives);
+    gp_hud->Set_Item(static_cast<SpriteType>(savegame->m_itembox_item), 0);
+    gp_hud->Set_Text(_("Savegame ") + int_to_string(save_slot) + _(" loaded"));
 
     // #### Return stack ####
 
@@ -306,7 +306,7 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
     savegame->m_ghost_time_mod = pLevel_Player -> m_ghost_time_mod;
 
     savegame->m_player_state = pLevel_Player->m_state;
-    savegame->m_itembox_item = pHud_Itembox->m_item_id;
+    savegame->m_itembox_item = gp_hud->Get_Item();
 
     // player return stack
     for (std::vector<cLevel_Player_Return_Entry>::const_iterator itr = pLevel_Player->m_return_stack.begin(); itr != pLevel_Player->m_return_stack.end(); itr++) {
@@ -316,7 +316,7 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
     // if in a level
     if (pActive_Level->Is_Loaded()) {
         // General info relating to all loaded levels
-        savegame->m_level_time = pHud_Time->m_milliseconds;
+        savegame->m_level_time = gp_hud->Get_Elapsed_Time();
 
         // Create save data for all loaded levels. Note that if a user entered
         // a sublevel, multiple levels can be loaded.
@@ -437,12 +437,10 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
     catch (xmlpp::exception& e) {
         cerr << "Failed to save savegame '" << filename << "': " << e.what() << endl
              << "Is the file read-only?" << endl;
-        pHud_Debug->Set_Text(_("Couldn't save savegame ") + path_to_utf8(filename), speedfactor_fps * 5.0f);
+        gp_hud->Set_Text(_("Couldn't save savegame ") + path_to_utf8(filename));
     }
 
-    if (pHud_Debug) {
-        pHud_Debug->Set_Text(_("Saved to Slot ") + int_to_string(save_slot));
-    }
+    gp_hud->Set_Text(_("Saved to Slot ") + int_to_string(save_slot));
 
     delete savegame;
 

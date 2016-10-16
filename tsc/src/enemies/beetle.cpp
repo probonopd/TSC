@@ -197,7 +197,7 @@ void cBeetle::Handle_Collision_Player(cObjectCollision* p_collision)
         pAudio->Play_Sound(m_kill_sound);
         DownGrade();
         pLevel_Player->Action_Jump(true);
-        pHud_Points->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
+        gp_hud->Add_Points(m_kill_points, m_pos_x, m_pos_y - 5.0f, "", static_cast<uint8_t>(255), 1);
         pLevel_Player->Add_Kill_Multiplier();
     }
     else if (!pLevel_Player->m_invincible) {

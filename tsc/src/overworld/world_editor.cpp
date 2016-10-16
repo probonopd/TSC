@@ -82,11 +82,11 @@ bool cEditor_World::Function_New(void)
         Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
         Game_Action_Data_End.add("screen_fadein_speed", "3");
 
-        pHud_Debug->Set_Text(_("Created ") + world_name);
+        gp_hud->Set_Text(_("Created ") + world_name);
         return 1;
     }
     else {
-        pHud_Debug->Set_Text(_("World ") + world_name + _(" already exists"));
+        gp_hud->Set_Text(_("World ") + world_name + _(" already exists"));
     }
 
     return 0;
@@ -114,7 +114,7 @@ void cEditor_World::Function_Load(void)
             Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
             Game_Action_Data_End.add("screen_fadein_speed", "3");
 
-            pHud_Debug->Set_Text(_("Loaded ") + world_name);
+            gp_hud->Set_Text(_("Loaded ") + world_name);
             break;
         }
         // failed

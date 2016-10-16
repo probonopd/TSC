@@ -115,6 +115,11 @@ fs::path cResource_Manager::Get_User_Level(std::string filename)
     return Get_User_Level_Directory() / utf8_to_path(filename);
 }
 
+fs::path cResource_Manager::Get_User_Pixmap(std::string pixmap)
+{
+    return Get_User_Pixmaps_Directory() / utf8_to_path("pixmaps") / utf8_to_path(pixmap);
+}
+
 fs::path cResource_Manager::Get_User_Savegame_Directory()
 {
     return m_paths.user_data_dir / utf8_to_path(USER_SAVEGAME_DIR);

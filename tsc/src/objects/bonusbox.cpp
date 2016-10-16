@@ -298,7 +298,7 @@ void cBonusBox::Activate(void)
     }
     // check if lower item should be used if no force best item
     else if (!m_force_best_item && (box_type == TYPE_FIREPLANT || box_type == TYPE_MUSHROOM_BLUE) &&
-             (current_alex_type == ALEX_SMALL || ((current_alex_type == ALEX_FIRE || current_alex_type == ALEX_ICE) && !pHud_Itembox->m_item_id))) {
+             (current_alex_type == ALEX_SMALL || ((current_alex_type == ALEX_FIRE || current_alex_type == ALEX_ICE) && !gp_hud->Get_Item()))) {
         pAudio->Play_Sound("sprout_1.ogg");
 
         cMushroom* mushroom = new cMushroom(m_sprite_manager);
