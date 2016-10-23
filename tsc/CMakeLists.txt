@@ -227,6 +227,9 @@ else()
     ${PCRE_LIBRARIES}
     ${X11_LIBRARIES}
     ${CMAKE_DL_LIBS})
+  if (CMAKE_SYSTEM_NAME MATCHES "BSD")
+    target_link_libraries(tsc iconv intl)
+  endif()
 endif()
 
 if (ENABLE_MRUBY)
