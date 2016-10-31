@@ -619,7 +619,7 @@ void cLevel_Player::Update_Walking(void)
     }
 
     // only if left or right is pressed
-    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->m_left || pJoystick->m_right) {
+    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Left() || pJoystick->Right()) {
         float ground_mod = 1.0f;
 
         if (m_ground_object && m_ground_object->m_image) {
@@ -723,7 +723,7 @@ void cLevel_Player::Update_Staying(void)
     }
 
     // if left and right is not pressed
-    if (!sf::Keyboard::isKeyPressed(pPreferences->m_key_left) && !sf::Keyboard::isKeyPressed(pPreferences->m_key_right) && !pJoystick->m_left && !pJoystick->m_right) {
+    if (!sf::Keyboard::isKeyPressed(pPreferences->m_key_left) && !sf::Keyboard::isKeyPressed(pPreferences->m_key_right) && !pJoystick->Left() && !pJoystick->Right()) {
         // walking
         if (m_velx) {
             if (m_ground_object->m_image && m_ground_object->m_image->m_ground_type == GROUND_ICE) {
@@ -789,7 +789,7 @@ void cLevel_Player::Update_Flying(void)
         }
 
         // move down
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->m_down) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->Down()) {
             const float max_vel = 5.0f * Get_Vel_Modifier();
 
             if (m_vely < max_vel) {
@@ -797,7 +797,7 @@ void cLevel_Player::Update_Flying(void)
             }
         }
         // move up
-        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->m_up) {
+        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->Up()) {
             const float max_vel = -5.0f * Get_Vel_Modifier();
 
             if (m_vely > max_vel) {
@@ -816,7 +816,7 @@ void cLevel_Player::Update_Flying(void)
     // falling
     else {
         // move left
-        if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->m_left) && !m_ducked_counter) {
+        if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->Left()) && !m_ducked_counter) {
             if (!m_parachute) {
                 const float max_vel = -10.0f * Get_Vel_Modifier();
 
@@ -834,7 +834,7 @@ void cLevel_Player::Update_Flying(void)
             }
         }
         // move right
-        else if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->m_right) && !m_ducked_counter) {
+        else if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Right()) && !m_ducked_counter) {
             if (!m_parachute) {
                 const float max_vel = 10.0f * Get_Vel_Modifier();
 
@@ -1074,17 +1074,17 @@ void cLevel_Player::Update_Climbing(void)
 
     if (Is_On_Climbable()) {
         // set velocity
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->m_left) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->Left()) {
             m_velx = -2.0f * Get_Vel_Modifier();
         }
-        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->m_right) {
+        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Right()) {
             m_velx = 2.0f * Get_Vel_Modifier();
         }
 
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->m_up) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->Up()) {
             m_vely = -4.0f * Get_Vel_Modifier();
         }
-        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->m_down) {
+        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->Down()) {
             m_vely = 4.0f * Get_Vel_Modifier();
         }
 
@@ -1176,7 +1176,7 @@ void cLevel_Player::Start_Jump(float deaccel /* = 0.08f */)
     bool jump_key = 0;
 
     // if jump key pressed
-    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || (pPreferences->m_joy_analog_jump && pJoystick->m_up) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
+    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || (pPreferences->m_joy_analog_jump && pJoystick->Up()) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
         jump_key = 1;
     }
 
@@ -1259,7 +1259,7 @@ void cLevel_Player::Update_Jump(void)
     }
 
     // jumping physics
-    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || (pPreferences->m_joy_analog_jump && pJoystick->m_up) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
+    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || (pPreferences->m_joy_analog_jump && pJoystick->Up()) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
         Add_Velocity_Y(-(m_jump_accel_up + (m_vely * m_jump_vel_deaccel) / Get_Vel_Modifier()));
         m_jump_power -= pFramerate->m_speed_factor;
     }
@@ -1269,7 +1269,7 @@ void cLevel_Player::Update_Jump(void)
     }
 
     // left right physics
-    if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->m_left) && !m_ducked_counter) {
+    if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->Left()) && !m_ducked_counter) {
         const float max_vel = -10.0f * Get_Vel_Modifier();
 
         if (m_velx > max_vel) {
@@ -1277,7 +1277,7 @@ void cLevel_Player::Update_Jump(void)
         }
 
     }
-    else if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->m_right) && !m_ducked_counter) {
+    else if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Right()) && !m_ducked_counter) {
         const float max_vel = 10.0f * Get_Vel_Modifier();
 
         if (m_velx < max_vel) {
@@ -3177,7 +3177,7 @@ void cLevel_Player::Action_Stop_Interact(input_identifier key_type)
     // Left
     else if (key_type == INP_LEFT) {
         // if key in opposite direction is still pressed only change direction
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->m_right) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Right()) {
             m_direction = DIR_RIGHT;
         }
         else {
@@ -3187,7 +3187,7 @@ void cLevel_Player::Action_Stop_Interact(input_identifier key_type)
     // Right
     else if (key_type == INP_RIGHT) {
         // if key in opposite direction is still pressed only change direction
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->m_left) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->Left()) {
             m_direction = DIR_LEFT;
         }
         else {
@@ -3515,7 +3515,7 @@ Col_Valid_Type cLevel_Player::Validate_Collision(cSprite* obj)
     }
     else if (obj->m_massive_type == MASS_HALFMASSIVE) {
         // fall through
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->m_down) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->Down()) {
             return COL_VTYPE_NOT_VALID;
         }
 
@@ -3746,7 +3746,7 @@ void cLevel_Player::Handle_Collision_Massive(cObjectCollision* collision)
     // climbable
     if (col_obj->m_massive_type == MASS_CLIMBABLE && m_state != STA_CLIMB && m_state != STA_FLY) {
         // if not climbing and player wants to climb
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->m_up || ((sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->m_down) && !m_ground_object)) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->Up() || ((sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->Down()) && !m_ground_object)) {
             // start climbing
             Start_Climbing();
         }

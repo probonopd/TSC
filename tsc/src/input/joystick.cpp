@@ -487,26 +487,6 @@ vector<std::string> cJoystick::Get_Names(void) const
     return names;
 }
 
-bool cJoystick::Left(void) const
-{
-    return pPreferences->m_joy_enabled && m_left;
-}
-
-bool cJoystick::Right(void) const
-{
-    return pPreferences->m_joy_enabled && m_right;
-}
-
-bool cJoystick::Up(void) const
-{
-    return pPreferences->m_joy_enabled && m_up;
-}
-
-bool cJoystick::Down(void) const
-{
-    return pPreferences->m_joy_enabled && m_down;
-}
-
 bool cJoystick::Button(unsigned int num)
 {
     if (pPreferences->m_joy_enabled && sf::Joystick::isButtonPressed(m_current_joystick, num)) {

@@ -33,6 +33,12 @@ namespace TSC {
         bool m_is_axis_down[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
         bool m_is_axis_up[cPreferences::NUM_JOYSTICK_AXIS_TYPES];
 
+        // analog / directional pad directions
+        bool m_left;
+        bool m_right;
+        bool m_up;
+        bool m_down;
+
     public:
         cJoystick(void);
         ~cJoystick(void);
@@ -62,19 +68,32 @@ namespace TSC {
         // Returns all available Joystick names
         vector<std::string> Get_Names(void) const;
 
-        // check if the analog direction is pressed
-        bool Left(void) const;
-        bool Right(void) const;
-        bool Up(void) const;
-        bool Down(void) const;
+        // Check if analog or directional pad left is pressed
+        bool Left(void) const
+        {
+            return pPreferences->m_joy_enabled && m_left;
+        }
+
+        // Check if analog or directional pad right is pressed
+        bool Right(void) const
+        {
+            return pPreferences->m_joy_enabled && m_right;
+        }
+
+        // Check if analog or directional pad up is pressed
+        bool Up(void) const
+        {
+            return pPreferences->m_joy_enabled && m_up;
+        }
+
+        // Check if analog or directional pad down is pressed
+        bool Down(void) const
+        {
+            return pPreferences->m_joy_enabled && m_down;
+        }
+
         // check if the given button is pushed
         bool Button(unsigned int button);
-
-        // analog directions
-        bool m_left;
-        bool m_right;
-        bool m_up;
-        bool m_down;
 
         // SFML current opened joystick
         unsigned int m_current_joystick;

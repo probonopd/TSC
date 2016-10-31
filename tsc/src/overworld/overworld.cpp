@@ -483,16 +483,16 @@ void cOverworld::Update_Camera(void)
 
     // todo : move to a Process_Input function
     if (pOverworld_Manager->m_camera_mode) {
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || (pJoystick->m_right && pPreferences->m_joy_enabled)) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Right()) {
             pOverworld_Manager->m_camera->Move(pFramerate->m_speed_factor * 15, 0);
         }
-        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || (pJoystick->m_left && pPreferences->m_joy_enabled)) {
+        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || pJoystick->Left()) {
             pOverworld_Manager->m_camera->Move(pFramerate->m_speed_factor * -15, 0);
         }
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || (pJoystick->m_up && pPreferences->m_joy_enabled)) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_up) || pJoystick->Up()) {
             pOverworld_Manager->m_camera->Move(0, pFramerate->m_speed_factor * -15);
         }
-        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || (pJoystick->m_down && pPreferences->m_joy_enabled)) {
+        else if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->Down()) {
             pOverworld_Manager->m_camera->Move(0, pFramerate->m_speed_factor * 15);
         }
     }
