@@ -3515,7 +3515,7 @@ Col_Valid_Type cLevel_Player::Validate_Collision(cSprite* obj)
     }
     else if (obj->m_massive_type == MASS_HALFMASSIVE) {
         // fall through
-        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down)) {
+        if (sf::Keyboard::isKeyPressed(pPreferences->m_key_down) || pJoystick->m_down) {
             return COL_VTYPE_NOT_VALID;
         }
 
