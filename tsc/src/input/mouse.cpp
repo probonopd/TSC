@@ -93,6 +93,16 @@ cMouseCursor::cMouseCursor(cSprite_Manager* sprite_manager)
     m_mover_mode = 0;
     m_last_clicked_object = NULL;
 
+    mp_coords_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Label", "editor_coords");
+    CEGUI::GUIContext& ctx = CEGUI::System::getSingleton().getDefaultGUIContext();
+    ctx.getRootWindow()->addChild(mp_coords_label);
+    mp_coords_label->setMousePassThroughEnabled(true);
+    mp_coords_label->setFont("DejaVuSans-Small-Bold");
+    mp_coords_label->setWidth(CEGUI::UDim(1, 0)); // Width does not matter as the label is transparent, but has to be large enough for the text
+    mp_coords_label->setProperty("HorzFormatting", "Left");
+    mp_coords_label->setProperty("VertFormatting", "Top");
+    mp_coords_label->hide(); // Shown only in editor
+
     Reset_Keys();
     Update_Position();
     // disable mouse initially
@@ -545,6 +555,11 @@ void cMouseCursor::Set_Hovered_Object(cSprite* sprite)
     if (sprite) {
         // add new mouse object to selected objects
         Add_Selected_Object(sprite);
+        // Show coords info
+        mp_coords_label->show();
+    }
+    else {
+        mp_coords_label->hide();
     }
 
     Update_Selected_Object_Offset(m_hovering_object);
@@ -1522,6 +1537,11 @@ void cMouseCursor::Editor_Update(void)
         return;
     }
 
+    // Snap coords text to cursor.
+    CEGUI::GUIContext& ctx = CEGUI::System::getSingleton().getDefaultGUIContext();
+    CEGUI::Vector2f curpos = ctx.getMouseCursor().getPosition();
+    mp_coords_label->setPosition(CEGUI::UVector2(CEGUI::UDim(0, curpos.d_x + 20), CEGUI::UDim(0, curpos.d_y + 35)));
+
     cObjectCollision* col = Get_First_Editor_Collsion();
 
     // if no collision
@@ -1593,28 +1613,24 @@ void cMouseCursor::Editor_Update(void)
         // position text
         std::string info =
             "X : "      + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_start_pos_x))
-            + " Y : "   + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_start_pos_y))
+            + "  Y : "  + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_start_pos_y))
             + " UID: "  + int_to_string(m_hovering_object->m_obj->m_uid);
 
         if (game_debug) {
             info.insert(0, "Start ");
         }
 
-        pFont->Prepare_SFML_Text(m_coords_text, info, sf::Mouse::getPosition().x + 20, sf::Mouse::getPosition().y + 35, cFont_Manager::FONTSIZE_SMALL, white, true);
-        pFont->Queue_Text(m_coords_text);
-
         // if in debug mode draw current position X, Y, Z and if available editor Z
         if (game_debug) {
-            info = "Curr.  X : " + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_pos_x)) + "  Y : " + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_pos_y)) + "  Z : " + float_to_string(m_hovering_object->m_obj->m_pos_z, 6);
+            info += "\nCurr.  X : " + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_pos_x)) + "  Y : " + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_pos_y)) + "  Z : " + float_to_string(m_hovering_object->m_obj->m_pos_z, 6);
 
             // if also got editor z position
             if (!Is_Float_Equal(m_hovering_object->m_obj->m_editor_pos_z, 0.0f)) {
                 info.insert(info.length(), _("  Editor Z : ") + float_to_string(m_hovering_object->m_obj->m_editor_pos_z, 6));
             }
-
-            pFont->Prepare_SFML_Text(m_extended_coords_text, info, sf::Mouse::getPosition().x + 20, sf::Mouse::getPosition().y + 55, cFont_Manager::FONTSIZE_SMALL, white, true);
-            pFont->Queue_Text(m_extended_coords_text);
         }
+
+        mp_coords_label->setText(info);
     }
 
     // OLD if (pHud_Debug->m_counter <= 0.0f) {

@@ -277,8 +277,7 @@ namespace TSC {
         // counter for catching double-clicks
         float m_click_counter;
 
-        sf::Text m_coords_text;
-        sf::Text m_extended_coords_text;
+        CEGUI::Window* mp_coords_label;
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
