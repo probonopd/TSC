@@ -1,3 +1,50 @@
-by Naerbu
+by Naerbu (RedFT)
 from http://www.newgrounds.com/audio/listen/383399
-licensed CC-BY-NC-SA 3.0
+license CC-BY 4.0 by explicit permission from RedFT:
+
+From: Norbu Tsering <ntsering91@gmail.com>
+Date: Fri, 4 Nov 2016 13:04:23 -0400
+Message-ID: <CAFSN_t5kcTKQuE=DHVGbaYson0t-QhNSHWxerYYhUSxPrah_tQ@mail.gmail.com>
+Subject: Re: Relicensing of TSC music
+To: =?UTF-8?Q?Marvin_G=C3=BClker?= <m-guelker@phoenixmail.de>
+
+Hi Marvin,
+
+Yes, you may relicense the music to CC-BY 4.0.
+
+Best,
+Norbu Tsering
+
+On Nov 4, 2016 12:51 PM, "Marvin Gülker" <m-guelker@phoenixmail.de> wrote:
+
+> Hi Norbu,
+>
+> we are currently trying to get TSC included into Debian, and the Debian
+> people have complained that we have a game music licensed under a
+> license prohibiting commercial use. The file in question is
+> reunion_1.ogg, see:
+>
+> * https://github.com/Secretchronicles/TSC/blob/devel/tsc/data/music/land/
+> reunion_1.txt
+> * https://github.com/Secretchronicles/TSC/raw/devel/tsc/data/music/land/
+> reunion_1.ogg
+>
+> The file is currently licensed as CC-BY-NC-SA 3.0. Are you willing to
+> relicense the music to CC-BY 4.0, which is the license we currently use
+> for any new contributions in TSC? If so, please also give me permission
+> to publish your response email so the license change can be documented.
+>
+> FYI, we are planning for a complete rewrite with the possibility of
+> further license changes. If you want to take part in the discusion, feel
+> free to do so:
+>
+>   https://github.com/Secretchronicles/TSC/issues/
+> 535#issuecomment-252493546
+>
+> Greetings
+> Quintus a.k.a Marvin
+>
+> --
+> Blog: http://www.guelkerdev.de
+> PGP/GPG ID: F1D8799FBCC8BC4F
+>
