@@ -2,8 +2,8 @@
 <level>
   <information>
     <property name="game_version" value="2.1.0"/>
-    <property name="engine_version" value="45"/>
-    <property name="save_time" value="1426818174"/>
+    <property name="engine_version" value="47"/>
+    <property name="save_time" value="1478661237"/>
   </information>
   <settings>
     <property name="lvl_author" value="datahead"/>
@@ -51,8 +51,8 @@
     <property name="const_vely" value="0.000000"/>
   </background>
   <player>
-    <property name="posx" value="597"/>
-    <property name="posy" value="-424"/>
+    <property name="posx" value="598"/>
+    <property name="posy" value="-428"/>
     <property name="direction" value="right"/>
   </player>
   <sprite>
@@ -8153,7 +8153,7 @@
     <property name="posx" value="6205"/>
     <property name="posy" value="-176"/>
     <property name="uid" value="1110"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="halfmassive"/>
     <property name="move_type" value="0"/>
@@ -8172,7 +8172,7 @@
     <property name="posx" value="6425"/>
     <property name="posy" value="-232"/>
     <property name="uid" value="1111"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="halfmassive"/>
     <property name="move_type" value="0"/>
@@ -8191,7 +8191,7 @@
     <property name="posx" value="6685"/>
     <property name="posy" value="-58"/>
     <property name="uid" value="1112"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="halfmassive"/>
     <property name="move_type" value="0"/>
@@ -8210,7 +8210,7 @@
     <property name="posx" value="6206"/>
     <property name="posy" value="-592"/>
     <property name="uid" value="1113"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="halfmassive"/>
     <property name="move_type" value="0"/>
@@ -8229,7 +8229,7 @@
     <property name="posx" value="6429"/>
     <property name="posy" value="-497"/>
     <property name="uid" value="1114"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="halfmassive"/>
     <property name="move_type" value="0"/>
@@ -9971,7 +9971,7 @@
     <property name="posx" value="9689"/>
     <property name="posy" value="-302"/>
     <property name="uid" value="1339"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="massive"/>
     <property name="move_type" value="0"/>
@@ -9990,7 +9990,7 @@
     <property name="posx" value="10108"/>
     <property name="posy" value="-303"/>
     <property name="uid" value="1340"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="massive"/>
     <property name="move_type" value="0"/>
@@ -10009,7 +10009,7 @@
     <property name="posx" value="10313"/>
     <property name="posy" value="-401"/>
     <property name="uid" value="1341"/>
-    <property name="image" value="ground/green_1/slider/1/brown/left.png"/>
+    <property name="image" value="ground/green_1/slider/1/brown/right.png"/>
     <property name="type" value="0"/>
     <property name="massive_type" value="halfmassive"/>
     <property name="move_type" value="0"/>
@@ -22421,7 +22421,7 @@
     <property name="posx" value="13002"/>
     <property name="posy" value="-106"/>
     <property name="uid" value="4291"/>
-    <property name="image" value="ground/underground/pow/blue.png"/>
+    <property name="image" value="ground/underground/switch/blue.png"/>
     <property name="type" value="massive"/>
   </sprite>
   <sprite>
@@ -31584,7 +31584,9 @@
     <property name="image" value="game/box/brown1_1.png"/>
     <property name="type" value="passive"/>
   </sprite>
-  <script>bridgeSwitch = false #Boolean for whether drawBridge switch is drawn
+  <script>TSC.require "std/enable"
+TSC.require "std/switch"
+
 doingTimer = false  #Boolean for whether timer is running (can then be saved)
 
 #Objects for all draw bridge blocks
@@ -31593,42 +31595,38 @@ blocks = [3090, 3089, 3068, 3069, 3091, 3092, 3093, 3094, 3096, 3095, 3097, 3098
 #Integer Uid's for all draw bridge blocks
 blockIds = [3090, 3089, 3068, 3069, 3091, 3092, 3093, 3094, 3096, 3095, 3097, 3098, 3099, 3100, 4292, 4293, 4294, 4295];
 
+#Reference to the switch object
+switchObject=UIDS[4291];
+
 #Default draw bridge to not being drawn
 blocks.each{|block| block.hide; block.massive_type = :passive}
 
 blockId = 0
 
 #Draw Bridge Switch Activation Logic
-UIDS[4291].on_touch do |other|
-    if !bridgeSwitch and other.player? and other.velocity_y &gt; 0
-        UIDS[4291].image = "ground/underground/pow/blue_active.png"
-        bridgeSwitch = true
-        #blocks.each{|block| block.show; block.massive_type = :massive}
-    
-        blockId = 0    
+Std::Switch.new(switchObject) do
+    blockId = 0    
+    block = UIDS[blockIds[blockId]]
+    block.show
+    block.massive_type = :massive        
+        
+    #Fire timer to create one block every 500 milliseconds
+    doingTimer = true  #Boolean for whether timer is running
+    blockId = 1        
+    bridgeTimer = Timer.every(500) do 
         block = UIDS[blockIds[blockId]]
         block.show
-        block.massive_type = :massive        
-        
-        #Fire timer to create one block every 500 milliseconds
-        doingTimer = true  #Boolean for whether timer is running
-        blockId = 1        
-        bridgeTimer = Timer.every(500) do 
-             block = UIDS[blockIds[blockId]]
-             block.show
-             block.massive_type = :massive
-             blockId = blockId + 1
-             if blockId &gt;= blockIds.length
-                 bridgeTimer.stop!()
-                 doingTimer = false
-             end
+        block.massive_type = :massive
+        blockId = blockId + 1
+        if blockId &gt;= blockIds.length
+            bridgeTimer.stop!()
+            doingTimer = false
         end
     end
 end
 
 #Logic to save script related data
 Level.on_save do |store|
-    store["bridgeSwitched"] = bridgeSwitch
     store["doingTimer"] = doingTimer
     store["blockId"] = blockId
     blockIds.each do |id|
@@ -31639,13 +31637,9 @@ end
 #Logic to load script related data
 Level.on_load do |store|
 
-    #Load switch state and general data
-    bridgeSwitch = store["bridgeSwitched"]
+    #Load timer and block id
     doingTimer = store["doingTimer"]
     blockId = store["blockId"]
-    if bridgeSwitch
-        UIDS[4291].image = "ground/underground/pow/blue_active.png"
-    end
 
     #Load block data for draw bridge
     blockIds.each do |id|
