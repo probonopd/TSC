@@ -2484,7 +2484,7 @@ void cMenu_Options::Set_Shortcut(std::string name, void* data, bool joystick /* 
         else {
             uint8_t* button = static_cast<uint8_t*>(data);
             unsigned int buttonTemp = input_event.joystickButton.button;
-            *button = (uint8_t)buttonTemp;
+            *button = static_cast<uint8_t>(buttonTemp);
         }
 
         sub_done = 1;
