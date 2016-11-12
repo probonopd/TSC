@@ -2405,11 +2405,15 @@ void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
         std::string shortcut_key;
         bool shortcut_not_the_default = 0;
 
+        item = new CEGUI::ListboxTextItem("");
+
         // Keyboard
         if (!joystick) {
             sf::Keyboard::Key* key = static_cast<sf::Keyboard::Key*>(shortcut_item.m_key);
             const sf::Keyboard::Key* key_default = static_cast<const sf::Keyboard::Key*>(shortcut_item.m_key_default);
             shortcut_key = Get_SFML_Key_Name(*key);
+            item->setText(shortcut_key);
+            item->setUserData(key);
 
             if (*key != *key_default) {
                 shortcut_not_the_default = 1;
@@ -2420,13 +2424,14 @@ void cMenu_Options::Build_Shortcut_List(bool joystick /* = 0 */)
             uint8_t* button = static_cast<uint8_t*>(shortcut_item.m_key);
             const uint8_t* button_default = static_cast<const uint8_t*>(shortcut_item.m_key_default);
             shortcut_key = int_to_string(*button);
+            item->setText(shortcut_key);
+            item->setUserData(button);
 
             if (*button != *button_default) {
                 shortcut_not_the_default = 1;
             }
         }
 
-        item = new CEGUI::ListboxTextItem(shortcut_key);
         // if not default
         if (shortcut_not_the_default) {
             item->setTextColours(CEGUI::Colour(0.9f, 0.6f, 0.0f));
@@ -2477,8 +2482,9 @@ void cMenu_Options::Set_Shortcut(std::string name, void* data, bool joystick /* 
         }
         // Joystick
         else {
-            unsigned int* button = static_cast<unsigned int*>(data);
-            *button = input_event.joystickButton.button;
+            uint8_t* button = static_cast<uint8_t*>(data);
+            unsigned int buttonTemp = input_event.joystickButton.button;
+            *button = (uint8_t)buttonTemp;
         }
 
         sub_done = 1;
