@@ -1133,8 +1133,7 @@ bool cLevel_Player::Is_On_Climbable(float move_y /* = 0.0f */)
 void cLevel_Player::Start_Jump_Keytime(void)
 {
     if (m_god_mode || m_state == STA_STAY || m_state == STA_WALK || m_state == STA_RUN
-        || m_state == STA_FALL || m_state == STA_FLY || m_state == STA_JUMP || (m_state == STA_CLIMB &&
-        !sf::Keyboard::isKeyPressed(pPreferences->m_key_up) && !pJoystick->Up())) {
+        || m_state == STA_FALL || m_state == STA_FLY || m_state == STA_JUMP || m_state == STA_CLIMB) {
         m_up_key_time = speedfactor_fps / 4;
     }
 }
