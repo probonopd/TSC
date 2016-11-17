@@ -92,6 +92,9 @@ namespace TSC {
         virtual void Update(void);
         virtual void Draw(void);
     private:
+        void credits_item_clicked(const CEGUI::EventArgs& event);
+        void credits_item_entered(const CEGUI::EventArgs& event);
+
         cHudSprite* mp_start_active;
         cHudSprite* mp_start_inactive;
         cHudSprite* mp_options_active;
@@ -106,7 +109,7 @@ namespace TSC {
         cHudSprite* mp_current_inactive_item;
         cHudSprite* mp_current_active_item;
 
-        sf::Text m_credits_item;
+        CEGUI::Window* mp_credits_item;
 
         int m_start_index;
         int m_options_index;

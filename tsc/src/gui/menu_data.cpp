@@ -188,6 +188,10 @@ cMenu_Main::cMenu_Main(void)
     mp_current_inactive_item = NULL;
     mp_current_active_item   = NULL;
 
+    mp_credits_item = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Label");
+    mp_credits_item->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&cMenu_Main::credits_item_clicked, this));
+    mp_credits_item->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cMenu_Main::credits_item_entered, this));
+
     m_start_index   = -1;
     m_options_index = -1;
     m_load_index    = -1;
@@ -211,6 +215,9 @@ cMenu_Main::~cMenu_Main(void)
     delete mp_save_inactive;
     delete mp_quit_active;
     delete mp_quit_inactive;
+
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_credits_item);
+    CEGUI::WindowManager::getSingleton().destroyWindow(mp_credits_item);
 }
 
 void cMenu_Main::Init(void)
@@ -316,14 +323,14 @@ void cMenu_Main::Init(void)
     // Only show the credit menu entry and the SFML logo on the title
     // screen, not in the in-game menu.
     if (m_exit_to_gamemode == MODE_NOTHING) {
-        // Credits
-        pFont->Prepare_SFML_Text(m_credits_item, _("Credits"), 0.56 * game_res_w, game_res_h * 1.2, cFont_Manager::FONTSIZE_NORMAL, yellow, true);
-        m_credits_index = pMenuCore
-            ->m_handler
-            ->Add_Menu_Item(sf::FloatRect(m_credits_item.getPosition().x * global_downscalex,         // SFML does not know about TSC's global_scale{x,y},
-                                          m_credits_item.getPosition().y * global_downscaley,         // so we need to manually include this when drawing
-                                          m_credits_item.getGlobalBounds().width * global_downscalex, // with SFML.
-                                          m_credits_item.getGlobalBounds().height * global_downscaley), NULL);
+        mp_credits_item->setText(_("[colour='FFFFFF00']Credits"));
+        mp_credits_item->setPosition(CEGUI::UVector2(CEGUI::UDim(0.44, 0), CEGUI::UDim(0.95, 0)));
+        mp_credits_item->setSize(CEGUI::USize(CEGUI::UDim(0.12, 0), CEGUI::UDim(0.05, 0)));
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_credits_item);
+
+        // Only to make the menu handler code happy. CEGUI does its own coordinate mapping
+        // for mouse clicks.
+        m_credits_index = pMenuCore->m_handler->Add_Menu_Item(sf::FloatRect(0, 0, 0, 0), NULL);
 
         // SFML logo
         cHudSprite* hud_sprite = new cHudSprite(pMenuCore->m_handler->m_level->m_sprite_manager);
@@ -370,7 +377,7 @@ void cMenu_Main::Exit(void)
 void cMenu_Main::Selected_Item_Changed(int new_active_item)
 {
     cMenu_Base::Selected_Item_Changed(new_active_item);
-    m_credits_item.setColor(yellow.Get_SFML_Color());
+    mp_credits_item->setText(_("[colour='FFFFFF00']Credits"));
 
     if (mp_current_inactive_item) {
         mp_current_inactive_item->Set_Scale(1);
@@ -416,6 +423,20 @@ void cMenu_Main::Selected_Item_Changed(int new_active_item)
         mp_current_inactive_item = NULL;
         break;
     }
+}
+
+// Translate the CEGUI event into something the menu handler understands
+// by imitating the results of a mouse input event on the menu handler.
+void cMenu_Main::credits_item_clicked(const CEGUI::EventArgs& event)
+{
+    pMenuCore->m_handler->Set_Active(m_credits_index);
+    Item_Activated(m_credits_index);
+}
+
+// Similar for mouse enter.
+void cMenu_Main::credits_item_entered(const CEGUI::EventArgs& event)
+{
+    pMenuCore->m_handler->Set_Active(m_credits_index);
 }
 
 void cMenu_Main::Update(void)
@@ -488,7 +509,7 @@ void cMenu_Main::Draw(void)
     }
 
     if (pMenuCore->m_handler->m_active == m_credits_index)
-        m_credits_item.setColor(red.Get_SFML_Color());
+        mp_credits_item->setText(_("[colour='FFFF0000']Credits"));
 
     mp_start_inactive->Draw();
     mp_options_inactive->Draw();
@@ -499,8 +520,6 @@ void cMenu_Main::Draw(void)
     if (mp_current_active_item) {
         mp_current_active_item->Draw();
     }
-
-    pFont->Queue_Text(m_credits_item);
 
     Draw_End();
 }
