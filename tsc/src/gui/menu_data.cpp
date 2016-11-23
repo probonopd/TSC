@@ -1065,12 +1065,15 @@ bool cMenu_Start::TabControl_Selection_Changed(const CEGUI::EventArgs& e)
     CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(windowEventArgs.window);
 
     if (tabcontrol->getSelectedTabIndex() == 0) {
-        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"))->activate();
+        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/listbox_packages"))->activate();
     }
     else if (tabcontrol->getSelectedTabIndex() == 1) {
-        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"))->activate();
+        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"))->activate();
     }
     else if (tabcontrol->getSelectedTabIndex() == 2) {
+        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"))->activate();
+    }
+    else if (tabcontrol->getSelectedTabIndex() == 3) {
         static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"))->activate();
     }
 
