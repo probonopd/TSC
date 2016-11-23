@@ -46,7 +46,12 @@ using namespace std;
 
 namespace fs = boost::filesystem;
 
+// extern variables
+CEGUI::String TSC::listbox_search_buffer;
+float TSC::listbox_search_buffer_counter = 0.0f;
+
 namespace TSC {
+
 
 /* *** *** *** *** *** *** *** *** cMenu_Base *** *** *** *** *** *** *** *** *** */
 
@@ -529,7 +534,7 @@ void cMenu_Main::Draw(void)
 cMenu_Start::cMenu_Start(void)
     : cMenu_Base()
 {
-    m_listbox_search_buffer_counter = 0.0f;
+
 }
 
 cMenu_Start::~cMenu_Start(void)
@@ -539,8 +544,6 @@ cMenu_Start::~cMenu_Start(void)
 
 void cMenu_Start::Init(void)
 {
-    m_listbox_search_buffer_counter = 0.0f;
-
     cMenu_Base::Init();
 
     m_layout_file = "menu/start.layout";
@@ -609,8 +612,8 @@ void cMenu_Start::Init_GUI(void)
     }
 
     // events
-    listbox_packages->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Keydown, this));
-    listbox_packages->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Character_Key, this));
+    listbox_packages->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&Listbox_Keydown));
+    listbox_packages->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&Listbox_Character_Key));
     listbox_packages->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cMenu_Start::Package_Select, this));
     listbox_packages->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::Package_Select_final_list, this));
 
@@ -618,8 +621,8 @@ void cMenu_Start::Init_GUI(void)
     CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"));
 
     // events
-    listbox_campaigns->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Keydown, this));
-    listbox_campaigns->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Character_Key, this));
+    listbox_campaigns->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&Listbox_Keydown));
+    listbox_campaigns->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&Listbox_Character_Key));
     listbox_campaigns->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cMenu_Start::Campaign_Select, this));
     listbox_campaigns->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::Campaign_Select_final_list, this));
 
@@ -627,8 +630,8 @@ void cMenu_Start::Init_GUI(void)
     CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"));
 
     // events
-    listbox_worlds->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Keydown, this));
-    listbox_worlds->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Character_Key, this));
+    listbox_worlds->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&Listbox_Keydown));
+    listbox_worlds->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&Listbox_Character_Key));
     listbox_worlds->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cMenu_Start::World_Select, this));
     listbox_worlds->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::World_Select_final_list, this));
 
@@ -639,8 +642,8 @@ void cMenu_Start::Init_GUI(void)
     // events
     listbox_levels->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cMenu_Start::Level_Select, this));
     listbox_levels->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::Level_Select_Final_List, this));
-    listbox_levels->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Keydown, this));
-    listbox_levels->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&cMenu_Start::Listbox_Character_Key, this));
+    listbox_levels->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&Listbox_Keydown));
+    listbox_levels->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&Listbox_Character_Key));
 
     // Level Buttons
     CEGUI::PushButton* button_new = static_cast<CEGUI::PushButton*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/button_level_new"));
@@ -711,17 +714,7 @@ void cMenu_Start::Exit(void)
 
 void cMenu_Start::Update(void)
 {
-    // if search buffer is active
-    if (m_listbox_search_buffer_counter > 0.0f) {
-        m_listbox_search_buffer_counter -= pFramerate->m_speed_factor;
-
-        // if time limit reached search buffer is abandoned
-        if (m_listbox_search_buffer_counter <= 0.0f) {
-            m_listbox_search_buffer_counter = 0.0f;
-            m_listbox_search_buffer.clear();
-        }
-    }
-
+    Listbox_Searchbuffer_Update();
     cMenu_Base::Update();
 
     if (!m_action) {
@@ -1126,7 +1119,7 @@ bool cMenu_Start::TabControl_Keydown(const CEGUI::EventArgs& e)
     return 0;
 }
 
-bool cMenu_Start::Listbox_Keydown(const CEGUI::EventArgs& e)
+bool Listbox_Keydown(const CEGUI::EventArgs& e)
 {
     const CEGUI::KeyEventArgs& ke = static_cast<const CEGUI::KeyEventArgs&>(e);
 
@@ -1207,7 +1200,7 @@ bool cMenu_Start::Listbox_Keydown(const CEGUI::EventArgs& e)
     return 0;
 }
 
-bool cMenu_Start::Listbox_Character_Key(const CEGUI::EventArgs& e)
+bool Listbox_Character_Key(const CEGUI::EventArgs& e)
 {
     const CEGUI::KeyEventArgs& ke = static_cast<const CEGUI::KeyEventArgs&>(e);
 
@@ -1215,8 +1208,8 @@ bool cMenu_Start::Listbox_Character_Key(const CEGUI::EventArgs& e)
     CEGUI::Listbox* listbox = static_cast<CEGUI::Listbox*>(ke.window);
 
     if (listbox->getFont()->isCodepointAvailable(ke.codepoint)) {
-        m_listbox_search_buffer_counter = speedfactor_fps;
-        m_listbox_search_buffer.insert(m_listbox_search_buffer.end(), 1, ke.codepoint);
+        listbox_search_buffer_counter = speedfactor_fps;
+        listbox_search_buffer.insert(listbox_search_buffer.end(), 1, ke.codepoint);
 
         // new selected if found
         CEGUI::ListboxItem* new_selected = NULL;
@@ -1228,7 +1221,7 @@ bool cMenu_Start::Listbox_Character_Key(const CEGUI::EventArgs& e)
             CEGUI::ListboxItem* item = listbox->getListboxItemFromIndex(index);
 
             // found
-            if (item->getText().substr(0, m_listbox_search_buffer.length()).compare(m_listbox_search_buffer) == 0) {
+            if (item->getText().substr(0, listbox_search_buffer.length()).compare(listbox_search_buffer) == 0) {
                 new_selected = item;
                 break;
             }
@@ -1246,6 +1239,20 @@ bool cMenu_Start::Listbox_Character_Key(const CEGUI::EventArgs& e)
     }
 
     return 0;
+}
+
+void Listbox_Searchbuffer_Update()
+{
+    // if search buffer is active
+    if (listbox_search_buffer_counter > 0.0f) {
+        listbox_search_buffer_counter -= pFramerate->m_speed_factor;
+
+        // if time limit reached search buffer is abandoned
+        if (listbox_search_buffer_counter <= 0.0f) {
+            listbox_search_buffer_counter = 0.0f;
+            listbox_search_buffer.clear();
+        }
+    }
 }
 
 bool cMenu_Start::Package_Select(const CEGUI::EventArgs& event)

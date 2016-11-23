@@ -173,10 +173,6 @@ namespace TSC {
         bool TabControl_Selection_Changed(const CEGUI::EventArgs& event);
         // key down event
         bool TabControl_Keydown(const CEGUI::EventArgs& event);
-        // listbox level/world key down event
-        bool Listbox_Keydown(const CEGUI::EventArgs& event);
-        // listbox level/world character key event
-        bool Listbox_Character_Key(const CEGUI::EventArgs& event);
 
         // package selected event
         bool Package_Select(const CEGUI::EventArgs& event);
@@ -208,11 +204,6 @@ namespace TSC {
         bool Button_Enter_Clicked(const CEGUI::EventArgs& event);
         // back button event
         bool Button_Back_Clicked(const CEGUI::EventArgs& event);
-
-        // buffer if user types characters in the listbox
-        CEGUI::String m_listbox_search_buffer;
-        // counter until buffer is cleared
-        float m_listbox_search_buffer_counter;
     };
 
     /* *** *** *** *** *** *** *** cMenu_Options *** *** *** *** *** *** *** *** *** *** */
@@ -418,6 +409,19 @@ namespace TSC {
         sf::Text m_back_text;
         int m_back_index;
     };
+
+    // listbox level/world key down event
+    bool Listbox_Keydown(const CEGUI::EventArgs& event);
+    // listbox level/world character key event
+    bool Listbox_Character_Key(const CEGUI::EventArgs& event);
+    // Update search buffer handling; call this once a frame in your menu that
+    // uses a CEGUI::Listbox if you want search facility.
+    void Listbox_Searchbuffer_Update();
+
+    // buffer if user types characters in the listbox
+    extern CEGUI::String listbox_search_buffer;
+    // counter until buffer is cleared
+    extern float listbox_search_buffer_counter;
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
 
