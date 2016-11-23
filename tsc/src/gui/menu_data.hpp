@@ -373,12 +373,6 @@ namespace TSC {
         virtual void Init(void);
         virtual void Init_GUI(void);
         virtual void Exit(void);
-        virtual void Selected_Item_Changed(int new_active_item);
-        virtual void Update(void);
-        virtual void Draw(void);
-
-        void Update_Load(void);
-        void Update_Save(void);
 
         // Set Savegame Description
         std::string Set_Save_Description(unsigned int save_slot);
@@ -388,11 +382,9 @@ namespace TSC {
         // if save menu
         bool m_type_save;
     private:
-        sf::Text m_slot_texts[NUM_SAVEGAME_SLOTS];
-        sf::Text m_back_text;
-        sf::Text* mp_current_item;
-        int m_back_item_index; //< Index of the back menu entry in the menu handler
-        bool m_scaling_up;
+        bool Button_Back_Clicked(const CEGUI::EventArgs& event);
+        bool Button_Save_Clicked(const CEGUI::EventArgs& event);
+        bool Button_Load_Clicked(const CEGUI::EventArgs& event);
     };
 
     /* *** *** *** *** *** *** *** cMenu_Credits *** *** *** *** *** *** *** *** *** *** */

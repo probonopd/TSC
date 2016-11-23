@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="menu_savegame">
+    <Property name="InheritsAlpha" value="False"/>
+    <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+    <Property name="MousePassThroughEnabled" value="True"/>
+
+    <Window type="TaharezLook/TabControl" name="savegame_tabcontrol">
+      <Property name="Area" value="{{0.182812,0},{0.241666,0},{0.840625,0},{0.793749,0}}"/>
+
+      <Window type="DefaultWindow" name="tab_savegame">
+        <Property name="Text" value="Savegame"/>
+	<Property name="Visible" value="True"/>
+        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+
+        <Window type="TaharezLook/StaticText" name="caption_text">
+          <Property name="Text" value="Replace this with the caption"/>
+          <Property name="HorzFormatting" value="HorzCentred"/>
+          <Property name="Area" value="{{0.015,0},{0,0},{0.5,0},{0.1,0}}"/>
+          <Property name="TextColours" value="tl:FFAAFFAA tr:FFAAFFAA bl:FFAAFFAA br:FFAAFFAA"/>
+          <Property name="FrameEnabled" value="False"/>
+          <Property name="BackgroundEnabled" value="False"/>
+        </Window>
+
+        <Window type="TaharezLook/Listbox" name="savegame_listbox">
+	  <Property name="Area" value="{{0.015,0},{0.105,0},{0.985,0},{0.9,0}}"/>
+        </Window>
+
+        <Window type="TaharezLook/Button" name="back_button">
+          <Property name="Text" value="Back"/>
+          <Property name="Area" value="{{0.7,0},{0.93,0},{0.84,0},{0.99,0}}"/>
+        </Window>
+
+        <Window type="TaharezLook/Button" name="ok_button">
+          <Property name="Text" value="OK"/>
+          <Property name="Area" value="{{0.85,0},{0.93,0},{0.99,0},{0.99,0}}"/>
+        </Window>
+      </Window>
+    </Window>
+  </Window>
+</GUILayout>

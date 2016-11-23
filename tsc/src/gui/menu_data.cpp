@@ -3180,9 +3180,6 @@ cMenu_Savegames::cMenu_Savegames(bool type)
 {
     m_type_save = type;
     m_menu_pos_y = 200.0f;
-    m_back_item_index = -1;
-    m_scaling_up = true;
-    mp_current_item = NULL;
 }
 
 cMenu_Savegames::~cMenu_Savegames(void)
@@ -3194,18 +3191,7 @@ void cMenu_Savegames::Init(void)
 {
     cMenu_Base::Init();
 
-    // savegame descriptions
-    Update_Saved_Games_Text();
-
-    // back
-    pFont->Prepare_SFML_Text(m_back_text, _("Back"), static_cast<float>(game_res_w) / 18, 400, cFont_Manager::FONTSIZE_NORMAL, m_text_color, true);
-    m_back_item_index = pMenuCore
-        ->m_handler
-        ->Add_Menu_Item(sf::FloatRect(m_back_text.getPosition().x * global_downscalex,
-                                      m_back_text.getPosition().y * global_downscaley,
-                                      m_back_text.getGlobalBounds().width * global_downscalex,
-                                      m_back_text.getGlobalBounds().height * global_downscaley),
-                        NULL);
+    m_layout_file = "menu/savegame.layout";
 
     if (m_type_save) {
         cHudSprite* hud_sprite = new cHudSprite(pMenuCore->m_handler->m_level->m_sprite_manager);
@@ -3234,6 +3220,31 @@ void cMenu_Savegames::Init(void)
 void cMenu_Savegames::Init_GUI(void)
 {
     cMenu_Base::Init_GUI();
+
+    CEGUI::Window* p_tab             = static_cast<CEGUI::Listbox*>(m_gui_window->getChild("savegame_tabcontrol/tab_savegame"));
+    CEGUI::Window* p_caption         = p_tab->getChild("caption_text");
+    CEGUI::PushButton* p_ok_button   = static_cast<CEGUI::PushButton*>(p_tab->getChild("ok_button"));
+    CEGUI::PushButton* p_back_button = static_cast<CEGUI::PushButton*>(p_tab->getChild("back_button"));
+
+    if (m_type_save) {
+        p_tab->setText(UTF8_("Save"));
+        p_caption->setText(UTF8_("Save the game"));
+        p_ok_button->setText(UTF8_("Save"));
+
+        p_ok_button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Savegames::Button_Save_Clicked, this));
+    }
+    else {
+        p_tab->setText(UTF8_("Load"));
+        p_caption->setText(UTF8_("Load a saved game"));
+        p_ok_button->setText(UTF8_("Load"));
+
+        p_ok_button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Savegames::Button_Load_Clicked, this));
+    }
+
+    p_back_button->setText(_("Back"));
+    p_back_button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Savegames::Button_Back_Clicked, this));
+
+    Update_Saved_Games_Text();
 }
 
 void cMenu_Savegames::Exit(void)
@@ -3245,107 +3256,39 @@ void cMenu_Savegames::Exit(void)
     }
 }
 
-void cMenu_Savegames::Selected_Item_Changed(int new_active_item)
+bool cMenu_Savegames::Button_Load_Clicked(const CEGUI::EventArgs& event)
 {
-    cMenu_Base::Selected_Item_Changed(new_active_item);
+    CEGUI::Listbox* p_listbox = static_cast<CEGUI::Listbox*>(m_gui_window->getChild("savegame_tabcontrol/tab_savegame/savegame_listbox"));
+    CEGUI::ListboxItem* p_item = p_listbox->getFirstSelectedItem();
+    int slot = p_listbox->getItemIndex(p_item) + 1;
 
-    // Reset the previous current item to its original state
-    if (mp_current_item)
-        mp_current_item->setScale(1.0f, 1.0f);
-
-    mp_current_item = NULL;
-
-    if (new_active_item < 0)
-        return;
-
-    if (static_cast<unsigned int>(new_active_item) < NUM_SAVEGAME_SLOTS)
-        mp_current_item = &m_slot_texts[new_active_item];
-    else if (new_active_item == m_back_item_index)
-        mp_current_item = &m_back_text;
-}
-
-void cMenu_Savegames::Update(void)
-{
-    cMenu_Base::Update();
-
-    if (mp_current_item) {
-        float scale = mp_current_item->getScale().x + ((m_scaling_up ? 0.02f : -0.02f) * pFramerate->m_speed_factor);
-        mp_current_item->setScale(scale, scale);
-
-        if (scale >= 1.1f)
-            m_scaling_up = false;
-        else if (scale <= 1.0f)
-            m_scaling_up = true;
-    }
-
-    if (!m_action) {
-        return;
-    }
-
-    m_action = 0;
-
-    // back
-    if (pMenuCore->m_handler->m_active == 9) {
-        Exit();
-        return;
-    }
-
-    if (!m_type_save) {
-        Update_Load();
-    }
-    else {
-        Update_Save();
-    }
-}
-
-void cMenu_Savegames::Draw(void)
-{
-    cMenu_Base::Draw();
-
-    for(unsigned int i=0; i < NUM_SAVEGAME_SLOTS; i++) {
-        pFont->Queue_Text(m_slot_texts[i]);
-    }
-
-    pFont->Queue_Text(m_back_text);
-
-    Draw_End();
-}
-
-void cMenu_Savegames::Update_Load(void)
-{
-    int save_num = pMenuCore->m_handler->m_active + 1;
-
-    // not valid
-    if (!pSavegame->Is_Valid(save_num)) {
-        return;
-    }
-
-    cSave* savegame = NULL;
+    cSave* p_savegame = NULL;
     try {
-        savegame = pSavegame->Load(save_num);
+        p_savegame = pSavegame->Load(slot);
     }
-    catch(xmlpp::parse_error& err) {
+        catch(xmlpp::parse_error& err) {
         pAudio->Play_Sound("error.ogg");
-        std::cerr << "Error: Failed to load savegame '" << save_num << "' (parsing error). xmlpp parsing exception: " << err.what() << std::endl;
-        return;
+        std::cerr << "Error: Failed to load savegame '" << slot << "' (parsing error). xmlpp parsing exception: " << err.what() << std::endl;
+        return true;
     }
     catch(InvalidSavegameError& err) {
         pAudio->Play_Sound("error.ogg");
-        std::cerr << "Error: Failed to load savegame '" << save_num << "' (invalid savegame). TSC exception: " << err.what() << std::endl;
-        return;
+        std::cerr << "Error: Failed to load savegame '" << slot << "' (invalid savegame). TSC exception: " << err.what() << std::endl;
+        return true;
     }
     catch(InvalidLevelError& err) {
         pAudio->Play_Sound("error.ogg");
-        std::cerr << "Error: Failed to load savegame '" << save_num << "' (invalid level). TSC exception: " << err.what() << std::endl;
-        return;
+        std::cerr << "Error: Failed to load savegame '" << slot << "' (invalid level). TSC exception: " << err.what() << std::endl;
+        return true;
     }
 
     // reset before actually loading the level to keep the level in the manager
     pLevel_Player->Reset_Save();
 
     pAudio->Play_Sound("savegame_load.ogg");
-    std::string level_name = savegame->Get_Active_Level();
-    delete savegame;
+    std::string level_name = p_savegame->Get_Active_Level();
+    delete p_savegame;
+    p_savegame = NULL;
 
     if (!level_name.empty()) {
         Game_Action = GA_ENTER_LEVEL;
@@ -3363,33 +3306,40 @@ void cMenu_Savegames::Update_Load(void)
     Game_Action_Data_Start.add("screen_fadeout", int_to_string(EFFECT_OUT_BLACK));
     Game_Action_Data_Start.add("screen_fadeout_speed", "3");
     Game_Action_Data_Middle.add("unload_menu", "1");
-    Game_Action_Data_Middle.add("load_savegame", int_to_string(save_num));
+    Game_Action_Data_Middle.add("load_savegame", int_to_string(slot));
     Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
     Game_Action_Data_End.add("screen_fadein_speed", "3");
+
+    return true;
 }
 
-void cMenu_Savegames::Update_Save(void)
+bool cMenu_Savegames::Button_Save_Clicked(const CEGUI::EventArgs& event)
 {
-    // not valid
+    // not valid (most likely title screen)
     if (pOverworld_Player->m_current_waypoint < 0 && !pActive_Level->Is_Loaded()) {
-        return;
+        return true;
     }
 
-    std::string descripion = Set_Save_Description(pMenuCore->m_handler->m_active + 1);
+    CEGUI::Listbox* p_listbox = static_cast<CEGUI::Listbox*>(m_gui_window->getChild("savegame_tabcontrol/tab_savegame/savegame_listbox"));
+    CEGUI::ListboxItem* p_item = p_listbox->getFirstSelectedItem();
+    int slot = p_listbox->getItemIndex(p_item) + 1;
+
+    std::string description = Set_Save_Description(slot);
 
     pFramerate->Reset();
 
-    if (descripion.compare("Not enough Points") == 0) {
+    if (description.compare("Not enough Points") == 0) { // String comparison intentional, see body of Set_Save_Description()
         Game_Action = GA_ENTER_MENU;
         Game_Action_Data_Middle.add("load_menu", int_to_string(MENU_MAIN));
         if (m_exit_to_gamemode != MODE_NOTHING) {
             Game_Action_Data_Middle.add("menu_exit_back_to", int_to_string(m_exit_to_gamemode));
         }
-        return;
+        return true;
     }
 
-    if (descripion.empty()) {
-        return;
+    // Do nothing if the slot is empty
+    if (description.empty()) {
+        return true;
     }
 
     pAudio->Play_Sound("savegame_save.ogg");
@@ -3401,13 +3351,21 @@ void cMenu_Savegames::Update_Save(void)
     }
 #endif
     // save
-    pSavegame->Save_Game(pMenuCore->m_handler->m_active + 1, descripion);
+    pSavegame->Save_Game(slot, description);
 
     Game_Action = GA_ENTER_MENU;
     Game_Action_Data_Middle.add("load_menu", int_to_string(MENU_MAIN));
     if (m_exit_to_gamemode != MODE_NOTHING) {
         Game_Action_Data_Middle.add("menu_exit_back_to", int_to_string(m_exit_to_gamemode));
     }
+
+    return true;
+}
+
+bool cMenu_Savegames::Button_Back_Clicked(const CEGUI::EventArgs& event)
+{
+    Exit();
+    return true;
 }
 
 std::string cMenu_Savegames::Set_Save_Description(unsigned int save_slot)
@@ -3421,6 +3379,8 @@ std::string cMenu_Savegames::Set_Save_Description(unsigned int save_slot)
         Clear_Input_Events();
         Draw_Static_Text(_("3000 Points needed for saving in a level.\nSaving on the Overworld is free."));
 
+        // FIXME: This is so hacky I can't even describe it.
+        // This is checked against by the caller!
         return "Not enough Points";
     }
 #endif
@@ -3456,6 +3416,8 @@ std::string cMenu_Savegames::Set_Save_Description(unsigned int save_slot)
 
 void cMenu_Savegames::Update_Saved_Games_Text(void)
 {
+    CEGUI::Listbox* p_listbox = static_cast<CEGUI::Listbox*>(m_gui_window->getChild("savegame_tabcontrol/tab_savegame/savegame_listbox"));
+
     for(unsigned int i=0; i < NUM_SAVEGAME_SLOTS; i++) {
         std::string text;
         Color color = m_text_color_value;
@@ -3480,14 +3442,12 @@ void cMenu_Savegames::Update_Saved_Games_Text(void)
             text = _("Savegame loading failed");
         }
 
-        pFont->Prepare_SFML_Text(m_slot_texts[i], text, static_cast<float>(game_res_w) / 2.5, m_menu_pos_y, cFont_Manager::FONTSIZE_NORMAL, color, true);
-        sf::FloatRect rect(m_slot_texts[i].getPosition().x * global_downscalex,
-                           m_slot_texts[i].getPosition().y * global_downscaley,
-                           m_slot_texts[i].getGlobalBounds().width * global_downscalex,
-                           m_slot_texts[i].getGlobalBounds().height * global_downscaley);
+        CEGUI::ListboxTextItem* p_item = new CEGUI::ListboxTextItem(text);
+        p_item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
+        p_item->setSelectionBrushImage("TaharezLook/ListboxSelectionBrush");
+        p_listbox->addItem(p_item);
 
-        pMenuCore->m_handler->Add_Menu_Item(rect, NULL);
-        m_menu_pos_y += rect.height + 16.0f;
+        // TODO: Use `color' variable for the text color
     }
 }
 
