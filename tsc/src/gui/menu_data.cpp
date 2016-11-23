@@ -3235,6 +3235,9 @@ void cMenu_Savegames::Init_GUI(void)
     CEGUI::Window* p_caption         = p_tab->getChild("caption_text");
     CEGUI::PushButton* p_ok_button   = static_cast<CEGUI::PushButton*>(p_tab->getChild("ok_button"));
     CEGUI::PushButton* p_back_button = static_cast<CEGUI::PushButton*>(p_tab->getChild("back_button"));
+    CEGUI::Listbox* p_listbox        = static_cast<CEGUI::Listbox*>(p_tab->getChild("savegame_listbox"));
+
+    m_gui_window->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Savegames::TabControl_Keydown, this));
 
     if (m_type_save) {
         p_tab->setText(UTF8_("Save"));
@@ -3253,6 +3256,10 @@ void cMenu_Savegames::Init_GUI(void)
 
     p_back_button->setText(_("Back"));
     p_back_button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Savegames::Button_Back_Clicked, this));
+
+    // Give input focus to the listbox so keyboard navigation works.
+    p_listbox->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&Listbox_Keydown));
+    p_listbox->activate();
 
     Update_Saved_Games_Text();
 }
@@ -3378,6 +3385,24 @@ bool cMenu_Savegames::Button_Back_Clicked(const CEGUI::EventArgs& event)
     return true;
 }
 
+bool cMenu_Savegames::TabControl_Keydown(const CEGUI::EventArgs& event)
+{
+    const CEGUI::KeyEventArgs& ke = static_cast<const CEGUI::KeyEventArgs&>(event);
+
+    // Button_Save_Clicked() and Button_Load_Clicked() do not use their argument anyway,
+    // so simply call them with a nonsense argument.
+    if (ke.scancode == CEGUI::Key::Return || ke.scancode == CEGUI::Key::NumpadEnter) {
+        if (m_type_save)
+            Button_Save_Clicked(event);
+        else
+            Button_Load_Clicked(event);
+
+        return true;
+    }
+
+    return false;
+}
+
 std::string cMenu_Savegames::Set_Save_Description(unsigned int save_slot)
 {
     if (save_slot == 0 || save_slot > 9) {
@@ -3458,6 +3483,10 @@ void cMenu_Savegames::Update_Saved_Games_Text(void)
         p_listbox->addItem(p_item);
 
         // TODO: Use `color' variable for the text color
+
+        if (i == 0) {
+            p_item->setSelected(true);
+        }
     }
 }
 

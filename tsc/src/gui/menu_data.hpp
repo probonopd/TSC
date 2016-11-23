@@ -376,6 +376,7 @@ namespace TSC {
         bool Button_Back_Clicked(const CEGUI::EventArgs& event);
         bool Button_Save_Clicked(const CEGUI::EventArgs& event);
         bool Button_Load_Clicked(const CEGUI::EventArgs& event);
+        bool TabControl_Keydown(const CEGUI::EventArgs& event);
     };
 
     /* *** *** *** *** *** *** *** cMenu_Credits *** *** *** *** *** *** *** *** *** *** */
