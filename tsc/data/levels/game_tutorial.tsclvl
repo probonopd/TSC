@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level>
   <information>
-    <property name="game_version" value="2.0.0"/>
-    <property name="engine_version" value="40"/>
-    <property name="save_time" value="1419364754"/>
+    <property name="game_version" value="2.1.0"/>
+    <property name="engine_version" value="47"/>
+    <property name="save_time" value="1479961867"/>
   </information>
   <settings>
     <property name="lvl_author" value="sauer2"/>
     <property name="lvl_version" value="1.0"/>
-    <property name="lvl_music" value="land/cave_2.ogg"/>
+    <property name="lvl_music" value="story/tutorial.ogg"/>
     <property name="lvl_description" value="The new tutorial.&#10;"/>
     <property name="lvl_difficulty" value="6"/>
     <property name="lvl_land_type" value="jungle"/>
@@ -942,7 +942,7 @@
     <property name="posx" value="1340"/>
     <property name="posy" value="-42"/>
     <property name="uid" value="113"/>
-    <property name="image" value="enemy/eato/green/1.png"/>
+    <property name="image" value="enemy/eato/brown/1.png"/>
     <property name="type" value="eato"/>
     <property name="image_dir" value="enemy/eato/green/"/>
     <property name="direction" value="left_top"/>
@@ -1789,7 +1789,7 @@
     <property name="posx" value="3346"/>
     <property name="posy" value="-69"/>
     <property name="uid" value="446"/>
-    <property name="image" value="enemy/eato/green/1.png"/>
+    <property name="image" value="enemy/eato/brown/1.png"/>
     <property name="type" value="eato"/>
     <property name="image_dir" value="enemy/eato/green/"/>
     <property name="direction" value="top_right"/>
@@ -2712,7 +2712,7 @@
     <property name="posx" value="3966"/>
     <property name="posy" value="-341"/>
     <property name="uid" value="404"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="0"/>
@@ -2724,7 +2724,7 @@
     <property name="posx" value="3923"/>
     <property name="posy" value="-341"/>
     <property name="uid" value="405"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -2737,7 +2737,7 @@
     <property name="posx" value="3880"/>
     <property name="posy" value="-341"/>
     <property name="uid" value="406"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3293,7 +3293,7 @@
     <property name="posx" value="1272"/>
     <property name="posy" value="-98"/>
     <property name="uid" value="435"/>
-    <property name="image" value="enemy/eato/green/1.png"/>
+    <property name="image" value="enemy/eato/brown/1.png"/>
     <property name="type" value="eato"/>
     <property name="image_dir" value="enemy/eato/green/"/>
     <property name="direction" value="top_right"/>
@@ -3311,7 +3311,7 @@
     <property name="posx" value="1717"/>
     <property name="posy" value="-251"/>
     <property name="uid" value="437"/>
-    <property name="image" value="enemy/eato/green/1.png"/>
+    <property name="image" value="enemy/eato/brown/1.png"/>
     <property name="type" value="eato"/>
     <property name="image_dir" value="enemy/eato/green/"/>
     <property name="direction" value="top_right"/>
@@ -3327,7 +3327,7 @@
     <property name="posx" value="3089"/>
     <property name="posy" value="-662"/>
     <property name="uid" value="439"/>
-    <property name="image" value="enemy/eato/green/1.png"/>
+    <property name="image" value="enemy/eato/brown/1.png"/>
     <property name="type" value="eato"/>
     <property name="image_dir" value="enemy/eato/green/"/>
     <property name="direction" value="top_right"/>
