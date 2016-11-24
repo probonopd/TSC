@@ -3460,12 +3460,19 @@ cMenu_Credits::cMenu_Credits(cHudSprite* p_tsc_logo)
     : cMenu_Base()
 {
     mp_tsc_logo = p_tsc_logo;
-    m_back_index = -1;
 }
 
 cMenu_Credits::~cMenu_Credits(void)
 {
     mp_tsc_logo = NULL;
+
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+    std::vector<CEGUI::Window*>::iterator iter;
+    for(iter=m_credit_lines.begin(); iter != m_credit_lines.end(); iter++) {
+        p_root->removeChild(*iter);
+        wmgr.destroyWindow(*iter);
+    }
 }
 
 void cMenu_Credits::Init(void)
@@ -3507,31 +3514,24 @@ void cMenu_Credits::Init(void)
         last_position = position;
     }
 
-    m_menu_pos_y = game_res_h * 1.4f;
+    float pos_y = game_res_h * 1.4f;
 
     // set credits position
-    std::vector<sf::Text>::iterator iter;
+    std::vector<CEGUI::Window*>::iterator iter;
     for(iter=m_credit_lines.begin(); iter != m_credit_lines.end(); iter++) {
         // get object
-        sf::Text& text = *iter;
+        CEGUI::Window* text = *iter;
 
         // set shadow if not set
         // OLD if (obj->m_shadow_pos == 0) {
         // OLD     obj->Set_Shadow(grey, 1);
         // OLD }
         // set position
-        text.setPosition(static_cast<float>(game_res_w) / 3, m_menu_pos_y);
+        text->setPosition(CEGUI::UVector2(CEGUI::UDim(0.3f, 0.0f), CEGUI::UDim(0, pos_y)));
 
-        m_menu_pos_y = text.getPosition().y + text.getGlobalBounds().height + 10;
+        pos_y += 20.0f * global_upscaley;
     }
 
-    pFont->Prepare_SFML_Text(m_back_text, _("Back"), static_cast<float>(game_res_w) / 18, 400, cFont_Manager::FONTSIZE_NORMAL, m_text_color, true);
-    m_back_index = pMenuCore
-        ->m_handler
-        ->Add_Menu_Item(sf::FloatRect(m_back_text.getPosition().x * global_downscalex,
-                                      m_back_text.getPosition().y * global_downscaley,
-                                      m_back_text.getGlobalBounds().width * global_downscalex,
-                                      m_back_text.getGlobalBounds().height * global_downscaley), NULL);
     Init_GUI();
 }
 
@@ -3580,13 +3580,18 @@ void cMenu_Credits::Update(void)
 {
     cMenu_Base::Update();
 
-    std::vector<sf::Text>::iterator iter;
+    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
+
+    std::vector<CEGUI::Window*>::iterator iter;
     for(iter=m_credit_lines.begin(); iter != m_credit_lines.end(); iter++) {
-        sf::Text& text = *iter;
+        CEGUI::Window* text = *iter;
 
         // When the respective line is long out of sight, remove it from the
         // list of lines to draw.
-        if (text.getPosition().y < -300) {
+        if (text->getYPosition().d_offset < -300) {
+            p_root->removeChild(text);
+            wmgr.destroyWindow(text);
             iter = m_credit_lines.erase(iter);
 
             // Exit loop if this was the last item (so we don't accidentally
@@ -3595,32 +3600,34 @@ void cMenu_Credits::Update(void)
                 break;
         }
         // fading out
-        else if (text.getPosition().y < game_res_h * 0.3f) {
-            sf::Color color = text.getColor();
-            unsigned int new_value = color.a - 1;
+        else if (text->getYPosition().d_offset < game_res_h * 0.3f) {
+            CEGUI::ColourRect colrect = CEGUI::PropertyHelper<CEGUI::ColourRect>::fromString(text->getProperty("TextColours"));
+            CEGUI::Colour color = colrect.getColourAtPoint(0.0f, 0.0f); // Entire rect has one colour
+            float new_value = color.getAlpha() - 0.01;
 
-            if (new_value < 0) {
-                new_value = 0;
+            if (new_value < 0.0f) {
+                new_value = 0.0f;
             }
 
-            color.a = new_value;
-            text.setColor(color);
+            colrect.setAlpha(new_value);
+            text->setProperty("TextColours", CEGUI::PropertyHelper<CEGUI::ColourRect>::toString(colrect));
         }
         // fading in
-        else if (text.getPosition().y < game_res_h * 0.9f) {
-            sf::Color color = text.getColor();
-            unsigned int new_value = color.a + 2;
+        else if (text->getYPosition().d_offset < game_res_h * 0.9f) {
+            CEGUI::ColourRect colrect = CEGUI::PropertyHelper<CEGUI::ColourRect>::fromString(text->getProperty("TextColours"));
+            CEGUI::Colour color = colrect.getColourAtPoint(0.0f, 0.0f); // Entire rect has one colour
+            float new_value = color.getAlpha() + 0.02;
 
-            if (new_value > 255) {
-                new_value = 255;
+            if (new_value > 1.0f) {
+                new_value = 1.0f;
             }
 
-            color.a = new_value;
-            text.setColor(color);
+            colrect.setAlpha(new_value);
+            text->setProperty("TextColours", CEGUI::PropertyHelper<CEGUI::ColourRect>::toString(colrect));
         }
 
         // default upwards scroll
-        text.move(0, -1.0f);
+        text->setYPosition(text->getYPosition() - CEGUI::UDim::px());
     }
 
     if (rand() % 100 > 95) {
@@ -3671,19 +3678,7 @@ void cMenu_Credits::Update(void)
         Exit();
     }
 
-    if (pMenuCore->m_handler->m_active == m_back_index)
-        m_back_text.setColor(red.Get_SFML_Color());
-    else
-        m_back_text.setColor(m_text_color.Get_SFML_Color());
-
-    if (!m_action) {
-        return;
-    }
-
-    m_action = false;
-
-    // back
-    if (pMenuCore->m_handler->m_active == 0) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
         Exit();
     }
 }
@@ -3706,20 +3701,24 @@ void cMenu_Credits::Draw(void)
     request->m_color.alpha = 195;
     pRenderer->Add(request);
 
-    std::vector<sf::Text>::iterator iter;
-    for(iter=m_credit_lines.begin(); iter != m_credit_lines.end(); iter++) {
-        pFont->Queue_Text(*iter);
-    }
-
-    pFont->Queue_Text(m_back_text);
-
     Draw_End();
 }
 
 void cMenu_Credits::Add_Credits_Line(const std::string& text, float posx, float posy, const Color& color /* = black */, float shadow_pos /* = 0.0f */, const Color& shadow_color /* = black */)
 {
-    m_credit_lines.resize(m_credit_lines.size() + 1);
-    pFont->Prepare_SFML_Text(m_credit_lines.back(), text, posx, posy, cFont_Manager::FONTSIZE_NORMAL, color, true);
+    CEGUI::ColourRect colrect(color.Get_cegui_Color());
+    CEGUI::String strcolrect = CEGUI::PropertyHelper<CEGUI::ColourRect>::toString(colrect);
+
+    CEGUI::Window* p_line = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText");
+    p_line->setText(text);
+    p_line->setProperty("FrameEnabled", "False");
+    p_line->setProperty("BackgroundEnabled", "False");
+    p_line->setProperty("TextColours", strcolrect);
+    p_line->setSize(CEGUI::USize(CEGUI::UDim(1.0f, 0.0f), CEGUI::UDim(0.05f, 0)));
+    p_line->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, posx), CEGUI::UDim(0.0f, posy)));
+
+    m_credit_lines.push_back(p_line);
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(p_line);
 }
 
 void cMenu_Credits::Menu_Fade(bool fade_in /* = 1 */)
