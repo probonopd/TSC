@@ -193,7 +193,7 @@ cMenu_Main::cMenu_Main(void)
     mp_current_inactive_item = NULL;
     mp_current_active_item   = NULL;
 
-    mp_credits_item = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Label");
+    mp_credits_item = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText");
     mp_credits_item->subscribeEvent(CEGUI::Window::EventMouseClick, CEGUI::Event::Subscriber(&cMenu_Main::credits_item_clicked, this));
     mp_credits_item->subscribeEvent(CEGUI::Window::EventMouseEntersArea, CEGUI::Event::Subscriber(&cMenu_Main::credits_item_entered, this));
 
@@ -328,7 +328,10 @@ void cMenu_Main::Init(void)
     // Only show the credit menu entry and the SFML logo on the title
     // screen, not in the in-game menu.
     if (m_exit_to_gamemode == MODE_NOTHING) {
-        mp_credits_item->setText(_("[colour='FFFFFF00']Credits"));
+        mp_credits_item->setText(_("Credits"));
+        mp_credits_item->setProperty("TextColours", "tl:FFFFFF00 tr:FFFFFF00 bl:FFFFFF00 br:FFFFFF00");
+        mp_credits_item->setProperty("FrameEnabled", "False");
+        mp_credits_item->setProperty("BackgroundEnabled", "False");
         mp_credits_item->setPosition(CEGUI::UVector2(CEGUI::UDim(0.44, 0), CEGUI::UDim(0.95, 0)));
         mp_credits_item->setSize(CEGUI::USize(CEGUI::UDim(0.12, 0), CEGUI::UDim(0.05, 0)));
         CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_credits_item);
@@ -382,7 +385,7 @@ void cMenu_Main::Exit(void)
 void cMenu_Main::Selected_Item_Changed(int new_active_item)
 {
     cMenu_Base::Selected_Item_Changed(new_active_item);
-    mp_credits_item->setText(_("[colour='FFFFFF00']Credits"));
+    mp_credits_item->setProperty("TextColours", "tl:FFFFFF00 tr:FFFFFF00 bl:FFFFFF00 br:FFFFFF00");
 
     if (mp_current_inactive_item) {
         mp_current_inactive_item->Set_Scale(1);
@@ -514,7 +517,7 @@ void cMenu_Main::Draw(void)
     }
 
     if (pMenuCore->m_handler->m_active == m_credits_index)
-        mp_credits_item->setText(_("[colour='FFFF0000']Credits"));
+        mp_credits_item->setProperty("TextColours", "tl:FFFF0000 tr:FFFF0000 bl:FFFF0000 br:FFFF0000");
 
     mp_start_inactive->Draw();
     mp_options_inactive->Draw();
