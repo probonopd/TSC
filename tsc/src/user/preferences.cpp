@@ -84,7 +84,6 @@ const sf::Keyboard::Key cPreferences::m_key_editor_pixel_move_right_default = sf
 const float cPreferences::m_scroll_speed_default = 1.0f;
 // Joystick
 const bool cPreferences::m_joy_enabled_default = 1;
-const bool cPreferences::m_joy_analog_jump_default = 0;
 const sf::Joystick::Axis cPreferences::m_joy_axis_hor_default[2] = {sf::Joystick::Axis::X, sf::Joystick::Axis::PovX};
 const sf::Joystick::Axis cPreferences::m_joy_axis_ver_default[2] = {sf::Joystick::Axis::Y, sf::Joystick::Axis::PovY};
 const float cPreferences::m_joy_axis_threshold_default = 0.1f;
@@ -188,7 +187,6 @@ void cPreferences::Save(void)
     // Joystick/Gamepad
     Add_Property(p_root, "joy_enabled", m_joy_enabled);
     Add_Property(p_root, "joy_name", m_joy_name);
-    Add_Property(p_root, "joy_analog_jump", m_joy_analog_jump);
     Add_Property(p_root, "joy_axis_hor", m_joy_axis_hor[0]);
     Add_Property(p_root, "joy_axis_ver", m_joy_axis_ver[0]);
     Add_Property(p_root, "joy_axis_hor2", m_joy_axis_hor[1]);
@@ -287,7 +285,6 @@ void cPreferences::Reset_Joystick(void)
 {
     m_joy_enabled = m_joy_enabled_default;
     m_joy_name.clear();
-    m_joy_analog_jump = m_joy_analog_jump_default;
     // axes
     for (int i = 0; i < cPreferences::NUM_JOYSTICK_AXIS_TYPES; i++)
     {

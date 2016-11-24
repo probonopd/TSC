@@ -111,8 +111,6 @@ namespace TSC {
         bool m_joy_enabled;
         // active joy name
         std::string m_joy_name;
-        // jump with upwards
-        bool m_joy_analog_jump;
         // hor/ver axes used
         static const int NUM_JOYSTICK_AXIS_TYPES = 2;
         sf::Joystick::Axis m_joy_axis_hor [NUM_JOYSTICK_AXIS_TYPES];
@@ -195,7 +193,6 @@ namespace TSC {
         static const float m_scroll_speed_default;
         // Joystick
         static const bool m_joy_enabled_default;
-        static const bool m_joy_analog_jump_default;
         static const sf::Joystick::Axis m_joy_axis_hor_default[NUM_JOYSTICK_AXIS_TYPES];
         static const sf::Joystick::Axis m_joy_axis_ver_default[NUM_JOYSTICK_AXIS_TYPES];
         static const float m_joy_axis_threshold_default;

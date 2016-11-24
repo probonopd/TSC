@@ -284,7 +284,6 @@ namespace TSC {
         bool Joystick_Name_Click(const CEGUI::EventArgs& event);
         bool Joystick_Name_Select(const CEGUI::EventArgs& event);
         bool Joystick_Sensitivity_Changed(const CEGUI::EventArgs& event);
-        bool Joystick_Analog_Jump_Select(const CEGUI::EventArgs& event);
         bool Joystick_Spinner_Axis_Hor_Changed(const CEGUI::EventArgs& event);
         bool Joystick_Spinner_Axis_Ver_Changed(const CEGUI::EventArgs& event);
         bool Joystick_Spinner_Axis_Hor2_Changed(const CEGUI::EventArgs& event);

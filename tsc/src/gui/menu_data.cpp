@@ -1945,10 +1945,6 @@ void cMenu_Options::Init_GUI_Joystick(void)
     CEGUI::Window* text_joystick_sensitivity = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_sensitivity");
     text_joystick_sensitivity->setText(UTF8_("Sensitivity"));
 
-    // Joystick analog jump text
-    CEGUI::Window* text_joystick_analog_jump = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_analog_jump");
-    text_joystick_analog_jump->setText(UTF8_("Analog Jump"));
-
     // Joystick name
     CEGUI::Window* text_joystick_name = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_name");
     text_joystick_name->setText(UTF8_("Joystick"));
@@ -1991,25 +1987,6 @@ void cMenu_Options::Init_GUI_Joystick(void)
     CEGUI::Slider* slider_joy_sensitivity = static_cast<CEGUI::Slider*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_slider_sensitivity"));
     slider_joy_sensitivity->setCurrentValue(pPreferences->m_joy_axis_threshold);
     slider_joy_sensitivity->subscribeEvent(CEGUI::Slider::EventValueChanged, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Sensitivity_Changed, this));
-
-    // Joystick analog jump
-    CEGUI::Combobox* combo_joy_analog_jump = static_cast<CEGUI::Combobox*>(p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_combo_analog_jump"));
-
-    item = new CEGUI::ListboxTextItem(UTF8_("On"));
-    item->setTextColours(CEGUI::Colour(0, 0, 1));
-    combo_joy_analog_jump->addItem(item);
-    item = new CEGUI::ListboxTextItem(UTF8_("Off"));
-    item->setTextColours(CEGUI::Colour(0, 1, 0));
-    combo_joy_analog_jump->addItem(item);
-
-    if (pPreferences->m_joy_analog_jump) {
-        combo_joy_analog_jump->setText(UTF8_("On"));
-    }
-    else {
-        combo_joy_analog_jump->setText(UTF8_("Off"));
-    }
-
-    combo_joy_analog_jump->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cMenu_Options::Joystick_Analog_Jump_Select, this));
 
     // First horizontal joystick axis
     CEGUI::Window* text_joystick_axis_hor = p_root->getChild("options/window_options/tabcontrol_main/tab_joystick/joystick_text_axis_hor");
@@ -3044,22 +3021,6 @@ bool cMenu_Options::Joystick_Sensitivity_Changed(const CEGUI::EventArgs& event)
     const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
     // set new value
     pPreferences->m_joy_axis_threshold = static_cast<int16_t>(static_cast<CEGUI::Slider*>(windowEventArgs.window)->getCurrentValue());
-
-    return 1;
-}
-
-bool cMenu_Options::Joystick_Analog_Jump_Select(const CEGUI::EventArgs& event)
-{
-    const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    CEGUI::ListboxItem* item = static_cast<CEGUI::Combobox*>(windowEventArgs.window)->getSelectedItem();
-
-    bool analog_jump = 0;
-
-    if (item->getText().compare(_("On")) == 0) {
-        analog_jump = 1;
-    }
-
-    pPreferences->m_joy_analog_jump = analog_jump;
 
     return 1;
 }

@@ -1177,7 +1177,7 @@ void cLevel_Player::Start_Jump(float deaccel /* = 0.08f */)
     bool jump_key = 0;
 
     // if jump key pressed
-    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || (pPreferences->m_joy_analog_jump && pJoystick->Up()) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
+    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
         jump_key = 1;
     }
 
@@ -1260,7 +1260,7 @@ void cLevel_Player::Update_Jump(void)
     }
 
     // jumping physics
-    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || (pPreferences->m_joy_analog_jump && pJoystick->Up()) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
+    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_jump) || pJoystick->Button(pPreferences->m_joy_button_jump)) {
         Add_Velocity_Y(-(m_jump_accel_up + (m_vely * m_jump_vel_deaccel) / Get_Vel_Modifier()));
         m_jump_power -= pFramerate->m_speed_factor;
     }
