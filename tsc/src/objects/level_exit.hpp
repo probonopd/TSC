@@ -128,7 +128,7 @@ namespace TSC {
         Camera_movement m_exit_motion;
         // destination level name (not path)
         std::string m_dest_level;
-        // destination entry ( only used if in same level )
+        // destination entry
         std::string m_dest_entry;
         // return level name
         std::string m_return_level;
@@ -139,8 +139,6 @@ namespace TSC {
 
         // editor type color
         Color m_editor_color;
-
-        sf::Text m_dest_entry_text;
 
         // Save to node
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);

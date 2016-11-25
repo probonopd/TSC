@@ -29,6 +29,7 @@
 #include "../core/framerate.hpp"
 #include "../objects/goldpiece.hpp"
 #include "../objects/level_exit.hpp"
+#include "../objects/level_entry.hpp"
 #include "../objects/bonusbox.hpp"
 #include "../enemies/furball.hpp"
 #include "../video/font.hpp"
@@ -99,6 +100,7 @@ cMouseCursor::cMouseCursor(cSprite_Manager* sprite_manager)
     mp_coords_label->setMousePassThroughEnabled(true);
     mp_coords_label->setFont("DejaVuSans-Small-Bold");
     mp_coords_label->setWidth(CEGUI::UDim(1, 0)); // Width does not matter as the label is transparent, but has to be large enough for the text
+    mp_coords_label->setHeight(CEGUI::UDim(0.5, 0)); // Likewise
     mp_coords_label->setProperty("HorzFormatting", "Left");
     mp_coords_label->setProperty("VertFormatting", "Top");
     mp_coords_label->hide(); // Shown only in editor
@@ -1616,12 +1618,9 @@ void cMouseCursor::Editor_Update(void)
             + "  Y : "  + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_start_pos_y))
             + " UID: "  + int_to_string(m_hovering_object->m_obj->m_uid);
 
-        if (game_debug) {
-            info.insert(0, "Start ");
-        }
-
         // if in debug mode draw current position X, Y, Z and if available editor Z
         if (game_debug) {
+            info.insert(0, "Start ");
             info += "\nCurr.  X : " + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_pos_x)) + "  Y : " + int_to_string(static_cast<int>(m_hovering_object->m_obj->m_pos_y)) + "  Z : " + float_to_string(m_hovering_object->m_obj->m_pos_z, 6);
 
             // if also got editor z position
@@ -1630,7 +1629,45 @@ void cMouseCursor::Editor_Update(void)
             }
         }
 
-        mp_coords_label->setText(info);
+        // if hovering over a level entry or exit, show name/target
+        if (m_hovering_object->m_obj->m_type == TYPE_LEVEL_EXIT ||
+            m_hovering_object->m_obj->m_type == TYPE_LEVEL_ENTRY) {
+            std::stringstream ss;
+            Color color;
+
+            if (m_hovering_object->m_obj->m_type == TYPE_LEVEL_EXIT) { // Level exit
+                cLevel_Exit* p_exit = static_cast<cLevel_Exit*>(m_hovering_object->m_obj);
+                color = p_exit->m_editor_color;
+                color.alpha = 255;
+
+                if (p_exit->m_dest_level.empty() && p_exit->m_dest_entry.empty()) { // Level finish
+                    // TRANS: Displayed when hovering over the level finish object in the editor.
+                    ss << _("FINISH");
+                }
+                else if (!p_exit->m_dest_level.empty() && !p_exit->m_dest_entry.empty()) { // entry in sublevel
+                    ss << "<" << p_exit->m_dest_level << ">→" << p_exit->m_dest_entry;
+                }
+                else if (p_exit->m_dest_level.empty()) { // entry in the active level
+                    ss << p_exit->m_dest_entry;
+                }
+                else { // sublevel without entry specification
+                    ss << "<" << p_exit->m_dest_level << ">";
+                }
+
+            }
+            else { // Level entry
+                cLevel_Entry* p_entry = static_cast<cLevel_Entry*>(m_hovering_object->m_obj);
+                color = p_entry->m_editor_color;
+                color.alpha = 255;
+
+                ss << p_entry->m_entry_name;
+            }
+
+            CEGUI::String colorstr  = CEGUI::PropertyHelper<CEGUI::Colour>::toString(color.Get_cegui_Color());
+            info += std::string("\n[colour='") + colorstr.c_str() + "']" + ss.str();
+        }
+
+        mp_coords_label->setText(reinterpret_cast<const CEGUI::utf8*>(info.c_str()));
     }
 
     // OLD if (pHud_Debug->m_counter <= 0.0f) {

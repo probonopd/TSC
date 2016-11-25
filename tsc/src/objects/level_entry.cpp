@@ -161,17 +161,6 @@ void cLevel_Entry::Draw(cSurface_Request* request /* = NULL */)
 
     // draw color rect
     pVideo->Draw_Rect(m_col_rect.m_x - pActive_Camera->m_x, m_col_rect.m_y - pActive_Camera->m_y, m_col_rect.m_w, m_col_rect.m_h, m_editor_pos_z, &m_editor_color);
-
-    // draw entry name
-    if (!m_entry_name.empty()) {
-        pFont->Prepare_SFML_Text(m_level_entry_text,
-                                 m_entry_name,
-                                 m_col_rect.m_x + m_col_rect.m_w + 5 - pActive_Camera->m_x,
-                                 m_col_rect.m_y - pActive_Camera->m_y,
-                                 cFont_Manager::FONTSIZE_SMALL,
-                                 white);
-        pFont->Queue_Text(m_level_entry_text);
-    }
 }
 
 void cLevel_Entry::Activate(void)
