@@ -144,6 +144,8 @@ namespace TSC {
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
         virtual std::string Create_Name(void) const;
 
+        void Refresh_Color(void);
+
     protected:
         // save to stream
         virtual std::string Get_XML_Type_Name();
