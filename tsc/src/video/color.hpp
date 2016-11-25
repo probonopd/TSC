@@ -21,6 +21,14 @@ namespace TSC {
 
     /* *** *** *** *** *** *** *** *** Color class *** *** *** *** *** *** *** *** *** */
 
+    /**
+     * Class representing a color in TSC's system. It provides converters to
+     * SFML and CEGUI colors.
+     *
+     * The color components are stored as an integer of range 0-255, where 0 denotes
+     * to use nothing of this color and 255 to use it completely. Alpha values range
+     * from 0 (transparent) to 255 (opaque) as well.
+     */
     class Color {
     public:
         Color(void)
@@ -31,6 +39,10 @@ namespace TSC {
             alpha = 255;
         }
 
+        /**
+         * Construct a color from the colorr components, which each may be between 0
+         * and 255 (for alpha, 0 means transparent and 255 opaque).
+         */
         Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a = 255)
         {
             red = r;
@@ -39,6 +51,11 @@ namespace TSC {
             alpha = a;
         }
 
+        /**
+         * Construct a color from the color components, which each may be between
+         * 0 (nothing) and 255 (full) (for alpha, 0 means transparent and 1 means
+         * opaque). The float values get converted to integer values internally.
+         */
         Color(float r, float g, float b, float a = 1.0f)
         {
             red = static_cast<uint8_t>(r * 255);
@@ -47,6 +64,9 @@ namespace TSC {
             alpha = static_cast<uint8_t>(a * 255);
         }
 
+        /**
+         * Construct a grey tone. 0 means white, 255 means black.
+         */
         Color(uint8_t grey)
         {
             red = grey;
@@ -65,13 +85,13 @@ namespace TSC {
             blue  = static_cast<uint8_t>(std::stoul(hexstr.substr(6, 2), NULL, 16));
         }
 
-        // Returns it as SFML color.
+        /// Returns it as SFML color.
         inline sf::Color Get_SFML_Color(void) const
         {
             return sf::Color(red, green, blue);
         }
 
-        // Returns it as CEGUI color
+        /// Returns it as CEGUI color
         inline CEGUI::Colour Get_cegui_Color(void) const
         {
             return CEGUI::Colour(static_cast<float>(red) / 255, static_cast<float>(green) / 255, static_cast<float>(blue) / 255, static_cast<float>(alpha) / 255);
