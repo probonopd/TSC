@@ -67,20 +67,6 @@ namespace TSC {
         virtual void Draw(void);
     };
 
-    /* *** *** *** *** *** *** cText_Request *** *** *** *** *** *** *** *** *** *** *** */
-
-    class cText_Request: public cRender_Request {
-    public:
-        cText_Request(const sf::Text& text);
-        virtual ~cText_Request();
-
-        virtual void Draw(void);
-
-        const sf::Text& m_text;
-        sf::Vector2f m_pos;
-    };
-
-
     /* *** *** *** *** *** *** cRender_Request_Advanced *** *** *** *** *** *** *** *** *** *** *** */
 
     class cRender_Request_Advanced : public cRender_Request {
@@ -263,7 +249,6 @@ namespace TSC {
 
         // render data array
         RenderList m_render_data;
-        std::vector<cText_Request*> m_text_render_data;
 
         // Z position sort
         struct zpos_sort {

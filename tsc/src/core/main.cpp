@@ -23,7 +23,6 @@
 #include "../level/level.hpp"
 #include "../gui/menu.hpp"
 #include "../core/framerate.hpp"
-#include "../video/font.hpp"
 #include "../user/preferences.hpp"
 #include "../audio/sound_manager.hpp"
 #include "../audio/audio.hpp"
@@ -41,6 +40,7 @@
 #include "../video/renderer.hpp"
 #include "../video/loading_screen.hpp"
 #include "../video/img_settings.hpp"
+#include "../video/img_manager.hpp"
 #include "../core/i18n.hpp"
 #include "../gui/generic.hpp"
 
@@ -243,7 +243,6 @@ void Init_Game(void)
     pPackage_Manager = new cPackage_Manager();
     pVideo = new cVideo();
     pAudio = new cAudio();
-    pFont = new cFont_Manager();
     pFramerate = new cFramerate();
     pRenderer = new cRenderQueue(200);
     pRenderer_current = new cRenderQueue(200);
@@ -273,7 +272,6 @@ void Init_Game(void)
     // audio init
     pAudio->Init();
     // video init
-    pFont->Init();
     pVideo->Init_Video();
 
     debug_print("Loading campaigns\n");
@@ -448,11 +446,6 @@ void Exit_Game(void)
     if (pSettingsParser) {
         delete pSettingsParser;
         pSettingsParser = NULL;
-    }
-
-    if (pFont) {
-        delete pFont;
-        pFont = NULL;
     }
 
     if (pPackage_Manager) {

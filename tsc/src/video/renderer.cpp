@@ -70,40 +70,6 @@ void cClear_Request::Draw(void)
     glLoadIdentity();
 }
 
-/* *** *** *** *** *** *** cText_Request *** *** *** *** *** *** *** *** *** *** *** */
-
-cText_Request::cText_Request(const sf::Text& text)
-    : cRender_Request(), m_text(text), m_pos(0, 0)
-{
-    m_type = REND_TEXT;
-}
-
-cText_Request::~cText_Request(void)
-{
-}
-
-/**
- * Executes this drawing request. The caller is required to save the
- * OpenGL stack before calling this function using
- * sf::Window::pushGLStates() so that SFML can render with its own
- * presets. After the function returns, the caller is required to
- * reset the OpenGL stack to what it was before with
- * sf::Window::popGLStates() so TSC can render again as it should.
- *
- * It is possible (and recommended) to execute multiple text drawing
- * requests between push/pop. This allows to keep things performant.
- * That is, this is okay:
- *
- * 1. Push OpenGL stack
- * 2. textreq1.Draw()
- * 3. textreq2.Draw()
- * 4. Pop OpenGL stack
- */
-void cText_Request::Draw(void)
-{
-    pVideo->mp_window->draw(m_text);
-}
-
 /* *** *** *** *** *** *** cRender_Request_Advanced *** *** *** *** *** *** *** *** *** *** *** */
 
 cRender_Request_Advanced::cRender_Request_Advanced(void)
@@ -702,24 +668,14 @@ void cRenderQueue::Add(cRender_Request* obj)
         delete obj;
         return;
     }
-    else if (obj->m_type == REND_TEXT) {
-        // Add to the special text render queue, which is rendered later for performance
-        m_text_render_data.push_back(static_cast<cText_Request*>(obj));
-    }
     else {
-        // Add to normal render queue
+        // Add to render queue
         m_render_data.push_back(obj);
     }
 }
 
 /**
- * Executes all render requests collected via Add(). SFML text elements are
- * rendered at the end of the rendering process, because this allows to
- * perform the OpenGL state saving required by the switch from raw OpenGL
- * to SFML just once here instead of once per text element. As a side effect
- * this causes all text elements to always render on top of the normal
- * stuff, but since texts are meant to be read by the user, this is what
- * is wanted in any case.
+ * Executes all render requests collected via Add().
  */
 void cRenderQueue::Render(bool clear /* = 1 */)
 {
@@ -735,17 +691,6 @@ void cRenderQueue::Render(bool clear /* = 1 */)
         obj->m_render_count--;
     }
 
-    // Render the SFML text elements afterwards. This allows to call the OpenGL
-    // state resetting functions just once per frame instead of once per text element.
-    pVideo->mp_window->pushGLStates();
-    for(std::vector<cText_Request*>::iterator itr = m_text_render_data.begin(); itr != m_text_render_data.end(); ++itr) {
-        cText_Request* obj = *itr;
-
-        obj->Draw();
-        obj->m_render_count--;
-    }
-    pVideo->mp_window->popGLStates();
-
     if (clear) {
         Clear(0);
     }
@@ -755,10 +700,6 @@ void cRenderQueue::Fake_Render(unsigned int amount /* = 1 */, bool clear /* = 1 
 {
     for (RenderList::iterator itr = m_render_data.begin(); itr != m_render_data.end(); ++itr) {
         cRender_Request* obj = (*itr);
-        obj->m_render_count -= amount;
-    }
-    for(std::vector<cText_Request*>::iterator itr = m_text_render_data.begin(); itr != m_text_render_data.end(); ++itr) {
-        cText_Request* obj = *itr;
         obj->m_render_count -= amount;
     }
 
@@ -775,20 +716,6 @@ void cRenderQueue::Clear(bool force /* = 1 */)
         // if forced or finished rendering
         if (force || obj->m_render_count <= 0) {
             itr = m_render_data.erase(itr);
-            delete obj;
-        }
-        // increment
-        else {
-            ++itr;
-        }
-    }
-
-    for (std::vector<cText_Request*>::iterator itr = m_text_render_data.begin(); itr != m_text_render_data.end();) {
-        cText_Request* obj = (*itr);
-
-        // if forced or finished rendering
-        if (force || obj->m_render_count <= 0) {
-            itr = m_text_render_data.erase(itr);
             delete obj;
         }
         // increment

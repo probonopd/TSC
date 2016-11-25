@@ -26,7 +26,6 @@
 #include "../level/level_player.hpp"
 #include "../objects/goldpiece.hpp"
 #include "../objects/level_exit.hpp"
-#include "../video/font.hpp"
 #include "../input/keyboard.hpp"
 #include "../input/mouse.hpp"
 #include "../input/joystick.hpp"

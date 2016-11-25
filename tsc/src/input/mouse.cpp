@@ -32,7 +32,6 @@
 #include "../objects/level_entry.hpp"
 #include "../objects/bonusbox.hpp"
 #include "../enemies/furball.hpp"
-#include "../video/font.hpp"
 #include "../video/renderer.hpp"
 #include "../core/i18n.hpp"
 

@@ -19,7 +19,6 @@
 #include "../core/framerate.hpp"
 #include "../overworld/overworld.hpp"
 #include "../level/level.hpp"
-#include "../video/font.hpp"
 #include "../audio/audio.hpp"
 #include "../gui/menu.hpp"
 #include "../video/renderer.hpp"

@@ -3,7 +3,6 @@
 #include "../gui/generic.hpp"
 #include "../core/framerate.hpp"
 #include "../audio/audio.hpp"
-#include "../video/font.hpp"
 #include "../video/animation.hpp"
 #include "../input/keyboard.hpp"
 #include "../input/mouse.hpp"

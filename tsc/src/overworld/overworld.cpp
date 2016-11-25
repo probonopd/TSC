@@ -24,7 +24,6 @@
 #include "../core/framerate.hpp"
 #include "../gui/menu.hpp"
 #include "../user/preferences.hpp"
-#include "../video/font.hpp"
 #include "../input/mouse.hpp"
 #include "../input/joystick.hpp"
 #include "../input/keyboard.hpp"

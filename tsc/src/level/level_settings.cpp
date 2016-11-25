@@ -19,7 +19,6 @@
 #include "../level/level_settings.hpp"
 #include "../input/mouse.hpp"
 #include "../level/level.hpp"
-#include "../video/font.hpp"
 #include "../video/renderer.hpp"
 #include "../core/filesystem/filesystem.hpp"
 #include "../core/filesystem/resource_manager.hpp"

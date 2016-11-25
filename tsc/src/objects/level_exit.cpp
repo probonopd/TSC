@@ -22,7 +22,6 @@
 #include "../core/framerate.hpp"
 #include "../core/main.hpp"
 #include "../video/gl_surface.hpp"
-#include "../video/font.hpp"
 #include "../video/renderer.hpp"
 #include "../level/level.hpp"
 #include "../core/i18n.hpp"
