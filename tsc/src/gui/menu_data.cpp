@@ -1130,9 +1130,14 @@ bool Listbox_Keydown(const CEGUI::EventArgs& e)
     CEGUI::Listbox* listbox = static_cast<CEGUI::Listbox*>(ke.window);
 
     // Down/Up (todo: detect event for joystick properly when CEGUI supports these events)
-    if (ke.scancode == CEGUI::Key::ArrowDown || ke.scancode == CEGUI::Key::ArrowUp || ke.scancode == CEGUI::Key::PageDown || ke.scancode == CEGUI::Key::PageUp ||
-            ke.scancode == CEGUI::Key::Home || ke.scancode == CEGUI::Key::End ||
-            ke.scancode == pKeyboard->SFMLKey_to_CEGUIKey(pPreferences->m_key_up) || ke.scancode == pKeyboard->SFMLKey_to_CEGUIKey(pPreferences->m_key_down)) {
+    if (listbox->getItemCount() > 0 && (ke.scancode == CEGUI::Key::ArrowDown ||
+                                        ke.scancode == CEGUI::Key::ArrowUp ||
+                                        ke.scancode == CEGUI::Key::PageDown ||
+                                        ke.scancode == CEGUI::Key::PageUp ||
+                                        ke.scancode == CEGUI::Key::Home ||
+                                        ke.scancode == CEGUI::Key::End ||
+                                        ke.scancode == pKeyboard->SFMLKey_to_CEGUIKey(pPreferences->m_key_up) ||
+                                        ke.scancode == pKeyboard->SFMLKey_to_CEGUIKey(pPreferences->m_key_down))) {
         int new_selected = 0;
         int last_selected = 0;
 
@@ -1197,10 +1202,10 @@ bool Listbox_Keydown(const CEGUI::EventArgs& e)
         listbox->setItemSelectState(new_selected, 1);
         listbox->ensureItemIsVisible(new_selected);
 
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 bool Listbox_Character_Key(const CEGUI::EventArgs& e)
