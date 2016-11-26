@@ -3678,7 +3678,8 @@ void cMenu_Credits::Update(void)
         Exit();
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape) || sf::Keyboard::isKeyPressed(sf::Keyboard::Return) ||
+            pJoystick->Button(pPreferences->m_joy_button_action) || pJoystick->Button(pPreferences->m_joy_button_exit)) {
         Exit();
     }
 }
