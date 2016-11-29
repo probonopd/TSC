@@ -644,7 +644,7 @@ void cAudio::Update(void)
     }
 
     // if music is enabled but nothing is playing
-    if (m_music_enabled && !Is_Music_Playing()) {
+    if (m_music_enabled && !Is_Music_Playing() && !m_next_music.empty()) {
         // play the next song in the queue
         NextMusicInfo next = m_next_music.front();
         m_next_music.pop();
