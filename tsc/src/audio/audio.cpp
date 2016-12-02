@@ -115,8 +115,6 @@ cAudio::cAudio(void)
 
     m_sound_volume = cPreferences::m_sound_volume_default;
     m_music_volume = cPreferences::m_music_volume_default;
-
-    m_max_sounds = 100; // XXX: what???
 }
 
 cAudio::~cAudio(void)
@@ -177,6 +175,8 @@ bool cAudio::Init(void)
 
         m_sound_enabled = 0;
     }
+
+    m_max_sounds = 100; // XXX: what???
 
     return 1;
 }
@@ -407,6 +407,8 @@ cAudio_Sound* cAudio::Get_Playing_Sound(fs::path filename)
 
 cAudio_Sound* cAudio::Create_Sound_Channel(void)
 {
+    assert(m_max_sounds > 0);
+
     // get all sounds
     for (AudioSoundList::iterator itr = m_active_sounds.begin(); itr != m_active_sounds.end(); ++itr) {
         // get object pointer
