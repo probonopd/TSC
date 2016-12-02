@@ -104,7 +104,7 @@ namespace TSC {
         // Initialize Audio Engine
         bool Init(void);
         // De-initializes Audio Engine
-        void Close(void);
+        void Close(bool close_sound=true, bool close_music=true);
 
         // Create the MRuby object for this
         virtual mrb_value Create_MRuby_Object(mrb_state* p_state)

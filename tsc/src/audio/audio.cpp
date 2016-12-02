@@ -139,7 +139,7 @@ bool cAudio::Init(void)
         return 1;
     }
 
-    Close();
+    Close(!sound, !music);
 
     // if no audio
     if (!music && !sound) {
@@ -149,30 +149,26 @@ bool cAudio::Init(void)
     m_initialised = 1;
 
     // music initialization
-    if (music && !m_music_enabled) {
+    if (music) {
         m_music_enabled = 1;
 
         // set music volume
         Set_Music_Volume(m_music_volume);
     }
     // music de-initialization
-    else if (!music && m_music_enabled) {
-        Halt_Music();
-
+    else {
         m_music_enabled = 0;
     }
 
     // sound initialization
-    if (sound && !m_sound_enabled) {
+    if (sound) {
         m_sound_enabled = 1;
 
         // set sound volume
         Set_Sound_Volume(m_sound_volume);
     }
     // sound de-initialization
-    else if (!sound && m_sound_enabled) {
-        Stop_Sounds();
-
+    else {
         m_sound_enabled = 0;
     }
 
@@ -181,14 +177,14 @@ bool cAudio::Init(void)
     return 1;
 }
 
-void cAudio::Close(void)
+void cAudio::Close(bool close_sound/*=true*/, bool close_music/*=true*/)
 {
     if (m_initialised) {
         if (m_debug) {
             cout << "Closing Audio System" << endl;
         }
 
-        if (m_sound_enabled) {
+        if (m_sound_enabled && close_sound) {
             Stop_Sounds();
 
             // clear sounds
@@ -202,7 +198,7 @@ void cAudio::Close(void)
             m_sound_enabled = 0;
         }
 
-        if (m_music_enabled) {
+        if (m_music_enabled && close_music) {
             Halt_Music();
 
             m_music_enabled = 0;
