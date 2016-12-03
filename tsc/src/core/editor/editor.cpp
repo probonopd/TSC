@@ -1213,10 +1213,17 @@ bool cEditor_Menu_Entry::on_image_mouse_down(const CEGUI::EventArgs& ev)
     // Move the editor tabpane to the left
     mp_tab_pane->getParent()->getParent()->getParent()->setXPosition(CEGUI::UDim(TABPANE_OUT_OF_SIGHT_X, 0));
 
-    // Add the new sprite to the level and attach it to the mouse cursor,
+    // Add the new sprite to the level / world and attach it to the mouse cursor,
     // ensuring the cursor is centered on the object.
-    p_new_sprite->Set_Sprite_Manager(pActive_Level->m_sprite_manager);
-    pActive_Level->m_sprite_manager->Add(p_new_sprite);
+    if (Game_Mode == MODE_LEVEL) {
+        p_new_sprite->Set_Sprite_Manager(pActive_Level->m_sprite_manager);
+        pActive_Level->m_sprite_manager->Add(p_new_sprite);
+    }
+    else {
+        p_new_sprite->Set_Sprite_Manager(pActive_Overworld->m_sprite_manager);
+        pActive_Overworld->m_sprite_manager->Add(p_new_sprite);
+    }
+
     pMouseCursor->Set_Hovered_Object(p_new_sprite);
     pMouseCursor->m_left = 1;
     pMouseCursor->m_hovering_object->m_mouse_offset_y = static_cast<int>(p_new_sprite->m_col_rect.m_h / 2);
