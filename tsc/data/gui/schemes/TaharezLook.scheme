@@ -7,6 +7,7 @@
   <Font filename="DejaVuSans-Regular.small.bold.font"/>
   <Font filename="DejaVuSans-Bold.font"/>
   <Font filename="DejaVuSansMono.font"/>
+  <Font filename="DejaVuSansMono.small.font"/>
   <LookNFeel filename="TaharezLook.looknfeel"/>
   <WindowRendererSet filename="CEGUICoreWindowRendererSet"/>
 
