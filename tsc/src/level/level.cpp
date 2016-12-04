@@ -21,6 +21,7 @@
 #include "level_loader.hpp"
 #include "../core/game_core.hpp"
 #include "../gui/menu.hpp"
+#include "../gui/game_console.hpp"
 #include "../user/preferences.hpp"
 #include "../audio/audio.hpp"
 #include "../level/level_player.hpp"
@@ -727,9 +728,14 @@ bool cLevel::Key_Down(const sf::Event& evt)
         Draw_Effect_Out(EFFECT_OUT_FIXED_COLORBOX);
         Draw_Effect_In();
     }
+    // Toggle game console (not allowed in editor)
+    else if (evt.key.code == sf::Keyboard::F7 && !editor_enabled) {
+        gp_game_console->Toggle();
+    }
     // Toggle leveleditor
     else if (evt.key.code == sf::Keyboard::F8) {
 #ifdef ENABLE_EDITOR
+        gp_game_console->Hide(); // Disable console in editor
         pLevel_Editor->Toggle(m_sprite_manager);
 #else
         std::cerr << "In-game editor disabled by compilation option." << std::endl;
@@ -801,6 +807,7 @@ bool cLevel::Key_Down(const sf::Event& evt)
     }
     // Exit
     else if (evt.key.code == sf::Keyboard::Escape) {
+        gp_game_console->Hide();
         pLevel_Player->Action_Interact(INP_EXIT);
     }
     // ## editor

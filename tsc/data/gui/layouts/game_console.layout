@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+  <Window type="DefaultWindow" name="game_console">
+    <Property name="Area" value="{{0,0},{0,0},{1,0},{0.3,0}}"/>
+    <Property name="MousePassThroughEnabled" value="True"/>
+    <Property name="Alpha" value="0.75"/>
+
+    <Window type="TaharezLook/MultiLineEditbox" name="output">
+      <Property name="Area" value="{{0,0},{0,0},{1,0},{0.8,0}}"/>
+      <Property name="Font" value="DejaVuSansMono"/>
+      <Property name="ReadOnly" value="True"/>
+    </Window>
+
+    <Window type="TaharezLook/Editbox" name="input">
+      <Property name="Area" value="{{0,0},{0.81,0},{1,0},{1,0}}"/>
+      <Property name="Font" value="DejaVuSansMono"/>
+    </Window>
+  </Window>
+</GUILayout>

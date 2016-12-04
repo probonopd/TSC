@@ -43,6 +43,7 @@
 #include "../video/img_manager.hpp"
 #include "../core/i18n.hpp"
 #include "../gui/generic.hpp"
+#include "../gui/game_console.hpp"
 
 using namespace std;
 
@@ -303,6 +304,8 @@ void Init_Game(void)
     gp_hud = new cHud();
     pLevel_Player->Init();
 
+    gp_game_console = new cGame_Console();
+
 #ifdef ENABLE_EDITOR
     pLevel_Editor = new cEditor_Level();
     pLevel_Editor->Init();
@@ -372,6 +375,11 @@ void Exit_Game(void)
         pWorld_Editor = NULL;
     }
 #endif
+
+    if (gp_game_console) {
+        delete gp_game_console;
+        gp_game_console = NULL;
+    }
 
     if (pPreferences) {
         delete pPreferences;
@@ -592,6 +600,9 @@ void Update_Game(void)
 
     // ## hud
     gp_hud->Update();
+
+    // ## game console
+    gp_game_console->Update();
 
     // ## update
     if (Game_Mode == MODE_LEVEL) {
