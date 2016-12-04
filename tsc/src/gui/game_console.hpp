@@ -29,10 +29,16 @@ namespace TSC {
         void Toggle();
         void Update();
 
-        void Clear();
-        void Append_Line(std::string line);
+        void Reset();
+        void Append_Text(CEGUI::String text);
+        void Append_Text(std::string text);
     private:
         CEGUI::Window* mp_console_root;
+        CEGUI::Editbox* mp_input_edit;
+        CEGUI::MultiLineEditbox* mp_output_edit;
+
+        void print_preamble();
+        bool on_input_accepted(const CEGUI::EventArgs& evt);
     };
 
     extern cGame_Console* gp_game_console;

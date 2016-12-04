@@ -8,7 +8,7 @@
 
     <Window type="TaharezLook/MultiLineEditbox" name="output">
       <Property name="Area" value="{{0,0},{0,0},{1,0},{0.8,0}}"/>
-      <Property name="Font" value="DejaVuSansMono"/>
+      <Property name="Font" value="DejaVuSansMono-Small"/>
       <Property name="ReadOnly" value="True"/>
     </Window>
 
