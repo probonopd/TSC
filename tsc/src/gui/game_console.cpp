@@ -1,6 +1,8 @@
 #include "../core/global_basic.hpp"
+#include <mruby/error.h>
 #include "config.hpp"
 #include "../core/i18n.hpp"
+#include "../level/level.hpp"
 #include "game_console.hpp"
 
 // extern
@@ -9,7 +11,11 @@ TSC::cGame_Console* TSC::gp_game_console = NULL;
 using namespace TSC;
 
 cGame_Console::cGame_Console()
-    : mp_console_root(NULL)
+    : mp_console_root(NULL),
+      mp_input_edit(NULL),
+      mp_output_edit(NULL),
+      mp_lino_text(NULL),
+      m_lino(0)
 {
     // Load layout file and add it to the root
     mp_console_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("game_console.layout");
@@ -19,6 +25,7 @@ cGame_Console::cGame_Console()
 
     mp_input_edit  = static_cast<CEGUI::Editbox*>(mp_console_root->getChild("input"));
     mp_output_edit = static_cast<CEGUI::MultiLineEditbox*>(mp_console_root->getChild("output"));
+    mp_lino_text   = mp_console_root->getChild("lineno");
 
     mp_input_edit->subscribeEvent(CEGUI::Editbox::EventTextAccepted,
                                   CEGUI::Event::Subscriber(&cGame_Console::on_input_accepted, this));
@@ -87,6 +94,8 @@ void cGame_Console::Append_Text(CEGUI::String text)
     CEGUI::String curtext = mp_output_edit->getText();
     curtext += text;
     mp_output_edit->setText(curtext);
+    mp_output_edit->setCaretIndex(curtext.length());
+    mp_output_edit->ensureCaretIsVisible();
 }
 
 void cGame_Console::print_preamble()
@@ -124,6 +133,54 @@ void cGame_Console::print_preamble()
 
 bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
 {
-    std::cout << "!!" << std::endl;
+    std::string code(mp_input_edit->getText().c_str());
+    mp_input_edit->setText("");
+
+    if (!pActive_Level) { // This should never happen
+        Append_Text(std::string("ERROR: No active level!"));
+        return true;
+    }
+
+    // TODO: Given that the console should be the regular output in the future,
+    // the following code should be merged into cMRuby_Interpreter::Run_Code().
+    mrb_state* p_mrb_state = pActive_Level->m_mruby->Get_MRuby_State();
+    mrbc_context* p_context = mrbc_context_new(p_mrb_state);
+    p_context->lineno = ++m_lino;
+    mrbc_filename(p_mrb_state, p_context, "(console)");
+    mrb_value result = pActive_Level->m_mruby->Run_Code_In_Context(code, p_context);
+
+    if (p_mrb_state->exc) {
+        mrb_value exception = mrb_obj_value(p_mrb_state->exc);
+        mrb_value rdesc = mrb_inspect(p_mrb_state, exception);
+        std::string desc(RSTRING_PTR(rdesc), RSTRING_LEN(rdesc));
+        Append_Text(desc);
+
+        mrb_value bt = mrb_funcall(p_mrb_state, exception, "backtrace", 0);
+        for(int i=0; i < mrb_ary_len(p_mrb_state, bt); i++) {
+            std::stringstream ss;
+            mrb_value rstep = mrb_ary_ref(p_mrb_state, bt, i);
+
+            ss << i+1 << "." << std::string(RSTRING_PTR(rstep), RSTRING_LEN(rstep)) << "\n";
+            Append_Text(ss.str());
+        }
+
+        // Clear exception pointer
+        p_mrb_state->exc = NULL;
+    }
+    else {
+        mrb_value rstr = mrb_inspect(p_mrb_state, result);
+        if (mrb_string_p(rstr)) {
+            std::string str(">> ");
+            str += std::string(RSTRING_PTR(rstr), RSTRING_LEN(rstr));
+            Append_Text(str);
+        }
+        else {
+            Append_Text(std::string("(#inspect did not return a string)"));
+        }
+    }
+
+    mrbc_context_free(p_mrb_state, p_context);
+    mp_lino_text->setText(std::to_string(m_lino+1));
+
     return true;
 }
