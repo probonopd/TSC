@@ -23,6 +23,11 @@
 #cmakedefine TSC_VERSION_GIT "@TSC_VERSION_GIT@"
 #cmakedefine TSC_VERSION_POSTFIX "@TSC_VERSION_POSTFIX@"
 
+// TSC compile date
+#define TSC_COMPILE_YEAR  @TSC_COMPILE_YEAR@
+#define TSC_COMPILE_MONTH @TSC_COMPILE_MONTH@
+#define TSC_COMPILE_DAY   @TSC_COMPILE_DAY@
+
 // Enables the mruby scripting engine (-DENABLE_MRUBY)
 // FIXME: This option currently does nothing.
 #cmakedefine ENABLE_MRUBY

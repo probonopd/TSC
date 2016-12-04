@@ -32,6 +32,9 @@ set(TSC_VERSION_MAJOR 2)
 set(TSC_VERSION_MINOR 1)
 set(TSC_VERSION_PATCH 0)
 set(TSC_VERSION_POSTFIX "dev")
+string(TIMESTAMP TSC_COMPILE_YEAR "%Y")
+string(TIMESTAMP TSC_COMPILE_MONTH "%m")
+string(TIMESTAMP TSC_COMPILE_DAY "%d")
 
 # Set TSC_VERSION_GIT if possible
 execute_process(COMMAND git rev-parse --short HEAD
