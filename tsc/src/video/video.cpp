@@ -67,12 +67,19 @@ cVideo::cVideo(void)
     m_render_thread = boost::thread();
 
     mp_cegui_renderer = NULL;
+    mp_default_tooltip = NULL;
 
     m_initialised = 0;
 }
 
 cVideo::~cVideo(void)
 {
+    if (mp_default_tooltip) {
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_default_tooltip);
+        CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultTooltipObject(0);
+        mp_default_tooltip = NULL;
+    }
+
     CEGUI::System::destroy();
     CEGUI::OpenGLRenderer::destroy(*mp_cegui_renderer);
     mp_cegui_renderer = NULL;
@@ -135,6 +142,12 @@ void cVideo::Init_CEGUI(void)
     CEGUI::Window* p_rootwindow = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "root");
     p_rootwindow->setMousePassThroughEnabled(true); // Ensure CEGUI doesn't eat mouse events not hitting any CEGUI window (return value of injector function)
     gui_context.setRootWindow(p_rootwindow);
+
+    // Create default tooltip widget (see http://static.cegui.org.uk/docs/0.8.7/classCEGUI_1_1Tooltip.html#details),
+    // where CEGUI::System::setTooltip() has been renamed to CEGUI::GUIContext::setDefaultTooltipObject()
+    // (documentation bug).
+    mp_default_tooltip = static_cast<CEGUI::Tooltip*>(CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Tooltip", "default_tooltip"));
+    gui_context.setDefaultTooltipObject(mp_default_tooltip);
 }
 
 void cVideo::Init_Video(bool reload_textures_from_file /* = false */, bool use_preferences /* = true */)

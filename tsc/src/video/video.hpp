@@ -236,6 +236,8 @@ namespace TSC {
         // GUI System
         CEGUI::OpenGLRenderer* mp_cegui_renderer;
 
+        CEGUI::Tooltip* mp_default_tooltip;
+
         //private: // FIXME: Make these private:
         // Initialize OpenGL with current settings
         void Init_OpenGL(void);
