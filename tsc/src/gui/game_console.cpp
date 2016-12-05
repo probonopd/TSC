@@ -27,6 +27,9 @@ cGame_Console::cGame_Console()
     mp_output_edit = static_cast<CEGUI::MultiLineEditbox*>(mp_console_root->getChild("output"));
     mp_lino_text   = mp_console_root->getChild("lineno");
 
+    // Terminals usually don't have scrollbars
+    mp_output_edit->setShowVertScrollbar(false);
+
     mp_input_edit->subscribeEvent(CEGUI::Editbox::EventTextAccepted,
                                   CEGUI::Event::Subscriber(&cGame_Console::on_input_accepted, this));
 
@@ -138,6 +141,7 @@ void cGame_Console::print_preamble()
 
 bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
 {
+    char buf[8];
     std::string code(mp_input_edit->getText().c_str());
     mp_input_edit->setText("");
 
@@ -145,6 +149,10 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
         Append_Text(std::string("ERROR: No active level!"));
         return true;
     }
+
+    // Echo user input back
+    sprintf(buf, "%02ld", m_lino+1);
+    Append_Text(std::string(buf) + ">> " + code);
 
     // TODO: Given that the console should be the regular output in the future,
     // the following code should be merged into cMRuby_Interpreter::Run_Code().
@@ -181,7 +189,7 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     else {
         mrb_value rstr = mrb_inspect(p_mrb_state, result);
         if (mrb_string_p(rstr)) {
-            std::string str(">> ");
+            std::string str("=> ");
             str += std::string(RSTRING_PTR(rstr), RSTRING_LEN(rstr));
             Append_Text(str);
         }
@@ -191,7 +199,9 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     }
 
     mrbc_context_free(p_mrb_state, p_context);
-    mp_lino_text->setText(std::to_string(m_lino+1));
+
+    sprintf(buf, "%02ld", m_lino+1);
+    mp_lino_text->setText(std::string(buf) + ">>");
 
     return true;
 }
