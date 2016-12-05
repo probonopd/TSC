@@ -155,18 +155,24 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     mrb_value result = pActive_Level->m_mruby->Run_Code_In_Context(code, p_context);
 
     if (p_mrb_state->exc) {
-        mrb_value exception = mrb_obj_value(p_mrb_state->exc);
-        mrb_value rdesc = mrb_inspect(p_mrb_state, exception);
-        std::string desc(RSTRING_PTR(rdesc), RSTRING_LEN(rdesc));
-        Append_Text(desc);
+        mrb_value exception   = mrb_obj_value(p_mrb_state->exc);
+        mrb_value bt          = mrb_exc_backtrace(p_mrb_state, exception);
+        mrb_value rdesc       = mrb_funcall(p_mrb_state, exception, "message", 0);
+        const char* classname = mrb_obj_classname(p_mrb_state, exception);
 
-        mrb_value bt = mrb_funcall(p_mrb_state, exception, "backtrace", 0);
-        for(int i=0; i < mrb_ary_len(p_mrb_state, bt); i++) {
-            std::stringstream ss;
+        std::string message(classname);
+        message += ": ";
+        message += std::string(RSTRING_PTR(rdesc), RSTRING_LEN(rdesc));
+        Append_Text(message);
+
+        //mrb_value bt = mrb_funcall(p_mrb_state, exception, "backtrace", 0);
+        for(int i=0; i < RARRAY_LEN(bt); i++) {
+            std::string btline("    from ");
             mrb_value rstep = mrb_ary_ref(p_mrb_state, bt, i);
 
-            ss << i+1 << "." << std::string(RSTRING_PTR(rstep), RSTRING_LEN(rstep)) << "\n";
-            Append_Text(ss.str());
+            btline += std::string(RSTRING_PTR(rstep), RSTRING_LEN(rstep));
+            btline += "\n";
+            Append_Text(btline);
         }
 
         // Clear exception pointer
