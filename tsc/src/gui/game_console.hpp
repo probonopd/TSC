@@ -27,6 +27,7 @@ namespace TSC {
         void Show();
         void Hide();
         void Toggle();
+        bool IsVisible() const;
         void Update();
 
         void Reset();

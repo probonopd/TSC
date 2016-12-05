@@ -61,6 +61,11 @@ void cGame_Console::Toggle()
         Show();
 }
 
+bool cGame_Console::IsVisible() const
+{
+    return mp_console_root->isVisible();
+}
+
 void cGame_Console::Update()
 {
 
