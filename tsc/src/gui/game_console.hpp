@@ -38,7 +38,6 @@ namespace TSC {
         CEGUI::Editbox* mp_input_edit;
         CEGUI::MultiLineEditbox* mp_output_edit;
         CEGUI::Window* mp_lino_text;
-        unsigned long m_lino;
 
         void print_preamble();
         bool on_input_accepted(const CEGUI::EventArgs& evt);

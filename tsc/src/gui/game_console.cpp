@@ -14,8 +14,7 @@ cGame_Console::cGame_Console()
     : mp_console_root(NULL),
       mp_input_edit(NULL),
       mp_output_edit(NULL),
-      mp_lino_text(NULL),
-      m_lino(0)
+      mp_lino_text(NULL)
 {
     // Load layout file and add it to the root
     mp_console_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("game_console.layout");
@@ -75,12 +74,21 @@ void cGame_Console::Update()
 }
 
 /**
- * Clear output and show preamble.
+ * Clear screen, output preamble and reset line number display.
  */
 void cGame_Console::Reset()
 {
     mp_output_edit->setText("");
     print_preamble();
+
+    if (pActive_Level && pActive_Level->m_mruby /* exclude menu level */) {
+        char buf[8];
+        sprintf(buf, "%02d", pActive_Level->m_mruby->Get_Console_Context()->lineno);
+        mp_lino_text->setText(std::string(buf) + ">>");
+    }
+    else {
+        mp_lino_text->setText("1>>");
+    }
 }
 
 /**
@@ -145,22 +153,21 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     std::string code(mp_input_edit->getText().c_str());
     mp_input_edit->setText("");
 
-    if (!pActive_Level) { // This should never happen
+    if (!pActive_Level || !pActive_Level->m_mruby) { // This should never happen (2nd case may be menu level)
         Append_Text(std::string("ERROR: No active level!"));
         return true;
     }
 
+    const mrbc_context* p_console_ctx = pActive_Level->m_mruby->Get_Console_Context();
+
     // Echo user input back
-    sprintf(buf, "%02ld", m_lino+1);
+    sprintf(buf, "%02d", p_console_ctx->lineno);
     Append_Text(std::string(buf) + ">> " + code);
 
     // TODO: Given that the console should be the regular output in the future,
     // the following code should be merged into cMRuby_Interpreter::Run_Code().
     mrb_state* p_mrb_state = pActive_Level->m_mruby->Get_MRuby_State();
-    mrbc_context* p_context = mrbc_context_new(p_mrb_state);
-    p_context->lineno = ++m_lino;
-    mrbc_filename(p_mrb_state, p_context, "(console)");
-    mrb_value result = pActive_Level->m_mruby->Run_Code_In_Context(code, p_context);
+    mrb_value result = pActive_Level->m_mruby->Run_Code_In_Console_Context(code + "\n");
 
     if (p_mrb_state->exc) {
         mrb_value exception   = mrb_obj_value(p_mrb_state->exc);
@@ -173,7 +180,6 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
         message += std::string(RSTRING_PTR(rdesc), RSTRING_LEN(rdesc));
         Append_Text(message);
 
-        //mrb_value bt = mrb_funcall(p_mrb_state, exception, "backtrace", 0);
         for(int i=0; i < RARRAY_LEN(bt); i++) {
             std::string btline("    from ");
             mrb_value rstep = mrb_ary_ref(p_mrb_state, bt, i);
@@ -198,9 +204,7 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
         }
     }
 
-    mrbc_context_free(p_mrb_state, p_context);
-
-    sprintf(buf, "%02ld", m_lino+1);
+    sprintf(buf, "%02d", p_console_ctx->lineno);
     mp_lino_text->setText(std::string(buf) + ">>");
 
     return true;

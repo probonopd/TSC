@@ -79,6 +79,8 @@ namespace TSC {
             // exception inspection is done for you. It’s basically
             // a wrapper around mrb_load_nstring_cxt().
             mrb_value Run_Code_In_Context(const std::string& code, mrbc_context* p_context);
+            // Run the given code in the execution context of the game console.
+            mrb_value Run_Code_In_Console_Context(const std::string& code);
             // Registers an MRuby callback to be called on the next
             // call to Evaluate_Timer_Callbacks(). `callback'
             // is an MRuby proc.
@@ -89,6 +91,8 @@ namespace TSC {
             void Evaluate_Timer_Callbacks();
             // Returns the underlying mrb_state*.
             mrb_state* Get_MRuby_State();
+            // Returns the game console execution context.
+            const mrbc_context* Get_Console_Context() const;
             // Returns the cLevel* we’re associated with.
             cLevel* Get_Level();
             // Ensure an object doesn't get GC'ed.
@@ -110,6 +114,7 @@ namespace TSC {
             }
         private:
             mrb_state* mp_mruby;
+            mrbc_context* mp_console_ctx;
             cLevel* mp_level;
             std::vector<mrb_value> m_callbacks;
             boost::mutex m_callback_mutex;
