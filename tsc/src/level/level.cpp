@@ -269,6 +269,7 @@ void cLevel::Unload(bool delayed /* = 0 */)
     Reset_Settings();
 
 #ifdef ENABLE_MRUBY
+    gp_game_console->Hide();
     /* Shutdown the mruby interpreter. The menu level (the one shown on the
      * startup screen) has not been Init()ialized and hence has no mruby
      * interpreter attached. Therefore we need to check the existance
