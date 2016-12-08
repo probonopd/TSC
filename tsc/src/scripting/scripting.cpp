@@ -224,6 +224,19 @@ bool cMRuby_Interpreter::Run_File(const boost::filesystem::path& filepath)
 
 void cMRuby_Interpreter::Load_Scripts()
 {
+    // Load the core functionality written in Ruby.
+    // TODO: Precompile these files so they don't need to be shipped.
+    boost::filesystem::directory_iterator iter(pResource_Manager->Get_Game_Scripting_Directory() / utf8_to_path("core"));
+    for (; iter != boost::filesystem::directory_iterator(); iter++) {
+        const boost::filesystem::path& entry = iter->path();
+
+        if (boost::filesystem::exists(entry) && boost::filesystem::is_regular_file(entry)) {
+            if (!Run_File(entry)) {
+                throw(std::runtime_error(std::string("Core script file '") + path_to_utf8(entry) + "' failed to evaluate!"));
+            }
+        }
+    }
+
     // Load the main scripting file. This file is supposed to
     // do any custom user scripting startup stuff.
     boost::filesystem::path mainfile = pResource_Manager->Get_Game_Scripting("main.rb");
