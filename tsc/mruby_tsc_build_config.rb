@@ -20,8 +20,28 @@ THIS_DIR = File.expand_path(File.dirname(__FILE__))
 MRUBY_DIR = File.join(THIS_DIR, "..", "mruby", "mruby")
 
 config = lambda do |conf, root|
-  #Standard things included with mruby
-  conf.gembox "default"
+  # The gems to build from mruby's standard collection.
+  # Note this most notably excludes the mruby-print gem
+  # because TSC implements its own printing mechanism.
+  # Also, the binaries (mruby, mirb) are not build.
+  # Other than that, this list is mostly a copy of default.gembox
+  # provided with mruby.
+  conf.gem :core => "mruby-sprintf"
+  conf.gem :core => "mruby-math"
+  conf.gem :core => "mruby-time"
+  conf.gem :core => "mruby-struct"
+  conf.gem :core => "mruby-enum-ext"
+  conf.gem :core => "mruby-string-ext"
+  conf.gem :core => "mruby-numeric-ext"
+  conf.gem :core => "mruby-array-ext"
+  conf.gem :core => "mruby-hash-ext"
+  conf.gem :core => "mruby-range-ext"
+  conf.gem :core => "mruby-proc-ext"
+  conf.gem :core => "mruby-symbol-ext"
+  conf.gem :core => "mruby-random" # replace with C++11 random-based method?
+  conf.gem :core => "mruby-object-ext"
+  conf.gem :core => "mruby-kernel-ext"
+  conf.gem :core => "mruby-compiler"
 
   # Additional things
   conf.gem "#{THIS_DIR}/../mruby/mgems/mruby-sleep"         # Sleep
