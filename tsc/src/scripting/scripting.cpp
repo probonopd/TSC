@@ -230,9 +230,6 @@ void cMRuby_Interpreter::Load_Scripts()
 
     // Warn user if user’s main.rb errors.
     if (!Run_File(mainfile)) {
-        cerr << "Warning: Error loading main mruby script '"
-             << path_to_utf8(mainfile)
-             << "'!" << endl;
         std::cerr << "Warning: Error loading main mruby script '"
                   << path_to_utf8(mainfile)
                   << "'!" << std::endl;
