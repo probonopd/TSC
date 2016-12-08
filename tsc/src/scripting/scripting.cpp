@@ -22,6 +22,7 @@
 #include "../audio/audio.hpp"
 #include "../user/savegame/savegame.hpp"
 #include "../input/keyboard.hpp"
+#include "../gui/game_console.hpp"
 
 #include "objects/mrb_tsc.hpp"
 #include "objects/mrb_eventable.hpp"
@@ -191,7 +192,10 @@ bool cMRuby_Interpreter::Run_Code(const std::string& code, const std::string& co
     bool result;
     if (mp_mruby->exc) {
         // Exception occured
-        mrb_print_error(mp_mruby);
+        gp_game_console->Display_Exception(mp_mruby);
+
+        // Clear exception pointer so execution can continue
+        mp_mruby->exc = NULL;
         result = false;
     }
     else

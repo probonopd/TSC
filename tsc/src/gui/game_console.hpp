@@ -33,6 +33,8 @@ namespace TSC {
         void Reset();
         void Append_Text(CEGUI::String text);
         void Append_Text(std::string text);
+
+        void Display_Exception(mrb_state* p_state);
     private:
         CEGUI::Window* mp_console_root;
         CEGUI::Editbox* mp_input_edit;

@@ -170,26 +170,9 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     mrb_value result = pActive_Level->m_mruby->Run_Code_In_Console_Context(code + "\n");
 
     if (p_mrb_state->exc) {
-        mrb_value exception   = mrb_obj_value(p_mrb_state->exc);
-        mrb_value bt          = mrb_exc_backtrace(p_mrb_state, exception);
-        mrb_value rdesc       = mrb_funcall(p_mrb_state, exception, "message", 0);
-        const char* classname = mrb_obj_classname(p_mrb_state, exception);
+        Display_Exception(p_mrb_state);
 
-        std::string message(classname);
-        message += ": ";
-        message += std::string(RSTRING_PTR(rdesc), RSTRING_LEN(rdesc));
-        Append_Text(message);
-
-        for(int i=0; i < RARRAY_LEN(bt); i++) {
-            std::string btline("    from ");
-            mrb_value rstep = mrb_ary_ref(p_mrb_state, bt, i);
-
-            btline += std::string(RSTRING_PTR(rstep), RSTRING_LEN(rstep));
-            btline += "\n";
-            Append_Text(btline);
-        }
-
-        // Clear exception pointer
+        // Clear exception pointer so execution can continue
         p_mrb_state->exc = NULL;
     }
     else {
@@ -208,4 +191,36 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     mp_lino_text->setText(std::string(buf) + ">>");
 
     return true;
+}
+
+/**
+ * Print class, message, and backtrace of the exception that terminated the
+ * execution on the given stack to the game console.
+ *
+ * This method expects that `p_mrb_state` is in an exceptional state, i.e.
+ * an mruby exception terminated its execution.
+ *
+ * This method does not clear the `exc` member of `p_mrb_state`; if this is
+ * desired, you need to do it manually.
+ */
+void cGame_Console::Display_Exception(mrb_state* p_mrb_state)
+{
+    mrb_value exception   = mrb_obj_value(p_mrb_state->exc);
+    mrb_value bt          = mrb_exc_backtrace(p_mrb_state, exception);
+    mrb_value rdesc       = mrb_funcall(p_mrb_state, exception, "message", 0);
+    const char* classname = mrb_obj_classname(p_mrb_state, exception);
+
+    std::string message(classname);
+    message += ": ";
+    message += std::string(RSTRING_PTR(rdesc), RSTRING_LEN(rdesc));
+    Append_Text(message);
+
+    for(int i=0; i < RARRAY_LEN(bt); i++) {
+        std::string btline("    from ");
+        mrb_value rstep = mrb_ary_ref(p_mrb_state, bt, i);
+
+        btline += std::string(RSTRING_PTR(rstep), RSTRING_LEN(rstep));
+        btline += "\n";
+        Append_Text(btline);
+    }
 }
