@@ -31,6 +31,7 @@
 #include "../input/mouse.hpp"
 #include "../core/global_basic.hpp"
 #include "../gui/hud.hpp"
+#include "../gui/game_console.hpp"
 
 using namespace std;
 
@@ -145,6 +146,7 @@ bool cLevel_Manager::Set_Active(cLevel* level)
     }
 
     pActive_Level = level;
+    gp_game_console->Reset();
 
     return 1;
 }

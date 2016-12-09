@@ -30,6 +30,7 @@
 #include "../level/level_editor.hpp"
 #include "../core/i18n.hpp"
 #include "../overworld/world_editor.hpp"
+#include "../gui/game_console.hpp"
 
 namespace TSC {
 
@@ -83,12 +84,12 @@ bool cKeyboard::Key_Up(const sf::Event& evt)
 bool cKeyboard::CEGUI_Handle_Key_Down(sf::Keyboard::Key key) const
 {
     // inject the scancode
-    if (CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SFMLKey_to_CEGUIKey(key)) == 1) {
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(SFMLKey_to_CEGUIKey(key))) {
         // input got processed by the gui system
-        return 1;
+        return true;
     }
 
-    return 0;
+    return false;
 }
 
 bool cKeyboard::Key_Down(const sf::Event& evt)
@@ -96,6 +97,21 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
     // input was processed by the gui system
     if (CEGUI_Handle_Key_Down(evt.key.code)) {
         return 1;
+    }
+
+    /* Do not forward keyboard input if the game console is open
+     * so that user input does not accidentally cause gameplay
+     * (e.g., jumping). It's not clear why CEGUI_Handle_Key_Down()
+     * does not return true if the console input window accepts the
+     * keyboard input, which makes this filter necessary (otherwise
+     * program flow would never get here).
+     *
+     * [F7] and [ESC] keys are let through so the user can close the
+     * game console again. */
+    if (gp_game_console->IsVisible() &&
+        evt.key.code != sf::Keyboard::F7 &&
+        evt.key.code != sf::Keyboard::Escape) {
+        return true;
     }
 
     // ## first the internal keys

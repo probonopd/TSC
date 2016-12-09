@@ -18,6 +18,7 @@
 #include "../../core/filesystem/resource_manager.hpp"
 #include "../../core/filesystem/package_manager.hpp"
 #include "../../core/framerate.hpp"
+#include "../../gui/game_console.hpp"
 
 /**
  * Module: TSC
@@ -228,6 +229,22 @@ static mrb_value Is_Debug_Mode(mrb_state* p_state, mrb_value self)
 #endif
 }
 
+/*
+ * Internal method used to implement #puts et al.
+ */
+static mrb_value printstr__(mrb_state* p_state, mrb_value self)
+{
+    mrb_value arg;
+
+    mrb_get_args(p_state, "o", &arg);
+
+    // This method is only called internally and is guaranteed to
+    // get passed a string.
+    gp_game_console->Append_Text(std::string(RSTRING_PTR(arg), RSTRING_LEN(arg)));
+
+    return arg;
+}
+
 void TSC::Scripting::Init_TSC(mrb_state* p_state)
 {
     struct RClass* p_rmTSC = mrb_define_module(p_state, "TSC");
@@ -242,4 +259,11 @@ void TSC::Scripting::Init_TSC(mrb_state* p_state)
     mrb_define_module_function(p_state, p_rmTSC, "worst_framerate", Worst_Framerate, MRB_ARGS_NONE());
     mrb_define_module_function(p_state, p_rmTSC, "version", Version, MRB_ARGS_NONE());
     mrb_define_module_function(p_state, p_rmTSC, "debug_mode?", Is_Debug_Mode, MRB_ARGS_NONE());
+
+    /* Cleanly remove the Kernel#__printstr__ method provided by the mruby-print MRBGEM
+     * and instead overwrite it with our own. The mruby-print MRBGEM implements #puts et
+     * al. all on top of this method, so that one can take advantage of this abstraction
+     * by simply rewriting that method to use TSC's game console. */
+    mrb_undef_method(p_state, p_state->kernel_module, "__printstr__");
+    mrb_define_method(p_state, p_state->kernel_module, "__printstr__", printstr__, MRB_ARGS_REQ(1));
 }

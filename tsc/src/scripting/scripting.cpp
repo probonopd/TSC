@@ -18,9 +18,11 @@
 #include "../core/sprite_manager.hpp"
 #include "../core/property_helper.hpp"
 #include "../core/filesystem/resource_manager.hpp"
+#include "../core/i18n.hpp"
 #include "../audio/audio.hpp"
 #include "../user/savegame/savegame.hpp"
 #include "../input/keyboard.hpp"
+#include "../gui/game_console.hpp"
 
 #include "objects/mrb_tsc.hpp"
 #include "objects/mrb_eventable.hpp"
@@ -92,6 +94,12 @@ cMRuby_Interpreter::cMRuby_Interpreter(cLevel* p_level)
     mp_level = p_level;
     mp_mruby = mrb_open();
 
+    // Create console context (execution context for the game console)
+    mp_console_ctx = mrbc_context_new(mp_mruby);
+    mp_console_ctx->lineno = 1;
+    // TRANS: Prompt issued in the game console
+    mrbc_filename(mp_mruby, mp_console_ctx, _("(console)"));
+
     // Load TSC classes into mruby
     Load_Wrappers();
     // Load scripting library
@@ -134,6 +142,9 @@ cMRuby_Interpreter::~cMRuby_Interpreter()
         delete p_timer;
     }
 
+    // Release console context
+    mrbc_context_free(mp_mruby, mp_console_ctx);
+
     // Terminate mruby interpreter
     mrb_close(mp_mruby);
 }
@@ -143,6 +154,11 @@ mrb_state* cMRuby_Interpreter::Get_MRuby_State()
     return mp_mruby;
 }
 
+const mrbc_context* cMRuby_Interpreter::Get_Console_Context() const
+{
+    return mp_console_ctx;
+}
+
 cLevel* cMRuby_Interpreter::Get_Level()
 {
     return mp_level;
@@ -150,7 +166,15 @@ cLevel* cMRuby_Interpreter::Get_Level()
 
 mrb_value cMRuby_Interpreter::Run_Code_In_Context(const std::string& code, mrbc_context* p_context)
 {
-    return mrb_load_nstring_cxt(mp_mruby, code.c_str(), code.length(), p_context);
+    mrb_value retval = mrb_load_nstring_cxt(mp_mruby, code.c_str(), code.length(), p_context);
+    int newlines = std::count(code.begin(), code.end(), '\n');
+    p_context->lineno += newlines;
+    return retval;
+}
+
+mrb_value cMRuby_Interpreter::Run_Code_In_Console_Context(const std::string& code)
+{
+    return Run_Code_In_Context(code, mp_console_ctx);
 }
 
 bool cMRuby_Interpreter::Run_Code(const std::string& code, const std::string& contextname)
@@ -168,7 +192,10 @@ bool cMRuby_Interpreter::Run_Code(const std::string& code, const std::string& co
     bool result;
     if (mp_mruby->exc) {
         // Exception occured
-        mrb_print_error(mp_mruby);
+        gp_game_console->Display_Exception(mp_mruby);
+
+        // Clear exception pointer so execution can continue
+        mp_mruby->exc = NULL;
         result = false;
     }
     else
@@ -207,9 +234,6 @@ void cMRuby_Interpreter::Load_Scripts()
 
     // Warn user if user’s main.rb errors.
     if (!Run_File(mainfile)) {
-        cerr << "Warning: Error loading main mruby script '"
-             << path_to_utf8(mainfile)
-             << "'!" << endl;
         std::cerr << "Warning: Error loading main mruby script '"
                   << path_to_utf8(mainfile)
                   << "'!" << std::endl;
