@@ -35,14 +35,20 @@ namespace TSC {
         void Append_Text(std::string text);
 
         void Display_Exception(mrb_state* p_state);
+
+        void History_Back();
+        void History_Forward();
     private:
         CEGUI::Window* mp_console_root;
         CEGUI::Editbox* mp_input_edit;
         CEGUI::MultiLineEditbox* mp_output_edit;
         CEGUI::Window* mp_lino_text;
+        std::vector<CEGUI::String> m_history;
+        size_t m_history_idx;
 
         void print_preamble();
         bool on_input_accepted(const CEGUI::EventArgs& evt);
+        bool on_key_down(const CEGUI::EventArgs& evt);
     };
 
     extern cGame_Console* gp_game_console;

@@ -14,7 +14,8 @@ cGame_Console::cGame_Console()
     : mp_console_root(NULL),
       mp_input_edit(NULL),
       mp_output_edit(NULL),
-      mp_lino_text(NULL)
+      mp_lino_text(NULL),
+      m_history_idx(0)
 {
     // Load layout file and add it to the root
     mp_console_root = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("game_console.layout");
@@ -31,6 +32,8 @@ cGame_Console::cGame_Console()
 
     mp_input_edit->subscribeEvent(CEGUI::Editbox::EventTextAccepted,
                                   CEGUI::Event::Subscriber(&cGame_Console::on_input_accepted, this));
+    mp_input_edit->subscribeEvent(CEGUI::Editbox::EventKeyDown,
+                                  CEGUI::Event::Subscriber(&cGame_Console::on_key_down, this));
 
     Reset();
 }
@@ -75,6 +78,7 @@ void cGame_Console::Update()
 
 /**
  * Clear screen, output preamble and reset line number display.
+ * Also clears command history.
  */
 void cGame_Console::Reset()
 {
@@ -89,6 +93,9 @@ void cGame_Console::Reset()
     else {
         mp_lino_text->setText("1>>");
     }
+
+    m_history.clear();
+    m_history_idx = 0;
 }
 
 /**
@@ -150,8 +157,13 @@ void cGame_Console::print_preamble()
 bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
 {
     char buf[8];
-    std::string code(mp_input_edit->getText().c_str());
+    CEGUI::String cegui_code(mp_input_edit->getText());
+    std::string code(cegui_code.c_str());
     mp_input_edit->setText("");
+
+    // Remember in history
+    m_history.push_back(cegui_code);
+    m_history_idx = m_history.size();
 
     if (!pActive_Level || !pActive_Level->m_mruby) { // This should never happen (2nd case may be menu level)
         Append_Text(std::string("ERROR: No active level!"));
@@ -193,6 +205,23 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     return true;
 }
 
+bool cGame_Console::on_key_down(const CEGUI::EventArgs& evt)
+{
+    const CEGUI::KeyEventArgs& kevt = static_cast<const CEGUI::KeyEventArgs&>(evt);
+
+    if (kevt.scancode == CEGUI::Key::Scan::ArrowUp) {
+        History_Back();
+        return true;
+    }
+    else if (kevt.scancode == CEGUI::Key::Scan::ArrowDown) {
+        History_Forward();
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 /**
  * Print class, message, and backtrace of the exception that terminated the
  * execution on the given stack to the game console.
@@ -222,5 +251,37 @@ void cGame_Console::Display_Exception(mrb_state* p_mrb_state)
         btline += std::string(RSTRING_PTR(rstep), RSTRING_LEN(rstep));
         btline += "\n";
         Append_Text(btline);
+    }
+}
+
+/**
+ * Show the command that was before the current command in the history,
+ * if any. Otherwise do nothing.
+ */
+void cGame_Console::History_Back()
+{
+    if (m_history_idx > 0) {
+        mp_input_edit->setText(m_history[--m_history_idx]);
+        mp_input_edit->setCaretIndex(m_history[m_history_idx].length());
+    }
+}
+
+/**
+ * Show the command that was after the current command in the history,
+ * if any. Otherwise clear the commandline.
+ */
+void cGame_Console::History_Forward()
+{
+    if (m_history_idx < m_history.size()) {
+        if (++m_history_idx >= m_history.size()) {
+            // Back at the toplevel; one could show the original user input
+            // here again, but for now, simply show an empty commandline.
+            mp_input_edit->setText("");
+            mp_input_edit->setCaretIndex(0);
+        }
+        else {
+            mp_input_edit->setText(m_history[m_history_idx]);
+            mp_input_edit->setCaretIndex(m_history[m_history_idx].length());
+        }
     }
 }
