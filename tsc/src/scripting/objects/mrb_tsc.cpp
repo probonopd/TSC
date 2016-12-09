@@ -260,5 +260,10 @@ void TSC::Scripting::Init_TSC(mrb_state* p_state)
     mrb_define_module_function(p_state, p_rmTSC, "version", Version, MRB_ARGS_NONE());
     mrb_define_module_function(p_state, p_rmTSC, "debug_mode?", Is_Debug_Mode, MRB_ARGS_NONE());
 
+    /* Cleanly remove the Kernel#__printstr__ method provided by the mruby-print MRBGEM
+     * and instead overwrite it with our own. The mruby-print MRBGEM implements #puts et
+     * al. all on top of this method, so that one can take advantage of this abstraction
+     * by simply rewriting that method to use TSC's game console. */
+    mrb_undef_method(p_state, p_state->kernel_module, "__printstr__");
     mrb_define_method(p_state, p_state->kernel_module, "__printstr__", printstr__, MRB_ARGS_REQ(1));
 }

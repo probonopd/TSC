@@ -20,12 +20,10 @@ THIS_DIR = File.expand_path(File.dirname(__FILE__))
 MRUBY_DIR = File.join(THIS_DIR, "..", "mruby", "mruby")
 
 config = lambda do |conf, root|
-  # The gems to build from mruby's standard collection.
-  # Note this most notably excludes the mruby-print gem
-  # because TSC implements its own printing mechanism.
-  # Also, the binaries (mruby, mirb) are not build.
-  # Other than that, this list is mostly a copy of default.gembox
-  # provided with mruby.
+  # The gems to build from mruby's standard collection. The binaries
+  # (mruby, mirb) are not build, as well as some rather unsual parts
+  # of mruby that are not needed.
+  conf.gem :core => "mruby-print"
   conf.gem :core => "mruby-sprintf"
   conf.gem :core => "mruby-math"
   conf.gem :core => "mruby-time"
