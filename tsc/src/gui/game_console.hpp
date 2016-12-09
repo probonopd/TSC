@@ -44,11 +44,12 @@ namespace TSC {
         CEGUI::MultiLineEditbox* mp_output_edit;
         CEGUI::Window* mp_lino_text;
         std::vector<CEGUI::String> m_history;
+        CEGUI::String m_last_edit;
         size_t m_history_idx;
 
         void print_preamble();
         bool on_input_accepted(const CEGUI::EventArgs& evt);
-        bool on_key_down(const CEGUI::EventArgs& evt);
+        bool on_key_up(const CEGUI::EventArgs& evt);
     };
 
     extern cGame_Console* gp_game_console;

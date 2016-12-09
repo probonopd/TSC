@@ -32,8 +32,8 @@ cGame_Console::cGame_Console()
 
     mp_input_edit->subscribeEvent(CEGUI::Editbox::EventTextAccepted,
                                   CEGUI::Event::Subscriber(&cGame_Console::on_input_accepted, this));
-    mp_input_edit->subscribeEvent(CEGUI::Editbox::EventKeyDown,
-                                  CEGUI::Event::Subscriber(&cGame_Console::on_key_down, this));
+    mp_input_edit->subscribeEvent(CEGUI::Editbox::EventKeyUp,
+                                  CEGUI::Event::Subscriber(&cGame_Console::on_key_up, this));
 
     Reset();
 }
@@ -164,6 +164,7 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     // Remember in history
     m_history.push_back(cegui_code);
     m_history_idx = m_history.size();
+    m_last_edit.clear();
 
     if (!pActive_Level || !pActive_Level->m_mruby) { // This should never happen (2nd case may be menu level)
         Append_Text(std::string("ERROR: No active level!"));
@@ -205,7 +206,7 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     return true;
 }
 
-bool cGame_Console::on_key_down(const CEGUI::EventArgs& evt)
+bool cGame_Console::on_key_up(const CEGUI::EventArgs& evt)
 {
     const CEGUI::KeyEventArgs& kevt = static_cast<const CEGUI::KeyEventArgs&>(evt);
 
@@ -218,6 +219,10 @@ bool cGame_Console::on_key_down(const CEGUI::EventArgs& evt)
         return true;
     }
     else {
+        // For the topmost command, remember the exact edits.
+        if (m_history_idx == m_history.size())
+            m_last_edit = mp_input_edit->getText();
+
         return false;
     }
 }
@@ -274,10 +279,10 @@ void cGame_Console::History_Forward()
 {
     if (m_history_idx < m_history.size()) {
         if (++m_history_idx >= m_history.size()) {
-            // Back at the toplevel; one could show the original user input
-            // here again, but for now, simply show an empty commandline.
-            mp_input_edit->setText("");
-            mp_input_edit->setCaretIndex(0);
+            // Toplevel reached again; show the original input as stored
+            // in `m_last_edit'.
+            mp_input_edit->setText(m_last_edit);
+            mp_input_edit->setCaretIndex(m_last_edit.length());
         }
         else {
             mp_input_edit->setText(m_history[m_history_idx]);
