@@ -46,6 +46,7 @@
 #include "../core/editor/editor.hpp"
 #include "../level/level_editor.hpp"
 #include "../gui/hud.hpp"
+#include "../gui/game_console.hpp"
 
 namespace TSC {
 
@@ -618,8 +619,8 @@ void cLevel_Player::Update_Walking(void)
         Reset_On_Ground();
     }
 
-    // only if left or right is pressed
-    if (sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Left() || pJoystick->Right()) {
+    // only if left or right is pressed, and game console is not open
+    if ((sf::Keyboard::isKeyPressed(pPreferences->m_key_left) || sf::Keyboard::isKeyPressed(pPreferences->m_key_right) || pJoystick->Left() || pJoystick->Right()) && !gp_game_console->IsVisible()) {
         float ground_mod = 1.0f;
 
         if (m_ground_object && m_ground_object->m_image) {
