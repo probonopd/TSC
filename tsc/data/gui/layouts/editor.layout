@@ -23,6 +23,20 @@
           <Property name="Area" value="{{0.0,0},{0.01,0},{0.99,0},{0.95,0}}"/>
         </Window>
       </Window>
+      <Window type="DefaultWindow" name="editor_tab_selector">
+        <Property name="Text" value="Selector"/>
+        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
+        <Window type="TaharezLook/RadioButton" name="selection">
+          <Property name="Position" value="{{0.2,0},{0.05,0}}"/>
+          <Property name="Text" value="Selection"/>
+          <Property name="GroupID" value="1"/>
+        </Window>
+        <Window type="TaharezLook/RadioButton" name="secretarea">
+          <Property name="Position" value="{{0.2,0},{0.1,0}}"/>
+          <Property name="Text" value="Secret Area"/>
+          <Property name="GroupID" value="1"/>
+        </Window>
+      </Window>
     </Window>
 
     <Window type="TaharezLook/TabControl" name="object_config_pane">

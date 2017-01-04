@@ -79,6 +79,9 @@ void cEditor::Init(void)
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_editor_root);
 
     mp_menu_listbox = static_cast<CEGUI::Listbox*>(mp_editor_tabpane->getChild("editor_tab_menu/editor_menu"));
+    mp_selector_radio_selection = static_cast<CEGUI::RadioButton*>(mp_editor_tabpane->getChild("editor_tab_selector/selection"));
+    mp_selector_radio_secretarea = static_cast<CEGUI::RadioButton*>(mp_editor_tabpane->getChild("editor_tab_selector/secretarea"));
+    mp_selector_radio_selection->setSelected(true);
 
     // Create the menu hierarchy
     parse_menu_file();
@@ -96,6 +99,8 @@ void cEditor::Init(void)
     mp_editor_tabpane->subscribeEvent(CEGUI::Window::EventMouseLeavesArea, CEGUI::Event::Subscriber(&cEditor::on_mouse_leave, this));
 
     mp_menu_listbox->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cEditor::on_menu_selection_changed, this));
+    mp_selector_radio_selection->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&cEditor::on_selector_radio_changed, this));
+    mp_selector_radio_secretarea->subscribeEvent(CEGUI::RadioButton::EventSelectStateChanged, CEGUI::Event::Subscriber(&cEditor::on_selector_radio_changed, this));
 }
 
 /**
@@ -1479,6 +1484,29 @@ bool cEditor::on_help_window_exit_clicked(const CEGUI::EventArgs& args)
     p_root->removeChild(p_helpframe);
     CEGUI::WindowManager::getSingleton().destroyWindow(p_helpframe);
     m_help_window_visible = false;
+
+    return true;
+}
+
+bool cEditor::on_selector_radio_changed(const CEGUI::EventArgs& args)
+{
+    CEGUI::RadioButton* p_selected_radio = mp_selector_radio_selection->getSelectedButtonInGroup();
+
+    if (Game_Mode == MODE_LEVEL) {
+        // The names compared to must match the widget names in the
+        // layout XML file.
+        if (p_selected_radio->getName() == "selection")
+            pMouseCursor->Set_Drag_Mode(DRAGMODE_SELECTION);
+        else if (p_selected_radio->getName() == "secretarea")
+            pMouseCursor->Set_Drag_Mode(DRAGMODE_SECRETAREA);
+        else {
+            std::cerr << "Warning: Invalid selector radio selected" << std::endl;
+        }
+    }
+    else if (Game_Mode == MODE_OVERWORLD) {
+        // Nothing for now (no secret areas in overworlds).
+        pMouseCursor->Set_Drag_Mode(DRAGMODE_SELECTION);
+    }
 
     return true;
 }
