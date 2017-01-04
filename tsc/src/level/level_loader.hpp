@@ -72,6 +72,7 @@ namespace TSC {
         static std::vector<cSprite*> Create_Enemy_Stoppers_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);
         static std::vector<cSprite*> Create_Level_Exits_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);
         static std::vector<cSprite*> Create_Level_Entries_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);
+        static std::vector<cSprite*> Create_Secret_Areas_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);
         static std::vector<cSprite*> Create_Boxes_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);
         static std::vector<cSprite*> Create_Items_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);
         static std::vector<cSprite*> Create_Moving_Platforms_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager);

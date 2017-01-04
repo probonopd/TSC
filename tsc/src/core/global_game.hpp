@@ -216,6 +216,7 @@ namespace TSC {
         TYPE_TEXT_BOX = 59,
         TYPE_MOVING_PLATFORM = 38,
         TYPE_CRATE = 71,
+        TYPE_SECRET_AREA = 74,
         // enemy
         TYPE_FURBALL = 10,
         TYPE_FURBALL_BOSS = 62,
