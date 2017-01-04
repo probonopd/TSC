@@ -5661,20 +5661,6 @@
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
-    <property name="posx" value="933"/>
-    <property name="posy" value="-2647"/>
-    <property name="uid" value="805"/>
-    <property name="image" value="Invalid image here"/>
-    <property name="type" value="passive"/>
-  </sprite>
-  <sprite>
-    <property name="posx" value="933"/>
-    <property name="posy" value="-2482"/>
-    <property name="uid" value="806"/>
-    <property name="image" value="Invalid image here"/>
-    <property name="type" value="passive"/>
-  </sprite>
-  <sprite>
     <property name="posx" value="977"/>
     <property name="posy" value="-2288"/>
     <property name="uid" value="807"/>
