@@ -472,7 +472,7 @@ CEGUI::Key::Scan cKeyboard::SFMLKey_to_CEGUIKey(const sf::Keyboard::Key key) con
     case sf::Keyboard::F15:
         return CEGUI::Key::F15;
     default:
-        std::cerr << "Warning: Unknown key received, treating as CEGUI::Key::Unknown." << std::endl;
+        //std::cerr << "Warning: Unknown key received, treating as CEGUI::Key::Unknown." << std::endl;
         return CEGUI::Key::Unknown;
     }
 }
