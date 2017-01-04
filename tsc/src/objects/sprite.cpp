@@ -336,8 +336,13 @@ cSprite::cSprite(XmlAttributes& attributes, cSprite_Manager* sprite_manager, con
         Set_Image(pVideo->Get_Package_Surface(utf8_to_path(attributes["image"])), true) ;
     }
     else {
-        Add_Image_Set("main", utf8_to_path(m_image_filename));
-        Set_Image_Set("main", true);
+        if (Add_Image_Set("main", utf8_to_path(m_image_filename)))
+            Set_Image_Set("main", true);
+        else { // level XML points to invalid file
+            std::cerr << "Warning: Level XML is invalid -- file does not load: " << m_image_filename << std::endl;
+            m_image_filename = "game/image_not_found.png";
+            Set_Image(pVideo->Get_Package_Surface(utf8_to_path(m_image_filename)));
+        }
     }
     // Massivity.
     // FIXME: Should be separate "massivity" attribute or so.
