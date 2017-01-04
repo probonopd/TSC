@@ -41,6 +41,9 @@ cSecret_Area::cSecret_Area(XmlAttributes& attributes, cSprite_Manager* sprite_ma
 
     // position
     Set_Pos(string_to_float(attributes["posx"]), string_to_float(attributes["posy"]), true);
+
+    // activated
+    m_activated = string_to_bool(attributes["activated"]);
 }
 
 cSecret_Area::~cSecret_Area(void)
@@ -63,12 +66,15 @@ void cSecret_Area::Init()
     m_col_rect.m_h = m_rect.m_h;
     m_start_rect.m_w = m_rect.m_w;
     m_start_rect.m_h = m_rect.m_h;
+
+    m_activated = false;
 }
 
 cSecret_Area* cSecret_Area::Copy(void) const
 {
     cSecret_Area* secarea = new cSecret_Area(m_sprite_manager);
     secarea->Set_Pos(m_start_pos_x, m_start_pos_y, 1);
+    secarea->m_activated = m_activated;
     return secarea;
 }
 
@@ -104,6 +110,12 @@ bool cSecret_Area::Is_Draw_Valid(void)
 
 void cSecret_Area::Activate(void)
 {
+    if (m_activated)
+        return;
+
+    std::cout << "SECRET AREA FOUND!" << std::endl;
+
+    m_activated = true;
 }
 
 #ifdef ENABLE_EDITOR
@@ -124,6 +136,8 @@ void cSecret_Area::Editor_State_Update(void)
 xmlpp::Element* cSecret_Area::Save_To_XML_Node(xmlpp::Element* p_element)
 {
     xmlpp::Element* p_node = cMovingSprite::Save_To_XML_Node(p_element);
+    Add_Property(p_node, "activated", m_activated);
+
     return p_node;
 }
 

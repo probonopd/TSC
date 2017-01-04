@@ -49,6 +49,8 @@ namespace TSC {
 #endif
 
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
+
+        bool m_activated;
     protected:
         virtual std::string Get_XML_Type_Name();
     };
