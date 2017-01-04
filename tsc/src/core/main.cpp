@@ -523,6 +523,7 @@ bool Handle_Input_Global(const sf::Event& ev)
             pAudio->Pause_Music();
             music_paused = true;
         }
+
         // Wait until we get focus again. This “freezes” the
         // game instead of updating it further.
         sf::Event focusin_event;
@@ -530,6 +531,12 @@ bool Handle_Input_Global(const sf::Event& ev)
             pVideo->mp_window->waitEvent(focusin_event);
             if (focusin_event.type == sf::Event::GainedFocus) {
                 break;
+            }
+            else if (focusin_event.type == sf::Event::Closed) {
+                // Window was closed while it didn't have the focus; exit game now
+                game_exit = 1;
+                Clear_Input_Events();
+                return 0;
             }
         }
         // resume if music got paused
