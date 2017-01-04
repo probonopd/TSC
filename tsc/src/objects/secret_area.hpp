@@ -34,6 +34,7 @@ namespace TSC {
         // copy this sprite
         virtual cSecret_Area* Copy(void) const;
 
+        virtual void Update(void);
         virtual void Draw(cSurface_Request* request = NULL);
         virtual void Set_Massive_Type(MassiveType type);
 
@@ -50,6 +51,9 @@ namespace TSC {
 
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
 
+        CEGUI::Window* mp_msg_window;
+        float m_transparency_counter;
+        float m_move_counter;
         bool m_activated;
     protected:
         virtual std::string Get_XML_Type_Name();

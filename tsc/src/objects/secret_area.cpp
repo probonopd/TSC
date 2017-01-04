@@ -25,6 +25,7 @@
 #include "../core/editor/editor.hpp"
 #include "../level/level_editor.hpp"
 #include "../video/renderer.hpp"
+#include "../core/framerate.hpp"
 
 using namespace TSC;
 
@@ -56,6 +57,11 @@ cSecret_Area::cSecret_Area(XmlAttributes& attributes, cSprite_Manager* sprite_ma
 
 cSecret_Area::~cSecret_Area(void)
 {
+    if (mp_msg_window) {
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_msg_window);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_msg_window);
+        mp_msg_window = NULL;
+    }
 }
 
 void cSecret_Area::Init()
@@ -75,6 +81,9 @@ void cSecret_Area::Init()
     m_start_rect.m_w = m_rect.m_w;
     m_start_rect.m_h = m_rect.m_h;
 
+    m_transparency_counter = 0.0f;
+    m_move_counter = 0.0f;
+    mp_msg_window = NULL;
     m_activated = false;
 }
 
@@ -90,6 +99,30 @@ cSecret_Area* cSecret_Area::Copy(void) const
     secarea->m_start_rect.m_h = m_start_rect.m_h;
     secarea->m_activated = m_activated;
     return secarea;
+}
+
+void cSecret_Area::Update(void)
+{
+    if (mp_msg_window) {
+        const static float alpha_max = 1.0f /* max alpha*/ / 100.0f /* max time */;
+        if (m_transparency_counter >= 100.0f) {
+            CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_msg_window);
+            CEGUI::WindowManager::getSingleton().destroyWindow(mp_msg_window);
+            mp_msg_window = NULL;
+        }
+        else {
+            mp_msg_window->setAlpha(1.0f - m_transparency_counter * alpha_max);
+            m_transparency_counter += pFramerate->m_speed_factor;
+
+            if (m_move_counter >= 2.5f) {
+                mp_msg_window->setYPosition(mp_msg_window->getYPosition() - CEGUI::UDim::px());
+                m_move_counter = 0.0f;
+            }
+            else {
+                m_move_counter += pFramerate->m_speed_factor;
+            }
+        }
+    }
 }
 
 void cSecret_Area::Draw(cSurface_Request* request /* = NULL */)
@@ -127,8 +160,18 @@ void cSecret_Area::Activate(void)
     if (m_activated)
         return;
 
-    std::cout << "SECRET AREA FOUND!" << std::endl;
+    if (mp_msg_window) { // This should never happen, because m_activate is true in that case
+        CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_msg_window);
+        CEGUI::WindowManager::getSingleton().destroyWindow(mp_msg_window);
+        mp_msg_window = NULL;
+    }
 
+    mp_msg_window = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("secret_area_message.layout");
+    mp_msg_window->getChild("message")->setText(UTF8_("You found a secret area!"));
+    CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->addChild(mp_msg_window);
+
+    m_transparency_counter = 0.0f;
+    m_move_counter = 0.0f;
     m_activated = true;
 }
 
