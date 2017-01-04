@@ -125,6 +125,11 @@ void cText_Box::Activate(void)
         // put it on screen
         text_pos_x = pActive_Camera->m_limit_rect.m_x + pActive_Camera->m_limit_rect.m_w - text_box_window_width;
     }
+    // if not on screen on the top side
+    if (text_pos_y < pActive_Camera->m_y) {
+        // put it on screen
+        text_pos_y = pActive_Camera->m_y;
+    }
 
     editbox->setXPosition(CEGUI::UDim(0, (text_pos_x - pActive_Camera->m_x) * global_upscalex));
     editbox->setYPosition(CEGUI::UDim(0, (text_pos_y - pActive_Camera->m_y) * global_upscaley));
