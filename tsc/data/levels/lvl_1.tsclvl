@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level>
   <information>
-    <property name="game_version" value="2.0.0"/>
-    <property name="engine_version" value="40"/>
-    <property name="save_time" value="1416847946"/>
+    <property name="game_version" value="2.1.0"/>
+    <property name="engine_version" value="48"/>
+    <property name="save_time" value="1483616858"/>
   </information>
   <settings>
     <property name="lvl_author" value=""/>
@@ -9765,7 +9765,7 @@
     <property name="posx" value="8290"/>
     <property name="posy" value="-277"/>
     <property name="uid" value="1415"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -9778,7 +9778,7 @@
     <property name="posx" value="8333"/>
     <property name="posy" value="-277"/>
     <property name="uid" value="1416"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -9791,7 +9791,7 @@
     <property name="posx" value="8376"/>
     <property name="posy" value="-277"/>
     <property name="uid" value="1417"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -9804,7 +9804,7 @@
     <property name="posx" value="8419"/>
     <property name="posy" value="-277"/>
     <property name="uid" value="1418"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="24"/>
@@ -9912,7 +9912,7 @@
     <property name="posx" value="9452"/>
     <property name="posy" value="-254"/>
     <property name="uid" value="1431"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -11952,7 +11952,7 @@
     <property name="posx" value="11608"/>
     <property name="posy" value="-223"/>
     <property name="uid" value="1713"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -11965,7 +11965,7 @@
     <property name="posx" value="11651"/>
     <property name="posy" value="-223"/>
     <property name="uid" value="1714"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -17932,6 +17932,15 @@
     <property name="image" value="ground/jungle_1/ground/plain/middle/left.png"/>
     <property name="type" value="massive"/>
   </sprite>
+  <secretarea>
+    <property name="posx" value="4384"/>
+    <property name="posy" value="-258"/>
+    <property name="uid" value="1097"/>
+    <property name="image" value=""/>
+    <property name="type" value="secretarea"/>
+    <property name="width" value="122.000000"/>
+    <property name="height" value="94.000000"/>
+  </secretarea>
   <script>TSC.require "std/enable"
 
 dead = false
