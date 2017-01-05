@@ -61,6 +61,28 @@ end
 desc "Generate the documentation in the directory htmldocs/."
 task :docs => ["docs:doxygen", "docs:scripting_core_docs", "docs:scripting_ssl_docs"]
 
+desc "Update all copyright notices to the current year."
+task :update_copyright do
+  FileList["src/**/*.{cpp,hpp}", "docs/**/*.css", "cmake/**/*.cmake",
+           "CMakeLists.txt", "extras/archlinux/*", "extras/*.desktop",
+           "*.rb", "Rakefile", "rakelib/**/*.rake", "../README.md"].each do |path|
+
+    if File.directory?(path)
+      puts "Skipping directory #{path}"
+      next
+    else
+      print "Processing #{path}... "
+    end
+
+    str = File.read(path)
+          .sub(/Copyright (©|\(C\)) .* The TSC Contributors/,
+               "Copyright © 2012-#{Time.now.year} The TSC Contributors")
+
+    open(path, "w"){ |f| f.write(str) }
+    puts "ok"
+  end
+end
+
 desc "Create source tarball."
 task :tarball => :clobber do
   version = ENV["VERSION"] || "#{TSC_VERSION_MAJOR}.#{TSC_VERSION_MINOR}.#{TSC_VERSION_PATCH}"
