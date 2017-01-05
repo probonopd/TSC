@@ -20,6 +20,7 @@
 #include "../core/filesystem/resource_manager.hpp"
 #include "../objects/enemystopper.hpp"
 #include "../objects/level_exit.hpp"
+#include "../objects/secret_area.hpp"
 #include "../objects/bonusbox.hpp"
 #include "../objects/spinbox.hpp"
 #include "../objects/text_box.hpp"
@@ -300,6 +301,8 @@ std::vector<cSprite*> cLevelLoader::Create_Level_Objects_From_XML_Tag(const std:
         return Create_Level_Exits_From_XML_Tag(name, attributes, engine_version, p_sprite_manager);
     else if (name == "level_entry")
         return Create_Level_Entries_From_XML_Tag(name, attributes, engine_version, p_sprite_manager);
+    else if (name == "secretarea")
+        return Create_Secret_Areas_From_XML_Tag(name, attributes, engine_version, p_sprite_manager);
     else if (name == "box")
         return Create_Boxes_From_XML_Tag(name, attributes, engine_version, p_sprite_manager);
     else if (name == "item" || name == "powerup") // powerup is pre V.0.99.5
@@ -642,6 +645,14 @@ std::vector<cSprite*> cLevelLoader::Create_Level_Entries_From_XML_Tag(const std:
         attributes["posy"] = float_to_string(string_to_float(attributes["posy"]) - 600.0f);
 
     result.push_back(new cLevel_Entry(attributes, p_sprite_manager));
+    return result;
+}
+
+std::vector<cSprite*> cLevelLoader::Create_Secret_Areas_From_XML_Tag(const std::string& name, XmlAttributes& attributes, int engine_version, cSprite_Manager* p_sprite_manager)
+{
+    std::vector<cSprite*> result;
+
+    result.push_back(new cSecret_Area(attributes, p_sprite_manager));
     return result;
 }
 

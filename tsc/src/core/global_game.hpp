@@ -188,7 +188,7 @@ namespace TSC {
     static const int speedfactor_fps = 32;
 
     /* *** level engine version *** */
-    static const int level_engine_version = 47;
+    static const int level_engine_version = 48;
     /* *** world engine version *** */
     static const int world_engine_version = 5;
 
@@ -216,6 +216,7 @@ namespace TSC {
         TYPE_TEXT_BOX = 59,
         TYPE_MOVING_PLATFORM = 38,
         TYPE_CRATE = 71,
+        TYPE_SECRET_AREA = 74,
         // enemy
         TYPE_FURBALL = 10,
         TYPE_FURBALL_BOSS = 62,

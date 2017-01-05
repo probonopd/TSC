@@ -30,6 +30,7 @@
 #include "../objects/goldpiece.hpp"
 #include "../objects/level_exit.hpp"
 #include "../objects/level_entry.hpp"
+#include "../objects/secret_area.hpp"
 #include "../objects/bonusbox.hpp"
 #include "../enemies/furball.hpp"
 #include "../video/renderer.hpp"
@@ -92,6 +93,8 @@ cMouseCursor::cMouseCursor(cSprite_Manager* sprite_manager)
     m_fastcopy_mode = 0;
     m_mover_mode = 0;
     m_last_clicked_object = NULL;
+
+    m_dragmode = DRAGMODE_SELECTION;
 
     mp_coords_label = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Label", "editor_coords");
     CEGUI::GUIContext& ctx = CEGUI::System::getSingleton().getDefaultGUIContext();
@@ -1385,7 +1388,20 @@ void cMouseCursor::Start_Selection(void)
 
 void cMouseCursor::End_Selection(void)
 {
-    m_selection_mode = 0;
+    if (m_selection_mode) {
+        m_selection_mode = 0;
+
+        if (m_dragmode == DRAGMODE_SECRETAREA && Game_Mode == MODE_LEVEL) {
+            // Insert secret area into the level
+            cSecret_Area* secarea = new cSecret_Area(pActive_Level->m_sprite_manager);
+            secarea->Set_Rect(m_normalized_selection_rect);
+            pActive_Level->m_sprite_manager->Add(secarea);
+
+            // Attach it to the cursor for positioning
+            Add_Selected_Object(secarea, 1);
+        }
+    }
+
     Update_Position();
 }
 
@@ -1426,30 +1442,35 @@ void cMouseCursor::Update_Selection(void)
         return;
     }
 
-    // only clear if not shift is pressed
-    if (!(pKeyboard->Is_Shift_Down() && !pKeyboard->Is_Ctrl_Down())) {
-        Clear_Selected_Objects();
-    }
+    // Preserve result
+    m_normalized_selection_rect = rect;
 
-    // add selected objects
-    for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
-        cSprite* obj = (*itr);
-
-        // don't check spawned/destroyed objects
-        if (obj->m_spawned || obj->m_auto_destroy) {
-            continue;
+    if (m_dragmode == DRAGMODE_SELECTION) {
+        // only clear if not shift is pressed
+        if (!(pKeyboard->Is_Shift_Down() && !pKeyboard->Is_Ctrl_Down())) {
+            Clear_Selected_Objects();
         }
 
-        // if it doesn't collide with the rect
-        if (!rect.Intersects(obj->m_rect)) {
-            continue;
+        // add selected objects
+        for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
+            cSprite* obj = (*itr);
+
+            // don't check spawned/destroyed objects
+            if (obj->m_spawned || obj->m_auto_destroy) {
+                continue;
+            }
+
+            // if it doesn't collide with the rect
+            if (!rect.Intersects(obj->m_rect)) {
+                continue;
+            }
+
+            Add_Selected_Object(obj, 1);
         }
 
-        Add_Selected_Object(obj, 1);
-    }
-
-    if (rect.Intersects(pActive_Player->m_rect)) {
-        Add_Selected_Object(pActive_Player, 1);
+        if (rect.Intersects(pActive_Player->m_rect)) {
+            Add_Selected_Object(pActive_Player, 1);
+        }
     }
 
     // ## inner rect
@@ -1529,6 +1550,11 @@ void cMouseCursor::Mover_Update(int move_x, int move_y)
         }
         }
     }
+}
+
+void cMouseCursor::Set_Drag_Mode(DragMode mode)
+{
+    m_dragmode = mode;
 }
 
 #ifdef ENABLE_EDITOR

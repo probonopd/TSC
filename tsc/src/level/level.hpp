@@ -143,6 +143,8 @@ namespace TSC {
         // Return true if a level is loaded
         bool Is_Loaded(void) const;
 
+        void Count_Secrets(int& area_count, int& exit_count);
+
 #ifdef ENABLE_MRUBY
         /// Delete existing (if any) and create new mruby interpreter.
         void Reinitialize_MRuby_Interpreter();
@@ -154,7 +156,8 @@ namespace TSC {
                     element == "global_effect" || element == "player" || element == "sound" || element == "particle_emitter" ||
                     element == "path" || element == "sprite" || element == "powerup" || element == "item" || element == "enemy" ||
                     element == "levelexit" || element == "level_entry" || element == "enemystopper" || element == "box" ||
-                    element == "moving_platform" || element == "falling_platform" || element == "ball" || element == "lava" || element == "crate") {
+                    element == "moving_platform" || element == "falling_platform" || element == "ball" || element == "lava" ||
+                    element == "crate" || element == "secretarea") {
                 return 1;
             }
 

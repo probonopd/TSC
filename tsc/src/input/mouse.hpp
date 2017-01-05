@@ -24,6 +24,15 @@
 
 namespace TSC {
 
+    /**
+     * Determines what happens when the user leftclicks and starts
+     * dragging.
+     */
+    enum DragMode {
+        DRAGMODE_SELECTION, //< Select objects.
+        DRAGMODE_SECRETAREA //< Draw a secret area,
+    };
+
     /* *** *** *** *** *** *** cSelectedObject *** *** *** *** *** *** *** *** *** *** *** */
 
     class cSelectedObject {
@@ -93,6 +102,11 @@ namespace TSC {
          * Returns true if GUI handled the event
          */
         bool Handle_Mouse_Move(const sf::Event& evt);
+
+        /* Set what happens when the user leftclicks and
+         * drags.
+         */
+        void Set_Drag_Mode(DragMode mode);
 
 #ifdef ENABLE_EDITOR
         /* Get the first object colliding with the mouse which is valid for the editor
@@ -240,6 +254,8 @@ namespace TSC {
         bool m_selection_mode;
         // selection rect
         GL_rect m_selection_rect;
+        // Same as selection rect, but no negative dimensions
+        GL_rect m_normalized_selection_rect;
 
         // if activated the mouse cursor movement moves the screen
         bool m_mover_mode;
@@ -276,6 +292,8 @@ namespace TSC {
         cSprite* m_last_clicked_object;
         // counter for catching double-clicks
         float m_click_counter;
+        // Dragging mode (what happens if dragged)
+        DragMode m_dragmode;
 
         CEGUI::Window* mp_coords_label;
     };

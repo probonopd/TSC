@@ -127,6 +127,8 @@ namespace TSC {
         CEGUI::Window* mp_editor_root;
         CEGUI::TabControl* mp_editor_tabpane;
         CEGUI::Listbox* mp_menu_listbox;
+        CEGUI::RadioButton* mp_selector_radio_selection;
+        CEGUI::RadioButton* mp_selector_radio_secretarea;
         CEGUI::Window* mp_object_config_pane;
         float m_visibility_timer;
         CEGUI::UDim m_tabpane_target_x_position;
@@ -153,6 +155,7 @@ namespace TSC {
         bool on_mouse_leave(const CEGUI::EventArgs& event);
         bool on_menu_selection_changed(const CEGUI::EventArgs& event);
         bool on_help_window_exit_clicked(const CEGUI::EventArgs& args);
+        bool on_selector_radio_changed(const CEGUI::EventArgs& event);
     };
 }
 
