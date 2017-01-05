@@ -136,7 +136,6 @@ void cSecret_Area::Draw(cSurface_Request* request /* = NULL */)
     cRect_Request* req = new cRect_Request();
     pVideo->Draw_Rect(m_col_rect.m_x - pActive_Camera->m_x, m_col_rect.m_y - pActive_Camera->m_y, m_col_rect.m_w, m_col_rect.m_h, m_editor_pos_z, &orange, req);
     req->m_filled = 0;
-    req->m_stipple_pattern = 0xAAAA;
     req->m_line_width = 6.0f;
     pRenderer->Add(req);
 }
