@@ -48,9 +48,6 @@ cSecret_Area::cSecret_Area(XmlAttributes& attributes, cSprite_Manager* sprite_ma
     r.m_w = string_to_float(attributes["width"]);
     r.m_h = string_to_float(attributes["height"]);
     Set_Rect(r, true);
-
-    // activated
-    m_activated = string_to_bool(attributes["activated"]);
 }
 
 cSecret_Area::~cSecret_Area(void)
@@ -195,7 +192,6 @@ void cSecret_Area::Editor_State_Update(void)
 xmlpp::Element* cSecret_Area::Save_To_XML_Node(xmlpp::Element* p_element)
 {
     xmlpp::Element* p_node = cMovingSprite::Save_To_XML_Node(p_element);
-    Add_Property(p_node, "activated", m_activated);
     Add_Property(p_node, "width", m_rect.m_w);
     Add_Property(p_node, "height", m_rect.m_h);
 
