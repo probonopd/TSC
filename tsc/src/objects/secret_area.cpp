@@ -124,6 +124,13 @@ void cSecret_Area::Update(void)
             }
         }
     }
+
+    // Activate it if the player is inside and it's not activated
+    if (!m_activated && Is_In_Range()) {
+        if (pLevel_Player->m_col_rect.Intersects(m_col_rect)) {
+            Activate();
+        }
+    }
 }
 
 void cSecret_Area::Draw(cSurface_Request* request /* = NULL */)

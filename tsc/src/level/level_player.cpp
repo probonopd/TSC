@@ -30,7 +30,6 @@
 #include "../level/level.hpp"
 #include "../gui/menu.hpp"
 #include "../objects/level_exit.hpp"
-#include "../objects/secret_area.hpp"
 #include "../objects/box.hpp"
 #include "../input/keyboard.hpp"
 #include "../core/math/utilities.hpp"
@@ -2912,7 +2911,7 @@ void cLevel_Player::Action_Interact(input_identifier key_type)
 {
     // Up
     if (key_type == INP_UP) {
-        // Search for colliding climbable, level exit, or secret area objects
+        // Search for colliding climbable or level exit
         for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
             cSprite* obj = (*itr);
 
@@ -2958,13 +2957,6 @@ void cLevel_Player::Action_Interact(input_identifier key_type)
             else if (obj->m_massive_type == MASS_CLIMBABLE) {
                 Start_Climbing();
             }
-            // secret area
-            else if (obj->m_type == TYPE_SECRET_AREA) {
-                cSecret_Area* secarea = static_cast<cSecret_Area*>(obj);
-                if (!secarea->m_activated) {
-                    secarea->Activate();
-                }
-            }
         }
     }
     // Down
@@ -3001,13 +2993,6 @@ void cLevel_Player::Action_Interact(input_identifier key_type)
                             return;
                         }
                     }
-                }
-            }
-            // secret area
-            else if (obj->m_type == TYPE_SECRET_AREA) {
-                cSecret_Area* secarea = static_cast<cSecret_Area*>(obj);
-                if (!secarea->m_activated) {
-                    secarea->Activate();
                 }
             }
         }
@@ -3058,13 +3043,6 @@ void cLevel_Player::Action_Interact(input_identifier key_type)
                     }
                 }
             }
-            // secret area
-            else if (obj->m_type == TYPE_SECRET_AREA) {
-                cSecret_Area* secarea = static_cast<cSecret_Area*>(obj);
-                if (!secarea->m_activated) {
-                    secarea->Activate();
-                }
-            }
         }
 
         // direction
@@ -3111,13 +3089,6 @@ void cLevel_Player::Action_Interact(input_identifier key_type)
                             return;
                         }
                     }
-                }
-            }
-            // secret area
-            else if (obj->m_type == TYPE_SECRET_AREA) {
-                cSecret_Area* secarea = static_cast<cSecret_Area*>(obj);
-                if (!secarea->m_activated) {
-                    secarea->Activate();
                 }
             }
         }
