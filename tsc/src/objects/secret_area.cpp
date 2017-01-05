@@ -26,6 +26,7 @@
 #include "../level/level_editor.hpp"
 #include "../video/renderer.hpp"
 #include "../core/framerate.hpp"
+#include "../user/savegame/save_level.hpp"
 
 using namespace TSC;
 
@@ -199,6 +200,24 @@ xmlpp::Element* cSecret_Area::Save_To_XML_Node(xmlpp::Element* p_element)
     Add_Property(p_node, "height", m_rect.m_h);
 
     return p_node;
+}
+
+bool cSecret_Area::Save_To_Savegame_XML_Node(xmlpp::Element* p_element) const
+{
+    cMovingSprite::Save_To_Savegame_XML_Node(p_element);
+
+    if (m_activated)
+        Add_Property(p_element, "activated", m_activated);
+
+    return true;
+}
+
+void cSecret_Area::Load_From_Savegame(cSave_Level_Object* save_object)
+{
+    cMovingSprite::Load_From_Savegame(save_object);
+
+    if (save_object->exists("activated"))
+        m_activated = string_to_bool(save_object->Get_Value("activated"));
 }
 
 std::string cSecret_Area::Get_XML_Type_Name()

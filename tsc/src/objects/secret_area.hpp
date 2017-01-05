@@ -51,6 +51,8 @@ namespace TSC {
 #endif
 
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
+        virtual bool Save_To_Savegame_XML_Node(xmlpp::Element* p_element) const;
+        virtual void Load_From_Savegame(cSave_Level_Object* save_object);
 
         CEGUI::Window* mp_msg_window;
         float m_transparency_counter;
