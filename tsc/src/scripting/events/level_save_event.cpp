@@ -1,7 +1,7 @@
 /***************************************************************************
  * level_save_event.cpp
  *
- * Copyright © 2013-2014 The TSC Contributors
+ * Copyright © 2012-2017 The TSC Contributors
  ***************************************************************************
  *
  * This program is free software; you can redistribute it and/or modify

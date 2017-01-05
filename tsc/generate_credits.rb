@@ -3,7 +3,7 @@
 #############################################################################
 # generate_credits.rb  -  credits.cpp generator
 #
-# Copyright © 2013-2016 The TSC Contributors
+# Copyright © 2012-2017 The TSC Contributors
 #############################################################################
 #
 # This program is free software; you can redistribute it and/or modify

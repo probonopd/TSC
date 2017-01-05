@@ -1,7 +1,7 @@
 /***************************************************************************
  * package_manager.cpp  -  Package Manager
  *
- * Copyright © 2009 - 2011 The TSC Contributors
+ * Copyright © 2012-2017 The TSC Contributors
  ***************************************************************************/
 /*
    This program is free software; you can redistribute it and/or modify
