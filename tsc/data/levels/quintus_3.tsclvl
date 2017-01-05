@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level>
   <information>
-    <property name="game_version" value="2.0.0"/>
-    <property name="engine_version" value="43"/>
-    <property name="save_time" value="1420227929"/>
+    <property name="game_version" value="2.1.0"/>
+    <property name="engine_version" value="48"/>
+    <property name="save_time" value="1483651924"/>
   </information>
   <settings>
     <property name="lvl_author" value=""/>
@@ -482,7 +482,7 @@
     <property name="posx" value="44"/>
     <property name="posy" value="-715"/>
     <property name="uid" value="63"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -631,7 +631,7 @@
     <property name="posx" value="520"/>
     <property name="posy" value="-265"/>
     <property name="uid" value="79"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -1033,7 +1033,7 @@
     <property name="posx" value="1689"/>
     <property name="posy" value="-269"/>
     <property name="uid" value="136"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -1046,7 +1046,7 @@
     <property name="posx" value="1732"/>
     <property name="posy" value="-269"/>
     <property name="uid" value="137"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -1059,7 +1059,7 @@
     <property name="posx" value="1775"/>
     <property name="posy" value="-269"/>
     <property name="uid" value="138"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -1072,7 +1072,7 @@
     <property name="posx" value="1818"/>
     <property name="posy" value="-269"/>
     <property name="uid" value="139"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -1993,7 +1993,7 @@
     <property name="posx" value="4740"/>
     <property name="posy" value="-308"/>
     <property name="uid" value="266"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -2018,7 +2018,7 @@
     <property name="posx" value="4826"/>
     <property name="posy" value="-308"/>
     <property name="uid" value="268"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -2031,7 +2031,7 @@
     <property name="posx" value="4869"/>
     <property name="posy" value="-308"/>
     <property name="uid" value="269"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -2584,7 +2584,7 @@
     <property name="posx" value="6004"/>
     <property name="posy" value="-859"/>
     <property name="uid" value="394"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3258,7 +3258,7 @@
     <property name="posx" value="6953"/>
     <property name="posy" value="-351"/>
     <property name="uid" value="488"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3312,7 +3312,7 @@
     <property name="posx" value="7039"/>
     <property name="posy" value="-351"/>
     <property name="uid" value="480"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -4046,7 +4046,7 @@
     <property name="posx" value="8316"/>
     <property name="posy" value="-1262"/>
     <property name="uid" value="570"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -6337,7 +6337,7 @@
     <property name="posx" value="13016"/>
     <property name="posy" value="-106"/>
     <property name="uid" value="728"/>
-    <property name="image" value="pipes/green/small/up.png"/>
+    <property name="image" value="pipes/grey/small/up.png"/>
     <property name="type" value="massive"/>
   </sprite>
   <sprite>
@@ -6365,7 +6365,7 @@
     <property name="posx" value="13016"/>
     <property name="posy" value="-85"/>
     <property name="uid" value="877"/>
-    <property name="image" value="pipes/green/small/ver.png"/>
+    <property name="image" value="pipes/grey/small/ver.png"/>
     <property name="type" value="massive"/>
   </sprite>
   <sprite>
@@ -6400,7 +6400,7 @@
     <property name="posx" value="11408"/>
     <property name="posy" value="-284"/>
     <property name="uid" value="881"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -6413,7 +6413,7 @@
     <property name="posx" value="11451"/>
     <property name="posy" value="-284"/>
     <property name="uid" value="882"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -6426,7 +6426,7 @@
     <property name="posx" value="11494"/>
     <property name="posy" value="-284"/>
     <property name="uid" value="883"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -6439,7 +6439,7 @@
     <property name="posx" value="11537"/>
     <property name="posy" value="-284"/>
     <property name="uid" value="884"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -8813,7 +8813,7 @@
     <property name="posx" value="15202"/>
     <property name="posy" value="-165"/>
     <property name="uid" value="1278"/>
-    <property name="image" value="ground/underground/pow/blue.png"/>
+    <property name="image" value="ground/underground/switch/blue.png"/>
     <property name="type" value="massive"/>
   </sprite>
   <sprite>
@@ -9476,7 +9476,7 @@
     <property name="posx" value="14005"/>
     <property name="posy" value="-565"/>
     <property name="uid" value="1312"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -9489,7 +9489,7 @@
     <property name="posx" value="14048"/>
     <property name="posy" value="-565"/>
     <property name="uid" value="1313"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -15161,7 +15161,7 @@
     <property name="posx" value="20887"/>
     <property name="posy" value="-1381"/>
     <property name="uid" value="2157"/>
-    <property name="image" value="game/box/yellow/power_1.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Power"/>
     <property name="item" value="35"/>
@@ -17627,6 +17627,15 @@
     <property name="image" value="ground/mushroom_1/platform/green/right.png"/>
     <property name="type" value="massive"/>
   </sprite>
+  <secretarea>
+    <property name="posx" value="20238"/>
+    <property name="posy" value="-435"/>
+    <property name="uid" value="300"/>
+    <property name="image" value=""/>
+    <property name="type" value="secretarea"/>
+    <property name="width" value="104.000000"/>
+    <property name="height" value="277.000000"/>
+  </secretarea>
   <script>TSC.require "std/enable"
 
 UIDS[143].on_enter do
