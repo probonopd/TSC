@@ -1076,6 +1076,78 @@ bool cLevel::Is_Loaded(void) const
     return 0;
 }
 
+/**
+ * Counts how many secret areas exist in this level and in how
+ * many of them exits are placed.
+ *
+ * \param[out] area_count
+ * Number of secret areas counted.
+ *
+ * \param[out] exit_count
+ * Number of exits in these secret areas. Beware this may be
+ * larger than `area_count` if multiple exits are placed in
+ * the same secret area.
+ *
+ * \remark The `exit_count` value is probably useless until
+ * multiple exits (ticket #19) are implemented.
+ *
+ * \remark This method iterates the entire list of objects
+ * in the level and is thus rather expensive to call
+ * performance-wise.
+ */
+void cLevel::Count_Secrets(int& area_count, int& exit_count)
+{
+    cSprite_List secret_areas;
+    cSprite_List possible_exits;
+    area_count = 0;
+    exit_count = 0;
+
+    // Gather a list of all secret areas and all level exits
+    cSprite_List::iterator iter;
+    for(iter=m_sprite_manager->objects.begin(); iter != m_sprite_manager->objects.end(); iter++) {
+        cSprite* obj = *iter;
+
+        // skip destroyed objects
+        if (obj->m_auto_destroy)
+            continue;
+
+        switch(obj->m_type) {
+        case TYPE_SECRET_AREA:
+            secret_areas.push_back(obj);
+            break;
+        case TYPE_LEVEL_EXIT:
+            possible_exits.push_back(obj);
+            break;
+        default:
+            // ignore
+            break;
+        }
+    }
+
+    // Part of the result already found
+    area_count = secret_areas.size();
+
+    // Filter down the list of level exits to those that are
+    // actually inside a secret area.
+    for(iter=possible_exits.begin(); iter != possible_exits.begin(); iter++) {
+        cSprite* levelexit = *iter;
+
+        cSprite_List::iterator iter2;
+        for(iter2=secret_areas.begin(); iter2 != secret_areas.end(); iter2++) {
+            cSprite* secret_area = *iter2;
+
+            if (levelexit->m_col_rect.Intersects(secret_area->m_col_rect)) {
+                exit_count++;
+
+                // It may happen in badly designed levels that two
+                // secret areas overlap and the exit is thus inside
+                // multiple secret areas. In that case, only count it once.
+                break;
+            }
+        }
+    }
+}
+
 #ifdef ENABLE_MRUBY
 /**
  * This method wipes out the entire current mruby state (just

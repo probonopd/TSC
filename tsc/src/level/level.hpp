@@ -143,6 +143,8 @@ namespace TSC {
         // Return true if a level is loaded
         bool Is_Loaded(void) const;
 
+        void Count_Secrets(int& area_count, int& exit_count);
+
 #ifdef ENABLE_MRUBY
         /// Delete existing (if any) and create new mruby interpreter.
         void Reinitialize_MRuby_Interpreter();
