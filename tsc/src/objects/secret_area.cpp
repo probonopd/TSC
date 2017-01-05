@@ -40,16 +40,13 @@ cSecret_Area::cSecret_Area(XmlAttributes& attributes, cSprite_Manager* sprite_ma
 {
     cSecret_Area::Init();
 
-    // position
-    Set_Pos(string_to_float(attributes["posx"]), string_to_float(attributes["posy"]), true);
-
-    // Sizing
-    m_rect.m_w = string_to_float(attributes["width"]);
-    m_rect.m_h = string_to_float(attributes["height"]);
-    m_col_rect.m_w = m_rect.m_w;
-    m_col_rect.m_h = m_rect.m_h;
-    m_start_rect.m_w = m_rect.m_w;
-    m_start_rect.m_h = m_rect.m_h;
+    // position and sizing
+    GL_rect r;
+    r.m_x = string_to_float(attributes["posx"]);
+    r.m_y = string_to_float(attributes["posy"]);
+    r.m_w = string_to_float(attributes["width"]);
+    r.m_h = string_to_float(attributes["height"]);
+    Set_Rect(r, true);
 
     // activated
     m_activated = string_to_bool(attributes["activated"]);
@@ -74,12 +71,7 @@ void cSecret_Area::Init()
     m_camera_range = 1000;
 
     // size
-    m_rect.m_w = 100;
-    m_rect.m_h = 100;
-    m_col_rect.m_w = m_rect.m_w;
-    m_col_rect.m_h = m_rect.m_h;
-    m_start_rect.m_w = m_rect.m_w;
-    m_start_rect.m_h = m_rect.m_h;
+    Set_Rect(GL_rect(m_rect.m_x, m_rect.m_y, 100, 100), true);
 
     m_transparency_counter = 0.0f;
     m_move_counter = 0.0f;
@@ -90,15 +82,25 @@ void cSecret_Area::Init()
 cSecret_Area* cSecret_Area::Copy(void) const
 {
     cSecret_Area* secarea = new cSecret_Area(m_sprite_manager);
-    secarea->Set_Pos(m_start_pos_x, m_start_pos_y, 1);
-    secarea->m_rect.m_w = m_rect.m_w;
-    secarea->m_rect.m_h = m_rect.m_h;
-    secarea->m_col_rect.m_w = m_col_rect.m_w;
-    secarea->m_col_rect.m_h = m_col_rect.m_h;
-    secarea->m_start_rect.m_w = m_start_rect.m_w;
-    secarea->m_start_rect.m_h = m_start_rect.m_h;
+    secarea->Set_Rect(m_rect);
     secarea->m_activated = m_activated;
     return secarea;
+}
+
+/**
+ * Set the entire extends of the secret area at once, rather than
+ * having to cater for all possible X/Y positions and rectangles
+ * involved.
+ */
+void cSecret_Area::Set_Rect(GL_rect rect, bool new_start_pos /* = false */)
+{
+    Set_Pos(rect.m_x, rect.m_y, new_start_pos);
+    m_rect.m_w       = rect.m_w;
+    m_rect.m_h       = rect.m_h;
+    m_col_rect.m_w   = m_rect.m_w;
+    m_col_rect.m_h   = m_rect.m_h;
+    m_start_rect.m_w = m_rect.m_w;
+    m_start_rect.m_h = m_rect.m_h;
 }
 
 void cSecret_Area::Update(void)

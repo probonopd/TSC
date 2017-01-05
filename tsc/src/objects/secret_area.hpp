@@ -42,6 +42,7 @@ namespace TSC {
         virtual bool Is_Draw_Valid(void);
 
         void Activate(void);
+        void Set_Rect(GL_rect rect, bool new_start_pos = false);
 
 #ifdef ENABLE_EDITOR
         virtual void Editor_Activate(void);

@@ -1393,7 +1393,7 @@ void cMouseCursor::End_Selection(void)
     if (m_dragmode == DRAGMODE_SECRETAREA && Game_Mode == MODE_LEVEL) {
         // Insert secret area into the level
         cSecret_Area* secarea = new cSecret_Area(pActive_Level->m_sprite_manager);
-        secarea->m_rect = secarea->m_col_rect = secarea->m_start_rect = m_normalized_selection_rect;
+        secarea->Set_Rect(m_normalized_selection_rect);
         pActive_Level->m_sprite_manager->Add(secarea);
 
         // Attach it to the cursor for positioning
