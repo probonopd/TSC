@@ -1505,6 +1505,7 @@ bool cEditor::on_selector_radio_changed(const CEGUI::EventArgs& args)
     }
     else if (Game_Mode == MODE_OVERWORLD) {
         // Nothing for now (no secret areas in overworlds).
+        mp_selector_radio_selection->setSelected(true);
         pMouseCursor->Set_Drag_Mode(DRAGMODE_SELECTION);
     }
 
