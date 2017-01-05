@@ -27,6 +27,7 @@
 #include "../video/renderer.hpp"
 #include "../core/framerate.hpp"
 #include "../user/savegame/save_level.hpp"
+#include "../scripting/events/activate_event.hpp"
 
 using namespace TSC;
 
@@ -153,7 +154,6 @@ bool cSecret_Area::Is_Draw_Valid(void)
     return 1;
 }
 
-
 void cSecret_Area::Activate(void)
 {
     if (m_activated)
@@ -172,6 +172,9 @@ void cSecret_Area::Activate(void)
     m_transparency_counter = 0.0f;
     m_move_counter = 0.0f;
     m_activated = true;
+
+    Scripting::cActivate_Event evt;
+    evt.Fire(pActive_Level->m_mruby, this);
 }
 
 #ifdef ENABLE_EDITOR

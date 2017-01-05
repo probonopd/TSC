@@ -38,6 +38,12 @@ namespace TSC {
         virtual void Draw(cSurface_Request* request = NULL);
         virtual void Set_Massive_Type(MassiveType type);
 
+        // Create the MRuby object for this
+        virtual mrb_value Create_MRuby_Object(mrb_state* p_state)
+        {
+            return mrb_obj_value(Data_Wrap_Struct(p_state, mrb_class_get(p_state, "SecretArea"), &Scripting::rtTSC_Scriptable, this));
+        }
+
         // if draw is valid for the current state and position
         virtual bool Is_Draw_Valid(void);
 

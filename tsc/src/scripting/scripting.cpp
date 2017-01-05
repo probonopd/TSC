@@ -65,6 +65,7 @@
 #include "objects/boxes/mrb_bonusbox.hpp"
 #include "objects/specials/mrb_level_exit.hpp"
 #include "objects/specials/mrb_level_entry.hpp"
+#include "objects/specials/mrb_secret_area.hpp"
 #include "objects/specials/mrb_path.hpp"
 #include "objects/specials/mrb_lava.hpp"
 #include "objects/specials/mrb_enemy_stopper.hpp"
@@ -365,6 +366,7 @@ void cMRuby_Interpreter::Load_Wrappers()
     Init_ParticleEmitter(mp_mruby);
     Init_LevelExit(mp_mruby);
     Init_LevelEntry(mp_mruby);
+    Init_SecretArea(mp_mruby);
     Init_Path(mp_mruby);
     Init_Lava(mp_mruby);
     Init_EnemyStopper(mp_mruby);
