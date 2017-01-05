@@ -15,7 +15,7 @@
             <Property name="Area" value="{{0.8,0},{0.94,0},{0.99,0},{0.99,0}}"/>
         </Window>
         <Window type="TaharezLook/StaticText" name="text_website">
-            <Property name="Text" value="www.secretchronicles.de"/>
+            <Property name="Text" value="https://secretchronicles.org"/>
             <Property name="TooltipText" value="Latest News, User Levels and Worlds, Wiki and a Community Forum."/>
             <Property name="TextColours" value="tl:FFFFAA22 tr:FFFFAA22 bl:FFFF8822 br:FFFF8822"/>
             <Property name="FrameEnabled" value="False"/>

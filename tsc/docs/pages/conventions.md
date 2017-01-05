@@ -473,7 +473,7 @@ server (`/var/local/repos/TSC-Licensing.git`). For any kind of
 contribution via public channels it is sufficient if the author of the
 contribution mentions the license publically. Specifically for
 contributions via the forum, [the forum
-rules](http://forum.secretchronicles.de/rules) already guarantee a
+rules](https://forum.secretchronicles.org/forum_rules) already guarantee a
 proper license so that further proof is not required.
 
 This is some precaution against the possibility some malicious man
