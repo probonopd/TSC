@@ -17,7 +17,7 @@ require "rake"
 require "rake/clean"
 require "pathname"
 
-CLOBBER.include("build", "crossbuild", "docs/scripting/html", "docs/scripting/rdoc", "docs/api")
+CLOBBER.include("build", "crossbuild", "docs/scripting/html", "docs/scripting/rdoc", "docs/api", "docs/ssl")
 
 str = File.read("CMakeLists.txt", :encoding => "utf-8")
 TSC_VERSION_MAJOR = str.match(/^set\(TSC_VERSION_MAJOR (\d+)\)/)[1]
@@ -203,20 +203,6 @@ task :release do
   puts "All files required for releasing are in #{targetpath}/files."
   puts "Don’t forget to add a signed Git tag (-s or -u option) to the repository."
 end
-
-# Ensure :clobber also wipes out mruby build content
-task :clean_mruby do
-  cd "../mruby/mruby" do
-    sh "rake clean"
-    rm_rf "build"
-  end
-end
-
-task :clean_ssl do
-  rm_rf "docs/ssl"
-end
-
-task :clobber => [:clean_mruby, :clean_ssl]
 
 desc "Run optipng on all PNG graphics to cut size down."
 task :optipng do
