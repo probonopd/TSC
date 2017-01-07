@@ -1009,14 +1009,14 @@ void cMenu_Start::Update_Lists(void)
     for (vector<cOverworld*>::const_iterator itr = pOverworld_Manager->objects.begin(); itr != pOverworld_Manager->objects.end(); ++itr) {
         const cOverworld_description* world = (*itr)->m_description;
 
-// show all worlds in debug builds
-#ifndef _DEBUG
         if (!world->m_visible) {
-            continue;
-        }
+#ifdef _DEBUG
+            // show all worlds in debug builds
+            cout << "Showing invisible world '" << world->m_name << "' because this is a debug build." << endl;
 #else
-        cout << "Showing invisible world '" << world->m_name << "' because this is a debug build." << endl;
+            continue;
 #endif
+        }
 
         CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(world->m_name.c_str()));
         // is in game dir
