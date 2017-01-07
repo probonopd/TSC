@@ -232,10 +232,6 @@ void cLevel_Manager::Update(void)
 {
     // input
     pActive_Level->Process_Input();
-#ifdef ENABLE_EDITOR
-    // TODO: Why is this not in cEditor::Update()?
-    pLevel_Editor->Process_Input();
-#endif
 
     // update performance timer
     pFramerate->m_perf_timer[PERF_UPDATE_PROCESS_INPUT]->Update();

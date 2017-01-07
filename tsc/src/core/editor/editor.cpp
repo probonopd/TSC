@@ -312,6 +312,7 @@ void cEditor::Update(void)
     }
 
     pMouseCursor->Editor_Update();
+    Process_Input();
 }
 
 void cEditor::Draw(void)
