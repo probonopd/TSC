@@ -427,6 +427,64 @@ static mrb_value Get_Return_Stack(mrb_state* p_state, mrb_value self)
     return ary;
 }
 
+/**
+ * Method: Level#boundaries
+ *
+ *   boundaries() → a_rect
+ *
+ * Returns the level's boundaries as a Rect instance (struct with `x`,
+ * `y`, `width`, `height` members). X and Y will always be zero; note
+ * that towards the upper edge the coordinates are lower, which is why
+ * you usually have a negative height in a level.
+ */
+static mrb_value Get_Boundaries(mrb_state* p_state, mrb_value self)
+{
+    struct RClass* p_class = mrb_class_get(p_state, "Rect");
+
+    mrb_value args[4];
+    args[0] = mrb_float_value(p_state, pActive_Level->m_camera_limits.m_x);
+    args[1] = mrb_float_value(p_state, pActive_Level->m_camera_limits.m_y);
+    args[2] = mrb_float_value(p_state, pActive_Level->m_camera_limits.m_w);
+    args[3] = mrb_float_value(p_state, pActive_Level->m_camera_limits.m_h);
+
+    return mrb_obj_new(p_state, p_class, 4, args);
+}
+
+/**
+ * Method: Level#start_position
+ *
+ *   start_position() → a_point
+ *
+ * Returns the position Alex starts when the level is entered either
+ * from the world map or from the level menu (not via a sublevel entry).
+ * Return value is a Point instance (struct with members `x` and `y`).
+ */
+static mrb_value Get_Start_Position(mrb_state* p_state, mrb_value self)
+{
+    struct RClass* p_class = mrb_class_get(p_state, "Point");
+
+    mrb_value args[2];
+    args[0] = mrb_float_value(p_state, pActive_Level->m_player_start_pos_x);
+    args[1] = mrb_float_value(p_state, pActive_Level->m_player_start_pos_y);
+
+    return mrb_obj_new(p_state, p_class, 2, args);
+}
+
+/**
+ * Method: Level#fixed_horizontal_velocity
+ *
+ *   fixed_horizontal_velocity() → a_number
+ *
+ * Returns the fixed horizontal scrolling velocity. This is usually 0,
+ * as the feature is only used by a handful of levels (it makes the
+ * camera move horizontally automatically and kills Alex if he falls
+ * behind too much).
+ */
+static mrb_value Get_Fixed_Hor_Vel(mrb_state* p_state, mrb_value self)
+{
+    return mrb_float_value(p_state, pActive_Level->m_fixed_camera_hor_vel);
+}
+
 /********************* StackEntry ********************/
 
 /**
@@ -518,6 +576,9 @@ void TSC::Scripting::Init_Level(mrb_state* p_state)
     mrb_define_method(p_state, p_rcLevel, "pop_return", Pop_Return, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel, "clear_return", Clear_Return, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel, "return_stack", Get_Return_Stack, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcLevel, "boundaries", Get_Boundaries, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcLevel, "start_position", Get_Start_Position, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcLevel, "fixed_horizontal_velocity", Get_Fixed_Hor_Vel, MRB_ARGS_NONE());
 
     mrb_define_method(p_state, p_rcLevel, "on_load", MRUBY_EVENT_HANDLER(load), MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel, "on_save", MRUBY_EVENT_HANDLER(save), MRB_ARGS_NONE());
