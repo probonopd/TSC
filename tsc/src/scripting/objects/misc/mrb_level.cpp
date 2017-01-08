@@ -156,12 +156,6 @@ MRUBY_IMPLEMENT_EVENT(save);
  * Methods
  ***************************************/
 
-static mrb_value Initialize(mrb_state* p_state,  mrb_value self)
-{
-    mrb_raise(p_state, MRB_NOTIMP_ERROR(p_state), "Cannot create instances of this class.");
-    return self; // Not reached
-}
-
 /**
  * Method: LevelClass#author
  *
@@ -507,7 +501,9 @@ void TSC::Scripting::Init_Level(mrb_state* p_state)
     // Make the Level constant the only instance of LevelClass
     mrb_define_const(p_state, p_state->object_class, "Level", pSavegame->Create_MRuby_Object(p_state));
 
-    mrb_define_method(p_state, p_rcLevel, "initialize", Initialize, MRB_ARGS_NONE());
+    // Forbid creating instances of Level
+    mrb_undef_class_method(p_state, p_rcLevel, "new");
+
     mrb_define_method(p_state, p_rcLevel, "author", Get_Author, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel, "description", Get_Description, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel, "difficulty", Get_Difficulty, MRB_ARGS_NONE());
