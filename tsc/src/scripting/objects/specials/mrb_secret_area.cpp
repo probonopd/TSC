@@ -87,5 +87,5 @@ void TSC::Scripting::Init_SecretArea(mrb_state* p_state)
     // Normal methods
     mrb_define_method(p_state, p_rcSecret_Area, "activate", Activate, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcSecret_Area, "activated?", Activated, MRB_ARGS_NONE());
-    mrb_define_method(p_state, p_rcSecret_Area, "on_activate", MRUBY_EVENT_HANDLER(activate), MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcSecret_Area, "on_activate", MRUBY_EVENT_HANDLER(activate), MRB_ARGS_BLOCK());
 }
