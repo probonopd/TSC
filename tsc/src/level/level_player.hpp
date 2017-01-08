@@ -282,6 +282,9 @@ namespace TSC {
         // true if player god mode is active
         bool m_god_mode;
 
+        // Temporaryly forbid the player to die (used by scripting)
+        bool m_veto_die;
+
         // time alex walked
         float m_walk_time;
         // running particle counter

@@ -40,6 +40,7 @@
 #include "../scripting/events/jump_event.hpp"
 #include "../scripting/events/shoot_event.hpp"
 #include "../scripting/events/downgrade_event.hpp"
+#include "../scripting/events/die_event.hpp"
 #include "../core/sprite_manager.hpp"
 #include "../level/level.hpp"
 #include "../level/level_settings.hpp"
@@ -88,6 +89,7 @@ cLevel_Player::cLevel_Player(cSprite_Manager* sprite_manager)
     m_running_particle_counter = 0.0f;
 
     m_god_mode = 0;
+    m_veto_die = 0;
 
     m_walk_time = 0.0f;
     m_ghost_time = 0.0f;
@@ -238,6 +240,20 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
         evt.Fire(pActive_Level->m_mruby, this);
 
         return;
+    }
+    else {
+        /* Fire the Die event, and allow the level scripter to temporarily
+         * veto the player's death. To prevent unexpected effects, clear the
+         * veto flag before and after the event so that it can only be set
+         * inside the event handler. */
+        m_veto_die = false;
+        Scripting::cDie_Event evt;
+        evt.Fire(pActive_Level->m_mruby, this);
+
+        if (m_veto_die) {
+            m_veto_die = false;
+            return;
+        }
     }
 
     Set_Type(ALEX_DEAD, 0, 0);

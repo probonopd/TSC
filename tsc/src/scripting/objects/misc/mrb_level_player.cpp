@@ -57,6 +57,16 @@ using namespace std;
  * Events
  * ------
  *
+ * Die
+ * : This event gets fired immediately before Alex is killed by the
+ *   the game logic. If you call `veto_death` from this event handler,
+ *   the player will not die, but note it is your responsibility to
+ *   ensure something useful happens. Especially note that Alex
+ *   would fall down eternally if he dies on the level lower edge
+ *   and you veto the death (you can check for this using the position
+ *   information of the player). This event is *not* emitted when
+ *   Omega mode or invincibility rescues Alex.
+ *
  * Downgrade
  * : Whenever Alex gets hit (but not killed), this event is triggered.
  *   The event handler gets passed Alex’s current downgrade count
@@ -97,6 +107,7 @@ using namespace std;
 
 MRUBY_IMPLEMENT_EVENT(jewel_100);
 MRUBY_IMPLEMENT_EVENT(downgrade);
+MRUBY_IMPLEMENT_EVENT(die);
 MRUBY_IMPLEMENT_EVENT(jump);
 MRUBY_IMPLEMENT_EVENT(shoot);
 
@@ -478,6 +489,25 @@ static mrb_value Release_Item(mrb_state* p_state, mrb_value self)
     return mrb_nil_value();
 }
 
+/**
+ * Method: LevelPlayer#veto_death
+ *
+ *   veto_death()
+ *
+ * This method is only useful to call inside a `Die` event handler,
+ * in which case it causes the game to not kill Alex although all
+ * logical conditions for killing him are fulfilled. The veto
+ * only affects this one death case the event was emitted for.
+ *
+ * Calling this method outside of the `Die` event handler has no
+ * effect.
+ */
+static mrb_value Veto_Death(mrb_state* p_state, mrb_value self)
+{
+    pLevel_Player->m_veto_die = true;
+    return mrb_nil_value();
+}
+
 /***************************************
  * Entry point
  ***************************************/
@@ -510,10 +540,12 @@ void TSC::Scripting::Init_Level_Player(mrb_state* p_state)
     mrb_define_method(p_state, p_rcLevel_Player, "add_lives", Add_Lives, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcLevel_Player, "invincible?", Is_Invincible, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel_Player, "release_item", Release_Item, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcLevel_Player, "veto_death", Veto_Death, MRB_ARGS_NONE());
 
     // Event handlers
     mrb_define_method(p_state, p_rcLevel_Player, "on_jewel_100", MRUBY_EVENT_HANDLER(jewel_100), MRB_ARGS_BLOCK());
     mrb_define_method(p_state, p_rcLevel_Player, "on_downgrade", MRUBY_EVENT_HANDLER(downgrade), MRB_ARGS_BLOCK());
+    mrb_define_method(p_state, p_rcLevel_Player, "on_die", MRUBY_EVENT_HANDLER(die), MRB_ARGS_BLOCK());
     mrb_define_method(p_state, p_rcLevel_Player, "on_jump", MRUBY_EVENT_HANDLER(jump), MRB_ARGS_BLOCK());
     mrb_define_method(p_state, p_rcLevel_Player, "on_shoot", MRUBY_EVENT_HANDLER(shoot), MRB_ARGS_BLOCK());
 }
