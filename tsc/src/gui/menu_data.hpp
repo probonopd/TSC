@@ -92,8 +92,8 @@ namespace TSC {
         virtual void Update(void);
         virtual void Draw(void);
     private:
-        void credits_item_clicked(const CEGUI::EventArgs& event);
-        void credits_item_entered(const CEGUI::EventArgs& event);
+        bool credits_item_clicked(const CEGUI::EventArgs& event);
+        bool credits_item_entered(const CEGUI::EventArgs& event);
 
         cHudSprite* mp_start_active;
         cHudSprite* mp_start_inactive;

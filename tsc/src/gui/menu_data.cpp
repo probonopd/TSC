@@ -435,16 +435,18 @@ void cMenu_Main::Selected_Item_Changed(int new_active_item)
 
 // Translate the CEGUI event into something the menu handler understands
 // by imitating the results of a mouse input event on the menu handler.
-void cMenu_Main::credits_item_clicked(const CEGUI::EventArgs& event)
+bool cMenu_Main::credits_item_clicked(const CEGUI::EventArgs& event)
 {
     pMenuCore->m_handler->Set_Active(m_credits_index);
     Item_Activated(m_credits_index);
+    return true;
 }
 
 // Similar for mouse enter.
-void cMenu_Main::credits_item_entered(const CEGUI::EventArgs& event)
+bool cMenu_Main::credits_item_entered(const CEGUI::EventArgs& event)
 {
     pMenuCore->m_handler->Set_Active(m_credits_index);
+    return true;
 }
 
 void cMenu_Main::Update(void)
