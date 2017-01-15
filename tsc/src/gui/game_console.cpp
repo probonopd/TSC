@@ -2,6 +2,7 @@
 #include <mruby/error.h>
 #include "config.hpp"
 #include "../core/i18n.hpp"
+#include "../core/filesystem/resource_manager.hpp"
 #include "../level/level.hpp"
 #include "game_console.hpp"
 
@@ -9,6 +10,27 @@
 TSC::cGame_Console* TSC::gp_game_console = NULL;
 
 using namespace TSC;
+namespace fs = boost::filesystem;
+
+static std::string timestamp()
+{
+    static const int formatted_length = 19;
+
+    time_t now = time(NULL);
+    struct tm* timeinfo = localtime(&now);
+
+    char buf[formatted_length];
+    sprintf(buf,
+            "%04d-%02d-%02d %02d:%02d:%02d",
+            timeinfo->tm_year + 1900,
+            timeinfo->tm_mon + 1,
+            timeinfo->tm_mday,
+            timeinfo->tm_hour,
+            timeinfo->tm_min,
+            timeinfo->tm_sec);
+
+    return std::string(buf, formatted_length);
+}
 
 cGame_Console::cGame_Console()
     : mp_console_root(NULL),
@@ -35,6 +57,12 @@ cGame_Console::cGame_Console()
     mp_input_edit->subscribeEvent(CEGUI::Editbox::EventKeyUp,
                                   CEGUI::Event::Subscriber(&cGame_Console::on_key_up, this));
 
+    // Open logfile
+    m_logfile.open(pResource_Manager->Get_User_GameConsole_Logfile(),
+                   fs::ofstream::out | fs::ofstream::app);
+ 
+    m_logfile << "--- Logfile opened on " << timestamp() << " ---" << std::endl;
+
     Reset();
 }
 
@@ -45,6 +73,9 @@ cGame_Console::~cGame_Console()
         CEGUI::WindowManager::getSingleton().destroyWindow(mp_console_root);
         mp_console_root = NULL;
     }
+
+    m_logfile << "--- Logfile closed on " << timestamp() << " ---" << std::endl;
+    m_logfile.close();
 }
 
 void cGame_Console::Show()
@@ -83,6 +114,7 @@ void cGame_Console::Update()
 void cGame_Console::Reset()
 {
     mp_output_edit->setText("");
+    m_logfile << std::endl << "--- Console Reset ---" << std::endl;
     print_preamble();
 
     if (pActive_Level && pActive_Level->m_mruby /* exclude menu level */) {
@@ -99,26 +131,20 @@ void cGame_Console::Reset()
 }
 
 /**
- * Convenience function that expects you pass valid UTF-8-encoded
- * text and conerts it to a CEGUI::String before forwarding it
- * to the other overload that takes a CEGUI::String.
+ * Append the given text to the output widget. The argument has to
+ * be valid UTF-8.
  */
 void cGame_Console::Append_Text(std::string text)
 {
     CEGUI::String ceguitext(reinterpret_cast<const CEGUI::utf8*>(text.c_str()));
-    Append_Text(ceguitext);
-}
+    CEGUI::String curtext(mp_output_edit->getText());
+    curtext += ceguitext;
 
-/**
- * Append the given text to the output widget.
- */
-void cGame_Console::Append_Text(CEGUI::String text)
-{
-    CEGUI::String curtext = mp_output_edit->getText();
-    curtext += text;
     mp_output_edit->setText(curtext);
     mp_output_edit->setCaretIndex(curtext.length());
     mp_output_edit->ensureCaretIsVisible();
+
+    m_logfile << text;
 }
 
 void cGame_Console::print_preamble()
@@ -132,20 +158,20 @@ void cGame_Console::print_preamble()
     "This program comes with ABSOLUTELY NO WARRANTY; for details\n"
     "see the file tsc/docs/license.txt. This is free software, and\n"
     "you are welcome to redistribute it under certain conditions;\n"
-    "see the aforementioned file for details."), TSC_COMPILE_YEAR);
+    "see the aforementioned file for details.\n"), TSC_COMPILE_YEAR);
 
     Append_Text(std::string(text));
     Append_Text(std::string("\n"));
 
 #ifdef TSC_VERSION_POSTFIX
     // TRANS: %s is the version postfix, e.g. "dev" or "beta3".
-    sprintf(text, _("You are running TSC version %d.%d.%d-%s."),
+    sprintf(text, _("You are running TSC version %d.%d.%d-%s.\n"),
             TSC_VERSION_MAJOR,
             TSC_VERSION_MINOR,
             TSC_VERSION_PATCH,
             TSC_VERSION_POSTFIX);
 #else
-    sprintf(text, _("You are running TSC version %d.%d.%d."),
+    sprintf(text, _("You are running TSC version %d.%d.%d.\n"),
             TSC_VERSION_MAJOR,
             TSC_VERSION_MINOR,
             TSC_VERSION_PATCH);
@@ -158,7 +184,7 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
 {
     char buf[8];
     CEGUI::String cegui_code(mp_input_edit->getText());
-    std::string code(cegui_code.c_str());
+    std::string code = std::string(cegui_code.c_str()) + "\n";
     mp_input_edit->setText("");
 
     // Remember in history
@@ -180,7 +206,7 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
     // TODO: Given that the console should be the regular output in the future,
     // the following code should be merged into cMRuby_Interpreter::Run_Code().
     mrb_state* p_mrb_state = pActive_Level->m_mruby->Get_MRuby_State();
-    mrb_value result = pActive_Level->m_mruby->Run_Code_In_Console_Context(code + "\n");
+    mrb_value result = pActive_Level->m_mruby->Run_Code_In_Console_Context(code);
 
     if (p_mrb_state->exc) {
         Display_Exception(p_mrb_state);
@@ -193,10 +219,11 @@ bool cGame_Console::on_input_accepted(const CEGUI::EventArgs& evt)
         if (mrb_string_p(rstr)) {
             std::string str("=> ");
             str += std::string(RSTRING_PTR(rstr), RSTRING_LEN(rstr));
+            str += "\n";
             Append_Text(str);
         }
         else {
-            Append_Text(std::string("(#inspect did not return a string)"));
+            Append_Text(std::string(_("(#inspect did not return a string)\n")));
         }
     }
 

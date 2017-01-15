@@ -46,6 +46,7 @@ namespace TSC {
         std::vector<CEGUI::String> m_history;
         CEGUI::String m_last_edit;
         size_t m_history_idx;
+        boost::filesystem::ofstream m_logfile;
 
         void print_preamble();
         bool on_input_accepted(const CEGUI::EventArgs& evt);
