@@ -3087,6 +3087,7 @@ bool cMenu_Options::Joystick_List_Double_Click(const CEGUI::EventArgs& event)
 bool cMenu_Options::Joystick_Button_Reset_Clicked(const CEGUI::EventArgs& event)
 {
     pPreferences->Reset_Joystick();
+    pJoystick->Init();
 
     // clear
     Game_Action = GA_ENTER_MENU;

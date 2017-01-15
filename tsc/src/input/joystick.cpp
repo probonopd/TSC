@@ -35,10 +35,6 @@ const float cJoystick::m_joystick_neutral_bound = 20.0f;
 
 cJoystick::cJoystick(void)
 {
-    m_current_joystick = 999; // SFML only supports 8, so this is guaranteed to be invalid input to SFML
-    m_num_joysticks = 0;
-    m_num_buttons = 0;
-
     m_debug = 0;
 
     Reset_keys();
@@ -53,13 +49,10 @@ cJoystick::~cJoystick(void)
 
 int cJoystick::Init(void)
 {
-    // if not enabled
-    if (!pPreferences->m_joy_enabled) {
-        return 0;
-    }
-
     // Ensure all joysticks are found now
     sf::Joystick::update();
+
+    m_num_joysticks = 0;
 
     for(int i=0; i < sf::Joystick::Count; i++) {
         if (sf::Joystick::isConnected(i)) {
@@ -97,7 +90,12 @@ int cJoystick::Init(void)
     pVideo->mp_window->setJoystickThreshold(pPreferences->m_joy_axis_threshold);
 
     // setup
-    Stick_Open(default_joy);
+    if (pPreferences->m_joy_enabled) {
+        Stick_Open(default_joy);
+    }
+    else {
+        Stick_Close();
+    }
 
     if (m_debug) {
         cout << "Joypad System Initialized" << endl;
