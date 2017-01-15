@@ -156,6 +156,11 @@ fs::path cResource_Manager::Get_User_CEGUI_Logfile()
     return m_paths.user_cache_dir / utf8_to_path("cegui.log");
 }
 
+fs::path cResource_Manager::Get_User_GameConsole_Logfile()
+{
+    return m_paths.user_cache_dir / path_to_utf8("gameconsole.log");
+}
+
 fs::path cResource_Manager::Get_Game_Schema_Directory()
 {
     return m_paths.game_data_dir / utf8_to_path(GAME_SCHEMA_DIR);

@@ -108,6 +108,7 @@ namespace TSC {
         boost::filesystem::path Get_User_Imgcache_Directory();
         boost::filesystem::path Get_User_Pixmaps_Directory();
         boost::filesystem::path Get_User_CEGUI_Logfile();
+        boost::filesystem::path Get_User_GameConsole_Logfile();
 
         // Get files from the various directories in the user’s data directory
         boost::filesystem::path Get_User_Level(std::string level);
