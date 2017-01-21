@@ -94,6 +94,7 @@ namespace TSC {
         virtual bool Key_Down(const sf::Event& evt);
 
         bool m_enabled;
+        bool m_object_config_pane_shown;
     protected:
         std::string m_editor_item_tag;
         boost::filesystem::path m_menu_filename;
@@ -138,7 +139,6 @@ namespace TSC {
         std::vector<CEGUI::Window*> m_editor_items;
         std::vector<cEditor_Menu_Entry*> m_menu_entries;
         bool m_help_window_visible;
-        bool m_object_config_pane_shown;
         const int CAMERA_SPEED = 35;
 
         void parse_menu_file();

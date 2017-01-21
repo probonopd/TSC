@@ -67,6 +67,10 @@ bool cEditor_Level::Key_Down(const sf::Event& evt)
     if (!m_enabled)
         return false;
 
+    // Ignore key presses if the editor config pane is open
+    if (m_object_config_pane_shown)
+        return false;
+
     // Handle general commands
     if (cEditor::Key_Down(evt)) {
         return true;

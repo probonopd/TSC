@@ -114,6 +114,14 @@ bool cKeyboard::Key_Down(const sf::Event& evt)
         return true;
     }
 
+    // Do not take screenshots and such things while the editor
+    // config panel is open and the user may be typing into the widgets
+    // (typing "p" would take a screenshot).
+    if ((Game_Mode == MODE_LEVEL && pLevel_Editor->m_object_config_pane_shown) ||
+        (Game_Mode == MODE_OVERWORLD && pWorld_Editor->m_object_config_pane_shown)) {
+        return true;
+    }
+
     // ## first the internal keys
 
     // game exit

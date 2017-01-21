@@ -380,6 +380,10 @@ bool cEditor::Key_Down(const sf::Event& evt)
     if (!m_enabled)
         return false;
 
+    // Ignore key presses if the editor config pane is open
+    if (m_object_config_pane_shown)
+        return false;
+
     // New level
     if (evt.key.code == sf::Keyboard::N && evt.key.control) {
         Function_New();
