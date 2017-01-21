@@ -1308,6 +1308,7 @@ void cMouseCursor::Draw_Object_Rects(void)
         else {
             // not filled
             request->m_filled = 0;
+            request->m_line_width = 2.0f;
         }
 
         // add request
@@ -1353,6 +1354,7 @@ void cMouseCursor::Draw_Object_Rects(void)
             cRect_Request* rect_request = new cRect_Request();
             pVideo->Draw_Rect(&hover_rect, pos_z, &obj_color, rect_request);
 
+            rect_request->m_line_width = 2.0f;
             // not filled
             rect_request->m_filled = 0;
             // with stipple
