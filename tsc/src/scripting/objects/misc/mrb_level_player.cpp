@@ -340,7 +340,7 @@ static mrb_value Forced_Kill(mrb_state* p_state, mrb_value self)
  */
 static mrb_value Get_Jewels(mrb_state* p_state,  mrb_value self)
 {
-    return mrb_fixnum_value(pLevel_Player->m_goldpieces);
+    return mrb_fixnum_value(gp_hud->Get_Jewels());
 }
 
 /**
