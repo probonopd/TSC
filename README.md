@@ -79,7 +79,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-* _See tsc/docs/license.txt for the full license text._
+* _See COPYING for the full license text._
 * _See tsc/docs/authors.txt for the full list of authors._
 
 Graphics, music, and any other artistic content in the game is _not_

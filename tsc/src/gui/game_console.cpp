@@ -171,9 +171,9 @@ void cGame_Console::print_preamble()
     // TRANS: it yourself.
     sprintf(text, _("TSC Scripting Console\nCopyright © 2012-%d The TSC Contributors\n\n"
     "This program comes with ABSOLUTELY NO WARRANTY; for details\n"
-    "see the file tsc/docs/license.txt. This is free software, and\n"
-    "you are welcome to redistribute it under certain conditions;\n"
-    "see the aforementioned file for details.\n"), TSC_COMPILE_YEAR);
+    "see the file COPYING. This is free software, and you are\n"
+    "welcome to redistribute it under certain conditions; see the\n"
+    "aforementioned file for details.\n"), TSC_COMPILE_YEAR);
 
     Append_Text(std::string(text));
     Append_Text(std::string("\n"));
