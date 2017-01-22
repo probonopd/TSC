@@ -150,6 +150,16 @@ void cEditor::Enable(cSprite_Manager* p_edited_sprite_manager)
     m_enabled = true;
     editor_enabled = true;
     mp_edited_sprite_manager = p_edited_sprite_manager;
+
+    /* Update the position rects of all objects so they are positioned
+     * properly in the editor. This must come after setting
+     * editor_enabled so that Update_Position_Rect() can execute the
+     * editor-specific update on the initial start position. */
+    cSprite_List::iterator iter;
+    for(iter=mp_edited_sprite_manager->objects.begin(); iter != mp_edited_sprite_manager->objects.end(); iter++) {
+        cSprite*  p_sprite = *iter;
+        p_sprite->Update_Position_Rect();
+    }
 }
 
 void cEditor::Disable(void)

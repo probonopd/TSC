@@ -390,6 +390,9 @@ cObjectCollision* cMouseCursor::Get_First_Mouse_Collision(const GL_rect& mouse_r
             continue;
         }
 
+        // Always match against the start position rect (and not the
+        // current rect), because that is where the object is drawn in
+        // the editor and placed on initial level start.
         if (mouse_rect.Intersects(obj->m_start_rect)) {
             return Create_Collision_Object(this, obj, COL_VTYPE_INTERNAL);
         }
