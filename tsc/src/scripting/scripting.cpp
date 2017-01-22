@@ -266,9 +266,9 @@ void cMRuby_Interpreter::Evaluate_Timer_Callbacks()
     for (iter = m_callbacks.begin(); iter != m_callbacks.end(); iter++) {
         mrb_funcall(mp_mruby, *iter, "call", 0);
         if (mp_mruby->exc) {
-            cerr << "Warning: Error running timer callback: " << endl;
-            std::cerr << "Warning: Error running timer callback: " << std::endl;
-            mrb_print_error(mp_mruby);
+            // Exception occured
+            gp_game_console->Display_Exception(mp_mruby);
+            mp_mruby->exc = NULL;
         }
     }
 
