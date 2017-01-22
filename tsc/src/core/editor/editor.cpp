@@ -861,11 +861,14 @@ bool cEditor::Try_Add_Special_Item(cSprite* p_sprite)
     std::vector<cEditor_Menu_Entry*> target_menu_entries = find_target_menu_entries_for(available_tags);
     std::vector<cEditor_Menu_Entry*>::iterator iter;
 
-    // Some objects (like pathes) have no image at all. For those we can directly
-    // jump to the dummy image.
+    // Some objects (like pathes) have no image at all. Others are
+    // marked as "special", which means they intentionally have no
+    // image. The rest is an error and needs to have the dummy image.
     boost::filesystem::path image_path;
     if (p_sprite->Get_Image(0))
         image_path = p_sprite->Get_Image(0)->Get_Real_PNG_Path();
+    else if (std::find(available_tags.begin(), available_tags.end(), "special") != available_tags.end())
+        image_path = pResource_Manager->Get_Game_Pixmap("game/editor/special.png");
     else
         image_path = pResource_Manager->Get_Game_Pixmap("game/image_not_found.png");
 
