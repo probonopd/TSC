@@ -351,7 +351,7 @@ set(CPACK_COMPONENT_WORLDS_DEPENDS levels)
 set(CPACK_COMPONENT_BASE_REQUIRED ON)
 
 # Misc
-set(CPACK_RESOURCE_FILE_LICENSE "${TSC_SOURCE_DIR}/docs/license.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${TSC_SOURCE_DIR}/../COPYING")
 set(CPACK_CREATE_DESKTOP_LINKS tsc)
 set(CPACK_NSIS_MODIFY_PATH "ON") # Required for desktop shortcuts
 set(CPACK_NSIS_MUI_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer icon
