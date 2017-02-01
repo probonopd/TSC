@@ -545,16 +545,11 @@ by selecting it from the editor's menu.
 		<property name="color" value="green" />
 		<property name="direction" value="vertical" />
 	</item>
-	<!-- Turtle boss disabled for now due to lack of
-	     replacements. -->
-	<!-- See https://github.com/Secretchronicles/TSC/issues/77 -->
-	<!--
 	<item>
 		<property name="object_name" value="enemy" />
 		<property name="object_tags" value="level;enemy" />
 		<property name="type" value="turtleboss" />
 	</item>
-	-->
 	<item>
 		<property name="object_name" value="item" />
 		<property name="object_tags" value="level;special" />
