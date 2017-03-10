@@ -86,6 +86,8 @@ namespace TSC {
         void Set_Return_Level(const std::string& filename);
         // Set the return entry
         void Set_Return_Entry(const std::string& entry);
+        // Set name of the exit
+        void Set_Exit_Name(const std::string& name);
 
         /* Set the path identifier
          * only used if motion type is path
@@ -114,6 +116,8 @@ namespace TSC {
         bool Editor_Return_Level_Text_Changed(const CEGUI::EventArgs& event);
         // editor return entry text changed event
         bool Editor_Return_Entry_Text_Changed(const CEGUI::EventArgs& event);
+        // editor level exit name text changed event
+        bool Editor_Exit_Name_Text_Changed(const CEGUI::EventArgs& event);
         // editor path identifier text changed event
         bool Editor_Path_Identifier_Text_Changed(const CEGUI::EventArgs& event);
 
@@ -136,6 +140,8 @@ namespace TSC {
         std::string m_return_entry;
         // string identifier of the linked path
         std::string m_path_identifier;
+        // Name of the exit itself (used to determine path on the world map)
+        std::string m_exit_name;
 
         // editor type color
         Color m_editor_color;
