@@ -634,27 +634,48 @@ bool cWaypoint::Editor_Waypoint_Delete_Exit_Clicked(const CEGUI::EventArgs& even
 
     m_exits.erase(m_exits.begin() + index);
     rebuild_waypoint_exit_list();
+    update_exit_widgets();
 
     return 1;
 }
 
 bool cWaypoint::Editor_Waypoint_Exit_Direction_Select(const CEGUI::EventArgs& event)
 {
+    waypoint_exit* p_exit = get_edited_waypoint_exit();
+    if (!p_exit)
+        return 1;
+
+    p_exit->direction = Get_Direction_Id(mp_wp_exit_dir_box->getText().c_str());
     return 1;
 }
 
 bool cWaypoint::Editor_Waypoint_Exit_Level_Exit_Name_Changed(const CEGUI::EventArgs& event)
 {
+    waypoint_exit* p_exit = get_edited_waypoint_exit();
+    if (!p_exit)
+        return 1;
+
+    p_exit->level_exit_name = mp_wp_exit_name_edit->getText().c_str();
     return 1;
 }
 
 bool cWaypoint::Editor_Waypoint_Exit_Line_Start_UID_Changed(const CEGUI::EventArgs& event)
 {
+    waypoint_exit* p_exit = get_edited_waypoint_exit();
+    if (!p_exit)
+        return 1;
+
+    p_exit->line_start_uid = string_to_int(mp_wp_exit_uid_edit->getText().c_str());
     return 1;
 }
 
 bool cWaypoint::Editor_Waypoint_Exit_Locked_Select(const CEGUI::EventArgs& event)
 {
+    waypoint_exit* p_exit = get_edited_waypoint_exit();
+    if (!p_exit)
+        return 1;
+
+    p_exit->locked = mp_wp_exit_lock_box->getItemIndex(mp_wp_exit_lock_box->getSelectedItem()) == 0;
     return 1;
 }
 
@@ -672,20 +693,18 @@ void cWaypoint::rebuild_waypoint_exit_list()
 
 void cWaypoint::update_exit_widgets()
 {
-    size_t index = string_to_int(mp_wp_exits_box->getText().c_str()); // string_to_int() returns 0 on texts like "(none)"
+    const waypoint_exit* p_exit = get_edited_waypoint_exit();
 
-    if (index > 0 && index <= m_exits.size()) {
-        const waypoint_exit& ex = m_exits[--index]; // Convert from 1-based to 0-based
+    if (p_exit) {
+        mp_wp_exit_dir_box->setText(Get_Direction_Name(p_exit->direction));
 
-        mp_wp_exit_dir_box->setText(Get_Direction_Name(ex.direction));
-
-        if (ex.locked)
+        if (p_exit->locked)
             mp_wp_exit_lock_box->setText(UTF8_("Locked"));
         else
             mp_wp_exit_lock_box->setText(UTF8_("Unlocked"));
 
-        mp_wp_exit_name_edit->setText(ex.level_exit_name);
-        mp_wp_exit_uid_edit->setText(int_to_string(ex.line_start_uid));
+        mp_wp_exit_name_edit->setText(p_exit->level_exit_name);
+        mp_wp_exit_uid_edit->setText(int_to_string(p_exit->line_start_uid));
 
         mp_wp_exit_dir_box->enable();
         mp_wp_exit_lock_box->enable();
@@ -702,6 +721,17 @@ void cWaypoint::update_exit_widgets()
         mp_wp_exit_lock_box->disable();
         mp_wp_exit_name_edit->disable();
         mp_wp_exit_uid_edit->disable();
+    }
+}
+
+waypoint_exit* cWaypoint::get_edited_waypoint_exit()
+{
+    size_t index = string_to_int(mp_wp_exits_box->getText().c_str()); // string_to_int() returns 0 on texts like "(none)"
+    if (index > 0 && index <= m_exits.size()) {
+        return &m_exits[--index]; // Convert from 1-based to 0-based
+    }
+    else {
+        return NULL;
     }
 }
 

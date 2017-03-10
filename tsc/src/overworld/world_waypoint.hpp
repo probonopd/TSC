@@ -157,6 +157,7 @@ namespace TSC {
     private:
         void rebuild_waypoint_exit_list();
         void update_exit_widgets();
+        waypoint_exit* get_edited_waypoint_exit();
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
