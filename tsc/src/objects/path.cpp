@@ -525,6 +525,8 @@ xmlpp::Element* cPath::Save_To_XML_Node(xmlpp::Element* p_element)
     Add_Property(p_node, "rewind", m_rewind);
 
     // segments
+    // This is ugly XML because TSC's loader does not support nested
+    // XML tags currently.
     for (unsigned int i=0; i < m_segments.size(); i++) {
         std::string str_pos = int_to_string(i);
 

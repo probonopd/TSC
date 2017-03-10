@@ -30,6 +30,25 @@ namespace TSC {
         WAYPOINT_WORLD_LINK = 2 // Enters another World
     };
 
+    /**
+     * This struct encapsulates information about a possibility
+     * to leave a waypoint on the world map.
+     */
+    struct waypoint_exit
+    {
+        /// Leave direction (for mapping the user's key presses)
+        ObjectDirection direction;
+        /// Connected level exit in the waypoint's associated level
+        /// that unlocked this waypoint exit if taken.
+        std::string level_exit_name;
+        /// UID of the start point of the line which the player
+        /// shall move to if this exit is chosen.
+        int line_start_uid;
+        /// Whether or not this exit is locked. Unlocking requires
+        /// finding the level exit named with `level_exit_name`.
+        bool locked;
+    };
+
     /* *** *** *** *** *** *** cWaypoint *** *** *** *** *** *** *** *** *** *** *** */
 
     class cWaypoint : public cSprite {
@@ -52,9 +71,9 @@ namespace TSC {
         // Draw
         virtual void Draw(cSurface_Request* request = NULL);
 
-        // Set direction forward
+        // Set direction forward (DEPRECATED)
         void Set_Direction_Forward(ObjectDirection direction);
-        // Set direction backward
+        // Set direction backward (DEPRECATED)
         void Set_Direction_Backward(ObjectDirection direction);
         // Set Access
         void Set_Access(bool enabled, bool new_start_access = 0);
@@ -79,11 +98,15 @@ namespace TSC {
         bool Editor_Backward_Direction_Select(const CEGUI::EventArgs& event);
         // editor direction forward option selected event
         bool Editor_Forward_Direction_Select(const CEGUI::EventArgs& event);
+        // a waypoint exit was selected in the combobox
+        bool Editor_Waypoint_Exit_Select(const CEGUI::EventArgs& event);
+        // a new waypoint exit was requested
+        bool Editor_Waypoint_New_Exit_Clicked(const CEGUI::EventArgs& event);
 #endif
 
-        // forward direction
+        // forward direction (DEPRECATED)
         ObjectDirection m_direction_forward;
-        // backward direction
+        // backward direction (DEPRECATED)
         ObjectDirection m_direction_backward;
 
         /* The Waypoint type
@@ -93,7 +116,7 @@ namespace TSC {
         // destination
         std::string m_destination;
 
-        // if this waypoint is accessible
+        // if this waypoint is accessible (checked for drawing waypoint graphic)
         bool m_access;
         // the default access defined in the definition
         bool m_access_default;
@@ -103,10 +126,13 @@ namespace TSC {
         // glim effect type switch
         bool m_glim_mod;
 
-        // arrow forward
+        // arrow forward (DEPRECATED)
         cGL_Surface* m_arrow_forward;
-        // arrow backward
+        // arrow backward (DEPRECATED)
         cGL_Surface* m_arrow_backward;
+
+        // All exits the user may take from this waypoint.
+        std::vector<waypoint_exit> m_exits;
 
         // Save to node
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);

@@ -33,6 +33,9 @@
 #include "../core/editor/editor.hpp"
 #include "world_editor.hpp"
 
+// Maximum number of waypoint exits is 4. One for each direction.
+#define MAX_WAYPOINT_EXITS 4
+
 using namespace std;
 
 namespace TSC {
@@ -73,14 +76,34 @@ cWaypoint::cWaypoint(XmlAttributes& attributes, cSprite_Manager* sprite_manager)
     else
         Set_Destination(attributes["destination"]);
 
-    // backward direction
-    Set_Direction_Backward(Get_Direction_Id(attributes.fetch<std::string>("direction_backward", "left")));
+    if (attributes.exists("direction_backward")) // pre 2.1.0
+        // backward direction
+        Set_Direction_Backward(Get_Direction_Id(attributes.fetch<std::string>("direction_backward", "left")));
 
-    // forward direction
-    Set_Direction_Forward(Get_Direction_Id(attributes.fetch<std::string>("direction_forward", "right")));
+    if (attributes.exists("direction_forward")) // pre 2.1.0
+        // forward direction
+        Set_Direction_Forward(Get_Direction_Id(attributes.fetch<std::string>("direction_forward", "right")));
 
     // access
     Set_Access(attributes.fetch<bool>("access", true), true);
+
+    // >=-2.1.0 way to save waypoint exits
+    for(int i=0; i < MAX_WAYPOINT_EXITS; i++) {
+        std::string direction_attr       = "waypoint_exit_" + int_to_string(i) + "_direction";
+        std::string level_exit_name_attr = "waypoint_exit_" + int_to_string(i) + "_level_exit_name";
+        std::string line_start_uid_attr  = "waypoint_exit_" + int_to_string(i) + "_line_start_uid";
+        std::string locked_attr          = "waypoint_exit_" + int_to_string(i) + "_locked";
+
+        if (attributes.exists(direction_attr)) { // assuming that in this case all 4 attributes exist
+            waypoint_exit exit;
+            exit.direction       = Get_Direction_Id(attributes[direction_attr]);
+            exit.level_exit_name = attributes[level_exit_name_attr];
+            exit.line_start_uid  = attributes.fetch<int>(line_start_uid_attr, 0);
+            exit.locked          = attributes.fetch<bool>(locked_attr, true);
+
+            m_exits.push_back(exit);
+        }
+    }
 }
 
 cWaypoint::~cWaypoint(void)
@@ -141,12 +164,31 @@ xmlpp::Element* cWaypoint::Save_To_XML_Node(xmlpp::Element* p_element)
 
     // destination
     Add_Property(p_node, "destination", m_destination);
-    // direction backward
-    Add_Property(p_node, "direction_backward", Get_Direction_Name(m_direction_backward));
-    // direction forward
-    Add_Property(p_node, "direction_forward", Get_Direction_Name(m_direction_forward));
+
+    // The following attributes only affect pre 2.1.0 worlds.
+
+    if (m_direction_backward != DIR_UNDEFINED)
+        // direction backward
+        Add_Property(p_node, "direction_backward", Get_Direction_Name(m_direction_backward));
+    if (m_direction_forward != DIR_UNDEFINED)
+        // direction forward
+        Add_Property(p_node, "direction_forward", Get_Direction_Name(m_direction_forward));
+
     // access
     Add_Property(p_node, "access", m_access_default);
+
+    // post-2.1.0 way of saving waypoint exits. Note that this is rather ugly
+    // XML, but TSC's XML loader does not support nested tags as of now. Everything
+    // must be expressed using a flat list of properties.
+    for(size_t i=0; i < m_exits.size(); i++) {
+        std::string str_pos = int_to_string(i);
+        waypoint_exit exit  = m_exits[i];
+
+        Add_Property(p_node, "waypoint_exit_" + str_pos + "_direction", Get_Direction_Name(exit.direction));
+        Add_Property(p_node, "waypoint_exit_" + str_pos + "_level_exit_name", exit.level_exit_name);
+        Add_Property(p_node, "waypoint_exit_" + str_pos + "_line_start_uid", exit.line_start_uid);
+        Add_Property(p_node, "waypoint_exit_" + str_pos + "_locked", exit.locked);
+    }
 
     return p_node;
 }
@@ -389,29 +431,35 @@ void cWaypoint::Editor_Activate(void)
     editbox->setText(Get_Destination());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Destination_Text_Changed, this));
 
-    // backward direction
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_backward_direction"));
+    // pre 2.1.0: direction backward
+    if (m_direction_backward != DIR_UNDEFINED) {
+        // backward direction
+        combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_backward_direction"));
 
-    combobox->addItem(new CEGUI::ListboxTextItem("up"));
-    combobox->addItem(new CEGUI::ListboxTextItem("down"));
-    combobox->addItem(new CEGUI::ListboxTextItem("right"));
-    combobox->addItem(new CEGUI::ListboxTextItem("left"));
-    combobox->setText(Get_Direction_Name(m_direction_backward));
+        combobox->addItem(new CEGUI::ListboxTextItem("up"));
+        combobox->addItem(new CEGUI::ListboxTextItem("down"));
+        combobox->addItem(new CEGUI::ListboxTextItem("right"));
+        combobox->addItem(new CEGUI::ListboxTextItem("left"));
+        combobox->setText(Get_Direction_Name(m_direction_backward));
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Backward_Direction_Select, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Backward Direction"), UTF8_("Backward Direction"), combobox);
+        combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Backward_Direction_Select, this));
+        pWorld_Editor->Add_Config_Widget(UTF8_("Backward Direction"), UTF8_("Backward Direction"), combobox);
+    }
 
-    // forward direction
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_forward_direction"));
+    // pre 2.1.0: direction forward
+    if (m_direction_forward != DIR_UNDEFINED) {
+        // forward direction
+        combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_forward_direction"));
 
-    combobox->addItem(new CEGUI::ListboxTextItem("up"));
-    combobox->addItem(new CEGUI::ListboxTextItem("down"));
-    combobox->addItem(new CEGUI::ListboxTextItem("right"));
-    combobox->addItem(new CEGUI::ListboxTextItem("left"));
-    combobox->setText(Get_Direction_Name(m_direction_forward));
+        combobox->addItem(new CEGUI::ListboxTextItem("up"));
+        combobox->addItem(new CEGUI::ListboxTextItem("down"));
+        combobox->addItem(new CEGUI::ListboxTextItem("right"));
+        combobox->addItem(new CEGUI::ListboxTextItem("left"));
+        combobox->setText(Get_Direction_Name(m_direction_forward));
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Forward_Direction_Select, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Forward Direction"), UTF8_("Forward Direction"), combobox);
+        combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Forward_Direction_Select, this));
+        pWorld_Editor->Add_Config_Widget(UTF8_("Forward Direction"), UTF8_("Forward Direction"), combobox);
+    }
 
     // Access
     combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_access"));
@@ -428,6 +476,22 @@ void cWaypoint::Editor_Activate(void)
 
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Access_Select, this));
     pWorld_Editor->Add_Config_Widget(UTF8_("Default Access"), UTF8_("Enable if the Waypoint should be always accessible."), combobox);
+
+    // waypoint exits
+    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_exit_select"));
+    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("(None)")));
+    for(size_t i=0; i < m_exits.size(); i++)
+        combobox->addItem(new CEGUI::ListboxTextItem(int_to_string(i+1)));
+    combobox->setText(UTF8_("(None)"));
+
+    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Waypoint Exit"), UTF8_("Select the waypoint exit to edit."), combobox);
+
+    // new waypoint exit
+    CEGUI::PushButton* button = static_cast<CEGUI::PushButton*>(wmgr.createWindow("TaharezLook/Button", "new_waypoint"));
+    button->setText(UTF8_("New Exit"));
+    button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_New_Exit_Clicked, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("New Exit"), UTF8_("Create a new exit by clicking."), button);
 
     // init
     Editor_Init();
@@ -492,6 +556,17 @@ bool cWaypoint::Editor_Access_Select(const CEGUI::EventArgs& event)
 
     return 1;
 }
+
+bool cWaypoint::Editor_Waypoint_Exit_Select(const CEGUI::EventArgs& event)
+{
+    return 1;
+}
+
+bool cWaypoint::Editor_Waypoint_New_Exit_Clicked(const CEGUI::EventArgs& event)
+{
+    return 1;
+}
+
 #endif // ENABLE_EDITOR
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */
