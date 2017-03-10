@@ -102,6 +102,14 @@ namespace TSC {
         bool Editor_Waypoint_Exit_Select(const CEGUI::EventArgs& event);
         // a new waypoint exit was requested
         bool Editor_Waypoint_New_Exit_Clicked(const CEGUI::EventArgs& event);
+        // direction of the exit was changed
+        bool Editor_Waypoint_Exit_Direction_Select(const CEGUI::EventArgs& event);
+        // mapped level name was changed
+        bool Editor_Waypoint_Exit_Level_Exit_Name_Changed(const CEGUI::EventArgs& event);
+        // UID of start line point was changed
+        bool Editor_Waypoint_Exit_Line_Start_UID_Changed(const CEGUI::EventArgs& event);
+        // default lock state was changed
+        bool Editor_Waypoint_Exit_Locked_Select(const CEGUI::EventArgs& event);
 #endif
 
         // forward direction (DEPRECATED)

@@ -493,6 +493,44 @@ void cWaypoint::Editor_Activate(void)
     button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_New_Exit_Clicked, this));
     pWorld_Editor->Add_Config_Widget(UTF8_("New Exit"), UTF8_("Create a new exit by clicking."), button);
 
+    // Widgets for configuring a waypoint exit
+
+    // waypoint exit direction
+    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_exit_direction"));
+
+    combobox->addItem(new CEGUI::ListboxTextItem("up"));
+    combobox->addItem(new CEGUI::ListboxTextItem("down"));
+    combobox->addItem(new CEGUI::ListboxTextItem("right"));
+    combobox->addItem(new CEGUI::ListboxTextItem("left"));
+    combobox->setText("up");
+    combobox->disable();
+
+    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Direction_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Leave direction"), UTF8_("Direction key to press for leaving the waypoint for this exit"), combobox);
+
+    // waypoint exit level exit name
+    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_exit_level_exit_name"));
+    editbox->disable();
+    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Level_Exit_Name_Changed, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Level Exit"), UTF8_("Name of the level exit in the level that activates this waypoint exit."), editbox);
+
+    // waypoint exit start line point UID
+    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_exit_line_start_uid"));
+    editbox->disable();
+    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Line_Start_UID_Changed, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Line start UID"), UTF8_("UID of the line start point to set Alex onto when taking this exit."), editbox);
+
+    // waypoint exit locked
+    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_locked"));
+
+    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Locked")));
+    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Unlocked")));
+    combobox->setText(UTF8_("Locked"));
+    combobox->disable();
+
+    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Locked_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Lock state"), UTF8_("Is this exit locked by default? PLEASE also set access to enabled on the target waypoint if you unlock by default!"), combobox);
+
     // init
     Editor_Init();
 }
@@ -563,6 +601,26 @@ bool cWaypoint::Editor_Waypoint_Exit_Select(const CEGUI::EventArgs& event)
 }
 
 bool cWaypoint::Editor_Waypoint_New_Exit_Clicked(const CEGUI::EventArgs& event)
+{
+    return 1;
+}
+
+bool cWaypoint::Editor_Waypoint_Exit_Direction_Select(const CEGUI::EventArgs& event)
+{
+    return 1;
+}
+
+bool cWaypoint::Editor_Waypoint_Exit_Level_Exit_Name_Changed(const CEGUI::EventArgs& event)
+{
+    return 1;
+}
+
+bool cWaypoint::Editor_Waypoint_Exit_Line_Start_UID_Changed(const CEGUI::EventArgs& event)
+{
+    return 1;
+}
+
+bool cWaypoint::Editor_Waypoint_Exit_Locked_Select(const CEGUI::EventArgs& event)
 {
     return 1;
 }
