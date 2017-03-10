@@ -102,6 +102,8 @@ namespace TSC {
         bool Editor_Waypoint_Exit_Select(const CEGUI::EventArgs& event);
         // a new waypoint exit was requested
         bool Editor_Waypoint_New_Exit_Clicked(const CEGUI::EventArgs& event);
+        // deletion of selected waypoint exit was requested
+        bool Editor_Waypoint_Delete_Exit_Clicked(const CEGUI::EventArgs& event);
         // direction of the exit was changed
         bool Editor_Waypoint_Exit_Direction_Select(const CEGUI::EventArgs& event);
         // mapped level name was changed
@@ -142,10 +144,19 @@ namespace TSC {
         // All exits the user may take from this waypoint.
         std::vector<waypoint_exit> m_exits;
 
+        CEGUI::Combobox* mp_wp_exits_box;
+        CEGUI::Combobox* mp_wp_exit_dir_box;
+        CEGUI::Combobox* mp_wp_exit_lock_box;
+        CEGUI::Editbox* mp_wp_exit_name_edit;
+        CEGUI::Editbox* mp_wp_exit_uid_edit;
+
         // Save to node
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
     protected:
         virtual std::string Get_XML_Type_Name();
+    private:
+        void rebuild_waypoint_exit_list();
+        void update_exit_widgets();
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

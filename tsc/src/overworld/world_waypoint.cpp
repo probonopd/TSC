@@ -137,6 +137,12 @@ void cWaypoint::Init(void)
     m_arrow_forward = NULL;
     m_arrow_backward = NULL;
 
+    mp_wp_exits_box      = NULL;
+    mp_wp_exit_dir_box   = NULL;
+    mp_wp_exit_lock_box  = NULL;
+    mp_wp_exit_name_edit = NULL;
+    mp_wp_exit_uid_edit  = NULL;
+
     Set_Image(pVideo->Get_Package_Surface("world/waypoint/default_1.png"));
 }
 
@@ -478,58 +484,59 @@ void cWaypoint::Editor_Activate(void)
     pWorld_Editor->Add_Config_Widget(UTF8_("Default Access"), UTF8_("Enable if the Waypoint should be always accessible."), combobox);
 
     // waypoint exits
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_exit_select"));
-    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("(None)")));
-    for(size_t i=0; i < m_exits.size(); i++)
-        combobox->addItem(new CEGUI::ListboxTextItem(int_to_string(i+1)));
-    combobox->setText(UTF8_("(None)"));
+    mp_wp_exits_box = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_exit_select"));
+    rebuild_waypoint_exit_list();
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Select, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Waypoint Exit"), UTF8_("Select the waypoint exit to edit."), combobox);
+    mp_wp_exits_box->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Waypoint Exit"), UTF8_("Select the waypoint exit to edit."), mp_wp_exits_box);
 
     // new waypoint exit
-    CEGUI::PushButton* button = static_cast<CEGUI::PushButton*>(wmgr.createWindow("TaharezLook/Button", "new_waypoint"));
+    CEGUI::PushButton* button = static_cast<CEGUI::PushButton*>(wmgr.createWindow("TaharezLook/Button", "new_waypoint_exit"));
     button->setText(UTF8_("New Exit"));
     button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_New_Exit_Clicked, this));
     pWorld_Editor->Add_Config_Widget(UTF8_("New Exit"), UTF8_("Create a new exit by clicking."), button);
 
+    // Remove waypoint exit
+    button = static_cast<CEGUI::PushButton*>(wmgr.createWindow("TaharezLook/Button", "delete_waypoint_exit"));
+    button->setText(UTF8_("Delete Exit"));
+    button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Delete_Exit_Clicked, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Delete Exit"), UTF8_("Delete the currently selected exit by clicking."), button);
+
     // Widgets for configuring a waypoint exit
 
     // waypoint exit direction
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_exit_direction"));
+    mp_wp_exit_dir_box = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_exit_direction"));
 
-    combobox->addItem(new CEGUI::ListboxTextItem("up"));
-    combobox->addItem(new CEGUI::ListboxTextItem("down"));
-    combobox->addItem(new CEGUI::ListboxTextItem("right"));
-    combobox->addItem(new CEGUI::ListboxTextItem("left"));
-    combobox->setText("up");
-    combobox->disable();
+    mp_wp_exit_dir_box->addItem(new CEGUI::ListboxTextItem("up"));
+    mp_wp_exit_dir_box->addItem(new CEGUI::ListboxTextItem("down"));
+    mp_wp_exit_dir_box->addItem(new CEGUI::ListboxTextItem("right"));
+    mp_wp_exit_dir_box->addItem(new CEGUI::ListboxTextItem("left"));
+    mp_wp_exit_dir_box->setText("up");
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Direction_Select, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Leave direction"), UTF8_("Direction key to press for leaving the waypoint for this exit"), combobox);
+    mp_wp_exit_dir_box->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Direction_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Leave direction"), UTF8_("Direction key to press for leaving the waypoint for this exit"), mp_wp_exit_dir_box);
 
     // waypoint exit level exit name
-    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_exit_level_exit_name"));
-    editbox->disable();
-    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Level_Exit_Name_Changed, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Level Exit"), UTF8_("Name of the level exit in the level that activates this waypoint exit."), editbox);
+    mp_wp_exit_name_edit = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_exit_level_exit_name"));
+    mp_wp_exit_name_edit->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Level_Exit_Name_Changed, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Level Exit"), UTF8_("Name of the level exit in the level that activates this waypoint exit."), mp_wp_exit_name_edit);
 
     // waypoint exit start line point UID
-    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_exit_line_start_uid"));
-    editbox->disable();
-    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Line_Start_UID_Changed, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Line start UID"), UTF8_("UID of the line start point to set Alex onto when taking this exit."), editbox);
+    mp_wp_exit_uid_edit = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "waypoint_exit_line_start_uid"));
+    mp_wp_exit_uid_edit->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Line_Start_UID_Changed, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Line start UID"), UTF8_("UID of the line start point to set Alex onto when taking this exit."), mp_wp_exit_uid_edit);
 
     // waypoint exit locked
-    combobox = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_locked"));
+    mp_wp_exit_lock_box = static_cast<CEGUI::Combobox*>(wmgr.createWindow("TaharezLook/Combobox", "waypoint_locked"));
 
-    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Locked")));
-    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("Unlocked")));
-    combobox->setText(UTF8_("Locked"));
-    combobox->disable();
+    mp_wp_exit_lock_box->addItem(new CEGUI::ListboxTextItem(UTF8_("Locked")));
+    mp_wp_exit_lock_box->addItem(new CEGUI::ListboxTextItem(UTF8_("Unlocked")));
+    mp_wp_exit_lock_box->setText(UTF8_("Locked"));
 
-    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Locked_Select, this));
-    pWorld_Editor->Add_Config_Widget(UTF8_("Lock state"), UTF8_("Is this exit locked by default? PLEASE also set access to enabled on the target waypoint if you unlock by default!"), combobox);
+    mp_wp_exit_lock_box->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cWaypoint::Editor_Waypoint_Exit_Locked_Select, this));
+    pWorld_Editor->Add_Config_Widget(UTF8_("Lock state"), UTF8_("Is this exit locked by default? PLEASE also set access to enabled on the target waypoint if you unlock by default!"), mp_wp_exit_lock_box);
+
+    update_exit_widgets();
 
     // init
     Editor_Init();
@@ -597,11 +604,37 @@ bool cWaypoint::Editor_Access_Select(const CEGUI::EventArgs& event)
 
 bool cWaypoint::Editor_Waypoint_Exit_Select(const CEGUI::EventArgs& event)
 {
+    update_exit_widgets();
     return 1;
 }
 
 bool cWaypoint::Editor_Waypoint_New_Exit_Clicked(const CEGUI::EventArgs& event)
 {
+    waypoint_exit ex { DIR_UP, "", 0, true };
+    m_exits.push_back(std::move(ex));
+
+    rebuild_waypoint_exit_list();
+
+    // Jump to the newly created waypoint exit
+    mp_wp_exits_box->setText(int_to_string(m_exits.size()));
+    update_exit_widgets();
+    return 1;
+}
+
+bool cWaypoint::Editor_Waypoint_Delete_Exit_Clicked(const CEGUI::EventArgs& event)
+{
+    size_t index = string_to_int(mp_wp_exits_box->getText().c_str()); // string_to_int() returns 0 on texts like "(none)"
+
+    // out of range
+    if (index <= 0 || index > m_exits.size())
+        return 1;
+
+    // Convert from 1-based to 0-based
+    index--;
+
+    m_exits.erase(m_exits.begin() + index);
+    rebuild_waypoint_exit_list();
+
     return 1;
 }
 
@@ -623,6 +656,53 @@ bool cWaypoint::Editor_Waypoint_Exit_Line_Start_UID_Changed(const CEGUI::EventAr
 bool cWaypoint::Editor_Waypoint_Exit_Locked_Select(const CEGUI::EventArgs& event)
 {
     return 1;
+}
+
+void cWaypoint::rebuild_waypoint_exit_list()
+{
+    // Wipe all entries from the list
+    mp_wp_exits_box->resetList();
+
+    // Add dummy item plus real items found in m_exits
+    mp_wp_exits_box->addItem(new CEGUI::ListboxTextItem(UTF8_("(None)")));
+    for(size_t i=0; i < m_exits.size(); i++)
+        mp_wp_exits_box->addItem(new CEGUI::ListboxTextItem(int_to_string(i+1)));
+    mp_wp_exits_box->setText(UTF8_("(None)"));
+}
+
+void cWaypoint::update_exit_widgets()
+{
+    size_t index = string_to_int(mp_wp_exits_box->getText().c_str()); // string_to_int() returns 0 on texts like "(none)"
+
+    if (index > 0 && index <= m_exits.size()) {
+        const waypoint_exit& ex = m_exits[--index]; // Convert from 1-based to 0-based
+
+        mp_wp_exit_dir_box->setText(Get_Direction_Name(ex.direction));
+
+        if (ex.locked)
+            mp_wp_exit_lock_box->setText(UTF8_("Locked"));
+        else
+            mp_wp_exit_lock_box->setText(UTF8_("Unlocked"));
+
+        mp_wp_exit_name_edit->setText(ex.level_exit_name);
+        mp_wp_exit_uid_edit->setText(int_to_string(ex.line_start_uid));
+
+        mp_wp_exit_dir_box->enable();
+        mp_wp_exit_lock_box->enable();
+        mp_wp_exit_name_edit->enable();
+        mp_wp_exit_uid_edit->enable();
+    }
+    else {
+        mp_wp_exit_dir_box->setText(Get_Direction_Name(DIR_UP));
+        mp_wp_exit_lock_box->setText(UTF8_("Locked"));
+        mp_wp_exit_name_edit->setText("");
+        mp_wp_exit_uid_edit->setText("");
+
+        mp_wp_exit_dir_box->disable();
+        mp_wp_exit_lock_box->disable();
+        mp_wp_exit_name_edit->disable();
+        mp_wp_exit_uid_edit->disable();
+    }
 }
 
 #endif // ENABLE_EDITOR
