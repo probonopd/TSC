@@ -541,7 +541,7 @@ bool cOverworld::Key_Down(const sf::Event& evt)
         pOverworld_Manager->m_debug_mode = !pOverworld_Manager->m_debug_mode;
         game_debug = pOverworld_Manager->m_debug_mode;
     }
-    else if (evt.key.code == sf::Keyboard::L && pOverworld_Manager->m_debug_mode) {
+    else if (evt.key.code == sf::Keyboard::L && editor_world_enabled) {
         // toggle layer drawing
         pOverworld_Manager->m_draw_layer = !pOverworld_Manager->m_draw_layer;
     }

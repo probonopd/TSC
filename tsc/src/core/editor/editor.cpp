@@ -439,6 +439,7 @@ bool cEditor::Key_Down(const sf::Event& evt)
                                       "Home - Focus level start\n"
                                       "End - Focus last level exit\n"
                                       "Ctrl + G - Goto Camera position\n"
+                                      "L - In world editor: toggle walk line visibility\n"
                                       "N - Step one screen to the right ( Next Screen )\n"
                                       "P - Step one screen to the left ( Previous Screen )\n"
                                       "Ctrl + N - Create a new Level\n"

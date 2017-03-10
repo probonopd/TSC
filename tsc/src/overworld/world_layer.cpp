@@ -85,7 +85,7 @@ xmlpp::Element* cLayer_Line_Point::Save_To_XML_Node(xmlpp::Element* p_element)
 
 void cLayer_Line_Point::Draw(cSurface_Request* request /* = NULL */)
 {
-    if (m_auto_destroy || !pOverworld_Manager->m_draw_layer) {
+    if (m_auto_destroy || !editor_world_enabled || !pOverworld_Manager->m_draw_layer) {
         return;
     }
 
@@ -193,7 +193,7 @@ void cLayer_Line_Point_Start::Set_Sprite_Manager(cSprite_Manager* sprite_manager
 void cLayer_Line_Point_Start::Draw(cSurface_Request* request /* = NULL */)
 {
     // not a valid draw
-    if (m_auto_destroy || m_linked_point->m_auto_destroy || !pOverworld_Manager->m_draw_layer) {
+    if (m_auto_destroy || m_linked_point->m_auto_destroy || !editor_world_enabled || !pOverworld_Manager->m_draw_layer) {
         return;
     }
 

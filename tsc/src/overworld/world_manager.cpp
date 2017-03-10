@@ -37,7 +37,7 @@ cOverworld_Manager::cOverworld_Manager(cSprite_Manager* sprite_manager)
     : cObject_Manager<cOverworld>()
 {
     m_debug_mode = 0;
-    m_draw_layer = 0;
+    m_draw_layer = 1;
     m_camera_mode = 0;
 
     m_camera = new cCamera(sprite_manager);
