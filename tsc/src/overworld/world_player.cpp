@@ -355,60 +355,79 @@ bool cOverworld_Player::Start_Walk(ObjectDirection new_direction)
         cout << "Current Alex Direction : " << m_direction << endl;
 
         if (m_current_waypoint > 0) {
-            cout << "Waypoint Direction Forward : " << Get_Waypoint()->m_direction_forward << " Backward : " << Get_Waypoint()->m_direction_backward << endl;
+            cout << "Legacy Waypoint Direction Forward : " << Get_Waypoint()->m_direction_forward << " Backward : " << Get_Waypoint()->m_direction_backward << endl;
+            cout << "Waypoint exit count: " << Get_Waypoint()->m_exits.size() << endl;
         }
     }
 
-    // a start from waypoint
-    if (m_current_waypoint >= 0 && m_direction == DIR_UNDEFINED) {
-        // Get Layer Line in front
-        cLayer_Line_Point_Start* front_line = Get_Front_Line(new_direction);
+    cLayer_Line_Point_Start* walk_line = NULL;
+    if (Get_Waypoint()->m_exits.size() > 0) { // Since 2.1.0
+        waypoint_exit* p_exit = NULL;
 
-        if (!front_line) {
-            if (pOverworld_Manager->m_debug_mode) {
-                cout << "Waypoint Front line not detected" << endl;
+        // Find the line matching the requested direction
+        for(auto iter=Get_Waypoint()->m_exits.begin(); iter != Get_Waypoint()->m_exits.end(); iter++) {
+            if (iter->direction == new_direction && !iter->locked) {
+                p_exit = &(*iter);
+                break;
             }
+        }
 
+        // No matching unlocked waypoint exit
+        if (!p_exit) {
             return 0;
         }
 
-        if (pOverworld_Manager->m_debug_mode) {
-            cout << "Waypoint Front line id " << m_overworld->m_layer->Get_Array_Num(front_line) << ", origin id " << front_line->m_origin << endl;
+        walk_line = Get_Line_By_UID(p_exit->line_start_uid);
+        if (!walk_line) {
+            cout << "Line with UID point " << p_exit->line_start_uid << " not found." << endl;
+            return 0;
         }
 
-        // forward
-        if (Get_Waypoint()->m_direction_forward == new_direction) {
-            cWaypoint* next_waypoint = front_line->Get_End_Waypoint();
+        // Not only lines, also waypoints have access rights
+        cWaypoint* next_waypoint = (walk_line->Get_Opposite_Waypoint_for_UID(p_exit->line_start_uid));
+        if (!check_access_to_waypoint(next_waypoint))
+            return 0;
 
-            if (!next_waypoint) {
-                cout << "Next waypoint not detected" << endl;
-                return 0;
-            }
+        // set line waypoint
+        m_line_waypoint = walk_line->m_origin;
+    }
+    else { // Legacy, pre-2.1.0 format using forward and backward direction
+        // a start from waypoint
+        if (m_current_waypoint >= 0 && m_direction == DIR_UNDEFINED) {
+            // Get Layer Line in front
+            cLayer_Line_Point_Start* front_line = Get_Front_Line(new_direction);
 
-            // next waypoint is not accessible
-            if (!next_waypoint->m_access) {
+            if (!front_line) {
                 if (pOverworld_Manager->m_debug_mode) {
-                    cout << "No access to next waypoint" << endl;
+                    cout << "Waypoint Front line not detected" << endl;
                 }
 
                 return 0;
             }
 
             if (pOverworld_Manager->m_debug_mode) {
-                cout << "Next waypoint id : " << m_current_waypoint << endl;
+                cout << "Waypoint Front line id " << m_overworld->m_layer->Get_Array_Num(front_line) << ", origin id " << front_line->m_origin << endl;
             }
 
-            // set line waypoint
-            m_line_waypoint = front_line->m_origin;
-        }
-        // backward
-        else if (Get_Waypoint()->m_direction_backward == new_direction) {
-            // set line waypoint
-            m_line_waypoint = front_line->m_origin;
-        }
-        // invalid direction
-        else {
-            return 0;
+            // forward
+            if (Get_Waypoint()->m_direction_forward == new_direction) {
+                cWaypoint* next_waypoint = front_line->Get_End_Waypoint();
+
+                if (!check_access_to_waypoint(next_waypoint))
+                    return 0;
+
+                // set line waypoint
+                m_line_waypoint = front_line->m_origin;
+            }
+            // backward: always unlocked, no need to check access
+            else if (Get_Waypoint()->m_direction_backward == new_direction) {
+                // set line waypoint
+                m_line_waypoint = front_line->m_origin;
+            }
+            // invalid direction
+            else {
+                return 0;
+            }
         }
     }
 
@@ -490,6 +509,18 @@ void cOverworld_Player::Start_Waypoint_Walk(int new_waypoint)
     m_current_waypoint = new_waypoint;
     m_current_line = -2;
 
+    // Unlock backwards direction waypoint exit on a non-legacy waypoint
+    // (otherwise the player can't go backwards).
+    cWaypoint* waypoint = m_overworld->m_waypoints[m_current_waypoint];
+    if (!waypoint->m_exits.empty()) {
+        for(waypoint_exit& ex: waypoint->m_exits) {
+            if (ex.direction == Get_Opposite_Direction(m_direction)) {
+                ex.locked = false;
+                break;
+            }
+        }
+    }
+
     m_overworld->Update_Waypoint_text();
 }
 
@@ -570,6 +601,11 @@ cWaypoint* cOverworld_Player::Get_Waypoint(void)
 cLayer_Line_Point_Start* cOverworld_Player::Get_Front_Line(ObjectDirection dir) const
 {
     return m_overworld->m_layer->Get_Line_Collision_Direction(m_col_rect.m_x + (m_col_rect.m_w * 0.5f), m_col_rect.m_y + (m_col_rect.m_h * 0.5f), dir).m_line;
+}
+
+cLayer_Line_Point_Start* cOverworld_Player::Get_Line_By_UID(int uid)
+{
+    return m_overworld->m_layer->Get_Line_Start_By_UID(uid);
 }
 
 void cOverworld_Player::Update_Path_Diff(unsigned int check_size /* = 25 */)
@@ -714,6 +750,25 @@ void cOverworld_Player::Auto_Pos_Correction(float size /* = 1.7f */, float min_d
             m_current_line = m_line_hor.m_line_number;
         }
     }
+}
+
+bool cOverworld_Player::check_access_to_waypoint(cWaypoint* p_wp)
+{
+    if (!p_wp) {
+        cout << "Next waypoint not detected" << endl;
+        return 0;
+    }
+
+    // next waypoint is not accessible
+    if (!p_wp->m_access) {
+        if (pOverworld_Manager->m_debug_mode) {
+            cout << "No access to next waypoint" << endl;
+        }
+
+        return 0;
+    }
+
+    return 1;
 }
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

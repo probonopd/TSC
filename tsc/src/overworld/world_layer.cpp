@@ -85,7 +85,7 @@ xmlpp::Element* cLayer_Line_Point::Save_To_XML_Node(xmlpp::Element* p_element)
 
 void cLayer_Line_Point::Draw(cSurface_Request* request /* = NULL */)
 {
-    if (m_auto_destroy || !pOverworld_Manager->m_draw_layer) {
+    if (m_auto_destroy || !editor_world_enabled || !pOverworld_Manager->m_draw_layer) {
         return;
     }
 
@@ -193,7 +193,7 @@ void cLayer_Line_Point_Start::Set_Sprite_Manager(cSprite_Manager* sprite_manager
 void cLayer_Line_Point_Start::Draw(cSurface_Request* request /* = NULL */)
 {
     // not a valid draw
-    if (m_auto_destroy || m_linked_point->m_auto_destroy || !pOverworld_Manager->m_draw_layer) {
+    if (m_auto_destroy || m_linked_point->m_auto_destroy || !editor_world_enabled || !pOverworld_Manager->m_draw_layer) {
         return;
     }
 
@@ -242,6 +242,43 @@ cWaypoint* cLayer_Line_Point_Start::Get_End_Waypoint(void) const
     // return Waypoint
     return m_overworld->Get_Waypoint(wp_num);
 }
+
+cWaypoint* cLayer_Line_Point_Start::Get_Start_Waypoint(void) const
+{
+    // get waypoint number
+    int wp_num = m_overworld->Get_Waypoint_Collision(m_col_rect);
+
+    // no waypoint collision
+    if (wp_num < 0) {
+        cLayer_Line_Point_Start* line_col = m_overworld->m_layer->Get_Line_Collision_Start(m_col_rect);
+
+        // line collision
+        if (line_col) {
+            // follow line
+            return line_col->Get_Start_Waypoint();
+        }
+    }
+
+    // return Waypoint
+    return m_overworld->Get_Waypoint(wp_num);
+}
+
+cWaypoint* cLayer_Line_Point_Start::Get_Waypoint_for_UID(int uid) const
+{
+    if (m_uid == uid)
+        return Get_Start_Waypoint();
+    else
+        return Get_End_Waypoint();
+}
+
+cWaypoint* cLayer_Line_Point_Start::Get_Opposite_Waypoint_for_UID(int uid) const
+{
+    if (m_uid == uid)
+        return Get_End_Waypoint();
+    else
+        return Get_Start_Waypoint();
+}
+
 
 #ifdef ENABLE_EDITOR
 void cLayer_Line_Point_Start::Editor_Activate(void)
@@ -317,6 +354,19 @@ void cLayer::Add(cLayer_Line_Point_Start* line_point)
         // add end point
         m_overworld->m_sprite_manager->Add(line_point->m_linked_point);
     }
+}
+
+cLayer_Line_Point_Start* cLayer::Get_Line_Start_By_UID(int uid)
+{
+    for(LayerLineList::iterator itr = objects.begin(); itr != objects.end(); ++itr) {
+        cLayer_Line_Point_Start* layer_line = (*itr);
+
+        if (layer_line->m_uid == uid || layer_line->m_linked_point->m_uid == uid) {
+            return layer_line;
+        }
+    }
+
+    return NULL;
 }
 
 void cLayer::Save_To_File(const fs::path& path)

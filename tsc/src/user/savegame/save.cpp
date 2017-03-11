@@ -183,6 +183,13 @@ void cSave::Write_To_File(fs::path filepath)
             xmlpp::Element* p_waypoint_node = p_node->add_child("waypoint");
             Add_Property(p_waypoint_node, "destination", p_wp->m_destination);
             Add_Property(p_waypoint_node, "access", p_wp->m_access);
+
+            for(size_t i=0; i < p_wp->m_exits.size(); i++) {
+                std::string str_pos     = int_to_string(i);
+                const waypoint_exit& ex = p_wp->m_exits[i];
+
+                Add_Property(p_waypoint_node, "waypoint_exit_" + str_pos + "_locked", ex.locked);
+            }
             // </waypoint>
         }
 

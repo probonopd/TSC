@@ -17,6 +17,7 @@
 #ifndef TSC_SAVEGAME_SAVE_OVERWORLD_HPP
 #define TSC_SAVEGAME_SAVE_OVERWORLD_HPP
 #include "../../core/global_basic.hpp"
+#include "../../overworld/world_waypoint.hpp"
 
 namespace TSC {
 
@@ -29,6 +30,7 @@ namespace TSC {
 
         std::string m_destination;
         bool m_access;
+        std::vector<waypoint_exit> m_exits;
     };
 
     typedef vector<cSave_Overworld_Waypoint*> Save_Overworld_WaypointList;

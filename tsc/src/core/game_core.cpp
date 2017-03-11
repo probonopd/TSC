@@ -193,9 +193,14 @@ void Handle_Generic_Game_Events(const CEGUI::XMLAttributes& action_data)
 
         // waypoint available
         if (waypoint_num >= 0) {
-            // set the previous waypoints accessible
-            pActive_Overworld->Set_Progress(waypoint_num, 0);
             pOverworld_Player->Set_Waypoint(waypoint_num);
+
+            /* Problem arises if the player starts e.g. at world 2 and
+             * then uses the world 1 waypoint to go to world 1, which
+             * he has not conquered yet. To not reveal all pathes,
+             * there is nothing sensible one can do about this. The
+             * world designer has to ensure that he properly hides
+             * subsequent worlds. */
         }
     }
     if (action_data.exists("new_level")) {

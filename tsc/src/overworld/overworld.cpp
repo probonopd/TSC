@@ -541,16 +541,16 @@ bool cOverworld::Key_Down(const sf::Event& evt)
         pOverworld_Manager->m_debug_mode = !pOverworld_Manager->m_debug_mode;
         game_debug = pOverworld_Manager->m_debug_mode;
     }
-    else if (evt.key.code == sf::Keyboard::L && pOverworld_Manager->m_debug_mode) {
+    else if (evt.key.code == sf::Keyboard::L && editor_world_enabled) {
         // toggle layer drawing
         pOverworld_Manager->m_draw_layer = !pOverworld_Manager->m_draw_layer;
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         // all waypoint access
-        Set_Progress(m_waypoints.size(), 1);
-    }
-    else if (evt.key.code == sf::Keyboard::F3 && pOverworld_Manager->m_debug_mode) {
-        Goto_Next_Level();
+        for (cWaypoint* waypoint: m_waypoints) {
+            waypoint->Set_Access(true);
+            waypoint->Unlock_All_Exits();
+        }
     }
     // Exit
     else if (evt.key.code == sf::Keyboard::Escape || evt.key.code == sf::Keyboard::BackSpace) {
@@ -665,26 +665,6 @@ bool cOverworld::Joy_Button_Up(unsigned int button)
     return 1;
 }
 
-void cOverworld::Set_Progress(unsigned int normal_level, bool force /* = 1 */)
-{
-    unsigned int level_num = 0;
-
-    for (WaypointList::iterator itr = m_waypoints.begin(); itr != m_waypoints.end(); ++itr) {
-        cWaypoint* obj = (*itr);
-
-        // accessible
-        if (normal_level >= level_num) {
-            obj->Set_Access(1);
-        }
-        // force unset
-        else if (force) {
-            obj->Set_Access(0);
-        }
-
-        level_num++;
-    }
-}
-
 cWaypoint* cOverworld::Get_Waypoint(const std::string& name)
 {
     for (WaypointList::iterator itr = m_waypoints.begin(); itr != m_waypoints.end(); ++itr) {
@@ -791,15 +771,18 @@ void cOverworld::Update_Waypoint_text(void)
     gp_hud->Set_Waypoint_Name(waypoint->Get_Destination(), color);
 }
 
-bool cOverworld::Goto_Next_Level(void)
+bool cOverworld::Goto_Next_Level(std::string taken_exit)
 {
     // if not in overworld only go to the next level on overworld enter
     if (Game_Mode != MODE_OVERWORLD) {
         m_next_level = 1;
+        m_exit_for_next_level = taken_exit;
         return 0;
     }
 
     m_next_level = 0;
+    taken_exit = m_exit_for_next_level;
+    m_exit_for_next_level.clear();
 
     cWaypoint* current_waypoint = pOverworld_Player->Get_Waypoint();
 
@@ -808,20 +791,50 @@ bool cOverworld::Goto_Next_Level(void)
         return 0;
     }
 
-    // Waypoint forward direction is invalid/unset
-    if (current_waypoint->m_direction_forward == DIR_UNDEFINED) {
-        return 0;
+    cWaypoint* next_waypoint = NULL;
+    ObjectDirection new_direction = DIR_UNDEFINED;
+
+    if (taken_exit.empty()) { // pre 2.1.0: use legacy forward direction
+        // Waypoint forward direction is invalid/unset
+        if (current_waypoint->m_direction_forward == DIR_UNDEFINED) {
+            return 0;
+        }
+
+        // Get Layer Line in front
+        cLayer_Line_Point_Start* front_line = pOverworld_Player->Get_Front_Line(current_waypoint->m_direction_forward);
+
+        if (!front_line) {
+            return 0;
+        }
+
+        // Get forward Waypoint
+        next_waypoint = front_line->Get_End_Waypoint();
+        new_direction = current_waypoint->m_direction_forward;
     }
+    else { // Since 2.1.0: use taken exit to determine line
+        // No exits defined
+        if (current_waypoint->m_exits.empty()) {
+            cerr << "Warning: Cannot advance to new level because no level exit mappings defined!" << endl;
+            return 0;
+        }
 
-    // Get Layer Line in front
-    cLayer_Line_Point_Start* front_line = pOverworld_Player->Get_Front_Line(current_waypoint->m_direction_forward);
+        for(waypoint_exit& ex: current_waypoint->m_exits) {
+            if (ex.level_exit_name == taken_exit) {
+                cLayer_Line_Point_Start* walk_line = m_layer->Get_Line_Start_By_UID(ex.line_start_uid);
 
-    if (!front_line) {
-        return 0;
+                if (walk_line) {
+                    // Unlock the associated line pathes for further movements.
+                    // Unlocking of opposite direction happens during walking
+                    // so it also works with legacy waypoints.
+                    ex.locked = false;
+
+                    next_waypoint = walk_line->Get_Opposite_Waypoint_for_UID(ex.line_start_uid);
+                    new_direction = ex.direction;
+                    break;
+                }
+            }
+        }
     }
-
-    // Get forward Waypoint
-    cWaypoint* next_waypoint = front_line->Get_End_Waypoint();
 
     // if no next waypoint available
     if (!next_waypoint) {
@@ -857,7 +870,7 @@ bool cOverworld::Goto_Next_Level(void)
         m_animation_manager->Add(anim);
     }
 
-    pOverworld_Player->Start_Walk(current_waypoint->m_direction_forward);
+    pOverworld_Player->Start_Walk(new_direction);
 
     return  1;
 }

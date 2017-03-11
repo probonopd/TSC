@@ -379,6 +379,39 @@ static mrb_value Set_Return_Entry(mrb_state* p_state, mrb_value self)
 }
 
 /**
+ * Method: LevelExit#exit_name
+ *
+ *   exit_name() → a_string
+ *
+ * Returns the name of this level exit. The name is used to determine
+ * which path to go on the overworld map.
+ */
+static mrb_value Get_Exit_Name(mrb_state* p_state, mrb_value self)
+{
+    cLevel_Exit* p_exit = Get_Data_Ptr<cLevel_Exit>(p_state, self);
+    return mrb_str_new_cstr(p_state, p_exit->m_exit_name.c_str());
+}
+
+/**
+ * Method: LevelExit#exit_name=
+ *
+ *   exit_name=( str ) → str
+ *
+ * Set the name of this level exit. The name is used to determine
+ * which path to go on the overworld map.
+ */
+static mrb_value Set_Exit_Name(mrb_state* p_state, mrb_value self)
+{
+    char* name = NULL;
+    mrb_get_args(p_state, "z", &name);
+
+    cLevel_Exit* p_exit = Get_Data_Ptr<cLevel_Exit>(p_state, self);
+    p_exit->Set_Exit_Name(name);
+
+    return mrb_str_new_cstr(p_state, name);
+}
+
+/**
  * Method: LevelExit#path=
  *
  *   path=( ident ) → ident
@@ -451,6 +484,8 @@ void TSC::Scripting::Init_LevelExit(mrb_state* p_state)
     mrb_define_method(p_state, p_rcLevel_Exit, "return_level=", Set_Return_Level, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcLevel_Exit, "return_entry", Get_Return_Entry, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcLevel_Exit, "return_entry=", Set_Return_Entry, MRB_ARGS_REQ(1));
+    mrb_define_method(p_state, p_rcLevel_Exit, "exit_name", Get_Exit_Name, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcLevel_Exit, "exit_name=", Set_Exit_Name, MRB_ARGS_REQ(1));
 
     mrb_define_method(p_state, p_rcLevel_Exit, "on_exit", MRUBY_EVENT_HANDLER(exit), MRB_ARGS_NONE());
 }

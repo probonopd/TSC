@@ -78,6 +78,9 @@ cLevel_Exit::cLevel_Exit(XmlAttributes& attributes, cSprite_Manager* sprite_mana
     // return entry
     Set_Return_Entry(attributes["return_entry"]);
 
+    // exit name
+    Set_Exit_Name(attributes["exit_name"]);
+
     // path identifier
     if (m_exit_motion == CAMERA_MOVE_ALONG_PATH || m_exit_motion == CAMERA_MOVE_ALONG_PATH_BACKWARDS)
         Set_Path_Identifier(attributes["path_identifier"]);
@@ -176,6 +179,10 @@ xmlpp::Element* cLevel_Exit::Save_To_XML_Node(xmlpp::Element* p_element)
             Add_Property(p_node, "path_identifier", m_path_identifier);
         }
     }
+
+    // exit name
+    if (!m_exit_name.empty())
+        Add_Property(p_node, "exit_name", m_exit_name);
 
     if (m_exit_type == LEVEL_EXIT_WARP)
         Add_Property(p_node, "direction", Get_Direction_Name(m_start_direction));
@@ -339,7 +346,7 @@ void cLevel_Exit::Activate(void)
             pLevel_Manager->Goto_Sub_Level(return_level, return_entry, m_exit_motion, m_path_identifier);
         }
         else {
-            pLevel_Manager->Finish_Level(1);
+            pLevel_Manager->Finish_Level(1, m_exit_name);
         }
     }
     // enter entry
@@ -428,6 +435,11 @@ void cLevel_Exit::Set_Return_Level(const std::string& level)
 void cLevel_Exit::Set_Return_Entry(const std::string& entry)
 {
     m_return_entry = entry;
+}
+
+void cLevel_Exit::Set_Exit_Name(const std::string& name)
+{
+    m_exit_name = name;
 }
 
 void cLevel_Exit::Set_Path_Identifier(const std::string& identifier)
@@ -523,13 +535,19 @@ void cLevel_Exit::Editor_Activate(void)
     editbox->setText(m_return_entry.c_str());
     editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Return_Entry_Text_Changed, this));
 
+    // exit name (for overworld path determination)
+    editbox = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_name"));
+    pLevel_Editor->Add_Config_Widget(UTF8_("Exit Name"), UTF8_("Name of the Exit (use this in the overworld editor to set the path selected by this exit)."), editbox);
+
+    editbox->setText(m_exit_name.c_str());
+    editbox->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Exit_Name_Text_Changed, this));
+
     // path identifier
     mp_path_ident_box = static_cast<CEGUI::Editbox*>(wmgr.createWindow("TaharezLook/Editbox", "level_exit_path_identifier"));
     pLevel_Editor->Add_Config_Widget(UTF8_("Path Identifier"), UTF8_("Name of the Path to use for the camera movement."), mp_path_ident_box);
 
     mp_path_ident_box->setText(m_path_identifier.c_str());
     mp_path_ident_box->subscribeEvent(CEGUI::Editbox::EventTextChanged, CEGUI::Event::Subscriber(&cLevel_Exit::Editor_Path_Identifier_Text_Changed, this));
-
 
     // init
     Editor_Init();
@@ -641,6 +659,16 @@ bool cLevel_Exit::Editor_Return_Entry_Text_Changed(const CEGUI::EventArgs& event
     std::string str_text = static_cast<CEGUI::Editbox*>(windowEventArgs.window)->getText().c_str();
 
     Set_Return_Entry(str_text);
+
+    return 1;
+}
+
+bool cLevel_Exit::Editor_Exit_Name_Text_Changed(const CEGUI::EventArgs& event)
+{
+    const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
+    std::string str_text = static_cast<CEGUI::Editbox*>(windowEventArgs.window)->getText().c_str();
+
+    Set_Exit_Name(str_text);
 
     return 1;
 }

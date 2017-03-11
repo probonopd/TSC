@@ -136,11 +136,6 @@ namespace TSC {
         */
         bool Joy_Button_Up(unsigned int button);
 
-        /* Sets the current Waypoint progress
-         * if force is set already accessible waypoints will be unset
-        */
-        void Set_Progress(unsigned int normal_level, bool force = 1);
-
         /* Returns a pointer to the Waypoint
          * if not found returns NULL
         */
@@ -164,8 +159,11 @@ namespace TSC {
         // update the Waypoint text
         void Update_Waypoint_text(void);
 
-        // Enable the next Level and walk into the forward direction
-        bool Goto_Next_Level(void);
+        // Use the line associated with the level exit name passed
+        // and enable the next level on that line. If an empty
+        // string is passed, legacy behaviour of forward direction
+        // is used.
+        bool Goto_Next_Level(std::string taken_exit = "");
         // Resets the Waypoint access to the default
         void Reset_Waypoints(void);
 
@@ -204,6 +202,8 @@ namespace TSC {
 
         // goto next level on overworld enter
         bool m_next_level;
+        // which level exit was taken for m_next_level
+        std::string m_exit_for_next_level;
 
     private:
         // Common stuff for constructors
