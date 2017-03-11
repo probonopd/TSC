@@ -38,6 +38,7 @@
 	* Feature: Add an in-game console reachable via [F7] (#518 by
 		Chris Jacobsen, implementation by Marvin Gülker)
 	* Feature: Make copy & paste work together with the system clipboard
+	* Feature: Add alternate overworld pathes (#19 by Marvin Gülker)
 	* Fix: Tiles in Editor are not Mirrored Properly (#149 by Justin Rissler)
 	* Fix: Invibility save problem (#180 by Chris Jacobsen)
 	* Fix: Crash on wn_05_top (#389, patch by Georger Araújo)
