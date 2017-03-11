@@ -829,6 +829,7 @@ bool cOverworld::Goto_Next_Level(std::string taken_exit)
                     ex.locked = false;
 
                     next_waypoint = walk_line->Get_Opposite_Waypoint_for_UID(ex.line_start_uid);
+                    new_direction = ex.direction;
                     break;
                 }
             }
