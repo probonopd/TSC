@@ -202,6 +202,8 @@ namespace TSC {
 
         // goto next level on overworld enter
         bool m_next_level;
+        // which level exit was taken for m_next_level
+        std::string m_exit_for_next_level;
 
     private:
         // Common stuff for constructors

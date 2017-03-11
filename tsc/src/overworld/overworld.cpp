@@ -776,10 +776,13 @@ bool cOverworld::Goto_Next_Level(std::string taken_exit)
     // if not in overworld only go to the next level on overworld enter
     if (Game_Mode != MODE_OVERWORLD) {
         m_next_level = 1;
+        m_exit_for_next_level = taken_exit;
         return 0;
     }
 
     m_next_level = 0;
+    taken_exit = m_exit_for_next_level;
+    m_exit_for_next_level.clear();
 
     cWaypoint* current_waypoint = pOverworld_Player->Get_Waypoint();
 
