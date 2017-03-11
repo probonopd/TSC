@@ -366,10 +366,10 @@ bool cOverworld_Player::Start_Walk(ObjectDirection new_direction)
 
         // Find the line matching the requested direction
         for(auto iter=Get_Waypoint()->m_exits.begin(); iter != Get_Waypoint()->m_exits.end(); iter++) {
-            p_exit = &(*iter);
-
-            if (p_exit->direction == new_direction && !p_exit->locked)
+            if (iter->direction == new_direction && !iter->locked) {
+                p_exit = &(*iter);
                 break;
+            }
         }
 
         // No matching unlocked waypoint exit
