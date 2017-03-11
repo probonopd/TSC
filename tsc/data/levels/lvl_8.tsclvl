@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <level>
   <information>
-    <property name="game_version" value="2.0.0"/>
-    <property name="engine_version" value="43"/>
-    <property name="save_time" value="1420319265"/>
+    <property name="game_version" value="2.1.0"/>
+    <property name="engine_version" value="48"/>
+    <property name="save_time" value="1489242630"/>
   </information>
   <settings>
     <property name="lvl_author" value="FluXy"/>
@@ -3136,8 +3136,8 @@
     <property name="posx" value="2711"/>
     <property name="posy" value="-118"/>
     <property name="uid" value="442"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="2711"/>
     <property name="posy" value="-118"/>
     <property name="color" value="red"/>
@@ -3147,8 +3147,8 @@
     <property name="posx" value="2975"/>
     <property name="posy" value="-123"/>
     <property name="uid" value="443"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="2975"/>
     <property name="posy" value="-123"/>
     <property name="color" value="red"/>
@@ -3207,8 +3207,8 @@
     <property name="posx" value="5507"/>
     <property name="posy" value="-474"/>
     <property name="uid" value="450"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="5507"/>
     <property name="posy" value="-474"/>
     <property name="color" value="red"/>
@@ -3218,8 +3218,8 @@
     <property name="posx" value="6044"/>
     <property name="posy" value="-123"/>
     <property name="uid" value="451"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="6044"/>
     <property name="posy" value="-123"/>
     <property name="color" value="red"/>
@@ -3238,8 +3238,8 @@
     <property name="posx" value="6548"/>
     <property name="posy" value="-297"/>
     <property name="uid" value="453"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="6548"/>
     <property name="posy" value="-297"/>
     <property name="color" value="red"/>
@@ -3249,8 +3249,8 @@
     <property name="posx" value="7521"/>
     <property name="posy" value="-516"/>
     <property name="uid" value="454"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="7521"/>
     <property name="posy" value="-516"/>
     <property name="color" value="red"/>
@@ -3302,8 +3302,8 @@
     <property name="posx" value="7933"/>
     <property name="posy" value="-159"/>
     <property name="uid" value="459"/>
-    <property name="image" value="enemy/turtle/red/walk_1.png"/>
-    <property name="type" value="turtle"/>
+    <property name="image" value="enemy/army/red/walk_1.png"/>
+    <property name="type" value="army"/>
     <property name="posx" value="7933"/>
     <property name="posy" value="-159"/>
     <property name="color" value="red"/>
@@ -3515,7 +3515,7 @@
     <property name="posx" value="3315"/>
     <property name="posy" value="-42"/>
     <property name="uid" value="484"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3546,7 +3546,7 @@
     <property name="posx" value="3317"/>
     <property name="posy" value="-533"/>
     <property name="uid" value="487"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3836,7 +3836,7 @@
     <property name="posx" value="3229"/>
     <property name="posy" value="-185"/>
     <property name="uid" value="519"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3858,7 +3858,7 @@
     <property name="posx" value="3272"/>
     <property name="posy" value="-185"/>
     <property name="uid" value="521"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -3974,7 +3974,7 @@
     <property name="posx" value="7572"/>
     <property name="posy" value="-262"/>
     <property name="uid" value="535"/>
-    <property name="image" value="game/box/yellow/default.png"/>
+    <property name="image" value="game/box/yellow/bonus/1.png"/>
     <property name="type" value="bonus"/>
     <property name="animation" value="Default"/>
     <property name="item" value="8"/>
@@ -4054,6 +4054,7 @@
     <property name="image" value=""/>
     <property name="type" value="1"/>
     <property name="camera_motion" value="1"/>
+    <property name="exit_name" value="normal"/>
     <property name="direction" value="down"/>
   </levelexit>
   <item>

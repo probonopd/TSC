@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <overworld>
   <information>
-    <property name="game_version" value="2.0.0"/>
-    <property name="engine_version" value="4"/>
-    <property name="save_time" value="1428826509"/>
+    <property name="game_version" value="2.1.0"/>
+    <property name="engine_version" value="6"/>
+    <property name="save_time" value="1489242895"/>
   </information>
   <settings>
     <property name="music" value="overworld/land_1.ogg"/>
@@ -190,6 +190,18 @@
     <property name="direction_backward" value="down"/>
     <property name="direction_forward" value="right"/>
     <property name="access" value="0"/>
+    <property name="waypoint_exit_0_direction" value="up"/>
+    <property name="waypoint_exit_0_level_exit_name" value="shortcut"/>
+    <property name="waypoint_exit_0_line_start_uid" value="156"/>
+    <property name="waypoint_exit_0_locked" value="1"/>
+    <property name="waypoint_exit_1_direction" value="right"/>
+    <property name="waypoint_exit_1_level_exit_name" value="normal"/>
+    <property name="waypoint_exit_1_line_start_uid" value="132"/>
+    <property name="waypoint_exit_1_locked" value="1"/>
+    <property name="waypoint_exit_2_direction" value="down"/>
+    <property name="waypoint_exit_2_level_exit_name" value=""/>
+    <property name="waypoint_exit_2_line_start_uid" value="131"/>
+    <property name="waypoint_exit_2_locked" value="1"/>
   </waypoint>
   <waypoint>
     <property name="posx" value="784"/>
@@ -314,7 +326,7 @@
     <property name="posx" value="541"/>
     <property name="posy" value="-142"/>
     <property name="uid" value="36"/>
-    <property name="image" value="world/objects/pipe/green_big.png"/>
+    <property name="image" value="world/objects/pipe/red_big.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
@@ -328,21 +340,21 @@
     <property name="posx" value="430"/>
     <property name="posy" value="-142"/>
     <property name="uid" value="38"/>
-    <property name="image" value="world/objects/pipe/green_big.png"/>
+    <property name="image" value="world/objects/pipe/red_big.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
     <property name="posx" value="342"/>
     <property name="posy" value="-206"/>
     <property name="uid" value="39"/>
-    <property name="image" value="world/objects/pipe/green_small.png"/>
+    <property name="image" value="world/objects/pipe/red_small.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
     <property name="posx" value="413"/>
     <property name="posy" value="-232"/>
     <property name="uid" value="40"/>
-    <property name="image" value="world/objects/pipe/green_big.png"/>
+    <property name="image" value="world/objects/pipe/red_big.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
@@ -363,7 +375,7 @@
     <property name="posx" value="246"/>
     <property name="posy" value="-242"/>
     <property name="uid" value="43"/>
-    <property name="image" value="world/objects/pipe/green_big.png"/>
+    <property name="image" value="world/objects/pipe/red_big.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
@@ -377,7 +389,7 @@
     <property name="posx" value="820"/>
     <property name="posy" value="-316"/>
     <property name="uid" value="45"/>
-    <property name="image" value="world/objects/pipe/green_small.png"/>
+    <property name="image" value="world/objects/pipe/red_small.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
@@ -447,7 +459,7 @@
     <property name="posx" value="268"/>
     <property name="posy" value="-478"/>
     <property name="uid" value="55"/>
-    <property name="image" value="world/objects/pipe/green_big.png"/>
+    <property name="image" value="world/objects/pipe/red_big.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
@@ -636,7 +648,7 @@
     <property name="posx" value="578"/>
     <property name="posy" value="-132"/>
     <property name="uid" value="82"/>
-    <property name="image" value="world/objects/pipe/green_small.png"/>
+    <property name="image" value="world/objects/pipe/red_small.png"/>
     <property name="type" value="passive"/>
   </sprite>
   <sprite>
@@ -691,6 +703,18 @@
     <property name="direction_backward" value="right"/>
     <property name="direction_forward" value="left"/>
     <property name="access" value="0"/>
+    <property name="waypoint_exit_0_direction" value="left"/>
+    <property name="waypoint_exit_0_level_exit_name" value="normal"/>
+    <property name="waypoint_exit_0_line_start_uid" value="146"/>
+    <property name="waypoint_exit_0_locked" value="1"/>
+    <property name="waypoint_exit_1_direction" value="right"/>
+    <property name="waypoint_exit_1_level_exit_name" value=""/>
+    <property name="waypoint_exit_1_line_start_uid" value="145"/>
+    <property name="waypoint_exit_1_locked" value="1"/>
+    <property name="waypoint_exit_2_direction" value="down"/>
+    <property name="waypoint_exit_2_level_exit_name" value=""/>
+    <property name="waypoint_exit_2_line_start_uid" value="157"/>
+    <property name="waypoint_exit_2_locked" value="1"/>
   </waypoint>
   <sprite>
     <property name="posx" value="714"/>
