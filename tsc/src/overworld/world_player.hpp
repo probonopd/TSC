@@ -90,6 +90,8 @@ namespace TSC {
 
         // Returns the current Waypoint front line
         cLayer_Line_Point_Start* Get_Front_Line(ObjectDirection dir) const;
+        // Find the line that has a point with the given UID.
+        cLayer_Line_Point_Start* Get_Line_By_UID(int uid);
 
         /* Checks how much Alex can walk into all directions
          * and sets the size into the path directions
@@ -132,6 +134,8 @@ namespace TSC {
         cHudSprite* m_debug_current_waypoint;
         cHudSprite* m_debug_lines;
         cHudSprite* m_debug_current_line;
+
+        bool check_access_to_waypoint(cWaypoint* p_wp);
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

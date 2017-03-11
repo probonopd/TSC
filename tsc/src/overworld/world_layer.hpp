@@ -87,6 +87,14 @@ namespace TSC {
          * if the line continues on another line it is followed to the end
         */
         cWaypoint* Get_End_Waypoint(void) const;
+        cWaypoint* Get_Start_Waypoint(void) const;
+        /* Returns the waypoint for the line point with/without the
+         * given UID. Also follows concatenated lines.
+         * Do not use these functions with UIDS of conncetion points between
+         * multi-element lines.
+        */
+        cWaypoint* Get_Waypoint_for_UID(int uid) const;
+        cWaypoint* Get_Opposite_Waypoint_for_UID(int uid) const;
 
 #ifdef ENABLE_EDITOR
         // editor activation
@@ -144,6 +152,10 @@ namespace TSC {
          * if not found returns a NULL line in the class
         */
         cLine_collision Get_Line_Collision_Direction(float x, float y, ObjectDirection dir, float dir_size = 15, unsigned int check_size = 10) const;
+        /* Returns the start point of a line with a point matching
+         * the given uid
+        */
+        cLayer_Line_Point_Start* Get_Line_Start_By_UID(int uid);
 
         /* Return the collision data between the nearest line and the given position
          * check_size is maximum size for both direction checking lines
