@@ -108,6 +108,11 @@ int cSavegame::Load_Game(unsigned int save_slot)
 
                 // set access
                 waypoint->Set_Access(save_waypoint->m_access);
+
+                // set (un)lock state of alternate pathes
+                for(size_t i=0; i < save_waypoint->m_exits.size(); i++) {
+                    waypoint->m_exits[i].locked = save_waypoint->m_exits[i].locked;
+                }
             }
         }
     }
@@ -406,6 +411,8 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
             save_waypoint->m_destination = waypoint->Get_Destination();
             // set access
             save_waypoint->m_access = waypoint->m_access;
+            // waypoint exits and their (un)lock state
+            save_waypoint->m_exits = waypoint->m_exits;
             // save
             save_overworld->m_waypoints.push_back(save_waypoint);
         }

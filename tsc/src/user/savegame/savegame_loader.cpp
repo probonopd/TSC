@@ -21,6 +21,9 @@
 #include "../../core/global_basic.hpp"
 #include "../../level/level_player.hpp"
 
+// Maximum number of waypoint exits is 4. One for each direction.
+#define MAX_WAYPOINT_EXITS 4
+
 namespace fs = boost::filesystem;
 using namespace std;
 using namespace TSC;
@@ -294,6 +297,19 @@ void cSavegameLoader::handle_overworld_waypoint()
         p_waypoint->m_destination = m_current_properties["destination"];
 
     p_waypoint->m_access = m_current_properties.retrieve<bool>("access");
+
+    // Since 2.1.0: alternate path lock state
+    for(int i=0; i < MAX_WAYPOINT_EXITS; i++) {
+        std::string locked_attr = "waypoint_exit_" + int_to_string(i) + "_locked";
+        if (m_current_properties.exists(locked_attr)) {
+            waypoint_exit ex;
+            ex.locked = m_current_properties.fetch<bool>(locked_attr, true);
+            p_waypoint->m_exits.push_back(ex);
+
+            // Clear attribute for the next waypoint (nested XML we need to take care of)
+            m_current_properties.erase(locked_attr);
+        }
+    }
 
     m_waypoints.push_back(p_waypoint);
 

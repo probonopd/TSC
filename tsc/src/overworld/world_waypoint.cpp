@@ -188,7 +188,7 @@ xmlpp::Element* cWaypoint::Save_To_XML_Node(xmlpp::Element* p_element)
     // must be expressed using a flat list of properties.
     for(size_t i=0; i < m_exits.size(); i++) {
         std::string str_pos = int_to_string(i);
-        waypoint_exit exit  = m_exits[i];
+        const waypoint_exit& exit  = m_exits[i];
 
         Add_Property(p_node, "waypoint_exit_" + str_pos + "_direction", Get_Direction_Name(exit.direction));
         Add_Property(p_node, "waypoint_exit_" + str_pos + "_level_exit_name", exit.level_exit_name);
