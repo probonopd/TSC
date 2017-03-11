@@ -77,6 +77,12 @@ namespace TSC {
         void Set_Direction_Backward(ObjectDirection direction);
         // Set Access
         void Set_Access(bool enabled, bool new_start_access = 0);
+        // Unlock an exit of this waypoint as denoted by the level exit name passed.
+        // Returns whether the exit was unlocked successfuly (will
+        // fail if there is no exit with the given name).
+        bool Unlock_Exit(std::string exit_name);
+        // Unlock all exits of this waypoint.
+        void Unlock_All_Exits();
 
         // Set the Destination, either a level or world name (NOT a path!)
         void Set_Destination(std::string level_or_worldname);

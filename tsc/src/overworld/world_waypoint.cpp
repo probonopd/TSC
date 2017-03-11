@@ -378,6 +378,24 @@ void cWaypoint::Set_Access(bool enabled, bool new_start_access /* = 0 */)
     }
 }
 
+bool cWaypoint::Unlock_Exit(std::string exit_name)
+{
+    for(waypoint_exit& ex: m_exits) {
+        if (ex.level_exit_name == exit_name) {
+            ex.locked = false;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void cWaypoint::Unlock_All_Exits()
+{
+    for(waypoint_exit& ex: m_exits)
+        ex.locked = false;
+}
+
 void cWaypoint::Set_Destination(std::string level_or_worldname)
 {
     m_destination = level_or_worldname;

@@ -136,11 +136,6 @@ namespace TSC {
         */
         bool Joy_Button_Up(unsigned int button);
 
-        /* Sets the current Waypoint progress
-         * if force is set already accessible waypoints will be unset
-        */
-        void Set_Progress(unsigned int normal_level, bool force = 1);
-
         /* Returns a pointer to the Waypoint
          * if not found returns NULL
         */

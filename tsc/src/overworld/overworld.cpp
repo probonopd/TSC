@@ -547,7 +547,10 @@ bool cOverworld::Key_Down(const sf::Event& evt)
     }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::G) && sf::Keyboard::isKeyPressed(sf::Keyboard::O) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
         // all waypoint access
-        Set_Progress(m_waypoints.size(), 1);
+        for (cWaypoint* waypoint: m_waypoints) {
+            waypoint->Set_Access(true);
+            waypoint->Unlock_All_Exits();
+        }
     }
     else if (evt.key.code == sf::Keyboard::F3 && pOverworld_Manager->m_debug_mode) {
         Goto_Next_Level();
@@ -663,26 +666,6 @@ bool cOverworld::Joy_Button_Up(unsigned int button)
 
     // key got processed
     return 1;
-}
-
-void cOverworld::Set_Progress(unsigned int normal_level, bool force /* = 1 */)
-{
-    unsigned int level_num = 0;
-
-    for (WaypointList::iterator itr = m_waypoints.begin(); itr != m_waypoints.end(); ++itr) {
-        cWaypoint* obj = (*itr);
-
-        // accessible
-        if (normal_level >= level_num) {
-            obj->Set_Access(1);
-        }
-        // force unset
-        else if (force) {
-            obj->Set_Access(0);
-        }
-
-        level_num++;
-    }
 }
 
 cWaypoint* cOverworld::Get_Waypoint(const std::string& name)
