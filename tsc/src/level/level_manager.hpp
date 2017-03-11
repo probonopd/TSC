@@ -67,8 +67,10 @@ namespace TSC {
         * - walks to the next Overworld waypoint if a world level
         * - enters the menu if a custom level
         * win_music : play the level finished music
+        * taken_exit: Name of the exit taken (used to find the correct line to
+        * walk on on the overworld). Leave empty for legacy behaviour of forward_direction.
         */
-        void Finish_Level(bool win_music = 0);
+        void Finish_Level(bool win_music = 0, std::string taken_exit = "");
         /* Enters the given level on the entry
         * move_camera: set how to move the camera to the new position
         * path_identifier: set the identifier of the path to move the camera along

@@ -318,7 +318,7 @@ void cLevel_Manager::Draw(void)
     pFramerate->m_perf_timer[PERF_DRAW_LEVEL_EDITOR]->Update();
 }
 
-void cLevel_Manager::Finish_Level(bool win_music /* = 0 */)
+void cLevel_Manager::Finish_Level(bool win_music /* = 0 */, std::string taken_exit /* = "" */)
 {
     gp_hud->Reset_Elapsed_Time();
 
@@ -337,7 +337,7 @@ void cLevel_Manager::Finish_Level(bool win_music /* = 0 */)
     // normal level
     else {
         // Finish level
-        pActive_Overworld->Goto_Next_Level();
+        pActive_Overworld->Goto_Next_Level(taken_exit);
         // Enter World
         Game_Action = GA_ENTER_WORLD;
     }

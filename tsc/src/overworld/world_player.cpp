@@ -509,6 +509,18 @@ void cOverworld_Player::Start_Waypoint_Walk(int new_waypoint)
     m_current_waypoint = new_waypoint;
     m_current_line = -2;
 
+    // Unlock backwards direction waypoint exit on a non-legacy waypoint
+    // (otherwise the player can't go backwards).
+    cWaypoint* waypoint = m_overworld->m_waypoints[m_current_waypoint];
+    if (waypoint->m_exits.empty()) {
+        for(waypoint_exit& ex: waypoint->m_exits) {
+            if (ex.direction == Get_Opposite_Direction(m_direction)) {
+                ex.locked = false;
+                break;
+            }
+        }
+    }
+
     m_overworld->Update_Waypoint_text();
 }
 

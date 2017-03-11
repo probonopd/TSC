@@ -346,7 +346,7 @@ void cLevel_Exit::Activate(void)
             pLevel_Manager->Goto_Sub_Level(return_level, return_entry, m_exit_motion, m_path_identifier);
         }
         else {
-            pLevel_Manager->Finish_Level(1);
+            pLevel_Manager->Finish_Level(1, m_exit_name);
         }
     }
     // enter entry
