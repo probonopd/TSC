@@ -271,13 +271,24 @@ static mrb_value Get_Next_Level_Filename(mrb_state* p_state, mrb_value self)
  *
  * win_music (false)
  * : If set, plays the level win music.
+ *
+ * exit_name ("")
+ * : Name of the level exit taken (used in the overworld
+ *   to determine which path to take).
  */
 static mrb_value Finish(mrb_state* p_state,  mrb_value self)
 {
     mrb_value obj;
-    mrb_get_args(p_state, "|o", &obj);
+    char* exit_name = NULL;
+    mrb_get_args(p_state, "|oz", &obj, &exit_name);
 
-    pLevel_Manager->Finish_Level(mrb_test(obj));
+    if (exit_name) {
+        pLevel_Manager->Finish_Level(mrb_test(obj), exit_name);
+    }
+    else {
+        pLevel_Manager->Finish_Level(mrb_test(obj));
+    }
+
     return mrb_nil_value();
 }
 
