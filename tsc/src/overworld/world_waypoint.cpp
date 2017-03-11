@@ -232,70 +232,121 @@ void cWaypoint::Draw(cSurface_Request* request /* = NULL  */)
         float x;
         float y;
 
-        // direction back arrow
-        if (m_direction_backward == DIR_RIGHT || m_direction_backward == DIR_LEFT || m_direction_backward == DIR_UP || m_direction_backward == DIR_DOWN) {
-            x = m_rect.m_x - pActive_Camera->m_x;
-            y = m_rect.m_y - pActive_Camera->m_y;
+        if (m_exits.empty()) { // pre 2.1.0 forward and backward direction
+            // direction back arrow
+            if (m_direction_backward == DIR_RIGHT || m_direction_backward == DIR_LEFT || m_direction_backward == DIR_UP || m_direction_backward == DIR_DOWN) {
+                x = m_rect.m_x - pActive_Camera->m_x;
+                y = m_rect.m_y - pActive_Camera->m_y;
 
-            // create request
-            cSurface_Request* surface_request = new cSurface_Request();
+                // create request
+                cSurface_Request* surface_request = new cSurface_Request();
 
-            if (m_direction_backward == DIR_RIGHT) {
-                x += m_rect.m_w;
-                y += (m_rect.m_h * 0.5f) - (m_arrow_backward->m_w * 0.5f);
-            }
-            else if (m_direction_backward == DIR_LEFT) {
-                x -= m_arrow_backward->m_w;
-                y += (m_rect.m_h * 0.5f) - (m_arrow_backward->m_w * 0.5f);
-            }
-            else if (m_direction_backward == DIR_UP) {
-                y -= m_arrow_backward->m_h;
-                x += (m_rect.m_w * 0.5f) - (m_arrow_backward->m_h * 0.5f);
-            }
-            // down
-            else {
-                y += m_rect.m_h;
-                x += (m_rect.m_w * 0.5f) - (m_arrow_backward->m_h * 0.5f);
+                if (m_direction_backward == DIR_RIGHT) {
+                    x += m_rect.m_w;
+                    y += (m_rect.m_h * 0.5f) - (m_arrow_backward->m_w * 0.5f);
+                }
+                else if (m_direction_backward == DIR_LEFT) {
+                    x -= m_arrow_backward->m_w;
+                    y += (m_rect.m_h * 0.5f) - (m_arrow_backward->m_w * 0.5f);
+                }
+                else if (m_direction_backward == DIR_UP) {
+                    y -= m_arrow_backward->m_h;
+                    x += (m_rect.m_w * 0.5f) - (m_arrow_backward->m_h * 0.5f);
+                }
+                // down
+                else {
+                    y += m_rect.m_h;
+                    x += (m_rect.m_w * 0.5f) - (m_arrow_backward->m_h * 0.5f);
+                }
+
+                m_arrow_backward->Blit(x, y, 0.089f, surface_request);
+                surface_request->m_shadow_pos = 2;
+                surface_request->m_shadow_color = lightgreyalpha64;
+                // add request
+                pRenderer->Add(surface_request);
             }
 
-            m_arrow_backward->Blit(x, y, 0.089f, surface_request);
-            surface_request->m_shadow_pos = 2;
-            surface_request->m_shadow_color = lightgreyalpha64;
-            // add request
-            pRenderer->Add(surface_request);
+            // direction forward arrow
+            if (m_direction_forward == DIR_RIGHT || m_direction_forward == DIR_LEFT || m_direction_forward == DIR_UP || m_direction_forward == DIR_DOWN) {
+                x = m_rect.m_x - pActive_Camera->m_x;
+                y = m_rect.m_y - pActive_Camera->m_y;
+
+                // create request
+                cSurface_Request* surface_request = new cSurface_Request();
+
+                if (m_direction_forward == DIR_RIGHT) {
+                    x += m_rect.m_w;
+                    y += (m_rect.m_h * 0.5f) - (m_arrow_forward->m_w * 0.5f);
+                }
+                else if (m_direction_forward == DIR_LEFT) {
+                    x -= m_arrow_forward->m_w;
+                    y += (m_rect.m_h * 0.5f) - (m_arrow_forward->m_w * 0.5f);
+                }
+                else if (m_direction_forward == DIR_UP) {
+                    y -= m_arrow_forward->m_h;
+                    x += (m_rect.m_w * 0.5f) - (m_arrow_forward->m_h * 0.5f);
+                }
+                // down
+                else {
+                    y += m_rect.m_h;
+                    x += (m_rect.m_w * 0.5f) - (m_arrow_forward->m_h * 0.5f);
+                }
+
+                m_arrow_forward->Blit(x, y, 0.089f, surface_request);
+                surface_request->m_shadow_pos = 2;
+                surface_request->m_shadow_color = lightgreyalpha64;
+                // add request
+                pRenderer->Add(surface_request);
+            }
         }
+        else { // Since 2.1.0: one arrow per direction
+            for(waypoint_exit& ex: m_exits) {
+                cGL_Surface* arrow = NULL;
 
-        // direction forward arrow
-        if (m_direction_forward == DIR_RIGHT || m_direction_forward == DIR_LEFT || m_direction_forward == DIR_UP || m_direction_forward == DIR_DOWN) {
-            x = m_rect.m_x - pActive_Camera->m_x;
-            y = m_rect.m_y - pActive_Camera->m_y;
+                x = m_rect.m_x - pActive_Camera->m_x;
+                y = m_rect.m_y - pActive_Camera->m_y;
 
-            // create request
-            cSurface_Request* surface_request = new cSurface_Request();
+                std::string color;
+                if (ex.locked)
+                    color = "blue";
+                else
+                    color = "white";
 
-            if (m_direction_forward == DIR_RIGHT) {
-                x += m_rect.m_w;
-                y += (m_rect.m_h * 0.5f) - (m_arrow_forward->m_w * 0.5f);
-            }
-            else if (m_direction_forward == DIR_LEFT) {
-                x -= m_arrow_forward->m_w;
-                y += (m_rect.m_h * 0.5f) - (m_arrow_forward->m_w * 0.5f);
-            }
-            else if (m_direction_forward == DIR_UP) {
-                y -= m_arrow_forward->m_h;
-                x += (m_rect.m_w * 0.5f) - (m_arrow_forward->m_h * 0.5f);
-            }
-            // down
-            else {
-                y += m_rect.m_h;
-                x += (m_rect.m_w * 0.5f) - (m_arrow_forward->m_h * 0.5f);
-            }
+                switch(ex.direction) {
+                case DIR_RIGHT:
+                    arrow = pVideo->Get_Package_Surface("game/arrow/small/" + color + "/right.png");
+                    x += m_rect.m_w;
+                    y += (m_rect.m_h * 0.5f) - (arrow->m_w * 0.5f);
+                    break;
+                case DIR_LEFT:
+                    arrow = pVideo->Get_Package_Surface("game/arrow/small/" + color + "/left.png");
+                    x -= arrow->m_w;
+                    y += (m_rect.m_h * 0.5f) - (arrow->m_w * 0.5f);
+                    break;
+                case DIR_UP:
+                    arrow = pVideo->Get_Package_Surface("game/arrow/small/" + color + "/up.png");
+                    y -= arrow->m_h;
+                    x += (m_rect.m_w * 0.5f) - (arrow->m_h * 0.5f);
+                    break;
+                case DIR_DOWN:
+                    arrow = pVideo->Get_Package_Surface("game/arrow/small/" + color + "/down.png");
+                    y += m_rect.m_h;
+                    x += (m_rect.m_w * 0.5f) - (arrow->m_h * 0.5f);
+                    break;
+                default: // invalid direction
+                    continue;
+                }
 
-            m_arrow_forward->Blit(x, y, 0.089f, surface_request);
-            surface_request->m_shadow_pos = 2;
-            surface_request->m_shadow_color = lightgreyalpha64;
-            // add request
-            pRenderer->Add(surface_request);
+                // create request
+                cSurface_Request* surface_request = new cSurface_Request();
+                arrow->Blit(x, y, 0.089f, surface_request);
+                surface_request->m_shadow_pos = 2;
+                surface_request->m_shadow_color = lightgreyalpha64;
+                // add request
+                pRenderer->Add(surface_request);
+
+                // TODO: Does `arrow' have to be freed?
+            }
         }
     }
 
