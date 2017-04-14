@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Secret Maryo Chronicles\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-06 06:03+0200\n"
+"POT-Creation-Date: 2017-04-14 20:37+0300\n"
 "PO-Revision-Date: 2014-08-30 19:48+0200\n"
 "Last-Translator: Florian Richter <fluxey@gmail.com>\n"
 "Language-Team: UNMAINTAINED\n"
@@ -104,6 +104,7 @@ msgid ""
 "Home - Focus level start\n"
 "End - Focus last level exit\n"
 "Ctrl + G - Goto Camera position\n"
+"L - In world editor: toggle walk line visibility\n"
 "N - Step one screen to the right ( Next Screen )\n"
 "P - Step one screen to the left ( Previous Screen )\n"
 "Ctrl + N - Create a new Level\n"
@@ -144,22 +145,22 @@ msgid ""
 " \n"
 msgstr ""
 
-#: ../../src/core/editor/editor.cpp:1470
+#: ../../src/core/editor/editor.cpp:1471
 #, c-format
 msgid "Change selected sprite's image"
 msgid_plural "Change selected %d sprites' images"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ../../src/core/game_core.cpp:242
+#: ../../src/core/game_core.cpp:247
 msgid "Loading Level failed : "
 msgstr ""
 
-#: ../../src/core/game_core.cpp:353
+#: ../../src/core/game_core.cpp:358
 msgid "Loading Images"
 msgstr "Загрузка изображений"
 
-#: ../../src/core/game_core.cpp:495
+#: ../../src/core/game_core.cpp:500
 msgid "Loading Sounds"
 msgstr "Загрузка звуков"
 
@@ -347,7 +348,7 @@ msgstr ""
 #: ../../src/enemies/larry.cpp:401 ../../src/enemies/pip.cpp:356
 #: ../../src/enemies/rokko.cpp:582 ../../src/enemies/spikeball.cpp:507
 #: ../../src/enemies/thromp.cpp:678 ../../src/level/level_player.cpp:3987
-#: ../../src/objects/level_entry.cpp:370 ../../src/objects/level_exit.cpp:471
+#: ../../src/objects/level_entry.cpp:370 ../../src/objects/level_exit.cpp:483
 #: ../../src/objects/moving_platform.cpp:960 ../../src/video/animation.cpp:1577
 msgid "Direction"
 msgstr ""
@@ -429,9 +430,9 @@ msgstr ""
 #: ../../src/enemies/static.cpp:345 ../../src/enemies/static.cpp:349
 #: ../../src/enemies/static.cpp:418 ../../src/objects/bonusbox.cpp:507
 #: ../../src/objects/bonusbox.cpp:511 ../../src/objects/bonusbox.cpp:619
-#: ../../src/overworld/world_waypoint.cpp:419
-#: ../../src/overworld/world_waypoint.cpp:423
-#: ../../src/overworld/world_waypoint.cpp:486
+#: ../../src/overworld/world_waypoint.cpp:542
+#: ../../src/overworld/world_waypoint.cpp:546
+#: ../../src/overworld/world_waypoint.cpp:664
 msgid "Enabled"
 msgstr "Включено"
 
@@ -442,8 +443,8 @@ msgstr "Включено"
 #: ../../src/enemies/static.cpp:346 ../../src/enemies/static.cpp:352
 #: ../../src/objects/bonusbox.cpp:508 ../../src/objects/bonusbox.cpp:514
 #: ../../src/objects/box.cpp:691 ../../src/objects/box.cpp:706
-#: ../../src/overworld/world_waypoint.cpp:420
-#: ../../src/overworld/world_waypoint.cpp:426
+#: ../../src/overworld/world_waypoint.cpp:543
+#: ../../src/overworld/world_waypoint.cpp:549
 msgid "Disabled"
 msgstr "Выключено"
 
@@ -538,7 +539,7 @@ msgstr "Имя изображения"
 msgid "Rotation Speed"
 msgstr ""
 
-#: ../../src/enemies/static.cpp:329 ../../src/objects/level_exit.cpp:528
+#: ../../src/enemies/static.cpp:329 ../../src/objects/level_exit.cpp:547
 #: ../../src/objects/moving_platform.cpp:945
 msgid "Path Identifier"
 msgstr ""
@@ -635,7 +636,7 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:676 ../../src/objects/path.cpp:769
+#: ../../src/gui/menu_data.cpp:676 ../../src/objects/path.cpp:771
 msgid "Delete"
 msgstr ""
 
@@ -1372,11 +1373,11 @@ msgstr ""
 msgid "Lava"
 msgstr ""
 
-#: ../../src/objects/level_entry.cpp:133 ../../src/objects/level_exit.cpp:201
+#: ../../src/objects/level_entry.cpp:133 ../../src/objects/level_exit.cpp:208
 msgid " Beam"
 msgstr ""
 
-#: ../../src/objects/level_entry.cpp:136 ../../src/objects/level_exit.cpp:204
+#: ../../src/objects/level_entry.cpp:136 ../../src/objects/level_exit.cpp:211
 msgid " Warp"
 msgstr ""
 
@@ -1388,58 +1389,69 @@ msgstr ""
 msgid "Name for identification"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:471
+#: ../../src/objects/level_exit.cpp:483
 msgid "Direction to move in"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:496
+#: ../../src/objects/level_exit.cpp:508
 msgid "Motion"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:496
+#: ../../src/objects/level_exit.cpp:508
 msgid "Camera Motion"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:500
+#: ../../src/objects/level_exit.cpp:512
 msgid "Destination Level"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:500
+#: ../../src/objects/level_exit.cpp:512
 msgid ""
 "Name of the level that should be entered. If empty uses the current level."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:507
+#: ../../src/objects/level_exit.cpp:519
 msgid "Destination Entry"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:507
+#: ../../src/objects/level_exit.cpp:519
 msgid ""
 "Name of the Entry in the destination level. If empty the entry point is the "
 "player start position."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:514
+#: ../../src/objects/level_exit.cpp:526
 msgid "Return Level"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:514
+#: ../../src/objects/level_exit.cpp:526
 msgid "Name of the level that should be pushed onto return stack."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:521
+#: ../../src/objects/level_exit.cpp:533
 msgid "Return Entry"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:521
+#: ../../src/objects/level_exit.cpp:533
 msgid "Name of the Entry in the return level."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:528
+#: ../../src/objects/level_exit.cpp:540
+#, fuzzy
+msgid "Exit Name"
+msgstr "Выход"
+
+#: ../../src/objects/level_exit.cpp:540
+msgid ""
+"Name of the Exit (use this in the overworld editor to set the path selected "
+"by this exit)."
+msgstr ""
+
+#: ../../src/objects/level_exit.cpp:547
 msgid "Name of the Path to use for the camera movement."
 msgstr ""
 
-#: ../../src/objects/moving_platform.cpp:941 ../../src/objects/path.cpp:744
+#: ../../src/objects/moving_platform.cpp:941 ../../src/objects/path.cpp:746
 msgid "Move Type"
 msgstr ""
 
@@ -1516,79 +1528,79 @@ msgstr ""
 msgid "Path"
 msgstr ""
 
-#: ../../src/objects/path.cpp:711
+#: ../../src/objects/path.cpp:713
 msgid "Identifier"
 msgstr ""
 
-#: ../../src/objects/path.cpp:711
+#: ../../src/objects/path.cpp:713
 msgid ""
 "Identifier name of the Path. This is needed for objects that can link to "
 "this."
 msgstr ""
 
-#: ../../src/objects/path.cpp:728
+#: ../../src/objects/path.cpp:730
 msgid "Show Line"
 msgstr ""
 
-#: ../../src/objects/path.cpp:728
+#: ../../src/objects/path.cpp:730
 msgid "Wether or not to show the path's moving line ingame."
 msgstr ""
 
-#: ../../src/objects/path.cpp:744
+#: ../../src/objects/path.cpp:746
 msgid ""
 "Movement type. Mirror moves forth and back and rewind starts from the "
 "beginning again."
 msgstr ""
 
-#: ../../src/objects/path.cpp:756
+#: ../../src/objects/path.cpp:758
 msgid "Segment"
 msgstr ""
 
-#: ../../src/objects/path.cpp:756
+#: ../../src/objects/path.cpp:758
 msgid "Select the Segment to edit."
 msgstr ""
 
-#: ../../src/objects/path.cpp:760
+#: ../../src/objects/path.cpp:762
 msgid "Add a Segment after the selected one."
 msgstr ""
 
-#: ../../src/objects/path.cpp:762
+#: ../../src/objects/path.cpp:764
 msgid "Add"
 msgstr ""
 
-#: ../../src/objects/path.cpp:767
+#: ../../src/objects/path.cpp:769
 msgid "Delete the selected Segment."
 msgstr ""
 
-#: ../../src/objects/path.cpp:774
+#: ../../src/objects/path.cpp:776
 msgid "Pos X1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:774
+#: ../../src/objects/path.cpp:776
 msgid "Line position X1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:782
+#: ../../src/objects/path.cpp:784
 msgid "Y1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:782
+#: ../../src/objects/path.cpp:784
 msgid "Line position Y1"
 msgstr ""
 
-#: ../../src/objects/path.cpp:790
+#: ../../src/objects/path.cpp:792
 msgid "Pos X2"
 msgstr ""
 
-#: ../../src/objects/path.cpp:790
+#: ../../src/objects/path.cpp:792
 msgid "Line position X2"
 msgstr ""
 
-#: ../../src/objects/path.cpp:798
+#: ../../src/objects/path.cpp:800
 msgid "Y2"
 msgstr ""
 
-#: ../../src/objects/path.cpp:798
+#: ../../src/objects/path.cpp:800
 msgid "Line position Y2"
 msgstr ""
 
@@ -1673,97 +1685,179 @@ msgstr ""
 msgid "Line End Point"
 msgstr ""
 
-#: ../../src/overworld/world_layer.cpp:254
+#: ../../src/overworld/world_layer.cpp:291
 msgid "Waypoint origin"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:104
+#: ../../src/overworld/world_waypoint.cpp:127
 msgid "Waypoint"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:372
-#: ../../src/overworld/world_waypoint.cpp:376
-#: ../../src/overworld/world_waypoint.cpp:441
+#: ../../src/overworld/world_waypoint.cpp:489
+#: ../../src/overworld/world_waypoint.cpp:493
+#: ../../src/overworld/world_waypoint.cpp:619
 msgid "Level"
 msgstr "Уровень"
 
-#: ../../src/overworld/world_waypoint.cpp:373
-#: ../../src/overworld/world_waypoint.cpp:379
+#: ../../src/overworld/world_waypoint.cpp:490
+#: ../../src/overworld/world_waypoint.cpp:496
 msgid "World"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:383
+#: ../../src/overworld/world_waypoint.cpp:500
 msgid "Type"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:383
+#: ../../src/overworld/world_waypoint.cpp:500
 msgid "Destination type"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:387
+#: ../../src/overworld/world_waypoint.cpp:504
 msgid "Destination"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:387
+#: ../../src/overworld/world_waypoint.cpp:504
 msgid "Destination level or world"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:402
+#: ../../src/overworld/world_waypoint.cpp:521
 msgid "Backward Direction"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:414
+#: ../../src/overworld/world_waypoint.cpp:536
 msgid "Forward Direction"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:430
+#: ../../src/overworld/world_waypoint.cpp:553
 msgid "Default Access"
 msgstr ""
 
-#: ../../src/overworld/world_waypoint.cpp:430
+#: ../../src/overworld/world_waypoint.cpp:553
 msgid "Enable if the Waypoint should be always accessible."
 msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:560
+msgid "Waypoint Exit"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:560
+msgid "Select the waypoint exit to edit."
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:564
+#: ../../src/overworld/world_waypoint.cpp:566
+#, fuzzy
+msgid "New Exit"
+msgstr "Выход"
+
+#: ../../src/overworld/world_waypoint.cpp:566
+msgid "Create a new exit by clicking."
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:570
+#: ../../src/overworld/world_waypoint.cpp:572
+#, fuzzy
+msgid "Delete Exit"
+msgstr "Удалить"
+
+#: ../../src/overworld/world_waypoint.cpp:572
+msgid "Delete the currently selected exit by clicking."
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:586
+#, fuzzy
+msgid "Leave direction"
+msgstr "Папка для изображений"
+
+#: ../../src/overworld/world_waypoint.cpp:586
+msgid "Direction key to press for leaving the waypoint for this exit"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:591
+#, fuzzy
+msgid "Level Exit"
+msgstr "Редактор уровней : "
+
+#: ../../src/overworld/world_waypoint.cpp:591
+msgid "Name of the level exit in the level that activates this waypoint exit."
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:596
+msgid "Line start UID"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:596
+msgid "UID of the line start point to set Alex onto when taking this exit."
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:601
+#: ../../src/overworld/world_waypoint.cpp:603
+#: ../../src/overworld/world_waypoint.cpp:771
+#: ../../src/overworld/world_waypoint.cpp:785
+msgid "Locked"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:602
+#: ../../src/overworld/world_waypoint.cpp:773
+msgid "Unlocked"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:606
+msgid "Lock state"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:606
+msgid ""
+"Is this exit locked by default? PLEASE also set access to enabled on the "
+"target waypoint if you unlock by default!"
+msgstr ""
+
+#: ../../src/overworld/world_waypoint.cpp:757
+#: ../../src/overworld/world_waypoint.cpp:760
+#, fuzzy
+msgid "(None)"
+msgstr "Нет"
 
 #. TRANS: Prompt issued in the game console
 #: ../../src/scripting/scripting.cpp:102
 msgid "(console)"
 msgstr ""
 
-#: ../../src/user/savegame/savegame.cpp:267
+#: ../../src/user/savegame/savegame.cpp:272
 msgid "Savegame "
 msgstr "Сохраненная игра "
 
-#: ../../src/user/savegame/savegame.cpp:267
+#: ../../src/user/savegame/savegame.cpp:272
 msgid " loaded"
 msgstr " Загружен"
 
-#: ../../src/user/savegame/savegame.cpp:440
+#: ../../src/user/savegame/savegame.cpp:447
 msgid "Couldn't save savegame "
 msgstr ""
 
-#: ../../src/user/savegame/savegame.cpp:443
+#: ../../src/user/savegame/savegame.cpp:450
 msgid "Saved to Slot "
 msgstr ""
 
 #. TRANS: %u is replaced by the number of the save slot, starting with 1.
-#: ../../src/user/savegame/savegame.cpp:509
+#: ../../src/user/savegame/savegame.cpp:516
 #, c-format
 msgid "%u. Free Save"
 msgstr ""
 
-#: ../../src/user/savegame/savegame.cpp:531
+#: ../../src/user/savegame/savegame.cpp:538
 msgid " -  Level "
 msgstr " -  Уровень "
 
-#: ../../src/user/savegame/savegame.cpp:538
+#: ../../src/user/savegame/savegame.cpp:545
 msgid " -  Unknown"
 msgstr ""
 
-#: ../../src/user/savegame/savegame.cpp:542
+#: ../../src/user/savegame/savegame.cpp:549
 msgid " - Date "
 msgstr " - Дата "
 
-#: ../../src/user/savegame/savegame_loader.cpp:72
+#: ../../src/user/savegame/savegame_loader.cpp:75
 #, fuzzy
 msgid "No description"
 msgstr "Нет описания"
@@ -1987,9 +2081,6 @@ msgstr "Кэширование изображений"
 
 #~ msgid "Menu : "
 #~ msgstr "Меню : "
-
-#~ msgid "Level Editor : "
-#~ msgstr "Редактор уровней : "
 
 #~ msgid "Mouse : "
 #~ msgstr "Мышь : "
