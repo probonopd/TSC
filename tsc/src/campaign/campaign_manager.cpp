@@ -50,14 +50,14 @@ void cCampaign::Save_To_File(const fs::path& filename)
     xmlpp::Element* p_node = NULL;
 
     // <information>
-    p_node = p_root->add_child("information");
+    p_node = p_root->add_child_element("information");
     Add_Property(p_node, "name", m_name);
     Add_Property(p_node, "description", m_description);
     Add_Property(p_node, "save_time", static_cast<uint64_t>(time(NULL)));
     // </information>
 
     // <target>
-    p_node = p_root->add_child("target");
+    p_node = p_root->add_child_element("target");
     Add_Property(p_node, "name", m_target);
     Add_Property(p_node, "is_level", m_is_target_level);
     // </target>

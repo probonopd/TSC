@@ -900,9 +900,9 @@ void cEditor::parse_menu_file()
     parser.parse_file(menu_file);
 
     xmlpp::Element* p_root = parser.get_document()->get_root_node();
-    xmlpp::NodeSet items = p_root->find("item");
+    xmlpp::Node::NodeSet items = p_root->find("item");
 
-    xmlpp::NodeSet::const_iterator iter;
+    xmlpp::Node::NodeSet::const_iterator iter;
     for (iter=items.begin(); iter != items.end(); iter++) {
         xmlpp::Element* p_node = dynamic_cast<xmlpp::Element*>(*iter);
 
@@ -911,7 +911,7 @@ void cEditor::parse_menu_file()
 
         // Set color if available (---header--- elements have no color property)
         std::string colorstr = "FFFFFFFF";
-        xmlpp::NodeSet results = p_node->find("property[@name='color']");
+        xmlpp::Node::NodeSet results = p_node->find("property[@name='color']");
         if (!results.empty())
             colorstr = dynamic_cast<xmlpp::Element*>(results[0])->get_attribute("value")->get_value();
 

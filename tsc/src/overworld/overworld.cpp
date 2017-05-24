@@ -77,7 +77,7 @@ void cOverworld_description::Save_To_File(fs::path path)
 {
     xmlpp::Document doc;
     xmlpp::Element* p_root = doc.create_root_node("description");
-    xmlpp::Element* p_node = p_root->add_child("world");
+    xmlpp::Element* p_node = p_root->add_child_element("world");
 
     Add_Property(p_node, "name", m_name);
     Add_Property(p_node, "visible", m_visible);
@@ -263,23 +263,23 @@ void cOverworld::Save_To_File(fs::path path)
     xmlpp::Element* p_node = NULL;
 
     // General information
-    p_node = p_root->add_child("information");
+    p_node = p_root->add_child_element("information");
     Add_Property(p_node, "game_version", int_to_string(TSC_VERSION_MAJOR) + "." + int_to_string(TSC_VERSION_MINOR) + "." + int_to_string(TSC_VERSION_PATCH));
     Add_Property(p_node, "engine_version", world_engine_version);
     Add_Property(p_node, "save_time", static_cast<uint64_t>(time(NULL))); // seconds since 1970
 
     // Settings (currently only music)
-    p_node = p_root->add_child("settings");
+    p_node = p_root->add_child_element("settings");
     Add_Property(p_node, "music", m_musicfile);
 
     // Background color
-    p_node = p_root->add_child("background");
+    p_node = p_root->add_child_element("background");
     Add_Property(p_node, "color_red", static_cast<int>(m_background_color.red));
     Add_Property(p_node, "color_green", static_cast<int>(m_background_color.green));
     Add_Property(p_node, "color_blue", static_cast<int>(m_background_color.blue));
 
     // Player
-    p_node = p_root->add_child("player");
+    p_node = p_root->add_child_element("player");
     Add_Property(p_node, "waypoint", m_player_start_waypoint);
     Add_Property(p_node, "moving_state", static_cast<int>(m_player_moving_state));
 

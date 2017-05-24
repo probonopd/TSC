@@ -612,7 +612,7 @@ void Preload_Sounds(bool draw_gui /* = 0 */)
 
 void Add_Property(xmlpp::Element* p_element, const Glib::ustring& name, const Glib::ustring& value)
 {
-    xmlpp::Element* p_propnode = p_element->add_child("property");
+    xmlpp::Element* p_propnode = p_element->add_child_element("property");
     p_propnode->set_attribute("name", name);
     p_propnode->set_attribute("value", value);
 }

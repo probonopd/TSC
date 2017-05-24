@@ -108,7 +108,7 @@ void cBackground::Save_To_XML_Node(xmlpp::Element* p_parent)
         return;
 
     // <background>
-    xmlpp::Element* p_node = p_parent->add_child("background");
+    xmlpp::Element* p_node = p_parent->add_child_element("background");
     Add_Property(p_node, "type", m_type);
 
     // gradient
