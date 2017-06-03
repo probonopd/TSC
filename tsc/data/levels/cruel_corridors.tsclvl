@@ -6,7 +6,7 @@
     <property name="save_time" value="1493846676"/>
   </information>
   <settings>
-    <property name="lvl_author" value=""/>
+    <property name="lvl_author" value="default0"/>
     <property name="lvl_version" value=""/>
     <property name="lvl_music" value="land/snow_2.ogg"/>
     <property name="lvl_description" value="&#10;"/>
