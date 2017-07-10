@@ -17,6 +17,8 @@ cmake -G Ninja .. -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 ninja install
 cd ../..
 
+ls -R $INSTALL_PREFIX
+
 mkdir build
 cd build
 cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX

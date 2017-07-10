@@ -19,7 +19,6 @@ addons:
       - bison
       - pkg-config
       - gperf
-      - libsfml-dev
       - ruby-full
       - rake
       - libglew-dev
