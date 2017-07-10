@@ -33,6 +33,7 @@ addons:
       - libboost-thread-dev
       - libglew-dev
       - libglm-dev
+      - libglfw-dev  # For CEGUI
 
 before_script:
   - git submodule update --init --recursive
