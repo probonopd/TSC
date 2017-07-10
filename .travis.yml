@@ -31,6 +31,7 @@ addons:
       - libboost-filesystem-dev
       - libboost-chrono-dev
       - libboost-thread-dev
+      - libepoxy-dev
 
 before_script:
   - git submodule update --init --recursive
