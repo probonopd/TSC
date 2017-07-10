@@ -31,11 +31,12 @@ addons:
       - libboost-filesystem-dev
       - libboost-chrono-dev
       - libboost-thread-dev
-      - ninja
 
 before_script:
-    # pull all sub modules recursively
   - git submodule update --init --recursive
+  - curl -Lo ninja-linux.zip "https://github.com/ninja-build/ninja/releases/download/v1.7.2/ninja-linux.zip"
+  - unzip ninja-linux.zip
+  - export PATH=$PATH:$PWD
 
 script:
   - mkdir build && cd build && cmake -G Ninja ../tsc && ninja
