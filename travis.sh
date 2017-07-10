@@ -5,10 +5,6 @@ set -e
 mkdir install
 export INSTALL_PREFIX=$PWD/install
 
-curl -Lo sfml.tgz https://www.sfml-dev.org/files/SFML-2.4.2-linux-gcc-64-bit.tar.gz
-tar xvf sfml.tgz
-cp -r SFML-2.4.2/* $INSTALL_PREFIX
-
 hg clone -b v0-8 https://bitbucket.org/cegui/cegui
 cd cegui
 mkdir build
@@ -18,6 +14,10 @@ ninja install
 cd ../..
 
 ls -R $INSTALL_PREFIX
+
+curl -Lo sfml.tgz https://www.sfml-dev.org/files/SFML-2.4.2-linux-gcc-64-bit.tar.gz
+tar xvf sfml.tgz
+cp -r SFML-2.4.2/* $INSTALL_PREFIX
 
 mkdir build
 cd build
