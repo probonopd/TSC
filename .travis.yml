@@ -39,4 +39,4 @@ before_script:
   - export PATH=$PATH:$PWD
 
 script:
-  - mkdir build && cd build && cmake -G Ninja ../tsc && ninja
+  - ./travis.sh
