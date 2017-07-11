@@ -2,14 +2,19 @@ dist: trusty
 sudo: false
 language: cpp
 
-compiler:
-  - gcc
-  - clang
-
 notifications:
   email:
     on_success: change
     on_failure: change
+
+matrix:
+  include:
+    - sudo: false
+      compiler: gcc
+    - sudo: false
+      compiler: clang
+    - sudo: true
+      compiler: clang
 
 addons:
   apt:

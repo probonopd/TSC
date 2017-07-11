@@ -13,8 +13,6 @@ cmake -G Ninja .. -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 ninja install
 cd ../..
 
-ls -R $INSTALL_PREFIX
-
 curl -Lo sfml.tgz https://www.sfml-dev.org/files/SFML-2.4.2-linux-gcc-64-bit.tar.gz
 tar xvf sfml.tgz
 cp -r SFML-2.4.2/* $INSTALL_PREFIX
@@ -25,3 +23,7 @@ cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 ninja install -j3
 
 ls -R $INSTALL_PREFIX
+
+if [ "$TRAVIS_SUDO" == "true" ]; then
+    echo "Building AppImage..."
+fi
