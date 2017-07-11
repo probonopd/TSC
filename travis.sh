@@ -22,6 +22,6 @@ cp -r SFML-2.4.2/* $INSTALL_PREFIX
 mkdir build
 cd build
 cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
-ninja install
+ninja install -j3
 
 ls -R $INSTALL_PREFIX
