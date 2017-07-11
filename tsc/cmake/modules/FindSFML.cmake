@@ -36,7 +36,7 @@
 
 pkg_search_module(SFMLPKG QUIET sfml-all sfml)
 
-find_path(SFML_INCLUDE_DIRS Graphics.hpp
+find_path(SFML_INCLUDE_DIRS SFML/Graphics.hpp
   HINTS ${SFMLPKG_INCLUDE_DIRS}
   PATH_SUFFIXES sfml SFML)
 
