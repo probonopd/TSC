@@ -33,6 +33,7 @@ addons:
       - libglew-dev
       - libglm-dev
       - libglfw-dev  # For CEGUI
+      - libopenal1
 
 before_script:
   - git submodule update --init --recursive
