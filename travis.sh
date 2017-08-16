@@ -19,11 +19,25 @@ cp -r SFML-2.4.2/* $INSTALL_PREFIX
 
 mkdir build
 cd build
-cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
+cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=/usr/local  # to set the install directory
+cmake -P cmake_install.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 ninja install -j3
 
 ls -R $INSTALL_PREFIX
 
 if [ "$TRAVIS_SUDO" == "true" ]; then
     echo "Building AppImage..."
+
+    mv install usr
+    curl -Lo functions.sh https://raw.githubusercontent.com/probonopd/AppImages/master/functions.sh
+    . ./functions.sh
+
+    get_apprun
+
+    patch_usr
+    copy_deps
+
+    export APP=TSC
+    export VERSION=2.0.0
+    generate_appimage
 fi
