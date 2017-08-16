@@ -41,5 +41,7 @@ if [ "$TRAVIS_SUDO" == "true" ]; then
 
     export APP=TSC
     export VERSION=2.0.0
+    mkdir TSC.AppDir
+    mv usr TSC.AppDir
     generate_appimage
 fi
