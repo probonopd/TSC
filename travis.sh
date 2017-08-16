@@ -19,8 +19,10 @@ cp -r SFML-2.4.2/* $INSTALL_PREFIX
 
 mkdir build
 cd build
-cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=/usr/local  # to set the install directory
-cmake -P cmake_install.cmake -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
+cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
+
+sed -i 's_"$INSTALL_PREFIX"_/usr_' config.hpp
+cat config.hpp
 ninja install -j3
 
 ls -R $INSTALL_PREFIX
