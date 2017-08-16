@@ -21,7 +21,7 @@ mkdir build
 cd build
 cmake -G Ninja ../tsc -DCMAKE_INSTALL_PREFIX=$INSTALL_PREFIX
 
-sed -i 's_"$INSTALL_PREFIX"_/usr_' config.hpp
+sed -i 's:"$INSTALL_PREFIX":/usr:' config.hpp
 cat config.hpp
 ninja install -j3
 
@@ -30,7 +30,7 @@ ls -R $INSTALL_PREFIX
 if [ "$TRAVIS_SUDO" == "true" ]; then
     echo "Building AppImage..."
 
-    mv install usr
+    mv $INSTALL_PREFIX usr
     curl -Lo functions.sh https://raw.githubusercontent.com/probonopd/AppImages/master/functions.sh
     . ./functions.sh
 
