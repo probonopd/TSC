@@ -38,7 +38,7 @@ if [ "$TRAVIS_SUDO" == "true" ]; then
     export VERSION=2.0.0
     mkdir TSC.AppDir
     mv usr TSC.AppDir
-    cp ../extras/tsc.desktop TSC.AppDir/TSC.desktop
+    cp ../tsc/extras/tsc.desktop TSC.AppDir/TSC.desktop
 
     cd TSC.AppDir
     get_apprun
