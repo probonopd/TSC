@@ -58,7 +58,7 @@
     <property name="posx" value="606"/>
     <property name="posy" value="-264"/>
     <property name="uid" value="503"/>
-    <property name="image" value="ground/underground/pow/blue.png"/>
+    <property name="image" value="ground/underground/switch/blue.png"/>
     <property name="type" value="massive"/>
   </sprite>
   <sprite>

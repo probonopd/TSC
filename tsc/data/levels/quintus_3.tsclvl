@@ -17688,7 +17688,7 @@ switch = UIDS[1278]
 switch.on_touch do |other|
   if !switch_enabled &amp;&amp; other.player? &amp;&amp; other.velocity_y &gt; 0
     [1239, 1244, 1245, 1246, 1279].map{ |uid| UIDS[uid].warp(-100, 100) }
-    switch.image = "ground/underground/pow/blue_active.png"
+    switch.image = "ground/underground/switch/blue_active.png"
     switch_enabled = true
   end
 end
