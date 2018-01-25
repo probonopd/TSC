@@ -199,7 +199,7 @@ namespace TSC {
         // current playing music pointer
         sf::Music m_music;
         // next music to play
-        std::queue<NextMusicInfo> m_next_music;
+        std::stack<NextMusicInfo> m_next_music;
 
         // The current sounds pointer array
         AudioSoundList m_active_sounds;
