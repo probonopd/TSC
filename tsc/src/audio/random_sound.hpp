@@ -85,9 +85,6 @@ namespace TSC {
         // if draw is valid for the current state and position
         virtual bool Is_Draw_Valid(void);
 
-        // if camera went out of range
-        void Event_Out_Of_Range(void) const;
-
 #ifdef ENABLE_EDITOR
         // editor activation
         virtual void Editor_Activate(void);

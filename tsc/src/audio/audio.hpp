@@ -143,18 +143,6 @@ namespace TSC {
         // Resume Music
         void Resume_Music(void);
 
-        // Fade out the sound source
-        void Fadeout_Source(sf::SoundSource& source, unsigned int ms);
-        /* Fade out Sound(s)
-         * ms : the time to fade out
-         * overwrite_fading : overwrite an already existing fade out
-        */
-        void Fadeout_Sounds(unsigned int ms = 200);
-        /* Fade out Sound(s)
-         * ms : the time to fade out
-         * filename : fade all sounds with this filename out
-        */
-        void Fadeout_Sounds(unsigned int ms, boost::filesystem::path filename);
         /* Fade out Music
          * ms : the time to fade out
         */
@@ -196,8 +184,16 @@ namespace TSC {
 
         // current playing music filename
         boost::filesystem::path m_music_filename;
-        // current playing music pointer
+        // current playing music
         sf::Music m_music;
+
+        enum class FadeDirection { NONE, IN, OUT };
+        FadeDirection m_fade_direction;
+        // fading time start
+        std::chrono::time_point<std::chrono::high_resolution_clock> m_fade_time_start;
+        // fading time total
+        unsigned int m_fade_time_total;
+
         // next music to play
         std::stack<NextMusicInfo> m_next_music;
 
@@ -206,9 +202,6 @@ namespace TSC {
 
         // maximum sounds allowed at once
         unsigned int m_max_sounds;
-
-        // initialization information
-        /* int m_audio_buffer, m_audio_channels; */
     };
 
     /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

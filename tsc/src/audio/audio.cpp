@@ -124,18 +124,11 @@ cAudio::~cAudio(void)
 
 bool cAudio::Init(void)
 {
-    // Get current device parameters
-    int dev_frequency = 0;
-    uint16_t dev_format = 0;
-    int dev_channels = 0;
-    /* int numtimesopened = Mix_QuerySpec(&dev_frequency, &dev_format, &dev_channels); XXX: SFML doesn't seem to have the ability to set audio frequencies... */
-    int numtimesopened = 0;
-
     bool sound = pPreferences->m_audio_sound;
     bool music = pPreferences->m_audio_music;
 
     // if no change
-    if (numtimesopened && m_music_enabled == music && m_sound_enabled == sound && dev_frequency == pPreferences->m_audio_hz) {
+    if (m_music_enabled == music && m_sound_enabled == sound) {
         return 1;
     }
 
@@ -206,6 +199,8 @@ void cAudio::Close(bool close_sound/*=true*/, bool close_music/*=true*/)
 
         m_initialised = 0;
     }
+
+    m_fade_direction = FadeDirection::NONE;
 }
 
 cSound* cAudio::Get_Sound_File(fs::path filename) const
@@ -342,24 +337,14 @@ bool cAudio::Play_Music(fs::path filename, bool loops /* = false */, bool force 
         }
 
         m_music.setLoop(loops);
-        // no fade in
-        if (!fadein_ms) {
-            m_music.play();
+        // set up fade in
+        if (fadein_ms) {
+            m_music.setVolume(0);
+            m_fade_direction = FadeDirection::IN;
+            m_fade_time_start = std::chrono::high_resolution_clock::now();
+            m_fade_time_total = fadein_ms;
         }
-        // fade in
-        else {
-            float current = m_music.getVolume();
-            float count = fadein_ms / m_music.getVolume();
-            m_music.setVolume(count);
-            m_music.play();
-            while (m_music.getVolume() < current) {
-                // sleep for several milliseconds
-                boost::this_thread::sleep_for(boost::chrono::milliseconds(int(fadein_ms / count)));
-                // raise the volume
-                m_music.setVolume(int(m_music.getVolume()+count));
-            }
-            m_music.setVolume(current);
-        }
+        m_music.play();
     }
     // music is playing and is not forced
     else {
@@ -472,64 +457,6 @@ void cAudio::Resume_Music(void)
     }
 }
 
-void cAudio::Fadeout_Source(sf::SoundSource& source, unsigned int ms) {
-    // count is the amount to decrease the sound by
-    float count = ms / source.getVolume();
-    while (source.getVolume() > count) {
-        // sleep for several milliseconds
-        boost::this_thread::sleep_for(boost::chrono::milliseconds(int(ms / count)));
-        // lower the volume
-        source.setVolume(int(source.getVolume()-count));
-    }
-    source.setVolume(0);
-}
-
-void cAudio::Fadeout_Sounds(unsigned int ms /* = 200 */)
-{
-    if (!m_sound_enabled || !m_initialised) {
-        return;
-    }
-
-    // if not playing
-    if (!Is_Music_Playing()) {
-        return;
-    }
-
-    // get all sounds
-    for (AudioSoundList::iterator itr = m_active_sounds.begin(); itr != m_active_sounds.end(); ++itr) {
-        // get object pointer
-        cAudio_Sound* obj = (*itr);
-
-        // fade the sound
-        Fadeout_Source(obj->m_sound, ms);
-    }
-}
-
-void cAudio::Fadeout_Sounds(unsigned int ms, fs::path filename)
-{
-    if (!m_sound_enabled || !m_initialised) {
-        return;
-    }
-
-    // add sound directory
-    if (!filename.is_absolute())
-        filename = pPackage_Manager->Get_Sound_Reading_Path(path_to_utf8(filename));
-
-    // get all sounds
-    for (AudioSoundList::iterator itr = m_active_sounds.begin(); itr != m_active_sounds.end(); ++itr) {
-        // get object pointer
-        cAudio_Sound* obj = (*itr);
-
-        // filename does not match
-        if (obj->m_data->m_filename.compare(filename) != 0) {
-            continue;
-        }
-
-        // fade the sound
-        Fadeout_Source(obj->m_sound, ms);
-    }
-}
-
 void cAudio::Fadeout_Music(unsigned int ms /* = 500 */)
 {
     if (!m_music_enabled || !m_initialised) {
@@ -541,11 +468,9 @@ void cAudio::Fadeout_Music(unsigned int ms /* = 500 */)
         return;
     }
 
-    float orig = m_music.getVolume();
-    Fadeout_Source(m_music, ms);
-    Halt_Music();
-    // reset volume after the sound stops
-    m_music.setVolume(orig);
+    m_fade_direction = FadeDirection::OUT;
+    m_fade_time_start = std::chrono::high_resolution_clock::now();
+    m_fade_time_total = ms;
 }
 
 void cAudio::Set_Music_Position(float position)
@@ -582,6 +507,7 @@ void cAudio::Halt_Music(void)
     }
 
     m_music.stop();
+    m_fade_direction = FadeDirection::NONE;
 }
 
 void cAudio::Stop_Sounds(void) const
@@ -632,21 +558,44 @@ void cAudio::Set_Music_Volume(uint8_t volume)
         volume = MAX_VOLUME;
     }
 
-    m_music.setVolume(volume);
+    m_music_volume = volume;
 }
 
 void cAudio::Update(void)
 {
-    if (!m_initialised) {
+    if (!m_initialised || !m_music_enabled) {
         return;
     }
 
     // if music is enabled but nothing is playing
-    if (m_music_enabled && !Is_Music_Playing() && !m_next_music.empty()) {
+    if (!Is_Music_Playing() && !m_next_music.empty()) {
         // play the next song in the queue
         NextMusicInfo next = m_next_music.top();
         m_next_music.pop();
         Play_Music(next.filename, next.loops, true, next.fadein_ms);
+    }
+    // if we are currently fading music
+    else if (m_fade_direction != FadeDirection::NONE) {
+        auto passed = std::chrono::high_resolution_clock::now() - m_fade_time_start;
+        unsigned int passed_ms = std::chrono::duration_cast<std::chrono::milliseconds>(passed).count();
+        if (passed_ms >= m_fade_time_total) {
+            // done fading; reset volume
+            if (m_fade_direction == FadeDirection::OUT) {
+                Halt_Music();
+            }
+            m_music.setVolume(m_music_volume);
+            m_fade_direction = FadeDirection::NONE;
+        } else {
+            // update volume
+            float new_volume = m_music_volume * (static_cast<float>(passed_ms) / m_fade_time_total);
+            if (m_fade_direction == FadeDirection::OUT) {
+                new_volume = MAX_VOLUME - new_volume;
+            }
+            m_music.setVolume(new_volume);
+        }
+    } else {
+        // make sure current volume is up-to-date
+        m_music.setVolume(m_music_volume);
     }
 }
 

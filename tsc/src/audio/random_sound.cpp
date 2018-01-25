@@ -411,7 +411,6 @@ bool cRandom_Sound::Is_Update_Valid()
 
     // if outside the range
     if (m_distance_to_camera >= m_volume_reduction_end) {
-        Event_Out_Of_Range();
         return 0;
     }
 
@@ -431,12 +430,6 @@ bool cRandom_Sound::Is_Draw_Valid(void)
     }
 
     return 1;
-}
-
-void cRandom_Sound::Event_Out_Of_Range(void) const
-{
-    // fade out sounds if out of range
-    pAudio->Fadeout_Sounds(500, m_filename);
 }
 
 #ifdef ENABLE_EDITOR
