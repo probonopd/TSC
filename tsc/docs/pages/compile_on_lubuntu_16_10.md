@@ -13,7 +13,7 @@ branch) up and running on Lubuntu 16.10.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo apt install ruby-full rake gperf pkg-config bison libglew-dev \
   freeglut3-dev gettext libpng-dev libpcre3-dev libxml++2.6-dev \
-  libfreetype6-dev libdevil-dev libboost1.58-all-dev libsfml-dev \
+  libfreetype6-dev libdevil-dev libboost-all-dev libsfml-dev \
   libcegui-mk2-dev cmake build-essential git git-core
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
