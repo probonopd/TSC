@@ -121,7 +121,7 @@ std::string cDialogBox_Text::Enter(std::string default_text, std::string title_t
     finished = 0;
 
     while (!finished) {
-        while (pVideo->mp_window->pollEvent(input_event)) {
+        while (pVideo->PollEvent(input_event)) {
             if (input_event.type == sf::Event::TextEntered) {
                 pKeyboard->Text_Entered(input_event);
             }
@@ -240,7 +240,7 @@ int cDialogBox_Question::Enter(std::string text, bool with_cancel /* = 0 */)
     while (!finished) {
         Draw();
 
-        while (pVideo->mp_window->pollEvent(input_event)) {
+        while (pVideo->PollEvent(input_event)) {
             if (input_event.type == sf::Event::TextEntered) {
                 pKeyboard->Text_Entered(input_event);
             }
@@ -366,7 +366,7 @@ void Draw_Static_Text(const std::string& text, const Color* color_text /* = &whi
         pVideo->Render();
 
         if (wait_for_input) {
-            while (pVideo->mp_window->pollEvent(input_event)) {
+            while (pVideo->PollEvent(input_event)) {
                 if (input_event.type == sf::Event::KeyPressed || input_event.type == sf::Event::JoystickButtonPressed || input_event.type == sf::Event::MouseButtonPressed) {
                     draw = 0;
                 }

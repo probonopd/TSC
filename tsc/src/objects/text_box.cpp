@@ -145,7 +145,7 @@ void cText_Box::Activate(void)
     bool display = 1;
 
     while (display) {
-        while (pVideo->mp_window->pollEvent(input_event)) {
+        while (pVideo->PollEvent(input_event)) {
             if (input_event.type == sf::Event::KeyPressed) {
 
                 // exit keys

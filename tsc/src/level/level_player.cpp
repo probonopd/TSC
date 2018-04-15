@@ -289,7 +289,7 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
     float i;
 
     for (i = 0.0f; i < 7.0f; i += pFramerate->m_speed_factor) {
-        while (pVideo->mp_window->pollEvent(input_event)) {
+        while (pVideo->PollEvent(input_event)) {
             if (input_event.type == sf::Event::KeyPressed) {
                 if (input_event.key.code == sf::Keyboard::Escape) {
                     goto animation_end;
@@ -321,7 +321,7 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
     m_walk_count = 0.0f;
 
     for (i = 0.0f; m_col_rect.m_y < pActive_Camera->m_y + game_res_h; i++) {
-        while (pVideo->mp_window->pollEvent(input_event)) {
+        while (pVideo->PollEvent(input_event)) {
             if (input_event.type == sf::Event::KeyPressed) {
                 if (input_event.key.code == sf::Keyboard::Escape) {
                     goto animation_end;
@@ -388,7 +388,7 @@ animation_end:
         anim->Set_Const_Rotation_Z(-2.0f, 4.0f);
 
         for (i = 10.0f; i > 0.0f; i -= 0.011f * pFramerate->m_speed_factor) {
-            while (pVideo->mp_window->pollEvent(input_event)) {
+            while (pVideo->PollEvent(input_event)) {
                 if (input_event.type == sf::Event::KeyPressed) {
                     if (input_event.key.code == pPreferences->m_key_screenshot) {
                         pVideo->Save_Screenshot();
