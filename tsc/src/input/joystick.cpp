@@ -52,6 +52,7 @@ int cJoystick::Init(void)
     // Ensure all joysticks are found now
     sf::Joystick::update();
 
+    m_current_joystick = 999;
     m_num_joysticks = 0;
 
     for(int i=0; i < sf::Joystick::Count; i++) {
