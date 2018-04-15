@@ -361,7 +361,7 @@ bool cOverworld_Player::Start_Walk(ObjectDirection new_direction)
     }
 
     cLayer_Line_Point_Start* walk_line = NULL;
-    if (Get_Waypoint()->m_exits.size() > 0) { // Since 2.1.0
+    if (m_current_waypoint >= 0 && Get_Waypoint()->m_exits.size() > 0) { // Since 2.1.0
         waypoint_exit* p_exit = NULL;
 
         // Find the line matching the requested direction
