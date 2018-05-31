@@ -181,6 +181,16 @@ bool cLevel::New(std::string levelname)
         m_level_filename = filename;
         m_engine_version = level_engine_version;
 
+        // Insert an object for viewing please as an example.
+        // Plus, this works around the bug reported in ticket #565.
+        cSprite* p_sprite = new cSprite(m_sprite_manager);
+        p_sprite->Set_Image(pVideo->Get_Surface("blocks/sand/1.png"), true);
+        p_sprite->Set_Massive_Type(MASS_MASSIVE);
+        p_sprite->Set_Active(true);
+        p_sprite->Set_Spawned(false);
+        p_sprite->Set_Pos(215, -215, true); // Position is right below Alex' default position
+        m_sprite_manager->Add(p_sprite);
+
         return 1;
     }
 
