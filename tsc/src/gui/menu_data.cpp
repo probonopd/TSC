@@ -579,49 +579,6 @@ void cMenu_Start::Init_GUI(void)
     tabcontrol->subscribeEvent(CEGUI::TabControl::EventSelectionChanged, CEGUI::Event::Subscriber(&cMenu_Start::TabControl_Selection_Changed, this));
     tabcontrol->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&cMenu_Start::TabControl_Keydown, this));
 
-    // ### Package ###
-    CEGUI::Listbox* listbox_packages = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/listbox_packages"));
-
-    // package names
-    vector<PackageInfo> packages = pPackage_Manager->Get_Packages();
-    for (vector<PackageInfo>::const_iterator itr = packages.begin(); itr != packages.end(); ++itr) {
-        if (itr == packages.begin()) {
-            CEGUI::ListboxTextItem* first_item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>("<Core>"));
-
-            first_item->setTextColours(CEGUI::Colour(1, 0.8f, 0.6f));
-            first_item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
-            first_item->setSelectionBrushImage("TaharezLook/ListboxSelectionBrush");
-            listbox_packages->addItem(first_item);
-
-            if (pPackage_Manager->Get_Current_Package().empty())
-                first_item->setSelected(true);
-        }
-
-        if (itr->hidden) {
-#ifndef _DEBUG
-            continue;
-#else
-            cout << "Showing hidden package  '" << itr->name << "' because this is a debug build." << endl;
-#endif
-        }
-
-        CEGUI::ListboxTextItem* item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>((itr->name).c_str()));
-
-        item->setTextColours(CEGUI::Colour(1, 0.8f, 0.6f));
-        item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
-        item->setSelectionBrushImage("TaharezLook/ListboxSelectionBrush");
-        listbox_packages->addItem(item);
-
-        if (pPackage_Manager->Get_Current_Package() == itr->name)
-            item->setSelected(true);
-    }
-
-    // events
-    listbox_packages->subscribeEvent(CEGUI::Window::EventKeyDown, CEGUI::Event::Subscriber(&Listbox_Keydown));
-    listbox_packages->subscribeEvent(CEGUI::Window::EventCharacterKey, CEGUI::Event::Subscriber(&Listbox_Character_Key));
-    listbox_packages->subscribeEvent(CEGUI::Listbox::EventSelectionChanged, CEGUI::Event::Subscriber(&cMenu_Start::Package_Select, this));
-    listbox_packages->subscribeEvent(CEGUI::Listbox::EventMouseDoubleClick, CEGUI::Event::Subscriber(&cMenu_Start::Package_Select_final_list, this));
-
     // ### Campaign ###
     CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"));
 
@@ -819,20 +776,8 @@ void cMenu_Start::Load_Selected(void)
     // Get Tab Control
     CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(p_root->getChild("menu_overworld/tabcontrol_main"));
 
-    // Package
-    if (tabcontrol->getSelectedTabIndex() == 0) {
-        CEGUI::Listbox* listbox_packages = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/listbox_packages"));
-        CEGUI::ListboxItem* item = listbox_packages->getFirstSelectedItem();
-
-        if (item) {
-            if (listbox_packages->getItemIndex(item) == 0)
-                Load_Package("");
-            else
-                Load_Package(item->getText().c_str());
-        }
-    }
     // Campaign
-    else if (tabcontrol->getSelectedTabIndex() == 1) {
+    if (tabcontrol->getSelectedTabIndex() == 0) {
         CEGUI::Listbox* listbox_campaigns = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"));
         CEGUI::ListboxItem* item = listbox_campaigns->getFirstSelectedItem();
 
@@ -841,7 +786,7 @@ void cMenu_Start::Load_Selected(void)
         }
     }
     // World
-    else if (tabcontrol->getSelectedTabIndex() == 2) {
+    else if (tabcontrol->getSelectedTabIndex() == 1) {
         CEGUI::Listbox* listbox_worlds = static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"));
         CEGUI::ListboxItem* item = listbox_worlds->getFirstSelectedItem();
 
@@ -1063,15 +1008,12 @@ bool cMenu_Start::TabControl_Selection_Changed(const CEGUI::EventArgs& e)
     CEGUI::TabControl* tabcontrol = static_cast<CEGUI::TabControl*>(windowEventArgs.window);
 
     if (tabcontrol->getSelectedTabIndex() == 0) {
-        static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/listbox_packages"))->activate();
-    }
-    else if (tabcontrol->getSelectedTabIndex() == 1) {
         static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_campaign/listbox_campaigns"))->activate();
     }
-    else if (tabcontrol->getSelectedTabIndex() == 2) {
+    else if (tabcontrol->getSelectedTabIndex() == 1) {
         static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_world/listbox_worlds"))->activate();
     }
-    else if (tabcontrol->getSelectedTabIndex() == 3) {
+    else if (tabcontrol->getSelectedTabIndex() == 2) {
         static_cast<CEGUI::Listbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_level/listbox_levels"))->activate();
     }
 
@@ -1263,51 +1205,6 @@ void Listbox_Searchbuffer_Update()
             listbox_search_buffer.clear();
         }
     }
-}
-
-bool cMenu_Start::Package_Select(const CEGUI::EventArgs& event)
-{
-    const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
-    CEGUI::Window* p_root = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-
-    // description
-    CEGUI::Editbox* editbox_package_description = static_cast<CEGUI::Editbox*>(p_root->getChild("menu_overworld/tabcontrol_main/tab_package/editbox_package_description"));
-
-    // set description
-    if (item) {
-        if (static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getItemIndex(item) == 0) {
-            editbox_package_description->setText("Core campaigns, worlds, and levels.");
-        }
-        else {
-            std::string package = item->getText().c_str();
-            PackageInfo info = pPackage_Manager->Get_Package(package);
-
-            editbox_package_description->setText(info.desc);
-        }
-    }
-    // clear
-    else {
-        editbox_package_description->setText("");
-    }
-
-    return 1;
-}
-
-bool cMenu_Start :: Package_Select_final_list(const CEGUI::EventArgs& event)
-{
-    const CEGUI::WindowEventArgs& windowEventArgs = static_cast<const CEGUI::WindowEventArgs&>(event);
-    CEGUI::ListboxItem* item = static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getFirstSelectedItem();
-
-    // load package
-    if (item) {
-        if (static_cast<CEGUI::Listbox*>(windowEventArgs.window)->getItemIndex(item) == 0)
-            Load_Package("");
-        else
-            Load_Package(item->getText().c_str());
-    }
-
-    return 1;
 }
 
 bool cMenu_Start::Campaign_Select(const CEGUI::EventArgs& event)

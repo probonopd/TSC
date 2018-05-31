@@ -11,43 +11,9 @@
       <Property name="MaxSize" value="{{1,0},{1,0}}"/>
       <Property name="TabPanePosition" value="Top"/>
       <Property name="Area" value="{{0.182812,0},{0.241666,0},{0.840625,0},{0.793749,0}}"/>
-      <Window type="DefaultWindow" name="tab_package">
-        <Property name="Text" value="Package"/>
-	<Property name="Visible" value="True"/>
-        <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-        <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
-        <Window type="TaharezLook/Listbox" name="listbox_packages">
-          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-          <Property name="Area" value="{{0.015,0},{0.105,0},{0.5,0},{0.9,0}}"/>
-        </Window>
-        <Window type="TaharezLook/MultiLineEditbox" name="editbox_package_description">
-          <Property name="Text"></Property>
-          <Property name="ReadOnly" value="True"/>
-          <Property name="MaxTextLength" value="1073741823"/>
-          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-          <Property name="Area" value="{{0.53,0},{0.21,0},{0.98,0},{0.6,0}}"/>
-        </Window>
-        <Window type="TaharezLook/StaticText" name="text_package_description">
-          <Property name="Text" value="Description"/>
-          <Property name="TooltipText" value="Package Description"/>
-          <Property name="FrameEnabled" value="False"/>
-          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-          <Property name="Area" value="{{0.53,0},{0.11,0},{0.8,0},{0.19,0}}"/>
-          <Property name="BackgroundEnabled" value="False"/>
-        </Window>
-        <Window type="TaharezLook/StaticText" name="text_package_select">
-          <Property name="Text" value="Select Package"/>
-          <Property name="TextColours" value="tl:FFAAFFAA tr:FFAAFFAA bl:FFAAFFAA br:FFAAFFAA"/>
-          <Property name="FrameEnabled" value="False"/>
-          <Property name="HorzFormatting" value="HorzCentred"/>
-          <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-          <Property name="Area" value="{{0.015,0},{0,0},{0.497184,0},{0.1,0}}"/>
-          <Property name="BackgroundEnabled" value="False"/>
-        </Window>
-      </Window>
       <Window type="DefaultWindow" name="tab_campaign">
         <Property name="Text" value="Campaign"/>
-	<Property name="Visible" value="False"/>
+	<Property name="Visible" value="True"/>
         <Property name="MaxSize" value="{{1,0},{1,0}}"/>
         <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}"/>
         <Window type="TaharezLook/Listbox" name="listbox_campaigns">
