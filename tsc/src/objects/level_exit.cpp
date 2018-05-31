@@ -239,6 +239,9 @@ void cLevel_Exit::Draw(cSurface_Request* request /* = NULL */)
 
 void cLevel_Exit::Activate(void)
 {
+    // Drop item (e.g., shell), as it can't be transported
+    pLevel_Player->Release_Item();
+
     // warp player out
     if (m_exit_type == LEVEL_EXIT_WARP) {
         pAudio->Play_Sound("enter_pipe.ogg");
