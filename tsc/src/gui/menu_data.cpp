@@ -1523,10 +1523,6 @@ void cMenu_Options::Init_GUI_Game(void)
         // get filename
         fs::path this_path = (*itr);
 
-        // if not directory
-        if (!fs::is_directory(this_path))
-            continue;
-
         item = new CEGUI::ListboxTextItem(path_to_utf8(this_path.filename()));
         item->setTextColours(CEGUI::Colour(0, 0, 1));
         m_game_combo_language->addItem(item);
