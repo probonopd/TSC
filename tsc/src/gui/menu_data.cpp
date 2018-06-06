@@ -1355,16 +1355,19 @@ bool cMenu_Start::Button_Level_Delete_Clicked(const CEGUI::EventArgs& event)
     // load level
     if (item) {
         std::string filename = item->getText().c_str();
+        filename += ".tsclvl";
 
         // if denied
-        if (!Box_Question(_("Delete ") + filename + " ?")) {
+        char question[512];
+        snprintf(question, 512, _("Delete %s?"), filename.c_str());
+        if (!Box_Question(question)) {
             return 1;
         }
 
         // only user directory
-        fs::path filepath = pLevel_Manager->Get_Path(filename, true);
+        fs::path filepath = pResource_Manager->Get_User_Level(filename);
         if (!filepath.empty()) {
-            fs::remove(filename);
+            fs::remove(filepath);
             listbox_levels->removeItem(item);
         }
     }
