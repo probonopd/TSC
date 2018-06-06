@@ -378,7 +378,7 @@ void cLayer::Save_To_File(const fs::path& path)
     LayerLineList::const_iterator iter;
     for (iter=objects.begin(); iter != objects.end(); iter++) {
         cLayer_Line_Point_Start* p_line = *iter;
-        xmlpp::Element* p_node = p_root->add_child("line");
+        xmlpp::Element* p_node = p_root->add_child_element("line");
 
         // start
         Add_Property(p_node, "X1", static_cast<int>(p_line->Get_Line_Pos_X()));

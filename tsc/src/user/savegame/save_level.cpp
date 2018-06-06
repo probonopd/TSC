@@ -81,7 +81,7 @@ cSave_Level::~cSave_Level(void)
 void cSave_Level::Save_To_Node(xmlpp::Element* p_parent_node)
 {
     // <level>
-    xmlpp::Element* p_node = p_parent_node->add_child("level");
+    xmlpp::Element* p_node = p_parent_node->add_child_element("level");
     Add_Property(p_node, "level_name", m_name);
 
     // Player position. Only save that for the active level.
@@ -98,7 +98,7 @@ void cSave_Level::Save_To_Node(xmlpp::Element* p_parent_node)
 
     // The regular objects.
     // <objects_data>
-    xmlpp::Element* p_objects_data_node = p_node->add_child("objects_data");
+    xmlpp::Element* p_objects_data_node = p_node->add_child_element("objects_data");
     std::vector<const cSprite*>::const_iterator iter;
     for(iter=m_regular_objects.begin(); iter != m_regular_objects.end(); iter++) {
         xmlpp::Document subdoc;
@@ -117,7 +117,7 @@ void cSave_Level::Save_To_Node(xmlpp::Element* p_parent_node)
 
     // The spawned objects. These have always to be saved.
     // <spawned_objects>
-    xmlpp::Element* p_spawned_node = p_node->add_child("spawned_objects");
+    xmlpp::Element* p_spawned_node = p_node->add_child_element("spawned_objects");
     cSprite_List::iterator iter2; // TODO: Should be const_iterator
     for(iter2=m_spawned_objects.begin(); iter2 != m_spawned_objects.end(); iter2++) {
         cSprite* p_sprite = (*iter2);

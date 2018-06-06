@@ -115,7 +115,7 @@ void cSave::Write_To_File(fs::path filepath)
     xmlpp::Element* p_node = NULL;
 
     // <information>
-    p_node = p_root->add_child("information");
+    p_node = p_root->add_child_element("information");
     Add_Property(p_node, "version", m_version);
     Add_Property(p_node, "level_engine_version", m_level_engine_version);
     Add_Property(p_node, "save_time", static_cast<uint64_t>(m_save_time));
@@ -123,7 +123,7 @@ void cSave::Write_To_File(fs::path filepath)
     // </information>
 
     // <player>
-    p_node = p_root->add_child("player");
+    p_node = p_root->add_child_element("player");
     Add_Property(p_node, "lives", m_lives);
     Add_Property(p_node, "points", m_points);
     Add_Property(p_node, "goldpieces", m_goldpieces);
@@ -148,7 +148,7 @@ void cSave::Write_To_File(fs::path filepath)
     for (return_iter = m_return_entries.begin(); return_iter != m_return_entries.end(); return_iter++) {
         cSave_Player_Return_Entry item = *return_iter;
 
-        p_node = p_root->add_child("return");
+        p_node = p_root->add_child_element("return");
         if (!item.m_level.empty())
             Add_Property(p_node, "level", item.m_level);
         if (!item.m_entry.empty())
@@ -168,7 +168,7 @@ void cSave::Write_To_File(fs::path filepath)
         cSave_Overworld* p_overworld = *oiter;
 
         // <overworld>
-        p_node = p_root->add_child("overworld");
+        p_node = p_root->add_child_element("overworld");
         Add_Property(p_node, "name", p_overworld->m_name);
 
         Save_Overworld_WaypointList::const_iterator wpiter;
@@ -180,7 +180,7 @@ void cSave::Write_To_File(fs::path filepath)
                 continue;
 
             // <waypoint>
-            xmlpp::Element* p_waypoint_node = p_node->add_child("waypoint");
+            xmlpp::Element* p_waypoint_node = p_node->add_child_element("waypoint");
             Add_Property(p_waypoint_node, "destination", p_wp->m_destination);
             Add_Property(p_waypoint_node, "access", p_wp->m_access);
 
