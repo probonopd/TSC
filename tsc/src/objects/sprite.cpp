@@ -493,7 +493,11 @@ cSprite* cSprite::Copy(void) const
 */
 xmlpp::Element* cSprite::Save_To_XML_Node(xmlpp::Element* p_element)
 {
+#ifdef USE_LIBXMLPP3
     xmlpp::Element* p_node = p_element->add_child_element(m_type_name);
+#else
+    xmlpp::Element* p_node = p_element->add_child(m_type_name);
+#endif
 
     // position
     Add_Property(p_node, "posx", static_cast<int>(m_start_pos_x));

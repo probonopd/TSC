@@ -49,6 +49,7 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
+option(USE_LIBXMLPP3 "Use libxml++3.0 instead of libxml++2.6 (experimental)" OFF)
 
 ########################################
 # Compiler config
@@ -114,15 +115,23 @@ if (WIN32)
   pkg_check_modules(OPENGL REQUIRED gl)
   pkg_check_modules(PNG REQUIRED libpng)
   pkg_check_modules(PCRE REQUIRED libpcre)
-  pkg_check_modules(LibXmlPP REQUIRED libxml++-3.0)
+  if (USE_LIBXMLPP3)
+    pkg_check_modules(LibXmlPP REQUIRED libxml++-3.0)
+  else()
+    pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
+  endif()
 else()
   find_package(SFML COMPONENTS audio graphics window system REQUIRED)
   find_package(CEGUI COMPONENTS OpenGL REQUIRED)
   find_package(OpenGL REQUIRED)
   find_package(PNG REQUIRED)
   find_package(PCRE REQUIRED)
-  find_package(LibXmlPP 2.6 REQUIRED)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
+  if (USE_LIBXMLPP3)
+    find_package(LibXmlPP 3.0 REQUIRED)
+  else()
+    find_package(LibXmlPP 2.6 REQUIRED)
+  endif()
 
   # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
   # linking error).

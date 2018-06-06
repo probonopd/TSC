@@ -173,6 +173,11 @@ USE_SYSTEM_TINYCLIPBOARD [OFF]
   system will dynamically link to the tinyclipboard library of
   the system and not build its own variant.
 
+USE_LIBXMLPP3 [OFF]
+: Enabling this upgrades TSC's dependency from libxml++2.6 to
+  libxml++3.0. This is EXPERIMENTAL. If it breaks something,
+  file a bug. For now, TSC officially only supports libxml++2.6.
+
 The following path options are available:
 
 CMAKE_INSTALL_PREFIX [/usr/local]

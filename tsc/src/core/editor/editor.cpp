@@ -899,10 +899,17 @@ void cEditor::parse_menu_file()
     xmlpp::DomParser parser;
     parser.parse_file(menu_file);
 
+#ifdef USE_LIBXMLPP3
     xmlpp::Element* p_root = parser.get_document()->get_root_node();
     xmlpp::Node::NodeSet items = p_root->find("item");
 
     xmlpp::Node::NodeSet::const_iterator iter;
+#else
+    xmlpp::Element* p_root = parser.get_document()->get_root_node();
+    xmlpp::NodeSet items = p_root->find("item");
+
+    xmlpp::NodeSet::const_iterator iter;
+#endif
     for (iter=items.begin(); iter != items.end(); iter++) {
         xmlpp::Element* p_node = dynamic_cast<xmlpp::Element*>(*iter);
 
@@ -910,8 +917,13 @@ void cEditor::parse_menu_file()
         std::string tagstr = dynamic_cast<xmlpp::Element*>(p_node->find("property[@name='tags']")[0])->get_attribute("value")->get_value();
 
         // Set color if available (---header--- elements have no color property)
+#ifdef USE_LIBXMLPP3
         std::string colorstr = "FFFFFFFF";
         xmlpp::Node::NodeSet results = p_node->find("property[@name='color']");
+#else
+        std::string colorstr = "FFFFFFFF";
+        xmlpp::NodeSet results = p_node->find("property[@name='color']");
+#endif
         if (!results.empty())
             colorstr = dynamic_cast<xmlpp::Element*>(results[0])->get_attribute("value")->get_value();
 

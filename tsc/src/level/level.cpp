@@ -301,14 +301,22 @@ fs::path cLevel::Save_To_File(fs::path filename /* = fs::path() */)
     xmlpp::Element* p_node = NULL;
 
     // <information>
+#ifdef USE_LIBXMLPP3
     p_node = p_root->add_child_element("information");
+#else
+    p_node = p_root->add_child("information");
+#endif
     Add_Property(p_node, "game_version", int_to_string(TSC_VERSION_MAJOR) + "." + int_to_string(TSC_VERSION_MINOR) + "." + int_to_string(TSC_VERSION_PATCH));
     Add_Property(p_node, "engine_version", level_engine_version);
     Add_Property(p_node, "save_time", static_cast<uint64_t>(time(NULL)));
     // </information>
 
     // <settings>
+#ifdef USE_LIBXMLPP3
     p_node = p_root->add_child_element("settings");
+#else
+    p_node = p_root->add_child("settings");
+#endif
     Add_Property(p_node, "lvl_author", m_author);
     Add_Property(p_node, "lvl_version", m_version);
     Add_Property(p_node, "lvl_music", Get_Music_Filename().generic_string());
@@ -329,7 +337,11 @@ fs::path cLevel::Save_To_File(fs::path filename /* = fs::path() */)
         (*iter)->Save_To_XML_Node(p_root);
 
     // <player>
+#ifdef USE_LIBXMLPP3
     p_node = p_root->add_child_element("player");
+#else
+    p_node = p_root->add_child("player");
+#endif
     Add_Property(p_node, "posx", static_cast<int>(pLevel_Player->m_start_pos_x));
     Add_Property(p_node, "posy", static_cast<int>(pLevel_Player->m_start_pos_y));
     Add_Property(p_node, "direction", Get_Direction_Name(pLevel_Player->m_start_direction));
@@ -349,8 +361,13 @@ fs::path cLevel::Save_To_File(fs::path filename /* = fs::path() */)
 
     // MRuby script code
     // <script>
+#ifdef USE_LIBXMLPP3
     p_node = p_root->add_child_element("script");
     p_node->add_child_text(m_script);
+#else
+    p_node = p_root->add_child("script");
+    p_node->add_child_text(m_script);
+#endif
     // </script>
 
     // Write to file (raises xmlpp::exception on write error)

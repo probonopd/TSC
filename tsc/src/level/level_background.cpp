@@ -108,8 +108,13 @@ void cBackground::Save_To_XML_Node(xmlpp::Element* p_parent)
         return;
 
     // <background>
+#ifdef USE_LIBXMLPP3
     xmlpp::Element* p_node = p_parent->add_child_element("background");
     Add_Property(p_node, "type", m_type);
+#else
+    xmlpp::Element* p_node = p_parent->add_child("background");
+    Add_Property(p_node, "type", m_type);
+#endif
 
     // gradient
     if (m_type == BG_GR_HOR || m_type == BG_GR_VER) {

@@ -14,14 +14,14 @@
 
 pkg_check_modules(PKG_LibXmlPP_Glib QUIET glib-2.0)
 pkg_check_modules(PKG_LibXmlPP_GlibMM QUIET glibmm-2.4)
-pkg_check_modules(PKG_LibXmlPP QUIET libxml++-3.0)
+pkg_check_modules(PKG_LibXmlPP QUIET libxml++-${LibXmlPP_FIND_VERSION})
 
 # Note we use a subdirectory find (libxml++/document.h) since that is what
 # we include. Many other libs may have a document.h file, so one definitely
 # does not want that subdirectory into the compiler include search path
 # (prevents conflicts).
 find_path(LibXmlPP_INCLUDE_DIR libxml++/document.h
-  HINTS ${PKG_LibXmlPP_INCLUDE_DIRS} /usr/include/libxml++-3.0)
+  HINTS ${PKG_LibXmlPP_INCLUDE_DIRS} /usr/include/libxml++-${LibXmlPP_FIND_VERSION})
 
 # libxml++'s headers include glibmm headers, which is irritating.
 # When including libxml++'s headers, these need to be in the compiler
@@ -44,11 +44,11 @@ find_path(LibXmlPP_Glib_Config_INCLUDE_DIR glibconfig.h
 
 # libxml++'s headers also include a config header.
 find_path(LibXmlPP_Config_INCLUDE_DIR libxml++config.h
-  HINTS ${PKG_LibXmlPP_INCLUDE_DIRS} /usr/lib/libxml++-3.0/include)
+  HINTS ${PKG_LibXmlPP_INCLUDE_DIRS} /usr/lib/libxml++-${LibXmlPP_FIND_VERSION}/include)
 
 # Now for the actual libraries.
 find_library(LibXmlPP_LIBRARY
-  NAMES xml++ xml++-3.0
+  NAMES xml++ xml++-${LibXmlPP_FIND_VERSION}
   HINTS ${PKG_LibXmlPP_LIBRARY_DIRS})
 find_library(LibXmlPP_GlibMM_LIBRARY
   NAMES glibmm-2.4 glibmm
