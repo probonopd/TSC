@@ -328,7 +328,7 @@ void cMenu_Main::Init(void)
     // Only show the credit menu entry and the SFML logo on the title
     // screen, not in the in-game menu.
     if (m_exit_to_gamemode == MODE_NOTHING) {
-        mp_credits_item->setText(_("Credits"));
+        mp_credits_item->setText(UTF8_("Credits"));
         mp_credits_item->setProperty("TextColours", "tl:FFFFFF00 tr:FFFFFF00 bl:FFFFFF00 br:FFFFFF00");
         mp_credits_item->setProperty("FrameEnabled", "False");
         mp_credits_item->setProperty("BackgroundEnabled", "False");
@@ -3119,7 +3119,7 @@ void cMenu_Savegames::Init_GUI(void)
         p_ok_button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Savegames::Button_Load_Clicked, this));
     }
 
-    p_back_button->setText(_("Back"));
+    p_back_button->setText(UTF8_("Back"));
     p_back_button->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&cMenu_Savegames::Button_Back_Clicked, this));
 
     // Give input focus to the listbox so keyboard navigation works.
@@ -3342,7 +3342,7 @@ void cMenu_Savegames::Update_Saved_Games_Text(void)
             text = _("Savegame loading failed");
         }
 
-        CEGUI::ListboxTextItem* p_item = new CEGUI::ListboxTextItem(text);
+        CEGUI::ListboxTextItem* p_item = new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(text.c_str()));
         p_item->setSelectionColours(CEGUI::Colour(0.33f, 0.33f, 0.33f));
         p_item->setSelectionBrushImage("TaharezLook/ListboxSelectionBrush");
         p_listbox->addItem(p_item);
@@ -3612,7 +3612,7 @@ void cMenu_Credits::Add_Credits_Line(const std::string& text, float posx, float 
     CEGUI::String strcolrect = CEGUI::PropertyHelper<CEGUI::ColourRect>::toString(colrect);
 
     CEGUI::Window* p_line = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText");
-    p_line->setText(text);
+    p_line->setText(reinterpret_cast<const CEGUI::utf8*>(text.c_str()));
     p_line->setProperty("FrameEnabled", "False");
     p_line->setProperty("BackgroundEnabled", "False");
     p_line->setProperty("TextColours", strcolrect);

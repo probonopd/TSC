@@ -397,7 +397,7 @@ namespace TSC {
         virtual void Draw(void);
 
 
-        // Add a line to the credits text
+        // Add a line to the credits text. `text' is required to be encoded in UTF-8.
         void Add_Credits_Line(const std::string& text, float posx, float posy, const Color& color = black, float shadow_pos = 0.0f, const Color& shadow_color = black);
         /* fade from the normal menu to the the credits menu
          * fade_in : if set fade in instead of fade out
