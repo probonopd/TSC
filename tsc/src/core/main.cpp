@@ -203,22 +203,41 @@ int main(int argc, char** argv)
         Game_Action_Data_End.add("screen_fadein_speed", "3");
 
         // game loop
-        while (!game_exit and !game_reset) {
-            // update
-            Update_Game();
-            // draw
-            Draw_Game();
+#ifndef _DEBUG
+        try {
+#endif
+            while (!game_exit and !game_reset) {
+                // update
+                Update_Game();
+                // draw
+                Draw_Game();
 
-            // render
+                // render
 #ifdef TSC_RENDER_THREAD_TEST
-            pVideo->Render(1);
+                pVideo->Render(1);
 #else
-            pVideo->Render();
+                pVideo->Render();
 #endif
 
-            // update speedfactor
-            pFramerate->Update();
+                // update speedfactor
+                pFramerate->Update();
+            }
+#ifndef _DEBUG
         }
+        catch (...) {
+            /* Cleanup and exit with non-success status. This is done
+             * only in release mode, because the try/catch statement
+             * unwinds the stack and confuses GDB. Running GDB's
+             * "backtrace" command on an exception re-thrown like this
+             * causes it to print the backtrace to the re-throw
+             * statement below, which is not useful at all. In debug
+             * mode, the original exception needs to terminate the
+             * programme so debugging the problem is easier. */
+            std::cerr << "Uncought exception. You might want to file a bug; see <https://secretchronicles.org/>." << std::endl;
+            Exit_Game();
+            throw;
+        }
+#endif
 
         Exit_Game();
 
@@ -335,6 +354,8 @@ void Init_Game(void)
     Loading_Screen_Exit();
 }
 
+// Note: This function must not throw exceptions! It is called in main()'s
+// global try/catch construct's catch{} clause.
 void Exit_Game(void)
 {
     if (pPreferences) {
