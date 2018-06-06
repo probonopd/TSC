@@ -164,27 +164,27 @@ void cHud::Update()
 
         sprintf(timestr, _("Time %02d:%02d"), seconds / 60, seconds % 60);
         mp_time_label->setText(timestr);
+    }
 
-        // Update all minipoints
-        std::vector<cMiniPoints*>::iterator iter;
-        for(iter=m_active_mini_points.begin(); iter != m_active_mini_points.end();) {
-            if ((*iter)->Update()) {
-                // If they're done displaying, delete them and remove them from the vector.
-                delete (*iter);
-                iter = m_active_mini_points.erase(iter);
-            }
-            else {
-                iter++;
-            }
+    // Update all minipoints
+    std::vector<cMiniPoints*>::iterator iter;
+    for(iter=m_active_mini_points.begin(); iter != m_active_mini_points.end();) {
+        if ((*iter)->Update()) {
+            // If they're done displaying, delete them and remove them from the vector.
+            delete (*iter);
+            iter = m_active_mini_points.erase(iter);
         }
+        else {
+            iter++;
+        }
+    }
 
-        // Update text counter if a message is displayed
-        if (mp_message_text->isVisible()) {
-            m_text_counter -= pFramerate->m_speed_factor;
-            if (m_text_counter <= 0) {
-                mp_message_text->hide();
-                m_text_counter = 0;
-            }
+    // Update text counter if a message is displayed
+    if (mp_message_text->isVisible()) {
+        m_text_counter -= pFramerate->m_speed_factor;
+        if (m_text_counter <= 0) {
+            mp_message_text->hide();
+            m_text_counter = 0;
         }
     }
 
