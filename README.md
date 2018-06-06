@@ -21,8 +21,8 @@ Links
 -----
 
 * The TSC website: https://secretchronicles.org
-* The forums: https://forum.secretchronicles.org
-* The wiki: https://wiki.secretchronicles.org
+* The user mailinglist: https://lists.secretchronicles.org/hyperkitty/list/tsc-users@lists.secretchronicles.org/
+* The developer mailinglist: https://lists.secretchronicles.org/hyperkitty/list/tsc-devel@lists.secretchronicles.org/
 * The bugtracker: https://github.com/Secretchronicles/TSC/issues
 * The documentation: https://secretchronicles.org/en/documentation
 
