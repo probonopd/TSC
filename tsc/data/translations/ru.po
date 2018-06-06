@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Secret Maryo Chronicles\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-14 20:37+0300\n"
+"POT-Creation-Date: 2018-06-06 21:19+0300\n"
 "PO-Revision-Date: 2014-08-30 19:48+0200\n"
 "Last-Translator: Florian Richter <fluxey@gmail.com>\n"
 "Language-Team: UNMAINTAINED\n"
@@ -14,63 +14,63 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../../src/audio/random_sound.cpp:459 ../../src/video/animation.cpp:1403
+#: ../../src/audio/random_sound.cpp:452 ../../src/video/animation.cpp:1403
 msgid "Filename"
 msgstr "Имя файла"
 
-#: ../../src/audio/random_sound.cpp:459
+#: ../../src/audio/random_sound.cpp:452
 msgid "Sound filename"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:466
+#: ../../src/audio/random_sound.cpp:459
 msgid "Continuous"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:466
+#: ../../src/audio/random_sound.cpp:459
 msgid "Check if the sound should be played continuously instead of randomly"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:473
+#: ../../src/audio/random_sound.cpp:466
 msgid "Delay Minimum"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:473
+#: ../../src/audio/random_sound.cpp:466
 msgid "Minimal delay until played again"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:481 ../../src/audio/random_sound.cpp:497
+#: ../../src/audio/random_sound.cpp:474 ../../src/audio/random_sound.cpp:490
 msgid "Maximum"
 msgstr "Максимум"
 
-#: ../../src/audio/random_sound.cpp:481
+#: ../../src/audio/random_sound.cpp:474
 msgid "Maximal delay until played again"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:489
+#: ../../src/audio/random_sound.cpp:482
 msgid "Volume Minimum"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:489
+#: ../../src/audio/random_sound.cpp:482
 msgid "Minimal random volume for each play"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:497
+#: ../../src/audio/random_sound.cpp:490
 msgid "Maximal random volume for each play"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:505
+#: ../../src/audio/random_sound.cpp:498
 msgid "Volume Reduction Begin"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:505
+#: ../../src/audio/random_sound.cpp:498
 msgid "Volume reduction begins gradually at this distance"
 msgstr ""
 
-#: ../../src/audio/random_sound.cpp:513
+#: ../../src/audio/random_sound.cpp:506
 msgid "End"
 msgstr "Закончить"
 
-#: ../../src/audio/random_sound.cpp:513
+#: ../../src/audio/random_sound.cpp:506
 msgid ""
 "Volume reduction ends at this distance. Sound is not played beyond this."
 msgstr ""
@@ -145,7 +145,7 @@ msgid ""
 " \n"
 msgstr ""
 
-#: ../../src/core/editor/editor.cpp:1471
+#: ../../src/core/editor/editor.cpp:1483
 #, c-format
 msgid "Change selected sprite's image"
 msgid_plural "Change selected %d sprites' images"
@@ -300,8 +300,8 @@ msgstr ""
 msgid "plastic"
 msgstr "последний"
 
-#: ../../src/core/property_helper.cpp:852 ../../src/gui/menu_data.cpp:1616
-#: ../../src/gui/menu_data.cpp:1639 ../../src/gui/menu_data.cpp:2579
+#: ../../src/core/property_helper.cpp:852 ../../src/gui/menu_data.cpp:1516
+#: ../../src/gui/menu_data.cpp:1535 ../../src/gui/menu_data.cpp:2475
 msgid "default"
 msgstr "стандарт"
 
@@ -348,7 +348,7 @@ msgstr ""
 #: ../../src/enemies/larry.cpp:401 ../../src/enemies/pip.cpp:356
 #: ../../src/enemies/rokko.cpp:582 ../../src/enemies/spikeball.cpp:507
 #: ../../src/enemies/thromp.cpp:678 ../../src/level/level_player.cpp:3987
-#: ../../src/objects/level_entry.cpp:370 ../../src/objects/level_exit.cpp:483
+#: ../../src/objects/level_entry.cpp:370 ../../src/objects/level_exit.cpp:486
 #: ../../src/objects/moving_platform.cpp:960 ../../src/video/animation.cpp:1577
 msgid "Direction"
 msgstr ""
@@ -526,11 +526,11 @@ msgstr "Папка для изображений"
 msgid "Speed when activated"
 msgstr ""
 
-#: ../../src/enemies/static.cpp:314 ../../src/objects/sprite.cpp:1454
+#: ../../src/enemies/static.cpp:314 ../../src/objects/sprite.cpp:1458
 msgid "Image"
 msgstr "Изображение"
 
-#: ../../src/enemies/static.cpp:314 ../../src/objects/sprite.cpp:1454
+#: ../../src/enemies/static.cpp:314 ../../src/objects/sprite.cpp:1458
 #: ../../src/video/animation.cpp:1403
 msgid "Image filename"
 msgstr "Имя изображения"
@@ -539,7 +539,7 @@ msgstr "Имя изображения"
 msgid "Rotation Speed"
 msgstr ""
 
-#: ../../src/enemies/static.cpp:329 ../../src/objects/level_exit.cpp:547
+#: ../../src/enemies/static.cpp:329 ../../src/objects/level_exit.cpp:550
 #: ../../src/objects/moving_platform.cpp:945
 msgid "Path Identifier"
 msgstr ""
@@ -628,40 +628,40 @@ msgstr ""
 msgid "Version "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:674
+#: ../../src/gui/menu_data.cpp:631
 msgid "New"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:675
+#: ../../src/gui/menu_data.cpp:632
 msgid "Edit"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:676 ../../src/objects/path.cpp:771
+#: ../../src/gui/menu_data.cpp:633 ../../src/objects/path.cpp:771
 msgid "Delete"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:677
+#: ../../src/gui/menu_data.cpp:634
 msgid "Enter"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:678 ../../src/gui/menu_data.cpp:1534
-#: ../../src/gui/menu_data.cpp:3229
+#: ../../src/gui/menu_data.cpp:635 ../../src/gui/menu_data.cpp:1434
+#: ../../src/gui/menu_data.cpp:3125
 msgid "Back"
 msgstr "Назад"
 
-#: ../../src/gui/menu_data.cpp:682
+#: ../../src/gui/menu_data.cpp:639
 msgid "Select Level"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:684
+#: ../../src/gui/menu_data.cpp:641
 msgid "Select Campaign"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:686
+#: ../../src/gui/menu_data.cpp:643
 msgid "Select Overworld"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:688 ../../src/gui/menu_data.cpp:690
+#: ../../src/gui/menu_data.cpp:645 ../../src/gui/menu_data.cpp:647
 #, fuzzy
 msgid "Description"
 msgstr "Нет описания"
@@ -673,7 +673,7 @@ msgstr "Нет описания"
 #. TRANS: personal level directory and is coloured mixedly to indicate
 #. TRANS: that. "Deprecated" are levels from very old versions
 #. TRANS: of the game.
-#: ../../src/gui/menu_data.cpp:700
+#: ../../src/gui/menu_data.cpp:657
 msgid ""
 "- Level Colors -\n"
 "\n"
@@ -683,366 +683,367 @@ msgid ""
 "Mixed: See the colors"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:865
+#: ../../src/gui/menu_data.cpp:810
 msgid ""
 "This will take affect after restarting.\n"
 "Continue ?"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:876 ../../src/gui/menu_data.cpp:911
-#: ../../src/gui/menu_data.cpp:937
+#: ../../src/gui/menu_data.cpp:821 ../../src/gui/menu_data.cpp:856
+#: ../../src/gui/menu_data.cpp:882
 msgid ""
 "This will reset your current progress.\n"
 "Continue ?"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:884
+#: ../../src/gui/menu_data.cpp:829
 msgid "Couldn't load campaign "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:919
+#: ../../src/gui/menu_data.cpp:864
 msgid "Couldn't load overworld "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:945
+#: ../../src/gui/menu_data.cpp:890
 msgid "Couldn't load level "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1463
-msgid "Delete "
+#: ../../src/gui/menu_data.cpp:1362
+#, fuzzy, c-format
+msgid "Delete %s?"
 msgstr "Удалить"
 
-#: ../../src/gui/menu_data.cpp:1572
+#: ../../src/gui/menu_data.cpp:1472
 msgid "Always Run"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1576 ../../src/gui/menu_data.cpp:1584
-#: ../../src/gui/menu_data.cpp:1747 ../../src/gui/menu_data.cpp:1755
-#: ../../src/gui/menu_data.cpp:1769 ../../src/gui/menu_data.cpp:1777
-#: ../../src/gui/menu_data.cpp:1860 ../../src/gui/menu_data.cpp:1868
-#: ../../src/gui/menu_data.cpp:1891 ../../src/gui/menu_data.cpp:1899
-#: ../../src/gui/menu_data.cpp:2061 ../../src/gui/menu_data.cpp:2069
-#: ../../src/gui/menu_data.cpp:2092 ../../src/gui/menu_data.cpp:2100
-#: ../../src/gui/menu_data.cpp:2155 ../../src/gui/menu_data.cpp:2247
-#: ../../src/gui/menu_data.cpp:2258 ../../src/gui/menu_data.cpp:2296
-#: ../../src/gui/menu_data.cpp:2307 ../../src/gui/menu_data.cpp:2332
-#: ../../src/gui/menu_data.cpp:2347 ../../src/gui/menu_data.cpp:2542
-#: ../../src/gui/menu_data.cpp:2675 ../../src/gui/menu_data.cpp:2691
-#: ../../src/gui/menu_data.cpp:2745 ../../src/gui/menu_data.cpp:2753
-#: ../../src/gui/menu_data.cpp:2854 ../../src/gui/menu_data.cpp:2889
-#: ../../src/gui/menu_data.cpp:3109 ../../src/gui/menu_data.cpp:3135
+#: ../../src/gui/menu_data.cpp:1476 ../../src/gui/menu_data.cpp:1484
+#: ../../src/gui/menu_data.cpp:1643 ../../src/gui/menu_data.cpp:1651
+#: ../../src/gui/menu_data.cpp:1665 ../../src/gui/menu_data.cpp:1673
+#: ../../src/gui/menu_data.cpp:1756 ../../src/gui/menu_data.cpp:1764
+#: ../../src/gui/menu_data.cpp:1787 ../../src/gui/menu_data.cpp:1795
+#: ../../src/gui/menu_data.cpp:1957 ../../src/gui/menu_data.cpp:1965
+#: ../../src/gui/menu_data.cpp:1988 ../../src/gui/menu_data.cpp:1996
+#: ../../src/gui/menu_data.cpp:2051 ../../src/gui/menu_data.cpp:2143
+#: ../../src/gui/menu_data.cpp:2154 ../../src/gui/menu_data.cpp:2192
+#: ../../src/gui/menu_data.cpp:2203 ../../src/gui/menu_data.cpp:2228
+#: ../../src/gui/menu_data.cpp:2243 ../../src/gui/menu_data.cpp:2438
+#: ../../src/gui/menu_data.cpp:2571 ../../src/gui/menu_data.cpp:2587
+#: ../../src/gui/menu_data.cpp:2641 ../../src/gui/menu_data.cpp:2649
+#: ../../src/gui/menu_data.cpp:2750 ../../src/gui/menu_data.cpp:2785
+#: ../../src/gui/menu_data.cpp:3005 ../../src/gui/menu_data.cpp:3031
 msgid "On"
 msgstr "Вкл"
 
-#: ../../src/gui/menu_data.cpp:1579 ../../src/gui/menu_data.cpp:1587
-#: ../../src/gui/menu_data.cpp:1750 ../../src/gui/menu_data.cpp:1758
-#: ../../src/gui/menu_data.cpp:1772 ../../src/gui/menu_data.cpp:1780
-#: ../../src/gui/menu_data.cpp:1863 ../../src/gui/menu_data.cpp:1871
-#: ../../src/gui/menu_data.cpp:1894 ../../src/gui/menu_data.cpp:1902
-#: ../../src/gui/menu_data.cpp:2064 ../../src/gui/menu_data.cpp:2072
-#: ../../src/gui/menu_data.cpp:2095 ../../src/gui/menu_data.cpp:2103
-#: ../../src/gui/menu_data.cpp:2158 ../../src/gui/menu_data.cpp:2250
-#: ../../src/gui/menu_data.cpp:2261 ../../src/gui/menu_data.cpp:2299
-#: ../../src/gui/menu_data.cpp:2310 ../../src/gui/menu_data.cpp:2335
-#: ../../src/gui/menu_data.cpp:2350 ../../src/gui/menu_data.cpp:2748
-#: ../../src/gui/menu_data.cpp:2756
+#: ../../src/gui/menu_data.cpp:1479 ../../src/gui/menu_data.cpp:1487
+#: ../../src/gui/menu_data.cpp:1646 ../../src/gui/menu_data.cpp:1654
+#: ../../src/gui/menu_data.cpp:1668 ../../src/gui/menu_data.cpp:1676
+#: ../../src/gui/menu_data.cpp:1759 ../../src/gui/menu_data.cpp:1767
+#: ../../src/gui/menu_data.cpp:1790 ../../src/gui/menu_data.cpp:1798
+#: ../../src/gui/menu_data.cpp:1960 ../../src/gui/menu_data.cpp:1968
+#: ../../src/gui/menu_data.cpp:1991 ../../src/gui/menu_data.cpp:1999
+#: ../../src/gui/menu_data.cpp:2054 ../../src/gui/menu_data.cpp:2146
+#: ../../src/gui/menu_data.cpp:2157 ../../src/gui/menu_data.cpp:2195
+#: ../../src/gui/menu_data.cpp:2206 ../../src/gui/menu_data.cpp:2231
+#: ../../src/gui/menu_data.cpp:2246 ../../src/gui/menu_data.cpp:2644
+#: ../../src/gui/menu_data.cpp:2652
 msgid "Off"
 msgstr "Выкл"
 
-#: ../../src/gui/menu_data.cpp:1594
+#: ../../src/gui/menu_data.cpp:1494
 msgid "Camera Hor Speed"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1603
+#: ../../src/gui/menu_data.cpp:1503
 msgid "Camera Ver Speed"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1612
+#: ../../src/gui/menu_data.cpp:1512
 msgid "Language"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1649
+#: ../../src/gui/menu_data.cpp:1545
 msgid "Menu Level"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1665 ../../src/gui/menu_data.cpp:1813
-#: ../../src/gui/menu_data.cpp:1917 ../../src/gui/menu_data.cpp:1947
-#: ../../src/gui/menu_data.cpp:2048 ../../src/gui/menu_data.cpp:2111
+#: ../../src/gui/menu_data.cpp:1561 ../../src/gui/menu_data.cpp:1709
+#: ../../src/gui/menu_data.cpp:1813 ../../src/gui/menu_data.cpp:1843
+#: ../../src/gui/menu_data.cpp:1944 ../../src/gui/menu_data.cpp:2007
 msgid "Reset"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1674
+#: ../../src/gui/menu_data.cpp:1570
 msgid "Resolution"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1726
+#: ../../src/gui/menu_data.cpp:1622
 msgid "Bpp"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1743
+#: ../../src/gui/menu_data.cpp:1639
 msgid "Fullscreen"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1765
+#: ../../src/gui/menu_data.cpp:1661
 msgid "VSync"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1787
+#: ../../src/gui/menu_data.cpp:1683
 msgid "FPS Limit"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1796
+#: ../../src/gui/menu_data.cpp:1692
 msgid "Geometry Quality"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1804
+#: ../../src/gui/menu_data.cpp:1700
 msgid "Texture Quality"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1818
+#: ../../src/gui/menu_data.cpp:1714
 msgid "Apply"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1823
+#: ../../src/gui/menu_data.cpp:1719
 msgid "Recreate Cache"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1832
+#: ../../src/gui/menu_data.cpp:1728
 msgid "Hertz (Hz)"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1833
+#: ../../src/gui/menu_data.cpp:1729
 msgid "You should only change the value if the audio is scratchy."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1855
+#: ../../src/gui/menu_data.cpp:1751
 msgid "Music"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1856
+#: ../../src/gui/menu_data.cpp:1752
 msgid "Enable to play music. You need to have the Music Addon installed."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1878
+#: ../../src/gui/menu_data.cpp:1774
 msgid "Set the Music Volume."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1886
+#: ../../src/gui/menu_data.cpp:1782
 msgid "Sound"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1887
+#: ../../src/gui/menu_data.cpp:1783
 msgid "Enable to play Sounds."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1909
+#: ../../src/gui/menu_data.cpp:1805
 msgid "Set the Sound Volume."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1926 ../../src/gui/menu_data.cpp:2035
+#: ../../src/gui/menu_data.cpp:1822 ../../src/gui/menu_data.cpp:1931
 msgid "Shortcuts"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1930 ../../src/gui/menu_data.cpp:2039
+#: ../../src/gui/menu_data.cpp:1826 ../../src/gui/menu_data.cpp:1935
 msgid "Name"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1931
+#: ../../src/gui/menu_data.cpp:1827
 msgid "Key"
 msgstr "Ключ"
 
-#: ../../src/gui/menu_data.cpp:1938
+#: ../../src/gui/menu_data.cpp:1834
 msgid "Scroll Speed"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1956
+#: ../../src/gui/menu_data.cpp:1852
 msgid "Sensitivity"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1960
+#: ../../src/gui/menu_data.cpp:1856
 msgid "Joystick"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:1967 ../../src/gui/menu_data.cpp:3019
+#: ../../src/gui/menu_data.cpp:1863 ../../src/gui/menu_data.cpp:2915
 msgid "None"
 msgstr "Нет"
 
-#: ../../src/gui/menu_data.cpp:2003
+#: ../../src/gui/menu_data.cpp:1899
 msgid "Axis Hor"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2011
+#: ../../src/gui/menu_data.cpp:1907
 msgid "Ver"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2019
+#: ../../src/gui/menu_data.cpp:1915
 msgid "Axis Hor2"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2027
+#: ../../src/gui/menu_data.cpp:1923
 msgid "Ver2"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2040
+#: ../../src/gui/menu_data.cpp:1936
 msgid "Button"
 msgstr "Кнопка"
 
-#: ../../src/gui/menu_data.cpp:2057
+#: ../../src/gui/menu_data.cpp:1953
 msgid "Show images"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2079
+#: ../../src/gui/menu_data.cpp:1975
 msgid "Item image size"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2088
+#: ../../src/gui/menu_data.cpp:1984
 msgid "Auto-Hide Mouse"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2383
+#: ../../src/gui/menu_data.cpp:2279
 msgid "Up"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2384
+#: ../../src/gui/menu_data.cpp:2280
 msgid "Down"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2385
+#: ../../src/gui/menu_data.cpp:2281
 msgid "Left"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2386
+#: ../../src/gui/menu_data.cpp:2282
 msgid "Right"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2387 ../../src/gui/menu_data.cpp:2403
+#: ../../src/gui/menu_data.cpp:2283 ../../src/gui/menu_data.cpp:2299
 msgid "Jump"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2388 ../../src/gui/menu_data.cpp:2404
+#: ../../src/gui/menu_data.cpp:2284 ../../src/gui/menu_data.cpp:2300
 msgid "Shoot"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2389 ../../src/gui/menu_data.cpp:2406
+#: ../../src/gui/menu_data.cpp:2285 ../../src/gui/menu_data.cpp:2302
 #: ../../src/objects/bonusbox.cpp:502
 msgid "Item"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2390 ../../src/gui/menu_data.cpp:2405
+#: ../../src/gui/menu_data.cpp:2286 ../../src/gui/menu_data.cpp:2301
 msgid "Action"
 msgstr "Фсешщт"
 
-#: ../../src/gui/menu_data.cpp:2391
+#: ../../src/gui/menu_data.cpp:2287
 msgid "Screenshot"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2392
+#: ../../src/gui/menu_data.cpp:2288
 msgid "Editor fast copy up"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2393
+#: ../../src/gui/menu_data.cpp:2289
 msgid "Editor fast copy down"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2394
+#: ../../src/gui/menu_data.cpp:2290
 msgid "Editor fast copy left"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2395
+#: ../../src/gui/menu_data.cpp:2291
 msgid "Editor fast copy right"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2396
+#: ../../src/gui/menu_data.cpp:2292
 msgid "Editor pixel move up"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2397
+#: ../../src/gui/menu_data.cpp:2293
 #, fuzzy
 msgid "Editor pixel move down"
 msgstr "Редактор включен"
 
-#: ../../src/gui/menu_data.cpp:2398
+#: ../../src/gui/menu_data.cpp:2294
 msgid "Editor pixel move left"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2399
+#: ../../src/gui/menu_data.cpp:2295
 msgid "Editor pixel move right"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2407
+#: ../../src/gui/menu_data.cpp:2303
 msgid "Exit"
 msgstr "Выход"
 
-#: ../../src/gui/menu_data.cpp:2466
+#: ../../src/gui/menu_data.cpp:2362
 msgid "Press a key"
 msgstr "Нажмите клавишу"
 
-#: ../../src/gui/menu_data.cpp:2469
+#: ../../src/gui/menu_data.cpp:2365
 msgid "Press a button"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2472
+#: ../../src/gui/menu_data.cpp:2368
 msgid " for "
 msgstr " для "
 
-#: ../../src/gui/menu_data.cpp:2472
+#: ../../src/gui/menu_data.cpp:2368
 msgid ". Press ESC to cancel."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2777
+#: ../../src/gui/menu_data.cpp:2673
 msgid "Reinitialization"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2836
+#: ../../src/gui/menu_data.cpp:2732
 msgid "Reloading"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:2863
+#: ../../src/gui/menu_data.cpp:2759
 msgid ""
 "Music addon not detected.\n"
 "You can download it from the Website."
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:3000
+#: ../../src/gui/menu_data.cpp:2896
 msgid "Enabled : "
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:3215 ../../src/gui/menu_data.cpp:3217
+#: ../../src/gui/menu_data.cpp:3111 ../../src/gui/menu_data.cpp:3113
 #, fuzzy
 msgid "Save"
 msgstr "Сохранить "
 
-#: ../../src/gui/menu_data.cpp:3216
+#: ../../src/gui/menu_data.cpp:3112
 #, fuzzy
 msgid "Save the game"
 msgstr "Сохраненная игра "
 
-#: ../../src/gui/menu_data.cpp:3222 ../../src/gui/menu_data.cpp:3224
+#: ../../src/gui/menu_data.cpp:3118 ../../src/gui/menu_data.cpp:3120
 #, fuzzy
 msgid "Load"
 msgstr "Загрузка"
 
-#: ../../src/gui/menu_data.cpp:3223
+#: ../../src/gui/menu_data.cpp:3119
 msgid "Load a saved game"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:3387
+#: ../../src/gui/menu_data.cpp:3283
 msgid ""
 "3000 Points needed for saving in a level.\n"
 "Saving on the Overworld is free."
 msgstr "Необходимо 3000 очков для сохранения"
 
-#: ../../src/gui/menu_data.cpp:3408 ../../src/gui/menu_data.cpp:3412
-#: ../../src/gui/menu_data.cpp:3417
+#: ../../src/gui/menu_data.cpp:3304 ../../src/gui/menu_data.cpp:3308
+#: ../../src/gui/menu_data.cpp:3313
 msgid "No Description"
 msgstr "Нет описания"
 
-#: ../../src/gui/menu_data.cpp:3421
+#: ../../src/gui/menu_data.cpp:3317
 msgid "Enter Description"
 msgstr ""
 
-#: ../../src/gui/menu_data.cpp:3439 ../../src/gui/menu_data.cpp:3444
-#: ../../src/gui/menu_data.cpp:3449
+#: ../../src/gui/menu_data.cpp:3335 ../../src/gui/menu_data.cpp:3340
+#: ../../src/gui/menu_data.cpp:3345
 msgid "Savegame loading failed"
 msgstr ""
 
@@ -1093,29 +1094,29 @@ msgstr ""
 msgid "FINISH"
 msgstr ""
 
-#: ../../src/level/level.cpp:210
+#: ../../src/level/level.cpp:220
 msgid "Unsupported Level format : "
 msgstr ""
 
-#: ../../src/level/level.cpp:377
+#: ../../src/level/level.cpp:404
 msgid "Couldn't save level "
 msgstr ""
 
-#: ../../src/level/level.cpp:393 ../../src/level/level_editor.cpp:148
+#: ../../src/level/level.cpp:420 ../../src/level/level_editor.cpp:148
 msgid "Level "
 msgstr ""
 
-#: ../../src/level/level.cpp:393 ../../src/overworld/overworld.cpp:246
+#: ../../src/level/level.cpp:420 ../../src/overworld/overworld.cpp:252
 #: ../../src/video/video.cpp:1486
 msgid " saved"
 msgstr " сохранен"
 
-#: ../../src/level/level.cpp:797
+#: ../../src/level/level.cpp:824
 #, fuzzy
 msgid "Omega Mode disabled"
 msgstr "Редактор уровней выключен"
 
-#: ../../src/level/level.cpp:800
+#: ../../src/level/level.cpp:827
 msgid "Omega Mode enabled"
 msgstr ""
 
@@ -1389,65 +1390,65 @@ msgstr ""
 msgid "Name for identification"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:483
+#: ../../src/objects/level_exit.cpp:486
 msgid "Direction to move in"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:508
+#: ../../src/objects/level_exit.cpp:511
 msgid "Motion"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:508
+#: ../../src/objects/level_exit.cpp:511
 msgid "Camera Motion"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:512
+#: ../../src/objects/level_exit.cpp:515
 msgid "Destination Level"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:512
+#: ../../src/objects/level_exit.cpp:515
 msgid ""
 "Name of the level that should be entered. If empty uses the current level."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:519
+#: ../../src/objects/level_exit.cpp:522
 msgid "Destination Entry"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:519
+#: ../../src/objects/level_exit.cpp:522
 msgid ""
 "Name of the Entry in the destination level. If empty the entry point is the "
 "player start position."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:526
+#: ../../src/objects/level_exit.cpp:529
 msgid "Return Level"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:526
+#: ../../src/objects/level_exit.cpp:529
 msgid "Name of the level that should be pushed onto return stack."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:533
+#: ../../src/objects/level_exit.cpp:536
 msgid "Return Entry"
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:533
+#: ../../src/objects/level_exit.cpp:536
 msgid "Name of the Entry in the return level."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:540
+#: ../../src/objects/level_exit.cpp:543
 #, fuzzy
 msgid "Exit Name"
 msgstr "Выход"
 
-#: ../../src/objects/level_exit.cpp:540
+#: ../../src/objects/level_exit.cpp:543
 msgid ""
 "Name of the Exit (use this in the overworld editor to set the path selected "
 "by this exit)."
 msgstr ""
 
-#: ../../src/objects/level_exit.cpp:547
+#: ../../src/objects/level_exit.cpp:550
 msgid "Name of the Path to use for the camera movement."
 msgstr ""
 
@@ -1648,11 +1649,11 @@ msgstr ""
 msgid "Couldn't save world description "
 msgstr ""
 
-#: ../../src/overworld/overworld.cpp:241
+#: ../../src/overworld/overworld.cpp:247
 msgid "Couldn't save world "
 msgstr ""
 
-#: ../../src/overworld/overworld.cpp:246
+#: ../../src/overworld/overworld.cpp:252
 #: ../../src/overworld/world_editor.cpp:88
 msgid "World "
 msgstr "Мир "
