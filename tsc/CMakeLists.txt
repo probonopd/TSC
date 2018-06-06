@@ -121,7 +121,7 @@ else()
   find_package(OpenGL REQUIRED)
   find_package(PNG REQUIRED)
   find_package(PCRE REQUIRED)
-  find_package(LibXmlPP REQUIRED)
+  find_package(LibXmlPP 2.6 REQUIRED)
   find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
 
   # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise

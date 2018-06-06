@@ -74,6 +74,8 @@ if (PKG_LibXmlPP_CFLAGS)
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(LibXmlPP DEFAULT_MSG LibXmlPP_INCLUDE_DIRS LibXmlPP_LIBRARY)
+find_package_handle_standard_args(LibXmlPP
+  REQUIRED_VARS LibXmlPP_LIBRARY LibXmlPP_GlibMM_LIBRARY LibXmlPP_Glib_LIBRARY LibXmlPP_INCLUDE_DIR
+  VERSION_VAR PKG_LibXmlPP_VERSION)
 
 mark_as_advanced(LibXmlPP_LIBRARIES LibXmlPP_INCLUDE_DIRS LibXmlPP_DEFINITIONS)
