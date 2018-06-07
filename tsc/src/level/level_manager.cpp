@@ -330,7 +330,7 @@ void cLevel_Manager::Finish_Level(bool win_music /* = 0 */, std::string taken_ex
         // Enter Menu
         Game_Action = GA_ENTER_MENU;
         Game_Action_Data_Start.add("screen_fadeout_speed", "1.5");
-        Game_Action_Data_Middle.add("load_menu", int_to_string(MENU_MAIN));
+        Game_Action_Data_Middle.add("load_menu", int_to_string(MENU_START));
         Game_Action_Data_Middle.add("menu_start_current_level", path_to_utf8(Trim_Filename(pActive_Level->m_level_filename, 0, 0)));
         Game_Action_Data_End.add("screen_fadein_speed", "1.5");
     }
