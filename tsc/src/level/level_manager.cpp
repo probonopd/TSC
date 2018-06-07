@@ -362,7 +362,6 @@ void cLevel_Manager::Goto_Sub_Level(std::string str_level, const std::string& st
     // same level
     if (str_level.compare(path_to_utf8(Trim_Filename(pActive_Level->m_level_filename, 0, 0))) == 0) {
         pLevel_Player->Release_Item(1, 1);
-        // fixme: reset does not release active_object correctly
         pLevel_Player->Reset(0);
 
         // get entry
