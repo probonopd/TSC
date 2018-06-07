@@ -391,6 +391,11 @@ void cSpika::Handle_Collision_Massive(cObjectCollision* collision)
     if (col_object->m_type == TYPE_BALL) {
         return;
     }
+    else if (col_object->m_type == TYPE_CRATE && collision->m_direction == DIR_TOP) {
+        // Ouch. Crate from above
+        DownGrade(true);
+        static_cast<cMovingSprite*>(col_object)->Reset_On_Ground();
+    }
 
     if (collision->m_direction == DIR_TOP) {
         if (m_vely < 0.0f) {

@@ -233,6 +233,11 @@ void cLarry::Handle_Collision_Massive(cObjectCollision* p_collision)
         if (p_ball->m_ball_type == FIREBALL_DEFAULT)
             DownGrade(true);
     }
+    else if (p_collidor->m_type == TYPE_CRATE && p_collision->m_direction == DIR_TOP) {
+        // Immediately explode if a crate falls onto it
+        DownGrade(true);
+        static_cast<cMovingSprite*>(p_collidor)->Reset_On_Ground();
+    }
 
     if (p_collision->m_direction == DIR_RIGHT || p_collision->m_direction == DIR_LEFT)
         Turn_Around(p_collision->m_direction);

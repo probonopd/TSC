@@ -216,7 +216,17 @@ void cBeetle::Handle_Collision_Player(cObjectCollision* p_collision)
 
 void cBeetle::Handle_Collision_Massive(cObjectCollision* p_collision)
 {
+    if (m_state == STA_OBJ_LINKED)
+        return;
+
     Send_Collision(p_collision);
+
+    cSprite* p_colobj = m_sprite_manager->Get_Pointer(p_collision->m_number);
+    if (p_colobj->m_type == TYPE_CRATE && p_collision->m_direction == DIR_TOP) {
+        // Ouch. Crate from above
+        DownGrade(true);
+        static_cast<cMovingSprite*>(p_colobj)->Reset_On_Ground();
+    }
 }
 
 float cBeetle::Get_Rest_Living_Time()

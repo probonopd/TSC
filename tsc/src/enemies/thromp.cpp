@@ -644,6 +644,11 @@ void cThromp::Handle_Collision_Massive(cObjectCollision* collision)
     if (col_obj->m_type == TYPE_BALL) {
         return;
     }
+    else if (col_obj->m_type == TYPE_CRATE && collision->m_direction == DIR_TOP) {
+        // Ouch. Crate from above
+        DownGrade(true);
+        static_cast<cMovingSprite*>(col_obj)->Reset_On_Ground();
+    }
 
     if (Move_Back()) {
         pAudio->Play_Sound("enemy/thromp/hit.ogg");

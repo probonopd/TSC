@@ -247,7 +247,12 @@ void cBeetleBarrage::Handle_Collision_Massive(cObjectCollision* p_collision)
     if (m_state == STA_OBJ_LINKED)
         return;
 
-    // TODO
+    cSprite* p_colobj = m_sprite_manager->Get_Pointer(p_collision->m_number);
+    if (p_colobj->m_type == TYPE_CRATE && p_collision->m_direction == DIR_TOP) {
+        // Ouch. Crate from above
+        DownGrade(true);
+        static_cast<cMovingSprite*>(p_colobj)->Reset_On_Ground();
+    }
 }
 
 void cBeetleBarrage::Set_Moving_State(Moving_state new_state)

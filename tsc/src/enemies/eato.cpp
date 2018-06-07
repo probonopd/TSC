@@ -248,6 +248,21 @@ void cEato::Handle_Collision_Player(cObjectCollision* collision)
     }
 }
 
+void cEato::Handle_Collision_Massive(cObjectCollision* p_collision)
+{
+    if (m_state == STA_OBJ_LINKED)
+        return;
+
+    Send_Collision(p_collision);
+
+    cSprite* p_colobj = m_sprite_manager->Get_Pointer(p_collision->m_number);
+    if (p_colobj->m_type == TYPE_CRATE && p_collision->m_direction == DIR_TOP) {
+        // Ouch. Crate from above
+        DownGrade(true);
+        static_cast<cMovingSprite*>(p_colobj)->Reset_On_Ground();
+    }
+}
+
 #ifdef ENABLE_EDITOR
 void cEato::Editor_Activate(void)
 {

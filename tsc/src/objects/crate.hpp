@@ -53,7 +53,6 @@ namespace TSC {
         virtual xmlpp::Element* Save_To_XML_Node(xmlpp::Element* p_element);
 
         virtual void Handle_Collision_Player(cObjectCollision* p_collision);
-        virtual void Handle_Collision_Enemy(cObjectCollision* p_collision);
         virtual void Handle_out_of_Level(ObjectDirection dir);
 
     protected:

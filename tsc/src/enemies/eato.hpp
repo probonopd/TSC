@@ -70,6 +70,7 @@ namespace TSC {
         virtual Col_Valid_Type Validate_Collision(cSprite* obj);
         // collision from player
         virtual void Handle_Collision_Player(cObjectCollision* collision);
+        virtual void Handle_Collision_Massive(cObjectCollision* collision);
 
 #ifdef ENABLE_EDITOR
         // editor activation

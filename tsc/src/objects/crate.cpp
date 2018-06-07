@@ -156,16 +156,6 @@ void cCrate::Handle_Collision_Player(cObjectCollision* p_collision)
     pAudio->Play_Sound("wood_1.ogg");
 }
 
-void cCrate::Handle_Collision_Enemy(cObjectCollision* p_collision)
-{
-    // When a crate falls onto an enemy, it gets killed.
-    if (m_vely > 0.05f) {
-        cEnemy* p_enemy = static_cast<cEnemy*>(m_sprite_manager->Get_Pointer(p_collision->m_number));
-        p_enemy->DownGrade(true);
-        Reset_On_Ground(); // The enemy cannot be ground for us, it was just killed
-    }
-}
-
 void cCrate::Handle_out_of_Level(ObjectDirection dir)
 {
     // abyss

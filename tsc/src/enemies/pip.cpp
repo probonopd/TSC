@@ -332,6 +332,11 @@ void cPip::Handle_Collision_Massive(cObjectCollision* p_collision)
     cSprite* p_colobj = m_sprite_manager->Get_Pointer(p_collision->m_number);
     if (p_colobj->m_type == TYPE_BALL)
         return;
+    else if (p_colobj->m_type == TYPE_CRATE && p_collision->m_direction == DIR_TOP) {
+        // Ouch. Crate from above
+        DownGrade(true);
+        static_cast<cMovingSprite*>(p_colobj)->Reset_On_Ground();
+    }
 
     if (p_collision->m_direction == DIR_TOP && m_vely < 0.0f)
         m_vely = 0.0f;
