@@ -469,7 +469,7 @@ void cLevel::Init(void)
     // player direction
     pLevel_Player->Set_Direction(m_player_start_direction, 1);
     // player reset
-    pLevel_Player->Reset();
+    pLevel_Player->Reset(false);
 
     // pre-update animations
     for (cSprite_List::iterator itr = m_sprite_manager->objects.begin(); itr != m_sprite_manager->objects.end(); ++itr) {
