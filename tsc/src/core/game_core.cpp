@@ -239,13 +239,6 @@ void Handle_Generic_Game_Events(const CEGUI::XMLAttributes& action_data)
                 else if (!str_entry.empty()) {
                     cerr << "Warning : Level entry " << str_entry << " not found" << endl;
                 }
-
-                if (action_data.getValueAsFloat("invincible") > 0.0f) {
-                    pLevel_Player->m_invincible = action_data.getValueAsFloat("invincible");
-                }
-                if (action_data.getValueAsFloat("invincible_star") > 0.0f) {
-                    pLevel_Player->m_invincible_star = action_data.getValueAsFloat("invincible_star");
-                }
             }
         }
         // loading failed

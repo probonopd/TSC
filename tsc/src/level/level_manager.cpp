@@ -493,11 +493,6 @@ void cLevel_Manager::Goto_Sub_Level(std::string str_level, const std::string& st
             Game_Action_Data_End.add("screen_fadein", int_to_string(EFFECT_IN_BLACK));
             Game_Action_Data_End.add("screen_fadein_speed", "3");
             Game_Action_Data_End.add("activate_level_entry", str_entry.c_str());
-
-            if (pLevel_Player->m_invincible_star > 0.0f) {
-                Game_Action_Data_Middle.add("invincible", float_to_string(pLevel_Player->m_invincible));
-                Game_Action_Data_Middle.add("invincible_star", float_to_string(pLevel_Player->m_invincible_star));
-            }
         }
     }
 }
