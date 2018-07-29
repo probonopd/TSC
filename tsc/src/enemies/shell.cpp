@@ -51,7 +51,6 @@ cShell::cShell(XmlAttributes& attributes, cSprite_Manager* p_sprite_manager)
 
     // color
     Set_Color(static_cast<DefaultColor>(Get_Color_Id(attributes.fetch("color", Get_Color_Name(m_color_type)))));
-
 }
 
 cShell::~cShell()
@@ -140,6 +139,8 @@ void cShell::Set_Color(DefaultColor col)
 
     cArmy::Set_Color(col);
 
+    // Fix wrong image set set by cArmy::Set_Color()
+    Set_Image_Set("shell", true);
     // Make it show up in the editor properly
     Set_Image_Num(10, true);
 }
