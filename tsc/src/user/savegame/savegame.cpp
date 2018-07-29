@@ -287,7 +287,7 @@ int cSavegame::Load_Game(unsigned int save_slot)
 
 bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
 {
-    if (pLevel_Player->m_alex_type == ALEX_DEAD || pLevel_Player->m_lives < 0) {
+    if (pLevel_Player->m_alex_type == ALEX_DEAD || gp_hud->Get_Lives() < 0) {
         cerr << "Error : Couldn't save savegame " << description << " because of invalid game state" << endl;
         return 0;
     }
@@ -299,10 +299,10 @@ bool cSavegame::Save_Game(unsigned int save_slot, std::string description)
     savegame->m_level_engine_version = level_engine_version;
     savegame->m_save_time = time(NULL);
     savegame->m_description = description;
-    savegame->m_goldpieces = pLevel_Player->m_goldpieces;
+    savegame->m_goldpieces = gp_hud->Get_Jewels();
 
-    savegame->m_lives = pLevel_Player->m_lives;
-    savegame->m_points = pLevel_Player->m_points;
+    savegame->m_lives = gp_hud->Get_Lives();
+    savegame->m_points = gp_hud->Get_Points();
     savegame->m_player_type = pLevel_Player->m_alex_type;
     savegame->m_player_type_temp_power = pLevel_Player->m_alex_type_temp_power;
     savegame->m_invincible = pLevel_Player->m_invincible;

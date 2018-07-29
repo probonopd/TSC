@@ -252,7 +252,7 @@ static mrb_value Set_Type(mrb_state* p_state,  mrb_value self)
  */
 static mrb_value Get_Points(mrb_state* p_state,  mrb_value self)
 {
-    return mrb_fixnum_value(pLevel_Player->m_points);
+    return mrb_fixnum_value(gp_hud->Get_Points());
 }
 
 /**
@@ -295,7 +295,7 @@ static mrb_value Add_Points(mrb_state* p_state,  mrb_value self)
      * with enemies, not direct point increasing, so I don’t provide
      * MRuby bindings for those parameters here. */
     gp_hud->Add_Points(points);
-    return mrb_fixnum_value(pLevel_Player->m_points);
+    return mrb_fixnum_value(gp_hud->Get_Points());
 }
 
 
@@ -392,7 +392,7 @@ static mrb_value Add_Jewels(mrb_state* p_state,  mrb_value self)
     mrb_get_args(p_state, "i", &jewels);
 
     gp_hud->Add_Jewels(jewels);
-    return mrb_fixnum_value(pLevel_Player->m_goldpieces);
+    return mrb_fixnum_value(gp_hud->Get_Jewels());
 }
 
 /**
@@ -405,7 +405,7 @@ static mrb_value Add_Jewels(mrb_state* p_state,  mrb_value self)
  */
 static mrb_value Get_Lives(mrb_state* p_state,  mrb_value self)
 {
-    return mrb_fixnum_value(pLevel_Player->m_lives);
+    return mrb_fixnum_value(gp_hud->Get_Lives());
 }
 
 /**
@@ -456,7 +456,7 @@ static mrb_value Add_Lives(mrb_state* p_state, mrb_value self)
     mrb_get_args(p_state, "i", &lives);
 
     gp_hud->Add_Lives(lives);
-    return mrb_fixnum_value(pLevel_Player->m_lives);
+    return mrb_fixnum_value(gp_hud->Get_Lives());
 }
 
 /**

@@ -818,7 +818,7 @@ void cMenu_Start::Load_Package(std::string name)
 
 void cMenu_Start::Load_Campaign(std::string name)
 {
-    if (pLevel_Player->m_points > 0 && !Box_Question(_("This will reset your current progress.\nContinue ?"))) {
+    if (gp_hud->Get_Points() > 0 && !Box_Question(_("This will reset your current progress.\nContinue ?"))) {
         return;
     }
 
@@ -853,7 +853,7 @@ void cMenu_Start::Load_Campaign(std::string name)
 
 void cMenu_Start::Load_World(std::string name)
 {
-    if (pLevel_Player->m_points > 0 && !Box_Question(_("This will reset your current progress.\nContinue ?"))) {
+    if (gp_hud->Get_Points() > 0 && !Box_Question(_("This will reset your current progress.\nContinue ?"))) {
         return;
     }
 
@@ -879,7 +879,7 @@ void cMenu_Start::Load_World(std::string name)
 
 bool cMenu_Start::Load_Level(std::string level_name)
 {
-    if (pLevel_Player->m_points > 0 && !Box_Question(_("This will reset your current progress.\nContinue ?"))) {
+    if (gp_hud->Get_Points() > 0 && !Box_Question(_("This will reset your current progress.\nContinue ?"))) {
         return 0;
     }
 

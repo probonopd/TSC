@@ -304,8 +304,6 @@ namespace TSC {
 
         // walking animation counter
         float m_walk_count;
-        // lives left
-        int m_lives;
 
         // jumping key time
         float m_up_key_time;
@@ -332,10 +330,6 @@ namespace TSC {
         float m_ducked_animation_counter;
         // if parachute falling
         bool m_parachute;
-        // amount of goldpieces collected
-        unsigned int m_goldpieces;
-        // collected points
-        long m_points;
         // enemy killed in a row multiplier
         float m_kill_multiplier;
         // time since the last killed enemy

@@ -95,10 +95,6 @@ cLevel_Player::cLevel_Player(cSprite_Manager* sprite_manager)
     m_ghost_time = 0.0f;
     m_ghost_time_mod = 0.0f;
 
-    // Starting with 3 lives
-    m_lives = 3;
-    m_goldpieces = 0;
-    m_points = 0;
     m_kill_multiplier = 1.0f;
     m_last_kill_counter = 0.0f;
 
@@ -264,7 +260,7 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
     pAudio->Fadeout_Music(1700);
 
     // lost a live
-    if (m_lives >= 0) {
+    if (gp_hud->Get_Lives() >= 0) {
         pAudio->Play_Sound(utf8_to_path("player/dead.ogg"), RID_ALEX_DEATH);
     }
     // game over
@@ -363,7 +359,7 @@ void cLevel_Player::DownGrade_Player(bool delayed /* = true */, bool force /* = 
 animation_end:
 
     // game over
-    if (m_lives < 0) {
+    if (gp_hud->Get_Lives() < 0) {
         cGL_Surface* game_over = pVideo->Get_Package_Surface("game/game_over.png");
         cSprite* sprite = new cSprite(m_sprite_manager);
         sprite->Set_Image(game_over);
@@ -428,7 +424,7 @@ animation_end:
     pFramerate->Reset();
 
     // game over
-    if (m_lives < 0) {
+    if (gp_hud->Get_Lives() < 0) {
         Game_Action = GA_ENTER_MENU;
         // reset saved data
         Game_Action_Data_Middle.add("reset_save", "1");
@@ -1861,10 +1857,9 @@ void cLevel_Player::Reset_Save(void)
     // reset player
     Set_Type(ALEX_SMALL, 0, 0);
     Reset();
-    m_lives = 3;
-    m_goldpieces = 0;
-    m_points = 0;
-
+    gp_hud->Set_Lives(3);
+    gp_hud->Set_Jewels(0);
+    gp_hud->Set_Points(0);
     gp_hud->Reset_Elapsed_Time();
     gp_hud->Reset_Item();
 }
