@@ -41,6 +41,9 @@
 // e.g. next to a killed enemy), times the speedfactor.
 #define MINIPOINTS_DISPLAY_TIME 2.0f * speedfactor_fps
 
+// Number of lives the player has at start.
+#define PLAYER_DEFAULT_LIVES 3
+
 // extern variables
 TSC::cHud* TSC::gp_hud = NULL;
 
@@ -48,7 +51,7 @@ using namespace TSC;
 namespace fs = boost::filesystem;
 
 cHud::cHud()
-    : m_points(0), m_jewels(0), m_lives(3),
+    : m_points(0), m_jewels(0), m_lives(PLAYER_DEFAULT_LIVES),
       mp_display_item(NULL), m_rescue_item_type(TYPE_UNDEFINED),
       m_elapsed_time(0), m_last_time(std::chrono::system_clock::now()),
       m_text_counter(0.0f), mp_hud_root(NULL), mp_points_label(NULL), mp_time_label(NULL),
@@ -89,7 +92,7 @@ cHud::cHud()
     Set_Points(0);
     Set_Jewels(0);
     Set_Elapsed_Time(0);
-    Set_Lives(3);
+    Set_Lives(PLAYER_DEFAULT_LIVES);
 }
 
 cHud::~cHud()
@@ -301,7 +304,7 @@ void cHud::Add_Lives(int lives)
 
 void cHud::Reset_Lives()
 {
-    Set_Lives(3);
+    Set_Lives(PLAYER_DEFAULT_LIVES);
 }
 
 int cHud::Get_Lives()
