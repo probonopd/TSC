@@ -1857,11 +1857,7 @@ void cLevel_Player::Reset_Save(void)
     // reset player
     Set_Type(ALEX_SMALL, 0, 0);
     Reset();
-    gp_hud->Set_Lives(3);
-    gp_hud->Set_Jewels(0);
-    gp_hud->Set_Points(0);
-    gp_hud->Reset_Elapsed_Time();
-    gp_hud->Reset_Item();
+    gp_hud->Reset();
 }
 
 void cLevel_Player::Reset(bool full /* = 1 */)

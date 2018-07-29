@@ -80,6 +80,9 @@ namespace TSC {
         void Reset_Item(void);
         SpriteType Get_Item();
 
+        /// Reset everything (calls all Reset* methods)
+        void Reset();
+
         /// Displays a short message to the user.
         void Set_Text(std::string message);
 

@@ -390,6 +390,15 @@ SpriteType cHud::Get_Item(void)
     return m_rescue_item_type;
 }
 
+void cHud::Reset()
+{
+    Reset_Points();
+    Reset_Jewels();
+    Reset_Lives();
+    Reset_Elapsed_Time();
+    Reset_Item();
+}
+
 void cHud::Set_Waypoint_Name(std::string name, Color color)
 {
     // TODO: Apply color
