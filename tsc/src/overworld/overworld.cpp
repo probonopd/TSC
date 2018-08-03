@@ -368,6 +368,7 @@ void cOverworld::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     }
 
     Update_Camera();
+    pOverworld_Manager->m_camera->Reset_Pos();
 
     // play music
     pAudio->Play_Music(m_musicfile, true, 0, 3000);
