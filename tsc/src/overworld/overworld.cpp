@@ -145,9 +145,6 @@ cOverworld* cOverworld::Load_From_Directory(fs::path directory, int user_dir /* 
     delete p_overworld->m_layer;
     p_overworld->m_layer = layerloader.Get_Layer();
 
-    // Set the text that is displayed at the top when this world is shown
-    gp_hud->Set_World_Name(p_overworld->m_description->m_name);
-
     return p_overworld;
 }
 
@@ -394,7 +391,8 @@ void cOverworld::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     // reset speedfactor
     pFramerate->Reset();
 
-    // Show HUD
+    // Show HUD with updated world name
+    gp_hud->Set_World_Name(m_description->m_name);
     gp_hud->Show();
 }
 
