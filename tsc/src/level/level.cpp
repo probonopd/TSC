@@ -62,6 +62,7 @@
 #include "../core/filesystem/relative.hpp"
 #include "../overworld/world_editor.hpp"
 #include "../scripting/events/key_down_event.hpp"
+#include "../scripting/objects/misc/mrb_timer.hpp"
 #include "../core/global_basic.hpp"
 
 namespace fs = boost::filesystem;
@@ -554,6 +555,9 @@ void cLevel::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     pLevel_Manager->m_camera->Center();
 #endif
 
+    // Continue timers
+    Continue_All_Timers();
+
     // play music
     if (m_valid_music) {
         pAudio->Play_Music(m_musicfile, true, 0, 1000);
@@ -575,6 +579,8 @@ void cLevel::Leave(const GameMode next_mode /* = MODE_NOTHING */)
     if (Game_Mode != MODE_LEVEL) {
         return;
     }
+
+    Pause_All_Timers();
 
     // reset camera limits
     pLevel_Manager->m_camera->Reset_Limits();
@@ -1202,6 +1208,36 @@ void cLevel::Reinitialize_MRuby_Interpreter()
     // all the event handlers the user wants to register)
     m_mruby->Run_Code(m_script, "(level script)");
 }
+
+void cLevel::Pause_All_Timers(bool pause)
+{
+    using namespace Scripting;
+
+    // Get Ruby Timer class
+    mrb_state* p_state = m_mruby->Get_MRuby_State();
+    mrb_value klass    = mrb_obj_value(mrb_class_get(p_state, "Timer"));
+    mrb_value timers   = mrb_iv_get(p_state, klass, mrb_intern_cstr(p_state, "instances"));
+
+    // The timer class stores all its instances in the "instances"
+    // class-instance variable (cf. Timer.new source code). Iterate it.
+    mrb_int len = mrb_ary_len(p_state, timers);
+    for(mrb_int i=0; i < len; i++) {
+        // Wire out the underlying C++ timer and pause it.
+        mrb_value rb_timer = mrb_ary_ref(p_state, timers, i);
+        cTimer* p_timer = Get_Data_Ptr<cTimer>(p_state, rb_timer);
+
+        if (pause)
+            p_timer->Pause();
+        else
+            p_timer->Continue();
+    }
+}
+
+void cLevel::Continue_All_Timers()
+{
+    Pause_All_Timers(false);
+}
+
 #endif
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

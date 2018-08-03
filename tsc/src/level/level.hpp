@@ -148,6 +148,11 @@ namespace TSC {
 #ifdef ENABLE_MRUBY
         /// Delete existing (if any) and create new mruby interpreter.
         void Reinitialize_MRuby_Interpreter();
+        /// Bulk controls for pausing/continueing all scripting timers.
+        /// pause: stop if true, continue if false.
+        void Pause_All_Timers(bool pause = true);
+        /// Convenience method for calling Pause_All_Timers(false).
+        void Continue_All_Timers();
 #endif
 
         static bool Is_Level_Object_Element(const CEGUI::String& element)
