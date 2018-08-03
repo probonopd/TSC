@@ -99,26 +99,12 @@ namespace TSC {
             mrb_int Protect_From_GC(mrb_value obj);
             // Release the protection for an object created with Protect_From_GC().
             void Unprotect_From_GC(mrb_int index);
-
-            // Retrieve an mruby class object.
-            inline struct RClass* Get_MRuby_Class(const std::string& name)
-            {
-                return m_classes[name];
-            }
-            // Set an mruby class object. Only use inside
-            // the Init_* functions that set up the mruby
-            // class hierarchy.
-            inline void Set_MRuby_Class(const std::string& name, struct RClass* klass)
-            {
-                m_classes[name] = klass;
-            }
         private:
             mrb_state* mp_mruby;
             mrbc_context* mp_console_ctx;
             cLevel* mp_level;
             std::vector<mrb_value> m_callbacks;
             boost::mutex m_callback_mutex;
-            std::map<std::string, struct RClass*> m_classes;
 
             // Load all MRuby wrapper classes for the C++ classes
             // into the given mruby state.
