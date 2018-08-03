@@ -138,17 +138,12 @@
  * once a frame for normal gameplay (i.e. not for
  * an active editor or the menu).
  *
- * Calling Stop() on a timer ends the underlying thread as soon as
- * possible, but not necessarily immediately, because the termination
- * condition is only checked after the callback execution.  The thread
- * is then deleted, and Stop() returns.
- *
- * To forcibly terminate a timer, call Interrupt(). This will throw a
- * C++ exception in the timer thread, which makes the thread
- * immediately halt (actually, the exception is rescued and some
- * cleanup is performed so that the `m_stopped' member is set
- * correctly). If a timer instance is deleted some way or another,
- * it’s destructor automatically calls Interrupt() for a running timer.
+ * Calling Stop() on a timer signals the halting condition to
+ * the underlying thread, which checks this condition several
+ * times a second. The method blocks until the thread terminates,
+ * which is then deleted, and Stop() returns.
+ * If a timer instance is deleted some way or another,
+ * it’s destructor automatically calls Stop() for a running timer.
  *
  * The timers created from the MRuby code a user supplies
  * are automatically (in their #initialize method) stored
@@ -191,7 +186,7 @@ cTimer::~cTimer()
     // If the timer is ticking currently, stop it.
     // This automatically deletes the thread.
     if (mp_thread)
-        Interrupt();
+        Stop();
 }
 
 void cTimer::Start()
@@ -223,22 +218,6 @@ void cTimer::Stop()
 bool cTimer::Shall_Halt()
 {
     return m_halt;
-}
-
-void cTimer::Interrupt()
-{
-    if (!mp_thread)
-        return;
-
-    /* A oneshot-timer may has ended when Interrupt()
-     * gets called, but terminated threads can still be
-     * interrupted and joined -- these method then just
-     * do nothing. */
-    mp_thread->interrupt();
-    mp_thread->join();
-
-    delete mp_thread;
-    mp_thread = NULL;
 }
 
 bool cTimer::Is_Active()
@@ -276,33 +255,37 @@ cMRuby_Interpreter* cTimer::Get_MRuby_Interpreter()
     return mp_mruby;
 }
 
+void cTimer::Pause()
+{
+    m_paused = true;
+}
+
+void cTimer::Continue()
+{
+    m_paused = false;
+}
+
+bool cTimer::Is_Paused()
+{
+    return m_paused;
+}
+
 void cTimer::Threading_Function(cTimer* timer)
 {
-    try {
-        if (timer->Is_Periodic()) {
-            while (true) {
-                boost::this_thread::sleep_for(boost::chrono::milliseconds(timer->Get_Interval()));
-
-                timer->Get_MRuby_Interpreter()->Register_Callback(timer->Get_Callback()); // This method is threadsafe
-
-                // If soft stop was requested, now terminate.
-                if (timer->Shall_Halt())
-                    break;
+    do {
+        unsigned int ticks = 0;
+        while (!timer->Shall_Halt() && ticks < timer->Get_Interval()) {
+            boost::this_thread::sleep_for(boost::chrono::milliseconds(1));
+            if (!timer->Is_Paused()) {
+                ticks++; // 1 tick = 1 millisecond
             }
         }
-        else { // One-shot timer
-            boost::this_thread::sleep_for(boost::chrono::milliseconds(timer->Get_Interval()));
 
-            timer->Get_MRuby_Interpreter()->Register_Callback(timer->Get_Callback());
-
-            // Soft stop does not make sense for oneshot timers, so no code here.
+        // Only execute callback if the timer hasn't been prematurely stopped.
+        if (!timer->Shall_Halt()) {
+            timer->Get_MRuby_Interpreter()->Register_Callback(timer->Get_Callback()); // This method is threadsafe
         }
-    }
-    catch (boost::thread_interrupted& e) {
-        // That exception is shown when boost::thread::interrupt() is called
-        // (which we do in cTimer::Interrupt()).
-        debug_print("boost::thread_interrupted received, terminating timer thread.\n");
-    }
+    } while (timer->Is_Periodic() && !timer->Shall_Halt());
 
     // Mark the timer as stopped.
     timer->Set_Stopped();
@@ -450,52 +433,22 @@ static mrb_value Start(mrb_state* p_state,  mrb_value self)
  *
  *   stop()
  *
- * Soft-stop the timer. Note this usually doesn’t mean the
- * timer is stopped immediately, but instead will wait until the
- * callback is executed once more (unless you call this in the very
- * nanosecond after the callback registration and before the checking
- * of the soft-stop condition).
+ * Stop the timer. This method blocks until the timer has stopped,
+ * which should be pretty quickly since the halting condition
+ * is checked several times a second.
  *
- * This method **blocks** until the timer has stopped. Think twice before
- * using this method, because this means the game’s main loop is completely
- * paused until this method returns. The user won’t be able to do any
- * interaction with the game in this time. The exact time this blocks is
- * determined by how far through the configured interval the timer has
- * already stepped; that is, in the worst case for a repeating one-hour
- * timer you have to wait one hour if `stop` is called immediately after
- * the callback execution.
+ * Stopping the timer means that the callback associated with it will
+ * not be run. If you stop a ticking oneshot timer, this means it is
+ * never run at all.
  *
- * Raises a RuntimeError if you call this on a oneshot timer, where
- * it is useless.
+ * Calling #stop on an executed oneshot timer is safe as it does
+ * nothing (except some internal cleanup).
  */
 static mrb_value Stop(mrb_state* p_state,  mrb_value self)
 {
     cTimer* p_timer = Get_Data_Ptr<cTimer>(p_state, self);
 
-    // Does not make sense for oneshot timers -- they already do execute only once.
-    if (!p_timer->Is_Periodic())
-        mrb_raise(p_state, MRB_RUNTIME_ERROR(p_state), "Can't usefully soft-stop a oneshot timer!");
-
     p_timer->Stop();
-    return mrb_nil_value();
-}
-/**
- * Method: Timer#stop!
- *
- *   stop!()
- *   interrupt()
- *
- * Forcibly interrupt the timer _now_. In contrast to #stop, this method
- * does not block; it tells the timer thread to terminate as soon as possible
- * and immediately returns. The timer thread will immediately terminate, unless
- * it is currently registering your callback into TSC’s main loop, in which case
- * it will terminate after that.
- */
-static mrb_value Interrupt(mrb_state* p_state, mrb_value self)
-{
-    cTimer* p_timer = Get_Data_Ptr<cTimer>(p_state, self);
-
-    p_timer->Interrupt();
     return mrb_nil_value();
 }
 
@@ -512,33 +465,17 @@ static mrb_value Inspect(mrb_state* p_state,  mrb_value self)
     char buffer[256];
 
     int num = sprintf(buffer,
-                      "#<%s interval=%dms (%s, %s)>",
+                      "#<%s interval=%dms (%s, %s, %s)>",
                       mrb_obj_classname(p_state, self),
                       p_timer->Get_Interval(),
                       p_timer->Is_Periodic() ? "periodic" : "oneshot",
+                      p_timer->Is_Paused() ? "paused" : "ticking",
                       p_timer->Is_Active() ? "running" : "stopped");
 
     if (num < 0)
         mrb_raisef(p_state, MRB_RUNTIME_ERROR(p_state), "Couldn't format string, sprintf() returned %d", num);
 
     return mrb_str_new(p_state, buffer, num);
-}
-
-/**
- * Method: Timer#shall_halt?
- *
- *   shall_halt?()
- *
- * Returns `true` if [#stop](#stop) was called on a running
- * timer.
- */
-static mrb_value Shall_Halt(mrb_state* p_state,  mrb_value self)
-{
-    cTimer* p_timer = Get_Data_Ptr<cTimer>(p_state, self);
-    if (p_timer->Shall_Halt())
-        return mrb_true_value();
-    else
-        return mrb_false_value();
 }
 
 /**
@@ -595,11 +532,7 @@ void TSC::Scripting::Init_Timer(mrb_state* p_state)
     mrb_define_method(p_state, p_rcTimer, "initialize", Initialize, MRB_ARGS_REQ(1) | MRB_ARGS_OPT(1) | MRB_ARGS_BLOCK());
     mrb_define_method(p_state, p_rcTimer, "start", Start, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcTimer, "stop", Stop, MRB_ARGS_NONE());
-    mrb_define_method(p_state, p_rcTimer, "stop!", Interrupt, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcTimer, "inspect", Inspect, MRB_ARGS_NONE());
-    mrb_define_method(p_state, p_rcTimer, "shall_halt?", Shall_Halt, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcTimer, "interval", Get_Interval, MRB_ARGS_NONE());
     mrb_define_method(p_state, p_rcTimer, "active?", Is_Active, MRB_ARGS_NONE());
-
-    mrb_define_alias(p_state, p_rcTimer, "interrupt", "stop!");
 }

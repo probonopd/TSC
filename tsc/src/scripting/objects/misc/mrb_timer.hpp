@@ -36,19 +36,16 @@ namespace TSC {
             // periodic timers as well). Does nothing if the
             // timer is already running.
             void Start();
-            // Soft-stop the timer, i.e. wait until it executes once
-            // more and then stop it. This method blocks until the
-            // timer has stopped. Does nothing if the timer has
-            // already been stopped.
-            void Stop();
-            // Returns true if the timer shall soft-stop
-            // as soon as possible.
+            // Returns true if the timer shall stop
+            // as soon as possible. This is a private API,
+            // don't use this.
             bool Shall_Halt();
-            // Immediately stop the timer, without waiting for
+            // Stop the timer, without waiting for
             // it to execute the callback once more. This method
-            // does _not_ block. Note you don’t know for sure
-            // when exactly the timer thread terminates.
-            void Interrupt();
+            // blocks until the timer's thread cheks the halting
+            // condition (which it does several times a second,
+            // so there should not be a noticable wait).
+            void Stop();
             // Returns true if the timer is running currently.
             // This may still return true if a call to Stop()
             // has not yet been honoured.
@@ -56,6 +53,18 @@ namespace TSC {
             // Marks the timer as stopped. This is private API,
             // don’t use this.
             void Set_Stopped();
+            // Pause this timer. It will not tick, but is not stopped
+            // either. Calling Continue() will start ticking from the
+            // point it was Pause()d. No-op if already paused.
+            // Stopping a paused timer is possible, it is cancelled.
+            // This is a private API. Do not use.
+            void Pause();
+            // Continue the timer after it was Pause()d. No-op if not
+            // Paused. This is a private API. Do not use.
+            void Continue();
+            // Is the timer currently paused? This is a private API.
+            // do not use.
+            bool Is_Paused();
 
             // Attribute getters
             bool                Is_Periodic();
@@ -85,6 +94,8 @@ namespace TSC {
             bool m_halt;
             // If set, the auxiliary thread is not running.
             bool m_stopped;
+            // If set the timer has started, but is not ticking.
+            bool m_paused;
         };
 
         // Usual function for initialising the binding
