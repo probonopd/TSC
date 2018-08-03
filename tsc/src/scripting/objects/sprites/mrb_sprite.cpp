@@ -542,6 +542,51 @@ static mrb_value Start_At(mrb_state* p_state, mrb_value self)
 }
 
 /**
+ * Method: Sprite#suppress_save=
+ *
+ *   suppress_save=(a_boolean) → a_boolean
+ *
+ * Enable this to prevent this sprite from being saved in
+ * savegame files; it is disabled by default. This functionality
+ * is useful in certain scripting situations, where without it
+ * generates sprites would be saved into the savegame that should
+ * actually only ever be inserted by the game's script.
+ *
+ * #### Return value
+ * Returns its argument.
+ */
+static mrb_value Set_Suppress_Save(mrb_state* p_state, mrb_value self)
+{
+    cSprite* p_sprite = Get_Data_Ptr<cSprite>(p_state, self);
+    mrb_bool suppress;
+    mrb_get_args(p_state, "b", &suppress);
+
+    p_sprite->Set_Suppress_Save(suppress);
+    return mrb_bool_value(suppress);
+}
+
+/**
+ * Method: Sprite#suppress_save
+ *
+ *   suppress_save() → a_boolean
+ *
+ * Queries whether this sprite is saved in savegame files.
+ * See #suppress_save=.
+ *
+ * #### Return value
+ * True or false.
+ */
+static mrb_value Get_Suppress_Save(mrb_state* p_state, mrb_value self)
+{
+    cSprite* p_sprite = Get_Data_Ptr<cSprite>(p_state, self);
+
+    if (p_sprite->m_suppress_save)
+        return mrb_true_value();
+    else
+        return mrb_false_value();
+}
+
+/**
  * Method: Sprite#player?
  *
  *   player?() → a_boolean
@@ -671,6 +716,8 @@ void TSC::Scripting::Init_Sprite(mrb_state* p_state)
     mrb_define_method(p_state, p_rcSprite, "image=", Set_Image, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcSprite, "active=", Set_Active, MRB_ARGS_REQ(1));
     mrb_define_method(p_state, p_rcSprite, "active?", Is_Active, MRB_ARGS_NONE());
+    mrb_define_method(p_state, p_rcSprite, "suppress_save=", Set_Suppress_Save, MRB_ARGS_REQ(1));
+    mrb_define_method(p_state, p_rcSprite, "suppress_save", Get_Suppress_Save, MRB_ARGS_NONE());
 
     mrb_define_method(p_state, p_rcSprite, "on_touch", MRUBY_EVENT_HANDLER(touch), MRB_ARGS_NONE());
 }

@@ -169,6 +169,15 @@ namespace TSC {
         {
             m_spawned = enable;
         };
+        /*
+         * set if suppressed on saving
+         * if set it is not saved in the savegame file,
+         * even if it Set_Spawned() is set.
+         */
+        void Set_Suppress_Save(bool suppress = 0)
+         {
+             m_suppress_save = suppress;
+         }
 
         // Sets the Position
         void Set_Pos(float x, float y, bool new_startpos = 0);
@@ -534,6 +543,8 @@ namespace TSC {
         bool m_active;
         /// if spawned
         bool m_spawned;
+        /// enable to prevent a spawned object from being saved
+        bool m_suppress_save;
         /// maximum distance to the camera to get updated
         unsigned int m_camera_range;
         /// can be used as ground object

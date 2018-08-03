@@ -413,6 +413,7 @@ void cSprite::Init(void)
     m_massive_type = MASS_PASSIVE;
     m_active = 1;
     m_spawned = 0;
+    m_suppress_save = 0;
     m_camera_range = 1000;
     m_can_be_ground = 0;
     m_disallow_managed_delete = 0;
@@ -475,6 +476,7 @@ cSprite* cSprite::Copy(void) const
     basic_sprite->Set_Shadow_Pos(m_shadow_pos);
     basic_sprite->Set_Shadow_Color(m_shadow_color);
     basic_sprite->Set_Spawned(m_spawned);
+    basic_sprite->Set_Suppress_Save(m_suppress_save);
 
     basic_sprite->m_uid = -1;
 
