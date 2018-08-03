@@ -54,6 +54,7 @@ module Std
         start_y = box_y - plant_y - (plant_h * i)
         s.massive_type = :climbable
         s.start_at(start_x, start_y)
+        s.suppress_save = true
         s.show
 
         @sprites << s
@@ -64,6 +65,7 @@ module Std
       top_sprite.start_at(@sprites.last.x, @sprites.last.y - top_sprite.rect[3])
       top_sprite.massive_type = :climbable
       top_sprite.show
+      top_sprite.suppress_save = true
       @sprites << top_sprite
 
       # First hide all the sprites.
@@ -80,8 +82,9 @@ module Std
         @timer = Timer.every(250) do
           spritelist.shift.enable
 
-          @timer.stop! if spritelist.empty?
+          @timer.stop if spritelist.empty?
         end
+        @activated = true
       end
 
       # Automatic saving and loading.
@@ -92,7 +95,7 @@ module Std
       end
 
       Level.on_load do |store|
-        if store["_ssl"] && store["_ssl"]["climbingboxes"] && store["_ssl"]["climbingboxes"][@box.uid]
+        if store["_ssl"] && store["_ssl"]["climbingboxes"] && store["_ssl"]["climbingboxes"][@box.uid.to_s]
           @sprites.each{|sprite| sprite.enable}
         end
       end
