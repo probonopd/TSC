@@ -454,11 +454,6 @@ void Preload_Images(bool draw_gui /* = 0 */)
     image_files.push_back(utf8_to_path("animation/fireball/1.png"));
     image_files.push_back(utf8_to_path("animation/iceball/1.png"));
 
-    // HUD
-    image_files.push_back(utf8_to_path("game/alex_l.png"));
-    image_files.push_back(utf8_to_path("game/gold_m.png"));
-    image_files.push_back(utf8_to_path("game/itembox.png"));
-
     unsigned int loaded_files = 0;
     unsigned int file_count = image_files.size();
 
