@@ -1234,9 +1234,9 @@ void cMovingSprite::Send_Collision(const cObjectCollision* collision, bool handl
     else {
         my_number = m_sprite_manager->Get_Array_Num(this);
 
-        // object not available in manager
+        // object not available (yet) in manager
         if (my_number < 0) {
-            debug_print("Warning : Object %s did send Collision but doesn't exists in Manager\n", m_name.c_str());
+            //debug_print("Warning : Object %s did send Collision but doesn't exists in Manager\n", m_name.c_str());
             return;
         }
     }
