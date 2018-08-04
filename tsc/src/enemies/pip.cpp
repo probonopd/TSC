@@ -273,6 +273,10 @@ void cPip::Handle_Collision_Player(cObjectCollision* p_collision)
     // invalid
     if (p_collision->m_direction == DIR_UNDEFINED)
         return;
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
 
     // Hit from the top. Downgrade if Alex is not small.
     if (p_collision->m_direction == DIR_TOP && pLevel_Player->m_state != STA_FLY) {

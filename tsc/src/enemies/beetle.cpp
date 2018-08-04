@@ -191,6 +191,10 @@ void cBeetle::Handle_Collision_Player(cObjectCollision* p_collision)
     // invalid
     if (p_collision->m_direction == DIR_UNDEFINED)
         return;
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
 
     // We will die only when hit from the top
     if (p_collision->m_direction == DIR_TOP && pLevel_Player->m_state != STA_FLY) {

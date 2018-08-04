@@ -302,6 +302,11 @@ Col_Valid_Type cSpika::Validate_Collision(cSprite* obj)
 
 void cSpika::Handle_Collision_Player(cObjectCollision* collision)
 {
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
+
     pLevel_Player->DownGrade_Player();
 
     if (collision->m_direction == DIR_LEFT || collision->m_direction == DIR_RIGHT) {

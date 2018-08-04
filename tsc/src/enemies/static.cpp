@@ -280,7 +280,10 @@ Col_Valid_Type cStaticEnemy::Validate_Collision(cSprite* obj)
 
 void cStaticEnemy::Handle_Collision_Player(cObjectCollision* collision)
 {
-    pLevel_Player->DownGrade_Player();
+    if (pLevel_Player->m_invincible)
+        DownGrade(true);
+    else
+        pLevel_Player->DownGrade_Player();
 }
 
 void cStaticEnemy::Handle_Collision_Enemy(cObjectCollision* collision)

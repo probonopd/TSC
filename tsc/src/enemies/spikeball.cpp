@@ -425,6 +425,10 @@ void cSpikeball::Handle_Collision_Player(cObjectCollision* collision)
     if (collision->m_direction == DIR_UNDEFINED) {
         return;
     }
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
 
     pLevel_Player->DownGrade_Player();
 

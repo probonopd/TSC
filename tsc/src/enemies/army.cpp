@@ -637,6 +637,10 @@ void cArmy::Handle_Collision_Player(cObjectCollision* collision)
         return;
     }
 
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
 
     if (collision->m_direction == DIR_TOP && pLevel_Player->m_state != STA_FLY) {
         if (m_army_state == ARMY_WALK) {

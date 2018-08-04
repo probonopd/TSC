@@ -588,6 +588,11 @@ Col_Valid_Type cThromp::Validate_Collision(cSprite* obj)
 
 void cThromp::Handle_Collision_Player(cObjectCollision* collision)
 {
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
+
     // front
     if (collision->m_direction == m_direction) {
         pLevel_Player->DownGrade_Player();

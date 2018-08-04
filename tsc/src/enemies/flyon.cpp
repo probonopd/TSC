@@ -527,6 +527,10 @@ void cFlyon::Handle_Collision_Player(cObjectCollision* collision)
     if (collision->m_direction == DIR_UNDEFINED) {
         return;
     }
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
 
     if (pLevel_Player->m_alex_type != ALEX_SMALL && !pLevel_Player->m_invincible && collision->m_direction == m_direction) {
         // todo : create again

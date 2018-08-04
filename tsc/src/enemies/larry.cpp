@@ -247,6 +247,10 @@ void cLarry::Handle_Collision_Player(cObjectCollision* p_collision)
 {
     if (p_collision->m_direction == DIR_UNDEFINED)
         return;
+    if (pLevel_Player->m_invincible) {
+        DownGrade(true);
+        return;
+    }
 
     if (p_collision->m_direction == DIR_TOP) {
         if (m_state == STA_WALK) { //Only add points for the first jump that lights the fuse

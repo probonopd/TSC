@@ -669,10 +669,15 @@ void cFurball::Handle_Collision_Player(cObjectCollision* collision)
         }
     }
     else {
-        pLevel_Player->DownGrade_Player();
+        pLevel_Player->DownGrade_Player(); // Does nothing if player is invincible
 
         if (collision->m_direction == DIR_RIGHT || collision->m_direction == DIR_LEFT) {
-            Turn_Around(collision->m_direction);
+            if (pLevel_Player->m_invincible) {
+                DownGrade(true);
+            }
+            else {
+                Turn_Around(collision->m_direction);
+            }
         }
     }
 }

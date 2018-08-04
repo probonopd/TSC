@@ -299,8 +299,13 @@ void cKrush::Handle_Collision_Player(cObjectCollision* collision)
         pLevel_Player->Action_Jump(1);
     }
     else {
-        pLevel_Player->DownGrade_Player();
-        Turn_Around(collision->m_direction);
+        if (pLevel_Player->m_invincible) {
+            DownGrade(true);
+        }
+        else {
+            pLevel_Player->DownGrade_Player();
+            Turn_Around(collision->m_direction);
+        }
     }
 }
 
