@@ -549,7 +549,7 @@ bool Handle_Input_Global(const sf::Event& ev)
         // game instead of updating it further.
         sf::Event focusin_event;
         while (true) {
-            pVideo->mp_window->waitEvent(focusin_event);
+            pVideo->WaitEvent(focusin_event);
             if (focusin_event.type == sf::Event::GainedFocus) {
                 break;
             }
@@ -612,7 +612,7 @@ void Update_Game(void)
     // ## input
     // Actually `input_event' is a global variable that is also queried elsewhere
     // in the code (uaaah, poor design).
-    while (pVideo->mp_window->pollEvent(input_event)) {
+    while (pVideo->PollEvent(input_event)) {
         // handle
         Handle_Input_Global(input_event);
     }

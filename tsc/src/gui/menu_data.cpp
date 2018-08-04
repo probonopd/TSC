@@ -2371,7 +2371,7 @@ void cMenu_Options::Set_Shortcut(std::string name, void* data, bool joystick /* 
 
     while (!sub_done) {
         // no event
-        if (!pVideo->mp_window->pollEvent(input_event)) {
+        if (!pVideo->PollEvent(input_event)) {
             continue;
         }
 

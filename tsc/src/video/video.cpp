@@ -22,6 +22,7 @@
 #include "img_settings.hpp"
 #include "img_manager.hpp"
 #include "../input/mouse.hpp"
+#include "../input/joystick.hpp"
 #include "../video/renderer.hpp"
 #include "../core/main.hpp"
 #include "../core/math/utilities.hpp"
@@ -1578,6 +1579,35 @@ void cVideo::Save_Surface(const fs::path& filename, const unsigned char* data, u
     delete []row_pointers;
 
     fclose(fp);
+}
+
+static void Handle_Important_Events(const sf::Event& event)
+{
+    switch (event.type) {
+    case sf::Event::JoystickConnected:
+    case sf::Event::JoystickDisconnected:
+        pJoystick->Init();
+        break;
+    default: break;
+    }
+}
+
+bool cVideo::PollEvent(sf::Event& event) {
+    if (mp_window->pollEvent(event)) {
+        Handle_Important_Events(event);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool cVideo::WaitEvent(sf::Event& event) {
+    if (mp_window->waitEvent(event)) {
+        Handle_Important_Events(event);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /* *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** */

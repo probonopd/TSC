@@ -1532,7 +1532,7 @@ void cMouseCursor::Mover_Update(int move_x, int move_y)
 
     sf::Event inEvent;
 
-    while (pVideo->mp_window->pollEvent(inEvent)) {
+    while (pVideo->PollEvent(inEvent)) {
         switch (inEvent.type) {
         case sf::Event::MouseButtonPressed: {
             if (inEvent.mouseButton.button == sf::Mouse::Middle) {

@@ -197,6 +197,13 @@ namespace TSC {
         // Save data as png image
         void Save_Surface(const boost::filesystem::path& filename, const unsigned char* data, unsigned int width, unsigned int height, unsigned int bpp = 4, bool reverse_data = 0) const;
 
+        /* A wrapper over mp_window->pollEvent that prevents important events (e.g. joystick
+        * events).
+        */
+        bool PollEvent(sf::Event& event);
+        // Same as above, but for waitEvent.
+        bool WaitEvent(sf::Event& event);
+
         // available OpenGL version
         float m_opengl_version;
 

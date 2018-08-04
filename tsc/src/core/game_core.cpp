@@ -334,7 +334,7 @@ void Enter_Game_Mode(const GameMode new_mode)
 
 void Clear_Input_Events(void)
 {
-    while (pVideo->mp_window->pollEvent(input_event)) {
+    while (pVideo->PollEvent(input_event)) {
         // todo : keep Windowmanager quit events ?
         // ignore all events
     }
