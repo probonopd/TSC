@@ -184,7 +184,7 @@ void cSpikeball::DownGrade(bool force /* = 0 */)
     m_velx = 0.0f;
     m_vely = 0.0f;
     // dead image
-    Set_Image_Set("dead");
+    //Set_Image_Set("dead"); // not made yet
 
     // default stomp death
     if (!force) {
