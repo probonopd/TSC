@@ -93,6 +93,7 @@
 // None, True, and False that screw CEGUI declarations.
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/OpenGL/GLRenderer.h>
+#include <CEGUI/ImageCodecModules/DevIL/ImageCodec.h>
 
 // SFML
 // Must also be included before X11, which has a #define Status int that messes

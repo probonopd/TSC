@@ -84,6 +84,9 @@ cVideo::~cVideo(void)
     CEGUI::OpenGLRenderer::destroy(*mp_cegui_renderer);
     mp_cegui_renderer = NULL;
 
+    delete mp_cegui_imgcodec;
+    mp_cegui_imgcodec = NULL;
+
     if (mp_window) {
         delete mp_window;
         mp_window = NULL;
@@ -97,7 +100,8 @@ void cVideo::Init_CEGUI(void)
 
     // create CEGUI renderer and system objects
     mp_cegui_renderer = &CEGUI::OpenGLRenderer::create();
-    CEGUI::System::create(*mp_cegui_renderer, NULL, NULL, NULL, NULL, "", utf8_logpath);
+    mp_cegui_imgcodec = new CEGUI::DevILImageCodec();
+    CEGUI::System::create(*mp_cegui_renderer, NULL, NULL, mp_cegui_imgcodec, NULL, "", utf8_logpath);
 
     // Retrieve default resource provider for the OpenGLRenderer
     CEGUI::DefaultResourceProvider* p_rp
