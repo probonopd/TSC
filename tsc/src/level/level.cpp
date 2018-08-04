@@ -1220,7 +1220,7 @@ void cLevel::Pause_All_Timers(bool pause)
 
     // The timer class stores all its instances in the "instances"
     // class-instance variable (cf. Timer.new source code). Iterate it.
-    mrb_int len = mrb_ary_len(p_state, timers);
+    mrb_int len = RARRAY_LEN(timers);
     for(mrb_int i=0; i < len; i++) {
         // Wire out the underlying C++ timer and pause it.
         mrb_value rb_timer = mrb_ary_ref(p_state, timers, i);

@@ -196,7 +196,7 @@ static mrb_value Index(mrb_state* p_state, mrb_value self)
 static mrb_value Cache_Size(mrb_state* p_state, mrb_value self)
 {
     mrb_value keys = mrb_hash_keys(p_state, mrb_iv_get(p_state, self, mrb_intern_cstr(p_state, "cache")));
-    return mrb_fixnum_value(mrb_ary_len(p_state, keys));
+    return mrb_fixnum_value(RARRAY_LEN(keys));
 }
 
 /**

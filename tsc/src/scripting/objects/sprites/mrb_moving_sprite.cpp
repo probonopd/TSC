@@ -602,7 +602,7 @@ static mrb_value Set_Velocity(mrb_state* p_state,  mrb_value self)
 
     if (!mrb_array_p(ary))
         mrb_raisef(p_state, MRB_TYPE_ERROR(p_state), "Not an array: '%s'", mrb_string_value_ptr(p_state, mrb_inspect(p_state, ary)));
-    if (mrb_ary_len(p_state, ary) != 2)
+    if (RARRAY_LEN(ary) != 2)
         mrb_raise(p_state, MRB_ARGUMENT_ERROR(p_state), "Not a two-element array.");
 
     mrb_float xvel = mrb_float(mrb_ary_ref(p_state, ary, 0));
