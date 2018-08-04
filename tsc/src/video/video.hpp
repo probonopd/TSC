@@ -235,6 +235,7 @@ namespace TSC {
 
         // GUI System
         CEGUI::OpenGLRenderer* mp_cegui_renderer;
+        CEGUI::XMLParser* mp_cegui_xmlparser;
         CEGUI::ImageCodec* mp_cegui_imgcodec;
 
         CEGUI::Tooltip* mp_default_tooltip;

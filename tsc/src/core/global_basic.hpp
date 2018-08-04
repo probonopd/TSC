@@ -93,6 +93,7 @@
 // None, True, and False that screw CEGUI declarations.
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/OpenGL/GLRenderer.h>
+#include <CEGUI/XMLParserModules/Libxml2/XMLParser.h>
 #include <CEGUI/ImageCodecModules/DevIL/ImageCodec.h>
 
 // SFML
