@@ -347,6 +347,9 @@ void cHud::Set_Item(SpriteType item_type, bool sound /* = true */)
     case TYPE_FIREPLANT:
         mp_item_image->setProperty("Image", m_fire_berry_img);
         break;
+    case TYPE_UNDEFINED: // Request to empty the item box
+        mp_item_image->setProperty("Image", "");
+        break;
     default:
         std::cerr << "Warning: Unsupported item type stored in HUD item box, changing to normal berry" << std::endl;
         m_rescue_item_type = TYPE_MUSHROOM_DEFAULT;
