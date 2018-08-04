@@ -103,7 +103,7 @@ namespace TSC {
         cHudSprite* mp_load_inactive;
         cHudSprite* mp_save_active;
         cHudSprite* mp_save_inactive;
-        cHudSprite* mp_quit_active;
+        //cHudSprite* mp_quit_active; // No quit icon made yet
         cHudSprite* mp_quit_inactive;
 
         cHudSprite* mp_current_inactive_item;

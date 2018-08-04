@@ -187,7 +187,7 @@ cMenu_Main::cMenu_Main(void)
     mp_load_inactive    = NULL;
     mp_save_active      = NULL;
     mp_save_inactive    = NULL;
-    mp_quit_active      = NULL;
+    //mp_quit_active      = NULL;
     mp_quit_inactive    = NULL;
 
     mp_current_inactive_item = NULL;
@@ -218,7 +218,7 @@ cMenu_Main::~cMenu_Main(void)
     delete mp_load_inactive;
     delete mp_save_active;
     delete mp_save_inactive;
-    delete mp_quit_active;
+    //delete mp_quit_active;
     delete mp_quit_inactive;
 
     CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow()->removeChild(mp_credits_item);
@@ -308,15 +308,15 @@ void cMenu_Main::Init(void)
 
     // Quit
     m_menu_pos_y += 60;
-    mp_quit_active   = new cHudSprite(pMenuCore->m_handler->m_level->m_sprite_manager);
+    //mp_quit_active   = new cHudSprite(pMenuCore->m_handler->m_level->m_sprite_manager);
     mp_quit_inactive = new cHudSprite(pMenuCore->m_handler->m_level->m_sprite_manager);
-    mp_quit_active   ->Set_Image(pVideo->Get_Package_Surface("menu/items/quit.png"), 1);
+    //mp_quit_active   ->Set_Image(pVideo->Get_Package_Surface("menu/items/quit.png"), 1);
     mp_quit_inactive ->Set_Image(pVideo->Get_Package_Surface("menu/quit.png"), 1);
 
     mp_quit_inactive->Set_Pos(game_res_w * 0.5f - (mp_quit_inactive->m_col_rect.m_w * 0.5f),
                               m_menu_pos_y);
-    mp_quit_active->Set_Pos(mp_quit_inactive->m_pos_x - mp_quit_active->m_col_rect.m_w - 16,
-                            m_menu_pos_y);
+    //mp_quit_active->Set_Pos(mp_quit_inactive->m_pos_x - mp_quit_active->m_col_rect.m_w - 16,
+    //                        m_menu_pos_y);
 
     m_quit_index = pMenuCore
         ->m_handler
