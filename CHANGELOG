@@ -51,7 +51,7 @@
 		#105 by Chris Jacobsen)
 	* Dependencies: Upgraded CEGUI from 0.7.9 to 0.8.7 (ticket #10 by
 		Marvin Gülker)
-	* Dependencies: Upgraded mruby from 1.0.0 to 1.2.0
+	* Dependencies: Upgraded mruby from 1.0.0 to 1.4.1
 	* Dependencies: New dependency on the `tinyclipboard' library
 	* Misc: C++11 compilation support
 	* Misc: Renamed "1-UP berry" to "Life berry" (#365 by Chris Jacobsen)
