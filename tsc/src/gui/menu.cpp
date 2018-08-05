@@ -31,6 +31,10 @@
 #include "../core/filesystem/package_manager.hpp"
 #include "../core/global_basic.hpp"
 
+// Music files to play on the title and credits screens.
+#define GAME_TITLE_MUSIC "game/menu.ogg"
+#define GAME_CREDITS_MUSIC "game/credits.ogg"
+
 using namespace std;
 
 
@@ -476,9 +480,9 @@ void cMenuCore::Enter(const GameMode old_mode /* = MODE_NOTHING */)
     // an overworld.
     if (!pActive_Level->Is_Loaded()) {
         if (m_menu_id == MENU_CREDITS)
-            pAudio->Play_Music("game/credits.ogg", true, 0, 1500);
+            pAudio->Play_Music(GAME_CREDITS_MUSIC, true, 0, 1500);
         else
-            pAudio->Play_Music("game/menu.ogg", true, 0, 1500);
+            pAudio->Play_Music(GAME_TITLE_MUSIC, true, 0, 1500);
     }
 }
 
