@@ -27,6 +27,7 @@
 #include "../audio/audio.hpp"
 #include "../gui/generic.hpp"
 #include "../core/i18n.hpp"
+#include "../core/filesystem/relative.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -81,9 +82,6 @@ void cLevel_Settings::Init(void)
     // level filename
     CEGUI::Editbox* editbox_level_filename = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_main/editbox_level_filename"));
     editbox_level_filename->setText(m_level->Get_Level_Name().c_str());
-    // music filename
-    CEGUI::Editbox* editbox_music_filename = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_main/editbox_music_filename"));
-    editbox_music_filename->setText(path_to_utf8(m_level->Get_Music_Filename()).c_str());
     // author
     CEGUI::Editbox* editbox_author = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_main/editbox_author"));
     editbox_author->setText(reinterpret_cast<const CEGUI::utf8*>(m_level->m_author.c_str()));
@@ -101,6 +99,16 @@ void cLevel_Settings::Init(void)
 
     m_text_difficulty_name = m_tabcontrol->getChild("level_settings_tab_main/text_difficulty_name");
     m_text_difficulty_name->setText(Get_Difficulty_Name(m_level->m_difficulty));
+
+    // music filename
+    CEGUI::Combobox* combo_music_filename = static_cast<CEGUI::Combobox*>(m_tabcontrol->getChild("level_settings_tab_main/combo_music_filename"));
+    std::vector<fs::path> filenames = Get_Directory_Files(pResource_Manager->Get_Game_Music_Directory(), ".ogg");
+    for (fs::path path: filenames) {
+        fs::path filename = fs_relative(pResource_Manager->Get_Game_Music_Directory(), path);
+        combo_music_filename->addItem(new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(path_to_utf8(filename).c_str())));
+    }
+    combo_music_filename->setText(reinterpret_cast<const CEGUI::utf8*>(path_to_utf8(m_level->Get_Music_Filename()).c_str()));
+    combo_music_filename->setReadOnly(true);
 
     // land type
     CEGUI::Combobox* combo_land_type = static_cast<CEGUI::Combobox*>(m_tabcontrol->getChild("level_settings_tab_main/combo_land_type"));
@@ -151,16 +159,13 @@ void cLevel_Settings::Init(void)
     combobox->addItem(new CEGUI::ListboxTextItem(cBackground::Get_Type_Name(BG_IMG_BOTTOM)));
     combobox->addItem(new CEGUI::ListboxTextItem(cBackground::Get_Type_Name(BG_IMG_ALL)));
     combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
-    // filename
-    CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_name"));
-    editbox->subscribeEvent(CEGUI::Editbox::EventKeyUp, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
     // speed
     spinner = static_cast<CEGUI::Spinner*>(m_tabcontrol->getChild("level_settings_tab_background/spinner_bg_image_speed_x"));
     spinner->subscribeEvent(CEGUI::Spinner::EventKeyUp, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
     spinner = static_cast<CEGUI::Spinner*>(m_tabcontrol->getChild("level_settings_tab_background/spinner_bg_image_speed_y"));
     spinner->subscribeEvent(CEGUI::Spinner::EventKeyUp, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
     // position
-    editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posx"));
+    CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posx"));
     editbox->subscribeEvent(CEGUI::Editbox::EventKeyUp, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
     editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posy"));
     editbox->subscribeEvent(CEGUI::Editbox::EventKeyUp, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
@@ -174,6 +179,19 @@ void cLevel_Settings::Init(void)
     // Gradient colors
     m_bg_color_1 = Color(m_level->m_background_manager->Get_Pointer(0)->m_color_1.red, m_level->m_background_manager->Get_Pointer(0)->m_color_1.green, m_level->m_background_manager->Get_Pointer(0)->m_color_1.blue, 255);
     m_bg_color_2 = Color(m_level->m_background_manager->Get_Pointer(0)->m_color_2.red, m_level->m_background_manager->Get_Pointer(0)->m_color_2.green, m_level->m_background_manager->Get_Pointer(0)->m_color_2.blue, 255);
+
+    // filename
+    combobox = static_cast<CEGUI::Combobox*>(m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_name"));
+    fs::path bgdir = pResource_Manager->Get_Game_Pixmaps_Directory() / utf8_to_path("game") / utf8_to_path("background");
+    filenames = Get_Directory_Files(bgdir, ".png");
+    for (fs::path path: filenames) {
+        fs::path filename = fs_relative(bgdir.parent_path().parent_path(), path);
+        combobox->addItem(new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(path_to_utf8(filename).c_str())));
+    }
+    combobox->addItem(new CEGUI::ListboxTextItem(UTF8_("(None)"))); // Item for no background image
+    combobox->setText(UTF8_("None"));
+    combobox->setReadOnly(true);
+    combobox->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted, CEGUI::Event::Subscriber(&cLevel_Settings::Update_BG_Image, this));
 
     // color 1
     editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_color_start_red"));
@@ -258,7 +276,7 @@ void cLevel_Settings::Leave(void)
         }
     }
     // music (relative to music/ directory)
-    fs::path new_music = utf8_to_path(m_tabcontrol->getChild("level_settings_tab_main/editbox_music_filename")->getText().c_str());
+    fs::path new_music = utf8_to_path(m_tabcontrol->getChild("level_settings_tab_main/combo_music_filename")->getText().c_str());
     // if the music is new
     if (pAudio->Is_Music_Playing() && new_music.compare(m_level->Get_Music_Filename()) != 0) {
         m_level->Set_Music(new_music);
@@ -406,6 +424,8 @@ bool cLevel_Settings::Delete_Background_Image(const CEGUI::EventArgs& event)
     return 1;
 }
 
+// This event handler method updates the GUI controls to reflect the
+// background the user has selected in the list box.
 bool cLevel_Settings::Set_Background_Image(const CEGUI::EventArgs& event)
 {
     CEGUI::Listbox* listbox = static_cast<CEGUI::Listbox*>(m_tabcontrol->getChild("level_settings_tab_background/listbox_backgrounds"));
@@ -421,8 +441,11 @@ bool cLevel_Settings::Set_Background_Image(const CEGUI::EventArgs& event)
         CEGUI::Editbox* editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_type"));
         editbox->setText(reinterpret_cast<const CEGUI::utf8*>(background->Get_Type_Name().c_str()));
         // filename
-        editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_name"));
-        editbox->setText(path_to_utf8(background_filename).c_str());
+        CEGUI::Combobox* combobox = static_cast<CEGUI::Combobox*>(m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_name"));
+        if (background_filename == fs::path())
+            combobox->setText(UTF8_("(None)"));
+        else
+            combobox->setText(reinterpret_cast<const CEGUI::utf8*>(path_to_utf8(background_filename).c_str()));
         // position
         editbox = static_cast<CEGUI::Editbox*>(m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posx"));
         editbox->setText(float_to_string(background->m_start_pos_x, 6, 0).c_str());
@@ -531,7 +554,7 @@ bool cLevel_Settings::Update_BG_Image(const CEGUI::EventArgs& event)
     }
 
     std::string bg_type = m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_type")->getText().c_str();
-    std::string bg_name = m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_name")->getText().c_str();
+    std::string bg_name = m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_name")->getText().c_str();
     float posx = string_to_float((m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posx"))->getText().c_str());
     float posy = string_to_float((m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posy"))->getText().c_str());
     float posz = string_to_float((m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posz"))->getText().c_str());
@@ -576,7 +599,7 @@ bool cLevel_Settings::Update_BG_Image(const CEGUI::EventArgs& event)
 void cLevel_Settings::Clear_Layer_Field(void)
 {
     m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_type")->setText("Disabled");
-    m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_name")->setText("");
+    m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_name")->setText(UTF8_("(None)"));
     m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posx")->setText("");
     m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posy")->setText("");
     m_tabcontrol->getChild("level_settings_tab_background/editbox_bg_image_posz")->setText("");

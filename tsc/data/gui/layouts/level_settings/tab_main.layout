@@ -59,10 +59,10 @@
             <Property name="MaxSize" value="{{1,0},{1,0}}"/>
             <Property name="Area" value="{{0.1,0},{0.01,0},{0.35,0},{0.06,0}}"/>
         </Window>
-        <Window type="TaharezLook/Editbox" name="editbox_music_filename">
+        <Window type="TaharezLook/Combobox" name="combo_music_filename">
             <Property name="MaxTextLength" value="1073741823"/>
             <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-            <Property name="Area" value="{{0.61,0},{0.01,0},{0.98,0},{0.06,0}}"/>
+            <Property name="Area" value="{{0.61,0},{0.01,0},{0.98,0},{0.6,0}}"/>
         </Window>
         <Window type="TaharezLook/Editbox" name="editbox_author">
             <Property name="MaxTextLength" value="30"/>

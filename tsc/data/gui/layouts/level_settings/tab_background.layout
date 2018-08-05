@@ -116,11 +116,11 @@
             <Property name="Area" value="{{0.013296,0},{0.349544,0},{0.128994,0},{0.486703,0}}"/>
             <Property name="MouseCursorImage" value="set:TaharezLook image:MouseTarget"/>
         </Window>
-        <Window type="TaharezLook/Editbox" name="editbox_bg_image_name">
+        <Window type="TaharezLook/Combobox" name="combo_bg_image_name">
             <Property name="TooltipText" value="Background image filename"/>
             <Property name="MaxTextLength" value="1073741823"/>
             <Property name="MaxSize" value="{{1,0},{1,0}}"/>
-            <Property name="Area" value="{{0.25,0},{0.34,0},{0.8,0},{0.39,0}}"/>
+            <Property name="Area" value="{{0.25,0},{0.34,0},{0.8,0},{0.6,0}}"/>
         </Window>
         <Window type="TaharezLook/Spinner" name="spinner_bg_image_speed_x">
             <Property name="TooltipText" value="Image X scrolling speed"/>

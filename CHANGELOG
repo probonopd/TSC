@@ -1,6 +1,8 @@
 3000-01-01  Nobody  <nobody@secretchronicles.de>
 
 	* Version unreleased.
+	* Feature: Allow selection of music and background files in the
+		level settings editor via dropdowns (#14 by Justin Rissler)
 	* Feature: Added "uninstall" target to build system (#391 by Danfun64)
 	* Feature: Added script std/giant_jewel_box
 	* Feature: Added sound "furry_death'"by Nearbu
