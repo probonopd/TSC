@@ -103,6 +103,7 @@ void cLevel_Settings::Init(void)
     // music filename
     CEGUI::Combobox* combo_music_filename = static_cast<CEGUI::Combobox*>(m_tabcontrol->getChild("level_settings_tab_main/combo_music_filename"));
     std::vector<fs::path> filenames = Get_Directory_Files(pResource_Manager->Get_Game_Music_Directory(), ".ogg");
+    std::sort(filenames.begin(), filenames.end());
     for (fs::path path: filenames) {
         fs::path filename = fs_relative(pResource_Manager->Get_Game_Music_Directory(), path);
         combo_music_filename->addItem(new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(path_to_utf8(filename).c_str())));
@@ -184,6 +185,7 @@ void cLevel_Settings::Init(void)
     combobox = static_cast<CEGUI::Combobox*>(m_tabcontrol->getChild("level_settings_tab_background/combo_bg_image_name"));
     fs::path bgdir = pResource_Manager->Get_Game_Pixmaps_Directory() / utf8_to_path("game") / utf8_to_path("background");
     filenames = Get_Directory_Files(bgdir, ".png");
+    std::sort(filenames.begin(), filenames.end());
     for (fs::path path: filenames) {
         fs::path filename = fs_relative(bgdir.parent_path().parent_path(), path);
         combobox->addItem(new CEGUI::ListboxTextItem(reinterpret_cast<const CEGUI::utf8*>(path_to_utf8(filename).c_str())));
