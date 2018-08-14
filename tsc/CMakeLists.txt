@@ -107,7 +107,7 @@ if (WIN32)
   # Boost thread library has a different name on Windows to indicate
   # the different implemention. Just complicates the build system...
   set(Boost_USE_STATIC_LIBS ON)
-  find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread_win32 system REQUIRED)
+  set(Boost_THREADAPI win32)
 
   # Use MXE's pkg-config to resolve all deps for us
   pkg_check_modules(SFML REQUIRED sfml)
@@ -126,7 +126,7 @@ else()
   find_package(OpenGL REQUIRED)
   find_package(PNG REQUIRED)
   find_package(PCRE REQUIRED)
-  find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread system REQUIRED)
+
   if (USE_LIBXMLPP3)
     find_package(LibXmlPP 3.0 REQUIRED)
   else()
@@ -137,6 +137,9 @@ else()
   # linking error).
   find_package(X11 REQUIRED)
 endif()
+
+find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread REQUIRED)
+set(Boost_COMPONENTS Boost::filesystem Boost::chrono Boost::thread)
 
 # Libraries we can build ourselves under certain cirumstances if missing
 include("ProvideTinyclipboard")
@@ -219,7 +222,7 @@ target_link_libraries(tsc
   ${CEGUI_LIBRARIES}
   ${SFML_LIBRARIES}
   ${SFML_DEPENDENCIES}
-  ${Boost_LIBRARIES}
+  ${Boost_COMPONENTS}
   ${OPENGL_LIBRARIES}
   ${PNG_LIBRARY}
   ${PNG_LIBRARIES} # compatibility
