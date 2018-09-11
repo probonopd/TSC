@@ -36,6 +36,7 @@
 #include "objects/misc/mrb_input.hpp"
 #include "objects/misc/mrb_timer.hpp"
 #include "objects/misc/mrb_ball.hpp"
+#include "objects/misc/mrb_cinematic_scene.hpp"
 #include "objects/enemies/mrb_enemy.hpp"
 #include "objects/enemies/mrb_beetle.hpp"
 #include "objects/enemies/mrb_beetle_barrage.hpp"
@@ -336,6 +337,7 @@ void cMRuby_Interpreter::Load_Wrappers()
     Init_Audio(mp_mruby);
     Init_Timer(mp_mruby);
     Init_Ball(mp_mruby);
+    Init_Cinematic_Scene(mp_mruby);
     Init_Enemy(mp_mruby);
     Init_Beetle(mp_mruby);
     Init_BeetleBarrage(mp_mruby);
