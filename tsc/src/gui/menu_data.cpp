@@ -3224,12 +3224,6 @@ bool cMenu_Savegames::Button_Save_Clicked(const CEGUI::EventArgs& event)
 
     pAudio->Play_Sound("savegame_save.ogg");
 
-    // no costs in debug builds
-#ifndef _DEBUG
-    if (pActive_Level->Is_Loaded()) {
-        gp_hud->Set_Points(pLevel_Player->m_points - 3000);
-    }
-#endif
     // save
     pSavegame->Save_Game(slot, description);
 
@@ -3273,7 +3267,7 @@ std::string cMenu_Savegames::Set_Save_Description(unsigned int save_slot)
     }
 // save always in debug builds
 #ifndef _DEBUG
-    if (pActive_Level->Is_Loaded() && pLevel_Player->m_points < 3000) {
+    if (pActive_Level->Is_Loaded() && gp_hud->Get_Points() < 3000) {
         Clear_Input_Events();
         Draw_Static_Text(_("3000 Points needed for saving in a level.\nSaving on the Overworld is free."));
 
