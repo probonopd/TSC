@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <id>org.secretchronicles.TSC</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>The Secret Chronicles of Dr. M.</name>
+  <summary>Pursue Dr. M. in this two-dimensional platform game</summary>
+  <description>
+    <p>
+      The Secret Chronicles of Dr. M. (TSC) is a two-dimensional sidecrolling platform game based
+      on OpenGL and SDL. The game features a rich set of levels plus an advanced level editor that
+      allows you to create your own levels. It is accompanied by a powerful scripting engine that
+      utilises mruby, a minimal implementation of the Ruby programming language.
+    </p>
+  </description>
+  <categories>
+    <category>Game</category>
+    <category>ArcadeGame</category>
+  </categories>
+  <url type="homepage">https://secretchronicles.org/</url>
+  <url type="bugtracker">https://github.com/Secretchronicles/TSC/issues</url>
+  <url type="help">https://secretchronicles.org/en/community/</url>
+  <launchable type="desktop-id">tsc.desktop</launchable>
+
+  <releases>
+    <release date="2015-08-17" version="2.0.0" />
+  </releases>
+
+  <developer_name>The Secret Chronicles of Dr. M.</developer_name>
+  <project_license>GPL-3.0+</project_license>
+
+  <screenshots>
+    <screenshot type="default">https://secretchronicles.org/assets/screenshots/6.png</screenshot>
+    <screenshot>https://secretchronicles.org/assets/screenshots/11.png</screenshot>
+    <screenshot>https://secretchronicles.org/assets/screenshots/13.png</screenshot>
+  </screenshots>
+
+  <content_rating type="oars-1.0">
+    <content_attribute id="violence-cartoon">moderate</content_attribute>
+    <content_attribute id="violence-fantasy">moderate</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">mild</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-info">intense</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+</component>

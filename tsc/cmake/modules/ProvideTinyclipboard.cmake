@@ -1,5 +1,5 @@
 if (USE_SYSTEM_TINYCLIPBOARD)
-  find_file(Tinyclipboard_INCLUDE_DIRS tinyclipboard.h)
+  find_path(Tinyclipboard_INCLUDE_DIRS tinyclipboard.h)
   find_library(Tinyclipboard_LIBRARIES tinyclipboard)
   message("-- Found tinyclipboard at ${Tinyclipboard_LIBRARIES}")
 else()

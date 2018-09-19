@@ -49,6 +49,7 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
+option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" OFF)
 option(USE_LIBXMLPP3 "Use libxml++3.0 instead of libxml++2.6 (experimental)" OFF)
 
 ########################################
@@ -245,7 +246,7 @@ else()
   endif()
 endif()
 
-if (ENABLE_MRUBY)
+if (ENABLE_MRUBY AND NOT USE_SYSTEM_MRUBY)
   add_dependencies(tsc mruby)
 endif()
 
@@ -315,6 +316,9 @@ install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_128.png"
   COMPONENT base)
 install(FILES "${TSC_SOURCE_DIR}/extras/tsc.desktop"
   DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+  COMPONENT base)
+install(FILES "${TSC_SOURCE_DIR}/extras/tsc.appdata.xml"
+  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/appdata
   COMPONENT base)
 
 foreach(pofile ${po_files})
@@ -403,6 +407,7 @@ message(STATUS "Enable the in-game editor:         ${ENABLE_EDITOR}")
 message(STATUS "Enable the mruby scripting engine: ${ENABLE_MRUBY}")
 message(STATUS "Enable native language support:    ${ENABLE_NLS}")
 message(STATUS "Use system-provided tinyclipboard: ${USE_SYSTEM_TINYCLIPBOARD}")
+message(STATUS "Use system-provided mruby:         ${USE_SYSTEM_MRUBY}")
 
 message(STATUS "--------------- Path configuration -----------------")
 message(STATUS "Install prefix:        ${CMAKE_INSTALL_PREFIX}")
