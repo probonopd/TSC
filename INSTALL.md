@@ -98,6 +98,15 @@ install to.
 
 * The DevIL library.
 
+#### Example for Fedora ####
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sudo dnf install ruby rubygem-rake gperf pkgconf bison libGLEW \
+freeglut-devel gettext libpng-devel pcre-devel libxml++-devel \
+freetype-devel DevIL-devel boost SFML-devel gcc-c++ \
+cegui-devel cmake @development-tools git libXt-devel
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 #### Example for Ubuntu ####
 
 (specific instructions for Lubuntu 16.10 can be found in
@@ -254,7 +263,7 @@ into.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ cmake -DCMAKE_INSTALL_PREFIX=/opt/tsc ..
-$ make
+$ make -j$(nproc)
 # make install
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -294,12 +303,12 @@ with the real build process. These preprations can be done as follows:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ git clone git://github.com/Secretchronicles/TSC.git
 $ cd TSC
-$ git submodule init
-$ git submodule update
+$ git submodule init; git submodule update
+$ cd tsc
+$ mkdir build; cd build
+$ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/opt/tsc ..
+$ make -j$(nproc)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-From there on, you can continue with the normal instructions as per
-the above section.
 
 
 
