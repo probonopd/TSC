@@ -99,6 +99,7 @@ install to.
 * The DevIL library.
 
 #### Example for Fedora ####
+(Tested on Fedora 28)
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 sudo dnf install ruby rubygem-rake gperf pkgconf bison libGLEW \
@@ -303,9 +304,11 @@ with the real build process. These preprations can be done as follows:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 $ git clone git://github.com/Secretchronicles/TSC.git
 $ cd TSC
-$ git submodule init; git submodule update
+$ git submodule init
+$ git submodule update
 $ cd tsc
-$ mkdir build; cd build
+$ mkdir build
+$ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/opt/tsc ..
 $ make -j$(nproc)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
