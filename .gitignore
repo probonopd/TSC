@@ -76,6 +76,9 @@ CMakeLists.txt.user*
 # Gedit and Emacs
 *~
 
+# Flatpak
+/.flatpak-builder
+
 # Installer
 /tsc/extras/Setup/*.exe
 
