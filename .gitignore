@@ -78,6 +78,7 @@ CMakeLists.txt.user*
 
 # Flatpak
 /.flatpak-builder
+/tsc/.flatpak-builder/
 
 # Installer
 /tsc/extras/Setup/*.exe

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source settings.sh
+
 # Get latest git submodules
 git submodule init
 git submodule update
@@ -16,14 +18,11 @@ cd build
 rm -rf ~/tsc
 
 # Build TSC
-cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=~/tsc ..
+cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$TSCGAMEDIR ..
 make
 
 # Install TSC to $HOME/tsc
 make install
 
 # Changing to game directory
-cd ~/tsc
-
-# Start TSC
-./bin/tsc
+cd $TSCGAMEDIR
