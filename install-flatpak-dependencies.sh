@@ -10,7 +10,7 @@ sudo echo "deb http://ftp.debian.org/debian stretch-backports main" > /etc/apt/s
 
 sudo apt-get update
 
-sudo apt-get install -t stretch-backports flatpak flatpak-builder
+sudo apt-get install -t stretch-backports flatpak flatpak-builder -y
 
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 
