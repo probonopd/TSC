@@ -49,7 +49,11 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
-option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" OFF)
+if(CMAKE_GENERATOR STREQUAL "MSYS Makefiles")
+  option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" TRUE)
+else()
+  option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" FALSE)
+endif()
 option(USE_LIBXMLPP3 "Use libxml++3.0 instead of libxml++2.6 (experimental)" OFF)
 
 ########################################
@@ -107,36 +111,24 @@ find_package(Gettext)
 if (WIN32)
   # Boost thread library has a different name on Windows to indicate
   # the different implemention. Just complicates the build system...
-  set(Boost_USE_STATIC_LIBS ON)
+  # set(Boost_USE_STATIC_LIBS ON)
   set(Boost_THREADAPI win32)
-
-  # Use MXE's pkg-config to resolve all deps for us
-  pkg_check_modules(SFML REQUIRED sfml)
-  pkg_check_modules(CEGUI REQUIRED CEGUI-0 CEGUI-0-OPENGL)
-  pkg_check_modules(OPENGL REQUIRED gl)
-  pkg_check_modules(PNG REQUIRED libpng)
-  pkg_check_modules(PCRE REQUIRED libpcre)
-  if (USE_LIBXMLPP3)
-    pkg_check_modules(LibXmlPP REQUIRED libxml++-3.0)
-  else()
-    pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
-  endif()
 else()
-  find_package(SFML COMPONENTS audio graphics window system REQUIRED)
-  find_package(CEGUI COMPONENTS OpenGL REQUIRED)
-  find_package(OpenGL REQUIRED)
-  find_package(PNG REQUIRED)
-  find_package(PCRE REQUIRED)
-
-  if (USE_LIBXMLPP3)
-    find_package(LibXmlPP 3.0 REQUIRED)
-  else()
-    find_package(LibXmlPP 2.6 REQUIRED)
-  endif()
-
   # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
   # linking error).
   find_package(X11 REQUIRED)
+endif()
+
+find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+find_package(CEGUI COMPONENTS OpenGL REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(PNG REQUIRED)
+find_package(PCRE REQUIRED)
+
+if (USE_LIBXMLPP3)
+  find_package(LibXmlPP 3.0 REQUIRED)
+else()
+  find_package(LibXmlPP 2.6 REQUIRED)
 endif()
 
 find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread REQUIRED)
@@ -146,19 +138,6 @@ set(Boost_COMPONENTS Boost::filesystem Boost::chrono Boost::thread)
 include("ProvideTinyclipboard")
 if (ENABLE_MRUBY)
   include("ProvideMRuby")
-endif()
-
-########################################
-# Definitions
-
-if (WIN32)
-  add_definitions(
-    ${SFML_CFLAGS}
-    ${CEGUI_CFLAGS}
-    ${OPENGL_CFLAGS}
-    ${PNG_CFLAGS}
-    ${LibXmlPP_CFLAGS}
-    ${PCRE_CFLAGS})
 endif()
 
 ########################################
@@ -228,17 +207,14 @@ target_link_libraries(tsc
   ${PNG_LIBRARY}
   ${PNG_LIBRARIES} # compatibility
   ${MRuby_LIBRARIES}
-  ${Tinyclipboard_LIBRARIES})
+  ${Tinyclipboard_LIBRARIES}
+  ${LibXmlPP_LIBRARIES}
+  ${PCRE_LIBRARIES})
 
 if (WIN32)
-  target_link_libraries(tsc
-    ${LibXmlPP_STATIC_LIBRARIES}
-    ${PCRE_STATIC_LIBRARIES}
-    )
+  target_link_libraries(tsc iconv intl ws2_32)
 else()
   target_link_libraries(tsc
-    ${LibXmlPP_LIBRARIES}
-    ${PCRE_LIBRARIES}
     ${X11_LIBRARIES}
     ${CMAKE_DL_LIBS})
   if (CMAKE_SYSTEM_NAME MATCHES "BSD")
