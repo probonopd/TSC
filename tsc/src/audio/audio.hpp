@@ -24,8 +24,10 @@
 #include "../scripting/scriptable_object.hpp"
 #include "../scripting/objects/misc/mrb_audio.hpp"
 #include <queue>
+#ifdef _WIN32
 #undef IN
 #undef OUT
+#endif
 
 
 namespace TSC {
