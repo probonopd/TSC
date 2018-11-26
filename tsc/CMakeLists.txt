@@ -21,9 +21,6 @@ project(TSC C CXX)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 include(ExternalProject)
 include(GNUInstallDirs)
-if(WIN32)
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
 
 ########################################
 # TSC version number
