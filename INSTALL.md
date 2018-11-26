@@ -567,7 +567,7 @@ From the same shell, that you installed packages for, run:
     $ cd TSC
     $ git submodule init && git submodule update
     $ mkdir tsc/build && cd tsc/build
-    $ cmake -G "MSYS Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=C:/TSC -DCPACK_BINARY_ZIP=1 -DCPACK_BINARY_7Z=1 -DCPACK_BINARY_IFW=1 -DCPACK_BINARY_NSIS=1 -DCPACK_SOURCE_ZIP=0 -DCPACK_SOURCE_7Z=0 ..
+    $ cmake -G "MSYS Makefiles" ..
     $ make -j$(nproc)
     $ strip tsc.exe
 
@@ -585,12 +585,7 @@ To pack the game:
 
     $ make package
 
-This will pack the game with the CPack generators that you chose in the CMake command line. If you didn't choose any, or if you wish to pack with a different generator you can instead run one of the following commands:
-
-    $ cpack -G "ZIP"
-    $ cpack -G "7Z"
-    $ cpack -G "IFW"
-    $ cpack -G "NSIS"
+This will pack the game with the CPack generators that you chose in the CMake command line.
 
 [1]: http://cmake.org
 [2]: http://mxe.cc
