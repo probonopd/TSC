@@ -21,6 +21,9 @@ project(TSC C CXX)
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 include(ExternalProject)
 include(GNUInstallDirs)
+if(WIN32)
+  set(CMAKE_BUILD_TYPE "Release")
+endif()
 
 ########################################
 # TSC version number
@@ -382,7 +385,7 @@ set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tsc.exe") # Icon for system control p
 set(CPACK_PACKAGE_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer window bar icon
 
 if(WIN32)
-  set(CPACK_GENERATOR "7Z;IFW;NSIS")
+  set(CPACK_GENERATOR "7Z;IFW")
 endif()
 
 include(CPack)
