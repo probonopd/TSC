@@ -39,6 +39,11 @@ VI. Crosscompiling from Linux to Windows
     1. Crosscompiling from a released tarball
     2. Crosscompiling from Git
 VII. Compiling on Windows with msys2
+    1. Installing and updating msys2
+    2. Installing the dependencies
+    3. Optional dependencies
+        3.1 CMake GUI Qt requirement workaround
+    4. Building TSC
 
 I. Dependencies
 ----------------
@@ -503,7 +508,7 @@ TSC can be compiled on Windows using msys2. The msys2 suite provides a convenien
 repository of prebuilt packages.
 
 
-### Installing and updating msys2 ###
+### 1. Installing and updating msys2 ###
 
 To begin, download and install msys2 from the [official website][3].
 
@@ -521,7 +526,7 @@ Now run update again:
     $ pacman -Syuu
 
 
-### Installing the dependencies ###
+### 2. Installing the dependencies ###
 
 Once it's finished, install the dependencies:
 
@@ -531,7 +536,7 @@ Or, for 32-bit:
 
     $ pacman -S --needed git bison ruby mingw-w64-i686-{toolchain,extra-cmake-modules,ruby,mruby,cegui,sfml,libxml++2.6,gperf}
 
-#### Optional dependencies ###
+#### 3. Optional dependencies ###
 
 The following packages are optional, you don't have to install these if you don't plan to generate installers or documentation:
 
@@ -545,7 +550,7 @@ Generating documentation also requires a few rubygems:
 
     $ gem install adsf bundler coderay kramdown nanoc rdoc
 
-### CMake GUI Qt requirement workaround ###
+### 3.1 CMake GUI Qt requirement workaround ###
 
 If you plan to use the CMake GUI, there's a few more steps required.
 The CMake GUI in msys2 is dynamically linked against Qt5 libraries. To use it, you need to have the Qt5 package installed:
@@ -559,14 +564,12 @@ Check which version of CMake is currently installed (`pacman -Qs cmake`), go to 
     $ cp /mingw64/bin/mingw32-make.exe /mingw64/bin/make.exe
 
 
-### Building TSC ###
+### 4. Building TSC ###
 
 From the same shell, that you installed packages for, run:
 
-    $ git clone git://github.com/Secretchronicles/TSC.git
-    $ cd TSC
-    $ git submodule init && git submodule update
-    $ mkdir tsc/build && cd tsc/build
+    $ git clone --recursive git://github.com/Secretchronicles/TSC.git
+    $ mkdir TSC/tsc/build && cd TSC/tsc/build
     $ cmake -G "MSYS Makefiles" ..
     $ make -j$(nproc)
     $ strip tsc.exe
