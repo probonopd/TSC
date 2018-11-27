@@ -302,11 +302,8 @@ repository, and initialize the Git submodules before you can continue
 with the real build process. These preprations can be done as follows:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ git clone git://github.com/Secretchronicles/TSC.git
-$ cd TSC
-$ git submodule init
-$ git submodule update
-$ cd tsc
+$ git clone --recursive git://github.com/Secretchronicles/TSC.git
+$ cd TSC/tsc
 $ mkdir build
 $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/opt/tsc ..
@@ -505,10 +502,8 @@ Clone the Git repository and execute the preparation steps. They are
 the same as for a normal non-cross build.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ git clone git://github.com/Secretchronicles/TSC.git
+$ git clone --recursive git://github.com/Secretchronicles/TSC.git
 $ cd TSC
-$ git submodule init
-$ git submodule update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Then continue with “Crosscompiling from a released tarball” above.
