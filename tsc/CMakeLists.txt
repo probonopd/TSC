@@ -52,6 +52,7 @@ option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
 if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
   set(CMAKE_INSTALL_PREFIX "$ENV{systemdrive}/Games/${CMAKE_PROJECT_NAME}" CACHE PATH "CMAKE PREFIX" FORCE)
 endif()
+option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" OFF)
 option(USE_LIBXMLPP3 "Use libxml++3.0 instead of libxml++2.6 (experimental)" OFF)
 
 ########################################
