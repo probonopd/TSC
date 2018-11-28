@@ -529,21 +529,21 @@ Now run update again:
 
 Once it's finished, install the dependencies:
 
-    $ pacman -S --needed git bison ruby mingw-w64-x86_64-{toolchain,extra-cmake-modules,ruby,mruby,cegui,sfml,libxml++2.6,gperf}
+    $ pacman -S --needed git bison ruby mingw-w64-x86_64-{toolchain,extra-cmake-modules,ruby,cegui,sfml,libxml++2.6,gperf}
 
 Or, for 32-bit:
 
-    $ pacman -S --needed git bison ruby mingw-w64-i686-{toolchain,extra-cmake-modules,ruby,mruby,cegui,sfml,libxml++2.6,gperf}
+    $ pacman -S --needed git bison ruby mingw-w64-i686-{toolchain,extra-cmake-modules,ruby,cegui,sfml,libxml++2.6,gperf}
 
 #### 3. Optional dependencies ###
 
 The following packages are optional, you don't have to install these if you don't plan to generate installers or documentation:
 
-    $ pacman -S --needed mingw-w64-x86_64-{doxygen,graphviz,nsis,qt-installer-framework-git}
+    $ pacman -S --needed mingw-w64-x86_64-{doxygen,graphviz,nsis}
 
 For 32-bit:
 
-    $ pacman -S --needed mingw-w64-x86_64-{doxygen,graphviz,nsis,qt-installer-framework-git}
+    $ pacman -S --needed mingw-w64-x86_64-{doxygen,graphviz,nsis}
 
 Generating documentation also requires a few rubygems:
 
