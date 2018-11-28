@@ -571,7 +571,6 @@ From the same shell, that you installed packages for, run:
     $ mkdir TSC/tsc/build && cd TSC/tsc/build
     $ cmake -G "MSYS Makefiles" ..
     $ make -j$(nproc)
-    $ strip tsc.exe
 
 Feel free to edit the CMake command line to your taste or use the GUI.
 After that you can run one of the following commands.
