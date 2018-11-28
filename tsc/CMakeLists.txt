@@ -49,11 +49,8 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
-if(MSYS)
-  option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" ON)
-  set(CMAKE_INSTALL_PREFIX "C:/Games/TSC" CACHE PATH "CMAKE PREFIX" FORCE)
-else()
-  option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" OFF)
+if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "$ENV{systemdrive}/Games/${CMAKE_PROJECT_NAME}" CACHE PATH "CMAKE PREFIX" FORCE)
 endif()
 option(USE_LIBXMLPP3 "Use libxml++3.0 instead of libxml++2.6 (experimental)" OFF)
 
@@ -239,7 +236,7 @@ if(WIN32)
     get_prerequisites(\"${CMAKE_CURRENT_BINARY_DIR}/tsc.exe\" LIBLIST 1 1 \"\" \"\" )
     get_filename_component(CEGUI_CoreWindowRendererSet ${CEGUI_CoreWindowRendererSet_LIBRARY} NAME)
     string(REPLACE \".a\" \"\" CEGUI_CoreWindowRendererSet \${CEGUI_CoreWindowRendererSet})
-    list(APPEND LIBLIST \${CEGUI_CoreWindowRendererSet})
+    list(APPEND LIBLIST \${CEGUI_CoreWindowRendererSet}) # Not detected, but still required
     foreach(LIB \${LIBLIST})
       gp_resolve_item(\"${CMAKE_CURRENT_BINARY_DIR}/tsc.exe\" \"\${LIB}\" \"\" \"\" resolved_item)
       list(APPEND LIBS \${resolved_item})
@@ -379,10 +376,10 @@ set(CPACK_NSIS_MODIFY_PATH "ON") # Required for desktop shortcuts
 set(CPACK_NSIS_MUI_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer icon
 set(CPACK_NSIS_MUI_UNIICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Uninstaller icon
 set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tsc.exe") # Icon for system control panel
-set(CPACK_PACKAGE_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer window bar icon
+set(CPACK_STRIP_FILES ON)
 
 if(WIN32)
-  set(CPACK_GENERATOR "7Z;IFW")
+  set(CPACK_GENERATOR "7Z;NSIS")
 endif()
 
 include(CPack)
