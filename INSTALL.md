@@ -1,4 +1,3 @@
-
 Installation instructions for TSC
 =================================
 
@@ -29,21 +28,21 @@ Contents
 --------
 
 I. Dependencies
-    1. Common dependencies
-    2. Optional Windows dependencies
+  1. Common dependencies
+  2. Optional Windows dependencies
 II. Configuration options
 III. Installing from a released tarball
 IV. Installing from Git
 V. Upgrade notices
 VI. Crosscompiling from Linux to Windows
-    1. Crosscompiling from a released tarball
-    2. Crosscompiling from Git
+  1. Crosscompiling from a released tarball
+  2. Crosscompiling from Git
 VII. Compiling on Windows with msys2
-    1. Installing and updating msys2
-    2. Installing the dependencies
-    3. Optional dependencies
-        3.1 CMake GUI Qt requirement workaround
-    4. Building TSC
+  1. Installing and updating msys2
+  2. Installing the dependencies
+  3. Optional dependencies
+    3.1 CMake GUI Qt requirement workaround
+  4. Building TSC
 
 I. Dependencies
 ----------------
@@ -121,10 +120,9 @@ sudo gem install kramdown coderay
 
 
 ### 2. Optional Windows dependencies ###
-
+* The FreeImage library.
 * For generating a setup installer:
   * The NSIS package.
-  * the QtIFW package.
 
 
 
@@ -290,11 +288,8 @@ repository, and initialize the Git submodules before you can continue
 with the real build process. These preprations can be done as follows:
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ git clone git://github.com/Secretchronicles/TSC.git
-$ cd TSC
-$ git submodule init
-$ git submodule update
-$ cd tsc
+$ git clone --recursive git://github.com/Secretchronicles/TSC.git
+$ cd TSC/tsc
 $ mkdir build
 $ cd build
 $ cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/opt/tsc ..
@@ -493,10 +488,8 @@ Clone the Git repository and execute the preparation steps. They are
 the same as for a normal non-cross build.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-$ git clone git://github.com/Secretchronicles/TSC.git
+$ git clone --recursive git://github.com/Secretchronicles/TSC.git
 $ cd TSC
-$ git submodule init
-$ git submodule update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Then continue with “Crosscompiling from a released tarball” above.
