@@ -574,11 +574,7 @@ From the same shell, that you installed packages for, run:
 
 Feel free to edit the CMake command line to your taste or use the GUI.
 After that you can run one of the following commands.
-To generate documentation:
-
-    $ make docs
-
-To install
+To install:
 
     $ make install
 
