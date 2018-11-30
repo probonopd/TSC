@@ -378,6 +378,7 @@ set(CPACK_NSIS_MUI_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Ins
 set(CPACK_NSIS_MUI_UNIICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Uninstaller icon
 set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tsc.exe") # Icon for system control panel
 set(CPACK_STRIP_FILES ON)
+set(CPACK_PACKAGE_ICON "${TSC_SOURCE_DIR}/extras\\\\Header.bmp") # Should be a 24-bit BMP sized 150x70, Gimp doesn't work.
 
 if(WIN32)
   set(CPACK_GENERATOR "7Z;NSIS")
