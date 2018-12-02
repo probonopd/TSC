@@ -23,33 +23,32 @@ Installation instructions tailored specifically towards compiling TSC
 from Git on Lubuntu 16.10 can be found in the separate file
 tsc/docs/pages/compile_on_lubuntu_16_10.md.
 
+
 Contents
 --------
 
 I. Dependencies
-    1. Common dependencies
-    2. Linux dependencies
-    3. Windows dependencies
+  1. Common dependencies
+  2. Optional Windows dependencies
+
 II. Configuration options
+
 III. Installing from a released tarball
+
 IV. Installing from Git
+
 V. Upgrade notices
+
 VI. Crosscompiling from Linux to Windows
-    1. Crosscompiling from a released tarball
-    2. Crosscompiling from Git
+  1. Crosscompiling from a released tarball
+  2. Crosscompiling from Git
 
-
-
-
-
-
-
-
-
-
-
-
-
+VII. Compiling on Windows with msys2
+  1. Installing and updating msys2
+  2. Installing the dependencies
+  3. Optional dependencies
+    3.1 CMake GUI Qt requirement workaround
+  4. Building TSC
 
 I. Dependencies
 ----------------
@@ -74,6 +73,7 @@ install to.
 * GLEW OpenGL wrangler extension library.
 * GNU Gettext.
 * The LibPNG library.
+* The DevIL library.
 * The libPCRE regular expression library.
 * The libxml++ library < 3.0.0. Versions >= 3.0.0 will not be
   supported until the libxml++ developers provide a porting guide
@@ -90,13 +90,6 @@ install to.
   * The `dot` program.
   * The `doxygen` program.
   * Ruby’s `rdoc` program.
-
-
-
-
-### 2. Linux dependencies ###
-
-* The DevIL library.
 
 #### Example for Fedora ####
 (Tested on Fedora 28)
@@ -132,11 +125,10 @@ sudo gem install kramdown coderay
 
 
 
-### 3. Windows dependencies ###
-
+### 2. Optional Windows dependencies ###
 * The FreeImage library.
 * For generating a setup installer:
-  * The NSIS tools.
+  * The NSIS package.
 
 
 
@@ -508,5 +500,90 @@ $ cd TSC
 
 Then continue with “Crosscompiling from a released tarball” above.
 
+VII. Compiling on Windows with msys2
+-----------------------------------------
+
+TSC can be compiled on Windows using msys2. The msys2 suite provides a convenient Bash shell for Windows, along with an expanding
+repository of prebuilt packages.
+
+
+### 1. Installing and updating msys2 ###
+
+To begin, download and install msys2 from the [official website][3].
+
+After it's installed run any of the shells and execute:
+
+    $ pacman -Syuu
+
+If the base system components are updated, you will be prompted to close the bash windows manually, go ahead and do so.
+
+Now, run either the `MSYS2 MinGW 32-bit` or the `MSYS2 MinGW 64-bit`, depending on which version you are going to build. Note that you
+can download libraries from one shell for the other, but you cannot build for the other architecture.
+
+Now run update again:
+
+    $ pacman -Syuu
+
+
+### 2. Installing the dependencies ###
+
+Once it's finished, install the dependencies:
+
+    $ pacman -S --needed git bison ruby mingw-w64-x86_64-{toolchain,extra-cmake-modules,ruby,cegui,sfml,libxml++2.6,gperf}
+
+Or, for 32-bit:
+
+    $ pacman -S --needed git bison ruby mingw-w64-i686-{toolchain,extra-cmake-modules,ruby,cegui,sfml,libxml++2.6,gperf}
+
+#### 3. Optional dependencies ###
+
+The following packages are optional, you don't have to install these if you don't plan to generate installers or documentation:
+
+    $ pacman -S --needed mingw-w64-x86_64-{doxygen,graphviz,nsis}
+
+For 32-bit:
+
+    $ pacman -S --needed mingw-w64-x86_64-{doxygen,graphviz,nsis}
+
+Generating documentation also requires a few rubygems:
+
+    $ gem install adsf bundler coderay kramdown nanoc rdoc
+
+### 3.1 CMake GUI Qt requirement workaround ###
+
+If you plan to use the CMake GUI, there's a few more steps required.
+The CMake GUI in msys2 is dynamically linked against Qt5 libraries. To use it, you need to have the Qt5 package installed:
+
+    $ pacman -S mingw-w64-x86_64-qt5
+
+But it's huge, it's going to take very long time to install and is really an overkill to install just to use CMake GUI. Instead, just use the command line CMake (as shown in the example below), or, if you still want to use the GUI, here's a little cheat:
+
+Check which version of CMake is currently installed (`pacman -Qs cmake`), go to [Cmake website][1] and download the same version for the appropriate architecture, and extract **ONLY** the executables (in the "bin" folder) to C:\msys64\mingw64\bin (or wherever you have installed msys2) and run the following command:
+
+    $ cp /mingw64/bin/mingw32-make.exe /mingw64/bin/make.exe
+
+
+### 4. Building TSC ###
+
+From the same shell, that you installed packages for, run:
+
+    $ git clone --recursive git://github.com/Secretchronicles/TSC.git
+    $ mkdir TSC/tsc/build && cd TSC/tsc/build
+    $ cmake -G "MSYS Makefiles" ..
+    $ make -j$(nproc)
+
+Feel free to edit the CMake command line to your taste or use the GUI.
+After that you can run one of the following commands.
+To install:
+
+    $ make install
+
+To pack the game:
+
+    $ make package
+
+This will pack the game with the CPack generators that you chose in the CMake command line.
+
 [1]: http://cmake.org
 [2]: http://mxe.cc
+[3]: https://www.msys2.org

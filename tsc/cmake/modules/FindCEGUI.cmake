@@ -66,16 +66,8 @@ endmacro()
 # CEGUI consists of a wealth of libraries.
 find_cegui_library(Base)
 find_cegui_library(CoreWindowRendererSet)
-
-# DevIL and the libxml-based parser are not available
-# on Windows it appears.
-if (WIN32)
-  find_cegui_library(FreeImageImageCodec)
-  find_cegui_library(ExpatParser)
-else()
-  find_cegui_library(DevILImageCodec)
-  find_cegui_library(LibXMLParser)
-endif()
+find_cegui_library(DevILImageCodec)
+find_cegui_library(LibXMLParser)
 
 ########################################
 # The renderers

@@ -49,6 +49,9 @@ option(ENABLE_MRUBY "Enable the MRuby scripting engine" ON)
 option(ENABLE_NLS "Enable translations and localisations" ON)
 option(ENABLE_EDITOR "Enable the in-game editor" ON)
 option(USE_SYSTEM_TINYCLIPBOARD "Use the system's tinyclipboard library" OFF)
+if(WIN32 AND CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX "$ENV{systemdrive}/Games/${CMAKE_PROJECT_NAME}" CACHE PATH "CMAKE PREFIX" FORCE)
+endif()
 option(USE_SYSTEM_MRUBY "Use the system's mruby (intended for internal use only!)" OFF)
 option(USE_LIBXMLPP3 "Use libxml++3.0 instead of libxml++2.6 (experimental)" OFF)
 
@@ -109,34 +112,22 @@ if (WIN32)
   # the different implemention. Just complicates the build system...
   set(Boost_USE_STATIC_LIBS ON)
   set(Boost_THREADAPI win32)
-
-  # Use MXE's pkg-config to resolve all deps for us
-  pkg_check_modules(SFML REQUIRED sfml)
-  pkg_check_modules(CEGUI REQUIRED CEGUI-0 CEGUI-0-OPENGL)
-  pkg_check_modules(OPENGL REQUIRED gl)
-  pkg_check_modules(PNG REQUIRED libpng)
-  pkg_check_modules(PCRE REQUIRED libpcre)
-  if (USE_LIBXMLPP3)
-    pkg_check_modules(LibXmlPP REQUIRED libxml++-3.0)
-  else()
-    pkg_check_modules(LibXmlPP REQUIRED libxml++-2.6)
-  endif()
 else()
-  find_package(SFML COMPONENTS audio graphics window system REQUIRED)
-  find_package(CEGUI COMPONENTS OpenGL REQUIRED)
-  find_package(OpenGL REQUIRED)
-  find_package(PNG REQUIRED)
-  find_package(PCRE REQUIRED)
-
-  if (USE_LIBXMLPP3)
-    find_package(LibXmlPP 3.0 REQUIRED)
-  else()
-    find_package(LibXmlPP 2.6 REQUIRED)
-  endif()
-
   # SFML requires us to link in -lX11 ourselves for whatever reason (otherwise
   # linking error).
   find_package(X11 REQUIRED)
+endif()
+
+find_package(SFML COMPONENTS audio graphics window system REQUIRED)
+find_package(CEGUI COMPONENTS OpenGL REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(PNG REQUIRED)
+find_package(PCRE REQUIRED)
+
+if (USE_LIBXMLPP3)
+  find_package(LibXmlPP 3.0 REQUIRED)
+else()
+  find_package(LibXmlPP 2.6 REQUIRED)
 endif()
 
 find_package(Boost 1.50.0 COMPONENTS filesystem chrono thread REQUIRED)
@@ -146,19 +137,6 @@ set(Boost_COMPONENTS Boost::filesystem Boost::chrono Boost::thread)
 include("ProvideTinyclipboard")
 if (ENABLE_MRUBY)
   include("ProvideMRuby")
-endif()
-
-########################################
-# Definitions
-
-if (WIN32)
-  add_definitions(
-    ${SFML_CFLAGS}
-    ${CEGUI_CFLAGS}
-    ${OPENGL_CFLAGS}
-    ${PNG_CFLAGS}
-    ${LibXmlPP_CFLAGS}
-    ${PCRE_CFLAGS})
 endif()
 
 ########################################
@@ -225,20 +203,16 @@ target_link_libraries(tsc
   ${SFML_DEPENDENCIES}
   ${Boost_COMPONENTS}
   ${OPENGL_LIBRARIES}
-  ${PNG_LIBRARY}
-  ${PNG_LIBRARIES} # compatibility
+  ${PNG_LIBRARIES}
   ${MRuby_LIBRARIES}
-  ${Tinyclipboard_LIBRARIES})
+  ${Tinyclipboard_LIBRARIES}
+  ${LibXmlPP_LIBRARIES}
+  ${PCRE_LIBRARIES})
 
 if (WIN32)
-  target_link_libraries(tsc
-    ${LibXmlPP_STATIC_LIBRARIES}
-    ${PCRE_STATIC_LIBRARIES}
-    )
+  target_link_libraries(tsc iconv intl ws2_32)
 else()
   target_link_libraries(tsc
-    ${LibXmlPP_LIBRARIES}
-    ${PCRE_LIBRARIES}
     ${X11_LIBRARIES}
     ${CMAKE_DL_LIBS})
   if (CMAKE_SYSTEM_NAME MATCHES "BSD")
@@ -256,6 +230,21 @@ endif()
 install(TARGETS tsc
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   COMPONENT base)
+
+if(WIN32)
+  install(CODE 
+    "include(GetPrerequisites)
+    get_prerequisites(\"${CMAKE_CURRENT_BINARY_DIR}/tsc.exe\" LIBLIST 1 1 \"\" \"\" )
+    get_filename_component(CEGUI_CoreWindowRendererSet ${CEGUI_CoreWindowRendererSet_LIBRARY} NAME)
+    string(REPLACE \".a\" \"\" CEGUI_CoreWindowRendererSet \${CEGUI_CoreWindowRendererSet})
+    list(APPEND LIBLIST \${CEGUI_CoreWindowRendererSet}) # Not detected, but still required
+    foreach(LIB \${LIBLIST})
+      gp_resolve_item(\"${CMAKE_CURRENT_BINARY_DIR}/tsc.exe\" \"\${LIB}\" \"\" \"\" resolved_item)
+      list(APPEND LIBS \${resolved_item})
+    endforeach()
+	file(INSTALL DESTINATION \"\${CMAKE_INSTALL_PREFIX}/bin\" TYPE FILE FILES \${LIBS})"
+    COMPONENT base)
+endif()
 
 install(DIRECTORY "${TSC_SOURCE_DIR}/data/campaigns/" # Note trailing slash for content copy
   DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/campaigns
@@ -291,35 +280,37 @@ install(DIRECTORY "${TSC_SOURCE_DIR}/data/worlds/"
   DESTINATION ${CMAKE_INSTALL_DATADIR}/tsc/worlds
   COMPONENT worlds)
 
-install(FILES "${TSC_SOURCE_DIR}/docs/man/tsc.6"
-  DESTINATION ${CMAKE_INSTALL_MANDIR}/man6
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_16.png"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16/apps
-  RENAME tsc.png
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_32.png"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/32x32/apps
-  RENAME tsc.png
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_48.png"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/48x48/apps
-  RENAME tsc.png
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_64.png"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/64x64/apps
-  RENAME tsc.png
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_128.png"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/128x128/apps
-  RENAME tsc.png
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/tsc.desktop"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
-  COMPONENT base)
-install(FILES "${TSC_SOURCE_DIR}/extras/tsc.appdata.xml"
-  DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/appdata
-  COMPONENT base)
+if(NOT WIN32)
+  install(FILES "${TSC_SOURCE_DIR}/docs/man/tsc.6"
+    DESTINATION ${CMAKE_INSTALL_MANDIR}/man6
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_16.png"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/16x16/apps
+    RENAME tsc.png
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_32.png"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/32x32/apps
+    RENAME tsc.png
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_48.png"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/48x48/apps
+    RENAME tsc.png
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_64.png"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/64x64/apps
+    RENAME tsc.png
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/icons/tsc_icon_128.png"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/128x128/apps
+    RENAME tsc.png
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/tsc.desktop"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications
+    COMPONENT base)
+  install(FILES "${TSC_SOURCE_DIR}/extras/tsc.appdata.xml"
+    DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/appdata
+    COMPONENT base)
+endif()
 
 foreach(pofile ${po_files})
   get_filename_component(lang ${pofile} NAME_WE)
@@ -386,7 +377,12 @@ set(CPACK_NSIS_MODIFY_PATH "ON") # Required for desktop shortcuts
 set(CPACK_NSIS_MUI_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer icon
 set(CPACK_NSIS_MUI_UNIICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Uninstaller icon
 set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\tsc.exe") # Icon for system control panel
-set(CPACK_PACKAGE_ICON "${TSC_SOURCE_DIR}/extras/icons/windows_icon.ico") # Installer window bar icon
+set(CPACK_STRIP_FILES ON)
+set(CPACK_PACKAGE_ICON "${TSC_SOURCE_DIR}/extras\\\\Header.bmp") # Should be a 24-bit BMP sized 150x70, Gimp doesn't work.
+
+if(WIN32)
+  set(CPACK_GENERATOR "7Z;NSIS")
+endif()
 
 include(CPack)
 
@@ -413,7 +409,9 @@ message(STATUS "--------------- Path configuration -----------------")
 message(STATUS "Install prefix:        ${CMAKE_INSTALL_PREFIX}")
 message(STATUS "Binary directory:      ${CMAKE_INSTALL_BINDIR}")
 message(STATUS "Shared data directory: ${CMAKE_INSTALL_DATADIR}")
-message(STATUS "Manpage directory:     ${CMAKE_INSTALL_MANDIR}")
+if(NOT WIN32)
+  message(STATUS "Manpage directory:     ${CMAKE_INSTALL_MANDIR}")
+endif()
 message(STATUS "(relative pathes are relative to the install prefix;")
 message(STATUS "the directory /tsc will be appended to the shared")
 message(STATUS "data directory indicated above.)")
