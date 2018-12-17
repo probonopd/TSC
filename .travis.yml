@@ -1,4 +1,5 @@
 language: cpp
+sudo: true
 
 compiler:
   - gcc
@@ -12,17 +13,16 @@ notifications:
 before_install:
   # new boost packages (1.54 and 1.55)
   - sudo add-apt-repository -y ppa:boost-latest/ppa
-  # new cmake (2.8.7 -> 2.18.11)
-  - sudo add-apt-repository -y ppa:kalakris/cmake
   - sudo apt-get update -qq
 
 install:
   - >
-   sudo apt-get install -qq cmake gettext bison pkg-config gperf
+   sudo apt-get install -qq gettext bison pkg-config gperf
    libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
    ruby-full rake libglew-dev libpng-dev libpcre3-dev libxml++2.6-dev
    libfreetype6-dev libdevil-dev libboost-filesystem1.54-dev libboost-chrono1.54-dev
    libboost-thread1.54-dev
+  - wget "https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2-Linux-x86_64.tar.gz" ; sudo tar xf  cmake*.tar.gz --strip-components=1 -C /usr
 
 before_script:
     # pull all sub modules recursively
